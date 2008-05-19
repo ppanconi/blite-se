@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Blite SE e' un progetto finalizzato all'implementazione del linguaggio [http://rap.dsi.unifi.it/cows/papers/blite.pdf *B*_lite_] all'interno di [https://fuji.dev.java.net/ Fuji].
+*B*_lite_ *SE* e' un progetto finalizzato all'implementazione del linguaggio [http://rap.dsi.unifi.it/cows/papers/blite.pdf Blite] all'interno di [https://fuji.dev.java.net/ Fuji].
 
 = Details =
 
