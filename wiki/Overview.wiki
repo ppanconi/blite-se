@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Blite SE e' un progetto finalizzato all'implementazione del linguaggio *B*_lite_
+Blite SE e' un progetto finalizzato all'implementazione del linguaggio *B*_lite_ all'interno di [https://fuji.dev.java.net/ Fuji]
 
 = Details =
 
