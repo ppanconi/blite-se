@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.unifi.dsi</groupId>
+    <artifactId>build-common</artifactId>
+    <packaging>pom</packaging>
+    <name>build-common</name>
+    <version>1.0</version>
+    <url>http://maven.apache.org</url>
+  
+    <!-- global properties: -->
+    <properties>
+        <!--
+         #   unfortunately, ${settings.localRepository} is not resolved at the time the
+         #   effective pom is built.  It is resolved sometime later, and is available to build plugins.
+         #
+         #       mvn -Dmaven.repo.local=/somedir
+         #
+         #   will override the default location, which is: ~/.m2/repository
+         #
+        
+        <localRepository>${settings.localRepository}</localRepository>
+        -->
+        
+        <!-- VERSION INFO: -->
+        <blite.currentVersion>1.0-SNAPSHOT</blite.currentVersion>
+
+        <!-- Warning:  SRCROOT (uppercase) has special meaning to maven-bundle-plugin,
+         #   and is added to the manifest if it is defined as a property.  RT 3/5/08
+        <srcroot>${env.JV_SRCROOT}</srcroot>
+        -->
+
+        <!-- this is default MAVEN_DISTROOT, in the event that the property is not set on the command line: 
+        <MAVEN_DISTROOT>${srcroot}/target/remote</MAVEN_DISTROOT>
+        <open-esb-deployment-mirror-url>file://${MAVEN_DISTROOT}</open-esb-deployment-mirror-url>
+        -->
+    </properties>
+</project>
