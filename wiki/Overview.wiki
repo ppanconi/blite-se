@@ -1,9 +1,8 @@
-#summary One-sentence summary of this page.
+#summary Introduzione e Premesse a Blite SE
 
 = Introduction =
 
-Add your content here.
-
+Blite SE e' un progetto finalizzato all'implementazione del linguaggio *B*_lite_
 
 = Details =
 
