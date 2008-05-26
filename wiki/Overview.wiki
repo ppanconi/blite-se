@@ -11,4 +11,11 @@ con l'intento di fornire un semantica formale a WS-BPEL e un strumento di suppor
 
 L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*_lite_ tramite un componente JBI e quindi fornirne un'implementazione usufruibile su ogni piattaforma JBI compatibile ( [https://open-esb.dev.java.net/ OpenESB], [http://servicemix.apache.org/home.html Apache ServiceMix] ...)
 
-JBI e' una specifica JCP ([http://jcp.org/aboutJava/communityprocess/final/jsr208/index.html JSR-208]) il cui acronimo sta per Java Business Integration. 
+JBI infatti e' una specifica JCP ([http://jcp.org/aboutJava/communityprocess/final/jsr208/index.html JSR-208]) il cui acronimo sta per Java Business Integration, e definisce un'architettura standard per uniformare la metodologia e le tecniche d'integrazione di componenti eterogenei secondo il modello SOA e SOC.
+
+Le specifiche JBI pur limitandosi alla tecnologia Java si basano sui principali standard open patrocinati da [W3C] e [Oasis].
+JBI definisce uno standard mirato ai container che permette lo sviluppo di container di servizi secondo un modello a plugin. Lo scenario che si prospetta è la definizione di un contenitore (l'environment JBI) in grado di ospitare sottocontainer di servizi agendo da "container of containers" (vedere [IWRTH]) in grado di interagire mediante un sistema di messaging basato sul Web Services Description Language 2.0 (vedere [WSDL2.0]).
+
+L'idea di base è di potere definire dei contenitori di servizi che consentano la System Integration e permettere quindi a sistemi inizialmente non progettati per lavorare insieme di cooperare tra loro come se fossero un'unica applicazione (Composite Application).
+
+In questo modo lo sviluppatore sarà in grado di sviluppare un'applicazione "assemblando" le funzionalità necessarie utilizzando gli opportuni Componenti plugin JBI. Ad esempio una soluzione d'integrazione potrebbe essere un'applicazione composta da un engine BPEL che interopera con un EJB Continer e un data trasformation all'interno di un JBI environment.
