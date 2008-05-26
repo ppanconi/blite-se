@@ -9,4 +9,6 @@ con l'intento di fornire un semantica formale a WS-BPEL e un strumento di suppor
 
 = Dettagli =
 
-L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*_lite_ tramite un componente JBI e quindi fornire un implementazione usufruibile su ogni piattaforma JBI compatibile ( [https://open-esb.dev.java.net/ OpenESB], [http://servicemix.apache.org/home.html Apache ServiceMix] ...)
+L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*_lite_ tramite un componente JBI e quindi fornirne un'implementazione usufruibile su ogni piattaforma JBI compatibile ( [https://open-esb.dev.java.net/ OpenESB], [http://servicemix.apache.org/home.html Apache ServiceMix] ...)
+
+JBI e' una specifica JCP ([http://jcp.org/aboutJava/communityprocess/final/jsr208/index.html JSR-208]) il cui acronimo sta per Java Business Integration. 
