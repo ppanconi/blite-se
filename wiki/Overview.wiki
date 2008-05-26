@@ -4,17 +4,16 @@
 
 *B*_lite_ *SE* e' un progetto finalizzato all'implementazione del linguaggio [http://rap.dsi.unifi.it/cows/papers/blite.pdf Blite] all'interno di [https://fuji.dev.java.net/ Fuji] come JBI service engine.
 
-*B*_lite_ e' un linguaggio ideato e formalizzato presso il Dipartimento di Sistemi Informatici ([http://www.dsi.unifi.it Dsi@Unifi]) dell'Università degli Studi di Firenze 
-con l'intento di fornire un semantica formale a WS-BPEL e un strumento di supporto per l'analisi formale (validazione e verifica) delle applicazioni service based. Una presentazione dettagliata del linguaggio e' fornita dall'articolo [http://rap.dsi.unifi.it/cows/papers/blite.pdf "A formal account of WS-BPEL"].
+*B*_lite_ e' un linguaggio ideato e formalizzato presso il Dipartimento di Sistemi Informatici ([http://www.dsi.unifi.it Dsi]) dell'Università degli Studi di Firenze [ http://www.unifi.it Unifi] con l'intento di fornire un semantica formale a WS-BPEL e un strumento di supporto per l'analisi formale (validazione e verifica) delle applicazioni service based. Una presentazione dettagliata del linguaggio e' fornita dall'articolo [http://rap.dsi.unifi.it/cows/papers/blite.pdf "A formal account of WS-BPEL"].
 
 = Dettagli =
 
-L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*_lite_ tramite un componente JBI e quindi fornirne un'implementazione usufruibile su ogni piattaforma JBI compatibile ( [https://open-esb.dev.java.net/ OpenESB], [http://servicemix.apache.org/home.html Apache ServiceMix] ...)
+L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*_lite_ tramite un componente JBI e quindi fornirne un'implementazione usufruibile su ogni piattaforma JBI compatibile ([https://open-esb.dev.java.net/ OpenESB], [http://servicemix.apache.org/home.html Apache ServiceMix] ...)
 
 JBI infatti e' una specifica JCP ([http://jcp.org/aboutJava/communityprocess/final/jsr208/index.html JSR-208]) il cui acronimo sta per Java Business Integration, e definisce un'architettura standard per uniformare la metodologia e le tecniche d'integrazione di componenti eterogenei secondo il modello SOA e SOC.
 
 Le specifiche JBI pur limitandosi alla tecnologia Java si basano sui principali standard open patrocinati da [W3C] e [Oasis].
-JBI definisce uno standard che guida lo sviluppo di container di servizi secondo un modello a plugin. L'architettura contenitore/framework (l'environment JBI) in grado di ospitare sottocontainer di servizi agendo da "container of containers" (vedere [IWRTH]). In grado di interagire mediante un sistema di messaging basato sul Web Services Description Language 2.0 (vedere [WSDL2.0]).
+JBI definisce uno standard che guida lo sviluppo di container di servizi secondo un modello a plugin. L'architettura e' costituita da un contenitore/framework (l'environment JBI) in grado di ospitare sottocontainer di servizi (si parla anche di "container of containers") che si Services Description Language 2.0 (vedere [WSDL2.0]).
 
 L'idea di base è di potere definire dei contenitori di servizi che consentano la System Integration e permettere quindi a sistemi inizialmente non progettati per lavorare insieme di cooperare tra loro come se fossero un'unica applicazione (Composite Application).
 
