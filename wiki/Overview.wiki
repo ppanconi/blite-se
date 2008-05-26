@@ -4,7 +4,7 @@
 
 *B*_lite_ *SE* e' un progetto finalizzato all'implementazione del linguaggio [http://rap.dsi.unifi.it/cows/papers/blite.pdf Blite] all'interno di [https://fuji.dev.java.net/ Fuji] come JBI service engine.
 
-*B*_lite_ e' un linguaggio ideato e formalizzato presso il Dipartimento di Sistemi Informatici ([http://www.dsi.unifi.it Dsi]) dell'Università degli Studi di Firenze [ http://www.unifi.it Unifi] con l'intento di fornire un semantica formale a WS-BPEL e un strumento di supporto per l'analisi formale (validazione e verifica) delle applicazioni service based. Una presentazione dettagliata del linguaggio e' fornita dall'articolo [http://rap.dsi.unifi.it/cows/papers/blite.pdf "A formal account of WS-BPEL"].
+*B*_lite_ e' un linguaggio ideato e formalizzato presso il Dipartimento di Sistemi Informatici ([http://www.dsi.unifi.it Dsi]) dell'Università degli Studi di Firenze [http://www.unifi.it Unifi] con l'intento di fornire un semantica formale a WS-BPEL e un strumento di supporto per l'analisi formale (validazione e verifica) delle applicazioni service based. Una presentazione dettagliata del linguaggio e' fornita dall'articolo [http://rap.dsi.unifi.it/cows/papers/blite.pdf "A formal account of WS-BPEL"].
 
 = Dettagli =
 
