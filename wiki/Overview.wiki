@@ -7,6 +7,6 @@
 *B*_lite_ e' un linguaggio ideato e formalizzato presso il Dipartimento di Sistemi Informatici ([http://www.dsi.unifi.it Dsi@Unifi]) dell'Università degli Studi di Firenze 
 con l'intento di fornire un semantica formale a WS-BPEL e un strumento di supporto per l'analisi formale (validazione e verifica) delle applicazioni service based. Una presentazione dettagliata del linguaggio e' fornita dall'articolo [http://rap.dsi.unifi.it/cows/papers/blite.pdf "A formal account of WS-BPEL"].
 
-= Details =
+= Dettagli =
 
 L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*_lite_ tramite un componente JBI e quindi fornire un implementazione usufruibile su ogni piattaforma JBI compatibile ( [https://open-esb.dev.java.net/ OpenESB], [http://servicemix.apache.org/home.html Apache ServiceMix] ...)
