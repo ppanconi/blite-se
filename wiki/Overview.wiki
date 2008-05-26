@@ -8,8 +8,3 @@
 con l'intento di fornire un semantica formale a WS-BPEL e un strumento di supporto per l'analisi formale (validazione e verifica) delle applicazioni service based. 
 
 = Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
