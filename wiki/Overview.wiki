@@ -1,6 +1,6 @@
 #summary Introduzione e Premesse a Blite SE
 
-= Introduction =
+= Introduzione =
 
 *B*_lite_ *SE* e' un progetto finalizzato all'implementazione del linguaggio [http://rap.dsi.unifi.it/cows/papers/blite.pdf Blite] all'interno di [https://fuji.dev.java.net/ Fuji] come JBI service engine.
 
@@ -14,7 +14,7 @@ L'obiettivo di questo progetto e' quello di realizzare un'implementazione di *B*
 JBI infatti e' una specifica JCP ([http://jcp.org/aboutJava/communityprocess/final/jsr208/index.html JSR-208]) il cui acronimo sta per Java Business Integration, e definisce un'architettura standard per uniformare la metodologia e le tecniche d'integrazione di componenti eterogenei secondo il modello SOA e SOC.
 
 Le specifiche JBI pur limitandosi alla tecnologia Java si basano sui principali standard open patrocinati da [W3C] e [Oasis].
-JBI definisce uno standard mirato ai container che permette lo sviluppo di container di servizi secondo un modello a plugin. Lo scenario che si prospetta è la definizione di un contenitore (l'environment JBI) in grado di ospitare sottocontainer di servizi agendo da "container of containers" (vedere [IWRTH]) in grado di interagire mediante un sistema di messaging basato sul Web Services Description Language 2.0 (vedere [WSDL2.0]).
+JBI definisce uno standard che guida lo sviluppo di container di servizi secondo un modello a plugin. L'architettura contenitore/framework (l'environment JBI) in grado di ospitare sottocontainer di servizi agendo da "container of containers" (vedere [IWRTH]). In grado di interagire mediante un sistema di messaging basato sul Web Services Description Language 2.0 (vedere [WSDL2.0]).
 
 L'idea di base è di potere definire dei contenitori di servizi che consentano la System Integration e permettere quindi a sistemi inizialmente non progettati per lavorare insieme di cooperare tra loro come se fossero un'unica applicazione (Composite Application).
 
