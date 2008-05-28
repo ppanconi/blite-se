@@ -4,5 +4,8 @@
  # Basi Teoriche
   # [Motivazioni]
   # [IlLinguaggio Il linguaggio]
- # Tocnologia
+ # Tecnologia
+  # [JBI]
+  # [Fuji]
+  # [OSGi]
  # Architettura e Progetto
