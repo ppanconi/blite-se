@@ -4,9 +4,11 @@
     <groupId>it.unifi.dsi</groupId>
     <artifactId>build-common</artifactId>
     <packaging>pom</packaging>
-    <name>build-common</name>
     <version>1.0</version>
-    <url>http://maven.apache.org</url>
+    
+    <name>Blite-se Common Pom</name>
+    <description>Common definitions inherited by all poms</description>
+    <url>http://code.google.com/p/blite-se/</url>
   
     <!-- global properties: -->
     <properties>
