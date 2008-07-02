@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <parent>
+    <artifactId>build-common</artifactId>
+    <groupId>it.unifi.dsi</groupId>
+    <version>1.0</version>
+    <relativePath>../build-common</relativePath>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.unifi.dsi</groupId>
+  <artifactId>blite-se-engine</artifactId>
+  <version>${blite.currentVersion}</version>
+  
+  <name>Blite-se Engine</name>
+  <description>Blite-se Core Engine</description>
+  <url>http://code.google.com/p/blite-se/</url>
+  
+  <dependencies>
+
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+    </dependency>
+      
+  </dependencies>
+  
+</project>
