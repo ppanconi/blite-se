@@ -27,12 +27,18 @@ import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
 public interface Engine {
     
     /**
-     * Add a Blite Process Definition 
+     * Add a Blite Process Definition to the Engine.
      * @param def
      * @param saName
      * @param suName
      */
     void addProcessDefinition(BliteProcessDef def, String saName, String suName);
+    
+    /**
+     * Undeply a Blite Process Definition from the Engine.
+     * @param id the Process Definition Unique id.
+     */
+    void removeProcessDefinition(Object id);
 
 }
 

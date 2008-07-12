@@ -5,10 +5,77 @@
     <artifactId>build-common</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    
     <name>Blite-se Common Pom</name>
     <description>Common definitions inherited by all poms</description>
     <url>http://code.google.com/p/blite-se/</url>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <!-- generate 1.5 class files: -->
+                        <source>1.5</source>
+                        <target>1.5</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    
+    <repositories>
+        <!--
+         ! since most artifacts come from central, check that next
+         ! the <id> element is set to "central", to enable any mirror settings
+         ! defined by the user.
+         !-->
+        <repository>
+            <id>central</id>
+            <name>Maven2 Central Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- repository for open-esb, fuji, and ojc artifacts. -->
+        <repository>
+            <id>java.net-maven2-repository</id>
+            <name>download.java.net top maven2 repository</name>
+            <url>http://download.java.net/maven/esb</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencyManagement>
+        <dependencies>
+            <!-- The Jbi 1.0 api -->
+            <dependency>
+                <groupId>open-esb</groupId>
+                <artifactId>jbi</artifactId>
+                <version>1.0</version>
+            </dependency>
+            
+            <!-- Test -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>3.8.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
   
     <!-- global properties: -->
     <properties>

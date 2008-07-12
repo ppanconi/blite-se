@@ -20,6 +20,7 @@ import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * This class is the implemetation of Bltie Engine the core of
@@ -33,6 +34,8 @@ import java.util.Map;
 // #[regen=yes,id=DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751]
 // </editor-fold> 
 public class EngineImp implements Engine {
+    
+    private static final Logger LOGGER = Logger.getLogger(EngineImp.class.getName());
     
     private Object mDeployLock = new Object(); //onjext used as monitor in un/deployment phase
     private boolean mNewAddedDep = false; //one state marker for eventually persistence synch.
@@ -75,6 +78,17 @@ public class EngineImp implements Engine {
         }
 
     }
+
+    public void removeProcessDefinition(Object id) {
+        if (mProcessDefs.get(id) == null) {
+            throw new RuntimeException("Trying to unregister a process that has never been registered");
+        }
+
+        BliteProcessDef proc = mProcessDefs.remove(id);
+        mManagers.remove(proc);
+    }
+    
+    
     
     
 
