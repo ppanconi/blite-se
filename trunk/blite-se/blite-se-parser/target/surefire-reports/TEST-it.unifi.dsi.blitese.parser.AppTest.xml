@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" skipped="0" tests="1" time="0.022" failures="0" name="it.unifi.dsi.blitese.parser.AppTest">
+  <properties>
+    <property value="Sun Microsystems Inc." name="java.vendor"/>
+    <property value="local/panks-laptop:/tmp/.ICE-unix/6432" name="env.SESSION_MANAGER"/>
+    <property value="| /usr/bin/lesspipe %s" name="env.LESSOPEN"/>
+    <property value="/home/panks/sviluppo/utilty/maven-2.0.4" name="env.MAVEN04_HOME"/>
+    <property value="/home/panks/.m2/repository_2_0_9" name="localRepository"/>
+    <property value="SUN_STANDARD" name="sun.java.launcher"/>
+    <property value="HotSpot Server Compiler" name="sun.management.compiler"/>
+    <property value="Linux" name="os.name"/>
+    <property value="/opt/java/jdk1.5.0_12/jre/lib/rt.jar:/opt/java/jdk1.5.0_12/jre/lib/i18n.jar:/opt/java/jdk1.5.0_12/jre/lib/sunrsasign.jar:/opt/java/jdk1.5.0_12/jre/lib/jsse.jar:/opt/java/jdk1.5.0_12/jre/lib/jce.jar:/opt/java/jdk1.5.0_12/jre/lib/charsets.jar:/opt/java/jdk1.5.0_12/jre/classes" name="sun.boot.class.path"/>
+    <property value="/home/panks/sviluppo/progetti/blite-se" name="env.PWD"/>
+    <property value="8e2926fe8e0072a02820b20046816ca8-1215871795.184026-1485278" name="env.XDG_SESSION_COOKIE"/>
+    <property value="/opt/java/jdk1.5.0_12" name="env.JAVA5_HOME"/>
+    <property value="gnome" name="sun.desktop"/>
+    <property value="it_IT.UTF-8" name="env.LANG"/>
+    <property value="Sun Microsystems Inc." name="java.vm.specification.vendor"/>
+    <property value="1.5.0_12-b04" name="java.runtime.version"/>
+    <property value=":0.0" name="env.DISPLAY"/>
+    <property value="/home/panks/sviluppo/utilty/maven-2.0.5" name="env.MAVEN05_HOME"/>
+    <property value="panks" name="user.name"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.9/bin/mvn" name="env._"/>
+    <property value="panks" name="env.USER"/>
+    <property value="ignoreboth" name="env.HISTCONTROL"/>
+    <property value="/bin/bash" name="env.SHELL"/>
+    <property value="default" name="env.DESKTOP_SESSION"/>
+    <property value="/usr/local/share/:/usr/share/:/usr/share/gdm/" name="env.XDG_DATA_DIRS"/>
+    <property value="/usr/dt/lib/nls/msg/%L/%N.cat" name="env.NLSPATH"/>
+    <property value="/opt/java/jdk1.5.0_12/bin:/home/panks/sviluppo/utilty/apache-maven-2.0.9/bin:/home/panks/sviluppo/utilty/apache-ant-1.7.0/bin:/home/panks/bin:/home/panks/sviluppo/lib/javacc-4.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11:/usr/games:/home/panks/sviluppo/utilty/Eiffel61/studio/spec/linux-x86/bin" name="env.PATH"/>
+    <property value="it" name="user.language"/>
+    <property value="/opt/java/jdk1.5.0_12/jre/lib/i386" name="sun.boot.library.path"/>
+    <property value="/opt/java/jdk1.6.0_01" name="env.JAVA6_HOME"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.9/bin/m2.conf" name="classworlds.conf"/>
+    <property value="/home/panks/sviluppo/utilty/netbeans-6.1" name="env.NETBEANS_HOME"/>
+    <property value="1.5.0_12" name="java.version"/>
+    <property value="Europe/Rome" name="user.timezone"/>
+    <property value="unix:abstract=/tmp/dbus-CTI0IIZV8L,guid=ba7176dc1f06f95650a891fd4878bb35" name="env.DBUS_SESSION_BUS_ADDRESS"/>
+    <property value="32" name="sun.arch.data.model"/>
+    <property value="/home/panks/sviluppo/utilty/maven-2.0.6" name="env.MAVEN06_HOME"/>
+    <property value="/opt/java/jdk1.5.0_12/jre/lib/endorsed" name="java.endorsed.dirs"/>
+    <property value="" name="sun.cpu.isalist"/>
+    <property value="UTF-8" name="sun.jnu.encoding"/>
+    <property value="sun.io" name="file.encoding.pkg"/>
+    <property value="1" name="env.SHLVL"/>
+    <property value="/home/panks/sviluppo/lib/javacc-4.0" name="env.JAVACC_HOME"/>
+    <property value="/" name="file.separator"/>
+    <property value="Java Platform API Specification" name="java.specification.name"/>
+    <property value="Default" name="env.GNOME_DESKTOP_SESSION_ID"/>
+    <property value="49.0" name="java.class.version"/>
+    <property value="default" name="env.GDMSESSION"/>
+    <property value="IT" name="user.country"/>
+    <property value="6431" name="env.GNOME_KEYRING_PID"/>
+    <property value="/opt/java/jdk1.5.0_12/jre" name="java.home"/>
+    <property value="mixed mode" name="java.vm.info"/>
+    <property value="/home/panks/sviluppo/server/apache-tomcat-5.5.25" name="env.CATALINA_HOME"/>
+    <property value="panks" name="env.LOGNAME"/>
+    <property value="2.6.24-19-generic" name="os.version"/>
+    <property value="/opt/java/jdk1.6.0_10" name="env.JAVA610_HOME"/>
+    <property value=":" name="path.separator"/>
+    <property value="linux-x86" name="env.ISE_PLATFORM"/>
+    <property value="1.5.0_12-b04" name="java.vm.version"/>
+    <property value="/home/panks/sviluppo/utilty/maven-2.0.7" name="env.MAVEN07_HOME"/>
+    <property value="/opt/java/jdk1.5.0_12" name="env.JAVA_HOME"/>
+    <property value="/home/panks/sviluppo/progetti/open-jbi-components" name="env.JV_SRCROOT"/>
+    <property value="sun.print.PSPrinterJob" name="java.awt.printerjob"/>
+    <property value="xterm" name="env.TERM"/>
+    <property value="7" name="env.WINDOWPATH"/>
+    <property value="UnicodeLittle" name="sun.io.unicode.encoding"/>
+    <property value="it_IT.UTF-8" name="env.GDM_LANG"/>
+    <property value="/home/panks" name="user.home"/>
+    <property value="/home/panks" name="env.OLDPWD"/>
+    <property value="Sun Microsystems Inc." name="java.specification.vendor"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.9" name="env.M2_HOME"/>
+    <property value="http://java.sun.com/" name="java.vendor.url"/>
+    <property value="/opt/java/jdk1.5.0_12/jre/lib/i386/server:/opt/java/jdk1.5.0_12/jre/lib/i386:/opt/java/jdk1.5.0_12/jre/../lib/i386" name="java.library.path"/>
+    <property value="local" name="env.GDM_XSERVER_LOCATION"/>
+    <property value="Sun Microsystems Inc." name="java.vm.vendor"/>
+    <property value="/home/panks/sviluppo/server/glassfish" name="env.JV_GFBASE"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.8" name="env.MAVEN08_HOME"/>
+    <property value="/usr/lib/jvm/java-6-sun" name="env.JAVA6_UBUNTU"/>
+    <property value="Java(TM) 2 Runtime Environment, Standard Edition" name="java.runtime.name"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.9" name="maven.home"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.9/boot/classworlds-1.1.jar" name="java.class.path"/>
+    <property value="/home/panks/sviluppo/server/jboss-4.2.2.GA" name="env.JBOSS_HOME"/>
+    <property value="/usr/dt/app-defaults/%L/Dt" name="env.XFILESEARCHPATH"/>
+    <property value="Java Virtual Machine Specification" name="java.vm.specification.name"/>
+    <property value="1.0" name="java.vm.specification.version"/>
+    <property value="unknown" name="sun.os.patch.level"/>
+    <property value="little" name="sun.cpu.endian"/>
+    <property value="/etc/gtk/gtkrc:/home/panks/.gtkrc-1.2-gnome2" name="env.GTK_RC_FILES"/>
+    <property value="/home/panks" name="env.HOME"/>
+    <property value="/home/panks/sviluppo/utilty/apache-ant-1.7.0" name="env.ANT_HOME"/>
+    <property value="/home/panks/sviluppo/progetti/blite-se/blite-se-parser/target/test-classes:/home/panks/sviluppo/progetti/blite-se/blite-se-parser/target/classes:/home/panks/.m2/repository_2_0_9/junit/junit/3.8.2/junit-3.8.2.jar:" name="surefire.test.class.path"/>
+    <property value="/tmp" name="java.io.tmpdir"/>
+    <property value="/opt/java/jdk1.5.0_12/jre/lib/i386/server:/opt/java/jdk1.5.0_12/jre/lib/i386:/opt/java/jdk1.5.0_12/jre/../lib/i386" name="env.LD_LIBRARY_PATH"/>
+    <property value="no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.svgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:" name="env.LS_COLORS"/>
+    <property value="http://java.sun.com/cgi-bin/bugreport.cgi" name="java.vendor.url.bug"/>
+    <property value="/tmp/keyring-rEzCfc/ssh" name="env.SSH_AUTH_SOCK"/>
+    <property value="sun.awt.X11GraphicsEnvironment" name="java.awt.graphicsenv"/>
+    <property value="i386" name="os.arch"/>
+    <property value="/home/panks/sviluppo/utilty/apache-maven-2.0.9" name="env.MAVEN09_HOME"/>
+    <property value="/opt/java/jdk1.5.0_12/jre/lib/ext" name="java.ext.dirs"/>
+    <property value="/home/panks/sviluppo/utilty/Eiffel61" name="env.ISE_EIFFEL"/>
+    <property value="/home/panks/sviluppo/progetti/blite-se/blite-se-parser" name="user.dir"/>
+    <property value="/home/panks/.Xauthority" name="env.XAUTHORITY"/>
+    <property value="
+" name="line.separator"/>
+    <property value="Java HotSpot(TM) Server VM" name="java.vm.name"/>
+    <property value="/opt/java/jrockit-R27.4.0-jdk1.5.0_12" name="env.JROCK_HOME"/>
+    <property value="/home/panks/sviluppo/progetti/blite-se/blite-se-parser" name="basedir"/>
+    <property value="panks" name="env.USERNAME"/>
+    <property value="UTF-8" name="file.encoding"/>
+    <property value="/tmp/keyring-rEzCfc/socket" name="env.GNOME_KEYRING_SOCKET"/>
+    <property value="/tmp/seahorse-EQdH3m/S.gpg-agent:6509:1" name="env.GPG_AGENT_INFO"/>
+    <property value="1.5" name="java.specification.version"/>
+    <property value="/usr/bin/lesspipe %s %s" name="env.LESSCLOSE"/>
+  </properties>
+  <testcase classname="it.unifi.dsi.blitese.parser.AppTest" time="0.003" name="testApp"/>
+</testsuite>
