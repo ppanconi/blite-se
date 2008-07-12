@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <parent>
+        <artifactId>build-common</artifactId>
+        <groupId>it.unifi.dsi</groupId>
+        <version>1.0</version>
+        <relativePath>../build-common</relativePath>
+    </parent>
+    
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.unifi.dsi</groupId>
+    <artifactId>blite-se-parser</artifactId>
+    <version>${blite.currentVersion}</version>
+    
+    <name>Blite-se Parser</name>
+    <description>Blite-se Parser</description>
+    <url>http://code.google.com/p/blite-se/</url>
+    
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.ifl</include>
+                </includes>
+            </resource>
+        </resources>
+        <!-- The JjTree and Javacc Plugin -->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javacc-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>${artifactId}-javacc</id>
+                        <goals>
+                            <goal>jjtree-javacc</goal>
+                        </goals>
+                        <configuration>
+                            <!--
+                            <lookAhead>2</lookAhead>
+                            <isStatic>false</isStatic>
+                            -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE XMI SYSTEM "/home/panks/.netbeans/6.1/.uml/config/UML_2.0EMBT.dtd"> --><XMI xmlns:UML="omg.org/UML/1.4" xmi.version="2.0"> <XMI.header> <XMI.metamodel xmi.name="UML" xmi.version="1.4"/> <XMI.documentation> <XMI.exporter> Embarcadero's Describe </XMI.exporter> <XMI.exporterVersion> 6.0 </XMI.exporterVersion> </XMI.documentation> </XMI.header> <XMI.content> <UML:Project xmi.id="DCE.6C8A88D6-5320-05D9-D029-C5CCED4E7386" mode="Implementation" defaultLanguage="Java" projVersion="6.1.4.837" name="blite-se-uml">
+<UML:Element.ownedElement><UML:Package name="it" xmi.id="DCE.8D600210-D2A0-99D0-5723-4173EB0694BF">
+<UML:Element.ownedElement><UML:Package name="unifi" xmi.id="DCE.01908759-57F5-0FBB-EAE6-3D9E94FB01E7" owner="DCE.8D600210-D2A0-99D0-5723-4173EB0694BF">
+<UML:Element.ownedElement><UML:Package name="dsi" xmi.id="DCE.9978AAAF-FA0B-C6B8-61DA-4C12DD6D7599" owner="DCE.01908759-57F5-0FBB-EAE6-3D9E94FB01E7">
+<UML:Element.ownedElement><UML:Package name="blitese" xmi.id="DCE.1F346EF5-A8CD-54E2-78F8-165BBE12F873" owner="DCE.9978AAAF-FA0B-C6B8-61DA-4C12DD6D7599">
+<UML:Element.ownedElement><UML:Package name="engine" xmi.id="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79" owner="DCE.1F346EF5-A8CD-54E2-78F8-165BBE12F873">
+<UML:Element.ownedElement><UML:Class isAbstract="false" isLeaf="false" visibility="public" name="App" xmi.id="DCE.61332582-8793-E566-99A7-D2C811514D10" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79"><UML:Element.ownedElement><UML:SourceFileArtifact sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/App.java" xmi.id="DCE.41322083-260A-2DB8-DC44-E1288EF2B934" owner="DCE.61332582-8793-E566-99A7-D2C811514D10"/><UML:TaggedValue xmi.id="DCE.4A156CDD-78B5-2B31-EC10-C5021CC770DF" name="documentation">
+<UML:TaggedValue.dataValue> Hello world!
+  </UML:TaggedValue.dataValue></UML:TaggedValue><UML:Operation visibility="public" isLeaf="false" ownerScope="instance" isAbstract="false" isStatic="true" name="main" xmi.id="DCE.5A165C87-476A-A849-3170-518B02F59200" owner="DCE.61332582-8793-E566-99A7-D2C811514D10"><UML:Element.ownedElement><UML:Parameter visibility="package" direction="result" isQuery="false" type="DCE.9F873A8A-0683-70F4-B16D-EAC3C8F42ECF" xmi.id="DCE.DEB25DC7-029B-46DD-093B-732D2CB9B571" owner="DCE.5A165C87-476A-A849-3170-518B02F59200"><UML:TypedElement.multiplicity>
+<UML:Multiplicity xmi.id="DCE.047048F8-67CC-2F1A-4334-0EC09223C889"/></UML:TypedElement.multiplicity></UML:Parameter><UML:Parameter visibility="package" isQuery="false" type="DCE.4F134F04-1410-C9A6-D01C-4AEB0BA80E6B" name="args" xmi.id="DCE.6D6D3118-E7D1-6F6E-13D3-6535024C0934" owner="DCE.5A165C87-476A-A849-3170-518B02F59200"><UML:TypedElement.multiplicity><UML:Multiplicity xmi.id="DCE.1C38F4DF-557B-C9B2-87DA-E81E9F094ADF"><UML:Multiplicity.range><UML:MultiplicityRange lower="0" upper="*" collectionType="[]" xmi.id="DCE.A12AF051-5DC7-A854-E07A-65DC1D15E54F"/></UML:Multiplicity.range></UML:Multiplicity></UML:TypedElement.multiplicity></UML:Parameter></UML:Element.ownedElement></UML:Operation></UML:Element.ownedElement></UML:Class>
+<UML:Package xmi.id="DCE.682FCFFD-9794-8E25-CAC4-75FE9883366F" name="runtime" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79"><UML:Element.ownedElement>
+<UML:Interface xmi.id="DCE.E3664DFA-BCB9-1B85-E713-CE7F075EF6ED" name="Engine" isAbstract="true" owner="DCE.682FCFFD-9794-8E25-CAC4-75FE9883366F" appliedStereotype="__uri_./blite-se-uml.etup#//*[@xmi.id=&quot;DCE.988B2ADB-AA08-D9BC-DEB3-1DB7461EEB8E&quot;]" supplierDependency="DCE.A3854548-B5E7-BA87-59D7-95902C78A110"><UML:Element.ownedElement>
+
+<UML:SourceFileArtifact xmi.id="DCE.899B682E-6D2B-3C8B-5DC8-36BC0A9647BE" name="Unnamed" owner="DCE.E3664DFA-BCB9-1B85-E713-CE7F075EF6ED" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/runtime/Engine.java"/></UML:Element.ownedElement><UML:Element.presentation>
+
+
+
+
+
+</UML:Element.presentation></UML:Interface>
+<UML:Interface xmi.id="DCE.61FF9FD5-783D-34DF-36BA-7F812EF80F73" name="ProcessManager" isAbstract="true" owner="DCE.682FCFFD-9794-8E25-CAC4-75FE9883366F" appliedStereotype="__uri_./blite-se-uml.etup#//*[@xmi.id=&quot;DCE.988B2ADB-AA08-D9BC-DEB3-1DB7461EEB8E&quot;]" supplierDependency="DCE.513FE22B-878D-4D79-612D-CFCDD1AF2F21"><UML:Element.presentation>
+
+
+
+
+
+</UML:Element.presentation><UML:Element.ownedElement>
+<UML:SourceFileArtifact xmi.id="DCE.C96FD2BF-12EF-C6FB-20AD-A1FF77652680" name="Unnamed" owner="DCE.61FF9FD5-783D-34DF-36BA-7F812EF80F73" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/runtime/ProcessManager.java"/></UML:Element.ownedElement></UML:Interface>
+<UML:Interface xmi.id="DCE.2E8712D5-29EF-AD0B-2D79-9698B66027CB" name="ProcessInstance" isAbstract="true" owner="DCE.682FCFFD-9794-8E25-CAC4-75FE9883366F" appliedStereotype="__uri_./blite-se-uml.etup#//*[@xmi.id=&quot;DCE.988B2ADB-AA08-D9BC-DEB3-1DB7461EEB8E&quot;]" supplierDependency="DCE.3C62716F-CD73-8AA8-65D9-D6D186588DFD"><UML:Element.presentation>
+
+
+
+
+
+</UML:Element.presentation><UML:Element.ownedElement>
+<UML:SourceFileArtifact xmi.id="DCE.204E0D4F-9AB8-570C-65F9-AE0987B3D017" name="Unnamed" owner="DCE.2E8712D5-29EF-AD0B-2D79-9698B66027CB" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/runtime/ProcessInstance.java"/></UML:Element.ownedElement></UML:Interface>
+<UML:Package xmi.id="DCE.EA4C7A8A-EEC1-40DC-B1BC-541EBC269C35" name="imp" owner="DCE.682FCFFD-9794-8E25-CAC4-75FE9883366F"><UML:Element.ownedElement>
+<UML:Class xmi.id="DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751" name="EngineImp" owner="DCE.EA4C7A8A-EEC1-40DC-B1BC-541EBC269C35" clientDependency="DCE.A3854548-B5E7-BA87-59D7-95902C78A110 DCE.FD2254C7-790C-1268-B3B0-0C2448A6DB59" associationEnd="DCE.1FD0DA84-8362-B3B5-465A-923BB5075DE9"><UML:Element.ownedElement>
+<UML:Operation xmi.id="DCE.95FD3D33-A130-6421-5A9C-C5E4D303DE4C" name="EngineImp" isConstructor="true" owner="DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751"/>
+<UML:SourceFileArtifact xmi.id="DCE.7DD93017-7C87-BB69-E6C6-92AD1D18DD45" name="Unnamed" owner="DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/runtime/imp/EngineImp.java"/></UML:Element.ownedElement><UML:Element.presentation>
+
+
+
+
+</UML:Element.presentation></UML:Class>
+<UML:Class xmi.id="DCE.8F85A8A5-A657-F4EA-E603-538328BF578F" name="ProcessInstanceImp" owner="DCE.EA4C7A8A-EEC1-40DC-B1BC-541EBC269C35" clientDependency="DCE.3C62716F-CD73-8AA8-65D9-D6D186588DFD"><UML:Element.ownedElement>
+<UML:Operation xmi.id="DCE.AE584DBA-A8BA-8D04-F37C-515DAE0F65F7" name="ProcessInstanceImp" isConstructor="true" owner="DCE.8F85A8A5-A657-F4EA-E603-538328BF578F"/>
+<UML:SourceFileArtifact xmi.id="DCE.978994C2-F604-97B5-48A3-DD8323C8D6BC" name="Unnamed" owner="DCE.8F85A8A5-A657-F4EA-E603-538328BF578F" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/runtime/imp/ProcessInstanceImp.java"/></UML:Element.ownedElement><UML:Element.presentation>
+
+
+
+
+</UML:Element.presentation></UML:Class>
+
+<UML:Class xmi.id="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02" name="ProcessManagerImp" owner="DCE.EA4C7A8A-EEC1-40DC-B1BC-541EBC269C35" clientDependency="DCE.513FE22B-878D-4D79-612D-CFCDD1AF2F21" associationEnd="DCE.9D8AE018-E7C3-8A8B-829C-53A4E82D216A DCE.99345CFF-FE1E-4991-0C36-607F1E854AB8 DCE.27C6C99D-4C4D-C9E7-4C9B-65ABD8E88C24"><UML:Element.ownedElement>
+<UML:Operation xmi.id="DCE.6F4C6D25-F11E-797D-9612-C3A4CA5475B1" name="ProcessManagerImp" isConstructor="true" owner="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02"/>
+<UML:SourceFileArtifact xmi.id="DCE.D965C153-8037-1DC7-264C-F4B1374896DA" name="Unnamed" owner="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/runtime/imp/ProcessManagerImp.java"/></UML:Element.ownedElement><UML:Element.presentation>
+
+
+
+
+</UML:Element.presentation></UML:Class>
+<UML:Aggregation xmi.id="DCE.213F476D-7552-E1DB-91C7-6C651086F160" isComposite="true" owner="DCE.EA4C7A8A-EEC1-40DC-B1BC-541EBC269C35" aggregateEnd="DCE.1FD0DA84-8362-B3B5-465A-923BB5075DE9" partEnd="DCE.9D8AE018-E7C3-8A8B-829C-53A4E82D216A"><UML:Association.end>
+<UML:AssociationEnd xmi.id="DCE.1FD0DA84-8362-B3B5-465A-923BB5075DE9" visibility="private" type="DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751" association="DCE.213F476D-7552-E1DB-91C7-6C651086F160"><UML:TypedElement.multiplicity>
+<UML:Multiplicity xmi.id="DCE.E0015516-7266-B5A1-FBFA-AED421017F1E"><UML:Multiplicity.range>
+<UML:MultiplicityRange xmi.id="DCE.260A91AB-0CE8-1D8B-8CA1-6D35DB8EFF17" lower="1_1" upper="0_*" collectionType="java::util::HashSet"/></UML:Multiplicity.range></UML:Multiplicity></UML:TypedElement.multiplicity></UML:AssociationEnd>
+<UML:AssociationEnd xmi.id="DCE.9D8AE018-E7C3-8A8B-829C-53A4E82D216A" visibility="private" type="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02" association="DCE.213F476D-7552-E1DB-91C7-6C651086F160"><UML:TypedElement.multiplicity>
+<UML:Multiplicity xmi.id="DCE.67D7B26C-EC80-A624-F90A-6949AB61EBDF"/></UML:TypedElement.multiplicity></UML:AssociationEnd></UML:Association.end><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Aggregation>
+<UML:Aggregation xmi.id="DCE.D9B212B5-2F5F-211F-ED56-9F6329F17630" isComposite="true" owner="DCE.EA4C7A8A-EEC1-40DC-B1BC-541EBC269C35" aggregateEnd="DCE.99345CFF-FE1E-4991-0C36-607F1E854AB8" partEnd="DCE.27C6C99D-4C4D-C9E7-4C9B-65ABD8E88C24"><UML:Association.end>
+<UML:AssociationEnd xmi.id="DCE.99345CFF-FE1E-4991-0C36-607F1E854AB8" visibility="private" type="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02" association="DCE.D9B212B5-2F5F-211F-ED56-9F6329F17630"><UML:TypedElement.multiplicity>
+<UML:Multiplicity xmi.id="DCE.E7BC762A-5759-0EA5-D5C6-549FF04F1291"/></UML:TypedElement.multiplicity></UML:AssociationEnd>
+<UML:AssociationEnd xmi.id="DCE.27C6C99D-4C4D-C9E7-4C9B-65ABD8E88C24" visibility="private" type="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02" association="DCE.D9B212B5-2F5F-211F-ED56-9F6329F17630"><UML:TypedElement.multiplicity>
+<UML:Multiplicity xmi.id="DCE.B92261EE-38D5-C419-4587-01462EC0FF01"/></UML:TypedElement.multiplicity></UML:AssociationEnd></UML:Association.end><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Aggregation></UML:Element.ownedElement><UML:Element.presentation>
+
+
+
+</UML:Element.presentation></UML:Package></UML:Element.ownedElement><UML:Element.presentation>
+
+
+
+
+</UML:Element.presentation></UML:Package>
+
+<UML:Package xmi.id="DCE.DCC94B1E-B88A-4FA1-3C68-C1665089380D" name="definition" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79"><UML:Element.ownedElement>
+<UML:Interface xmi.id="DCE.37FF4355-A40B-87F0-09FC-68525EE2AC5E" name="BliteProcessDef" isAbstract="true" owner="DCE.DCC94B1E-B88A-4FA1-3C68-C1665089380D" appliedStereotype="__uri_./blite-se-uml.etup#//*[@xmi.id=&quot;DCE.988B2ADB-AA08-D9BC-DEB3-1DB7461EEB8E&quot;]" supplierDependency="DCE.FD2254C7-790C-1268-B3B0-0C2448A6DB59"><UML:Element.presentation>
+
+</UML:Element.presentation><UML:Element.ownedElement>
+<UML:SourceFileArtifact xmi.id="DCE.96A68345-F74D-7657-FB4B-E29E39F835CE" name="Unnamed" owner="DCE.37FF4355-A40B-87F0-09FC-68525EE2AC5E" sourcefile="../blite-se-engine/src/main/java/it/unifi/dsi/blitese/engine/definition/BliteProcessDef.java"/></UML:Element.ownedElement></UML:Interface></UML:Element.ownedElement><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Package>
+<UML:Implementation xmi.id="DCE.A3854548-B5E7-BA87-59D7-95902C78A110" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79" client="DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751" supplier="DCE.E3664DFA-BCB9-1B85-E713-CE7F075EF6ED"><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Implementation>
+<UML:Implementation xmi.id="DCE.3C62716F-CD73-8AA8-65D9-D6D186588DFD" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79" client="DCE.8F85A8A5-A657-F4EA-E603-538328BF578F" supplier="DCE.2E8712D5-29EF-AD0B-2D79-9698B66027CB"><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Implementation>
+<UML:Implementation xmi.id="DCE.513FE22B-878D-4D79-612D-CFCDD1AF2F21" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79" client="DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02" supplier="DCE.61FF9FD5-783D-34DF-36BA-7F812EF80F73"><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Implementation>
+<UML:Usage xmi.id="DCE.FD2254C7-790C-1268-B3B0-0C2448A6DB59" owner="DCE.C5E66C5F-8692-C1B0-87EC-353F2AB00E79" client="DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751" supplier="DCE.37FF4355-A40B-87F0-09FC-68525EE2AC5E"><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Usage></UML:Element.ownedElement><UML:Element.presentation>
+
+</UML:Element.presentation></UML:Package></UML:Element.ownedElement></UML:Package></UML:Element.ownedElement></UML:Package></UML:Element.ownedElement></UML:Package></UML:Element.ownedElement></UML:Package>
+<UML:DataType xmi.id="DCE.9F873A8A-0683-70F4-B16D-EAC3C8F42ECF" name="void" owner="DCE.6C8A88D6-5320-05D9-D029-C5CCED4E7386"/>
+<UML:DataType xmi.id="DCE.4F134F04-1410-C9A6-D01C-4AEB0BA80E6B" name="String" owner="DCE.6C8A88D6-5320-05D9-D029-C5CCED4E7386"/>
+<UML:Package xmi.id="DCE.FECD635A-C9F8-47ED-9479-780F4CDC92C5" name="junit" owner="DCE.6C8A88D6-5320-05D9-D029-C5CCED4E7386"><UML:Element.ownedElement>
+<UML:Package xmi.id="DCE.3D48ADB3-FD2C-F567-14D0-56DBCD05CB17" name="framework" owner="DCE.FECD635A-C9F8-47ED-9479-780F4CDC92C5"><UML:Element.ownedElement>
+<UML:DataType xmi.id="DCE.79531468-06AB-5938-ACF6-BDA50ED18F74" name="Test" owner="DCE.3D48ADB3-FD2C-F567-14D0-56DBCD05CB17"/>
+<UML:DataType xmi.id="DCE.7E83912B-1932-6B26-6B31-442D7A31FE50" name="TestCase" owner="DCE.3D48ADB3-FD2C-F567-14D0-56DBCD05CB17" specialization="DCE.9FD65ED5-069D-F1E6-B250-1CDAE128697D"/></UML:Element.ownedElement></UML:Package></UML:Element.ownedElement></UML:Package>
+<UML:DataType xmi.id="DCE.31161E85-BF83-F385-6EFC-03504503A5E6" name="int" owner="DCE.6C8A88D6-5320-05D9-D029-C5CCED4E7386"/></UML:Element.ownedElement><UML:Package.packageImport>
+<UML:PackageImport xmi.id="DCE.099A0B86-AA45-8771-E21E-C3CB8BD9C1F8" importingPackage="DCE.6C8A88D6-5320-05D9-D029-C5CCED4E7386"><UML:PackageImport.importedPackage>
+<UML:Profile xmi.id="DCE.A6FA6048-0054-0CE5-7E77-A23706654F87" name="Unnamed" isCloned="true" href="./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]" isDirty="false"/></UML:PackageImport.importedPackage><UML:Element.ownedElement>
+<UML:TaggedValue xmi.id="DCE.D7413D87-3622-9E04-76A8-8264AE6EE1F2" owner="DCE.099A0B86-AA45-8771-E21E-C3CB8BD9C1F8" name="autoCreated">
+<UML:TaggedValue.dataValue>true</UML:TaggedValue.dataValue></UML:TaggedValue></UML:Element.ownedElement></UML:PackageImport></UML:Package.packageImport></UML:Project></XMI.content> </XMI>
