@@ -28,7 +28,11 @@ PARSER_BEGIN(BliteParser)
 
 package it.unifi.dsi.blitese.parser; // Target package of the generated classes:
 
-public class BliteParser {
+public class BliteParser extends AbstractBliteParser {
+
+    public void parse() throws ParseException {
+        DefinitionUnit();
+    }
 
 }
 
@@ -114,6 +118,8 @@ void BasicActivity() :
 {
     EmptyActivity()
   | ReceiveActivity()
+  | InvokeActivity()
+  | ExitActivity()
 }
 
 void StartSequenceActivity() :
@@ -139,3 +145,16 @@ void ReceiveActivity() :
 {
     <RECEIVE>
 }
+
+void InvokeActivity() :
+{}
+{
+    <INVOKE>
+}
+
+void ExitActivity() :
+{}
+{
+    <EXIT>
+}
+
