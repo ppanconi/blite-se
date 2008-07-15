@@ -33,7 +33,7 @@
                 <artifactId>javacc-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>${artifactId}-javacc</id>
+                        <id>${artifactId}-jjtree-javacc</id>
                         <goals>
                             <goal>jjtree-javacc</goal>
                         </goals>
