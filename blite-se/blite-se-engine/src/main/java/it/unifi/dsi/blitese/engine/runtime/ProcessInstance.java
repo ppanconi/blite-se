@@ -18,7 +18,8 @@ package it.unifi.dsi.blitese.engine.runtime;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.2E8712D5-29EF-AD0B-2D79-9698B66027CB]
 // </editor-fold> 
-public interface ProcessInstance {
+public interface ProcessInstance extends FlowOwner, ActivityComponent, ExecutionContext {
 
+    void activete();
 }
 

@@ -14,6 +14,9 @@
  */
 package it.unifi.dsi.blitese.engine.definition;
 
+import it.unifi.dsi.blitese.parser.BLTDEFProcessInstanceMY;
+import java.util.Set;
+
 /**
  * This the interface for the static definition of a Blite process (program).
  *
@@ -31,6 +34,12 @@ public interface BliteProcessDef {
      * @return Object (in future a QNAme)
      */
     Object getBliteId();
+    
+    /**
+     * @return Set<BltDefServiceInstance> the set of statically defined 
+     * blite processes instaces.
+     */
+    Set<BLTDEFProcessInstanceMY> getDefProcessInstances();
     
 }
 

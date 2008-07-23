@@ -26,6 +26,8 @@ import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
 // </editor-fold> 
 public interface Engine {
     
+    public static final int INTERNAL_THREADPOOL_SIZE_DEFAULT = 10;
+    
     /**
      * Add a Blite Process Definition to the Engine.
      * @param def
@@ -39,6 +41,20 @@ public interface Engine {
      * @param id the Process Definition Unique id.
      */
     void removeProcessDefinition(Object id);
+    
+//    /**
+//     * Add a Blite DefDeployment 
+//     * @param deployment
+//     */
+//    void addDeploymentDefinition(BltDefDeployment deployment);
+    
+    
+    /**
+     * Add a ready to run executor to queue where the working threads get
+     * the current works.
+     * @param executor
+     */
+    void queueFlowExecutor(FlowExecutor executor);
 
 }
 
