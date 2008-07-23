@@ -26,6 +26,6 @@ public interface ActivityComponent {
     
     static interface ActivityParmas {}
     
-    boolean doActivity(ActivityParmas parmas); 
-
+//    boolean doActivity(ActivityParmas parmas); 
+    boolean doActivity(); 
 }

@@ -17,9 +17,12 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
 import it.unifi.dsi.blitese.engine.runtime.Engine; 
+import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -49,7 +52,10 @@ public class EngineImp implements Engine {
      */
     private Map<BliteProcessDef, ProcessManager> mManagers = new Hashtable<BliteProcessDef, ProcessManager>();
     
-    
+    /**
+     * The internal threadpool for executionFlow
+     */
+    private ExecutorService executorService = Executors.newFixedThreadPool(INTERNAL_THREADPOOL_SIZE_DEFAULT);
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.95FD3D33-A130-6421-5A9C-C5E4D303DE4C]
@@ -63,7 +69,7 @@ public class EngineImp implements Engine {
             // String id = bpelProcess.getBPELId();
             Object id = bliteDef.getBliteId();
             if (mProcessDefs.get(id) != null) {
-                throw new RuntimeException("BPCOR-6025: Business processes with duplicate id are " +
+                throw new RuntimeException("Business processes with duplicate id are " +
                         "not allowed in an engine. Business Process " + id.toString() + " id already registered");
             }
 
@@ -87,9 +93,35 @@ public class EngineImp implements Engine {
         BliteProcessDef proc = mProcessDefs.remove(id);
         mManagers.remove(proc);
     }
+
+//    public void addDeploymentDefinition(BltDefDeployment deployment) {
+//        throw new UnsupportedOperationException("Not supported yet.");
+//    }
+
+    public void queueFlowExecutor(FlowExecutor executor) {
+        
+        executorService.execute(new FlowExecutorRunnable(executor));
+        
+    }
     
-    
-    
+    /**
+     * Internal class to map the Java 5 concurrency tecnology to
+     * Blite Execution Model
+     */
+    private class FlowExecutorRunnable implements Runnable {
+
+        private FlowExecutor executor;
+
+        public FlowExecutorRunnable(FlowExecutor executor) {
+            this.executor = executor;
+        }
+        
+        public void run() {
+            executor.executeCurrentActivity();
+        }
+        
+    }
+           
     
 
 }

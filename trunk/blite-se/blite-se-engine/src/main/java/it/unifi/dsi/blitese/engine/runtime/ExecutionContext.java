@@ -13,12 +13,12 @@
  * 
  */
 
-package it.unifi.dsi.blitese.parser;
+package it.unifi.dsi.blitese.engine.runtime;
 
 /**
  *
  * @author panks
  */
-public class BliteDefNode {
+public interface ExecutionContext {
 
 }

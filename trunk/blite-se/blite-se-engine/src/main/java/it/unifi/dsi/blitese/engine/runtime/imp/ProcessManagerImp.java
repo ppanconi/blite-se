@@ -16,7 +16,9 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
+import it.unifi.dsi.blitese.parser.BLTDEFProcessInstanceMY;
 
 /**
  * 
@@ -41,6 +43,15 @@ public class ProcessManagerImp implements ProcessManager {
         mSaName = (saName != null) ? saName : "unavailable";
 	mSuName = (suName != null) ? suName : "unavailable";
 
+        //if the static definition conteins same ready to run instances
+        //we start with them
+        for (BLTDEFProcessInstanceMY instDef : bliteProcessDef.getDefProcessInstances()) {
+            
+            ProcessInstance processInstance = new ProcessInstanceImp(mEngine, this, null, instDef);
+            processInstance.activete();
+            
+        }
+        
     }
 
    

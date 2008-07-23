@@ -23,6 +23,6 @@
     <module>build-common</module>
     <module>blite-se-engine</module>
     <module>blite-se-jbiadapter</module>
-    <module>blite-se-parser</module>
+    <module>blite-se-defmodel</module>
   </modules>
 </project>

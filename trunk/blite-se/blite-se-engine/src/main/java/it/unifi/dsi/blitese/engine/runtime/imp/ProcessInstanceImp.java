@@ -15,18 +15,57 @@
 
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
+import it.unifi.dsi.blitese.engine.definition.ActivityComponentFactory;
+import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
+import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance; 
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.8F85A8A5-A657-F4EA-E603-538328BF578F]
-// </editor-fold> 
-public class ProcessInstanceImp implements ProcessInstance {
+import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
+import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import it.unifi.dsi.blitese.parser.BltDefProcess;
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.AE584DBA-A8BA-8D04-F37C-515DAE0F65F7]
-    // </editor-fold> 
-    public ProcessInstanceImp () {
+public class ProcessInstanceImp implements ProcessInstance {
+    
+    private Engine mEngine;
+    private ProcessManager mProcessManager;
+    private String instanceId; 
+    private BltDefProcess bliteDefinition;
+
+    public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
+                              String instanceId, BltDefProcess bliteDefinition) {
+        this.mEngine = mEngine;
+        this.mProcessManager = mProcessManager;
+        this.instanceId = instanceId;
+        this.bliteDefinition = bliteDefinition;
+       
     }
+    
+    public void activete() {
+        
+        FlowExecutor executor = new FlowExecutorImp(this);
+        
+        BltDefBaseNode myChilDDefNode = bliteDefinition.provideChildNode();
+                
+        ActivityComponent myChilsActivity = ActivityComponentFactory.getInstance()
+                .makeRuntimeActivity(myChilDDefNode, this, this, executor);
+        
+        executor.setCurrentActivity(myChilsActivity);
+        mEngine.queueFlowExecutor(executor);
+        
+    }
+
+    public void flowCompleted() {
+        
+        System.out.println("Process Instance" + instanceId + " completed");
+        
+    }
+
+    public boolean doActivity() {
+        return false;
+    }
+
+    
 
 }
 
