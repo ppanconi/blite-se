@@ -14,5 +14,14 @@
 
    <XMI.content>
    <UML:Profile xmi.id="DCE.A6FA6048-0054-0CE5-7E77-A23706654F87" name="Unnamed" isCloned="true" href="./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]" isDirty="false"><UML:Element.ownedElement>
-<UML:Stereotype xmi.id="DCE.988B2ADB-AA08-D9BC-DEB3-1DB7461EEB8E" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/></UML:Element.ownedElement></UML:Profile></XMI.content>
+<UML:Stereotype xmi.id="DCE.988B2ADB-AA08-D9BC-DEB3-1DB7461EEB8E" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.C083AA1B-3769-5D94-A591-05DF1B811865" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.839B8D62-058F-725C-3408-3F17F62FEF1A" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.B6D98009-E442-A61F-E9B2-1F2A1F78BA96" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.ED5595EC-475A-1935-D096-E748B07000B5" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.C695CF04-B26A-AA73-51B7-C9C7D9063E71" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.54F1069A-A8B5-C609-E022-B94736C1725C" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.1B4D2EA1-026A-6DF3-0FDC-1A5411DFCDB5" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.FE8C10A1-B36E-0176-6FE2-04ABCCAA4B92" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/>
+<UML:Stereotype xmi.id="DCE.3CA8A8B0-6D94-E953-ED2F-1E943BEC607F" name="interface" owner="__uri_./blite-se-uml.etup#//*[@xmi.id=&apos;DCE.A6FA6048-0054-0CE5-7E77-A23706654F87&apos;]"/></UML:Element.ownedElement></UML:Profile></XMI.content>
 </XMI>

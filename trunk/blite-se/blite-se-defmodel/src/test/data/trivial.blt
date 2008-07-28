@@ -1,0 +1,23 @@
+{
+    [
+        seq
+            rcv <"s1"> method1 x ;
+            y := x;
+            inv <y> method2 "message";
+            exit
+        qes
+    ]
+}
+||
+{
+    [
+        seq
+            rcv <"s2"> mathod2 y;
+            empty
+        qes
+    ]
+}
+||
+{
+    inv <"s1"> method1 "s2"
+}

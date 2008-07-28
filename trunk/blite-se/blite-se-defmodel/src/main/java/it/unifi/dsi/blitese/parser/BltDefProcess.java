@@ -12,11 +12,25 @@
  *  permissions and limitations under the License.
  * 
  */
-package it.unifi.dsi.blitese.engine.runtime;
 
+package it.unifi.dsi.blitese.parser;
 
-public interface ProcessInstance extends FlowOwner, ActivityComponent, ExecutionContext {
+/**
+ *
+ * @author panks
+ */
+public abstract class BltDefProcess extends SimpleNode {
 
-    void activete();
+    public BltDefProcess(BliteParser p, int i) {
+        super(p, i);
+    }
+
+    public BltDefProcess(int i) {
+        super(i);
+    }
+    
+    public BltDefBaseNode provideChildNode() {
+        return (BltDefBaseNode) jjtGetChild(0);
+    }
+
 }
-
