@@ -15,9 +15,6 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.61FF9FD5-783D-34DF-36BA-7F812EF80F73]
-// </editor-fold> 
 public interface ProcessManager {
 
 }

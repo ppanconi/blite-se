@@ -21,9 +21,6 @@ import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
  *
  * @author panks
  */
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.E3664DFA-BCB9-1B85-E713-CE7F075EF6ED]
-// </editor-fold> 
 public interface Engine {
     
     public static final int INTERNAL_THREADPOOL_SIZE_DEFAULT = 10;

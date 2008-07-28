@@ -12,11 +12,22 @@
  *  permissions and limitations under the License.
  * 
  */
-package it.unifi.dsi.blitese.engine.runtime;
 
+package it.unifi.dsi.blitese.parser;
 
-public interface ProcessInstance extends FlowOwner, ActivityComponent, ExecutionContext {
+import java.io.InputStream;
 
-    void activete();
+/**
+ *
+ * @author panks
+ */
+public abstract class AbstractBliteParser {
+    
+    static public AbstractBliteParser provideInstance(InputStream stream) {
+        BliteParser bliteParser = new BliteParser(stream);
+        return bliteParser;
+    }
+    
+    abstract public BltDefBaseNode parse() throws ParseException;
+
 }
-

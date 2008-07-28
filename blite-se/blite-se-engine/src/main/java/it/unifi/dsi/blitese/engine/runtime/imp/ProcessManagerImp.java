@@ -26,9 +26,6 @@ import it.unifi.dsi.blitese.parser.BLTDEFProcessInstanceMY;
  * @author panks
  */
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.12E7EAA9-5CE5-F0BD-946A-514ECDA6EC02]
-// </editor-fold> 
 public class ProcessManagerImp implements ProcessManager {
     
     private BliteProcessDef mBliteProcessDef;

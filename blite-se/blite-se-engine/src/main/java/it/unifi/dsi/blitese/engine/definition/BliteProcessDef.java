@@ -23,9 +23,7 @@ import java.util.Set;
  * @author panks
  */
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.37FF4355-A40B-87F0-09FC-68525EE2AC5E]
-// </editor-fold> 
+
 public interface BliteProcessDef {
 
     /**

@@ -33,9 +33,6 @@ import java.util.logging.Logger;
  * @author panks
  */
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.AF124637-05AF-E8EF-2AE2-36BB74D03751]
-// </editor-fold> 
 public class EngineImp implements Engine {
     
     private static final Logger LOGGER = Logger.getLogger(EngineImp.class.getName());
@@ -57,9 +54,6 @@ public class EngineImp implements Engine {
      */
     private ExecutorService executorService = Executors.newFixedThreadPool(INTERNAL_THREADPOOL_SIZE_DEFAULT);
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.95FD3D33-A130-6421-5A9C-C5E4D303DE4C]
-    // </editor-fold> 
     public EngineImp () {
     }
 

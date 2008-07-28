@@ -12,11 +12,16 @@
  *  permissions and limitations under the License.
  * 
  */
-package it.unifi.dsi.blitese.engine.runtime;
 
+package it.unifi.dsi.blitese.parser;
 
-public interface ProcessInstance extends FlowOwner, ActivityComponent, ExecutionContext {
-
-    void activete();
+/**
+ *
+ * @author panks
+ */
+public class BltDefBaseNode {
+    
+    public String provideRuntimeActivity() {
+        return null;
+    }
 }
-
