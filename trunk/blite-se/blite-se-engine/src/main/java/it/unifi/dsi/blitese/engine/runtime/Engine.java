@@ -14,7 +14,7 @@
  */
 package it.unifi.dsi.blitese.engine.runtime;
 
-import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 
 
 /**
@@ -31,7 +31,7 @@ public interface Engine {
      * @param saName
      * @param suName
      */
-    void addProcessDefinition(BliteProcessDef def, String saName, String suName);
+    void addProcessDefinition(BliteDeploymentDefinition def, String saName, String suName);
     
     /**
      * Undeply a Blite Process Definition from the Engine.

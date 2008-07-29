@@ -12,13 +12,17 @@
  *  permissions and limitations under the License.
  * 
  */
-
 package it.unifi.dsi.blitese.engine.definition;
 
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ActivityComponentBase;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,10 +31,10 @@ import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 public class ActivityComponentFactory {
 
     private static final ActivityComponentFactory SINGLETON = new ActivityComponentFactory();
-    
+
     private ActivityComponentFactory() {
     }
-    
+
     /**
      * gets singleton instance
      * @return ActivityComponentFactory 
@@ -40,12 +44,42 @@ public class ActivityComponentFactory {
     }
 
     public ActivityComponent makeRuntimeActivity(BltDefBaseNode bltDefNode,
-                                                 ExecutionContext context,
-                                                 ActivityComponent parentComponent,
-                                                 FlowExecutor executor) {
-        
-        return null;
+            ExecutionContext context,
+            ActivityComponent parentComponent,
+            FlowExecutor executor) {
+        try {
+            Class actClass = provideActivityClass(bltDefNode);
+            ActivityComponentBase activity = (ActivityComponentBase) actClass.newInstance();
+            
+            activity.setBltDefNode(bltDefNode);
+            activity.setContext(context);
+            activity.setExecutor(executor);
+            activity.setParentComponent(parentComponent);
+
+            return activity;
+
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(ActivityComponentFactory.class.getName()).log(Level.SEVERE, null, ex);
+//            throw new RuntimeException(ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(ActivityComponentFactory.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(ActivityComponentFactory.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+
     }
     
-
+    private Class provideActivityClass(BltDefBaseNode bltDefNode) {
+        
+        if (bltDefNode instanceof BLTDEFInvokeActivity ) {
+            return InvokeActivity.class;
+        } else {
+            throw new RuntimeException("Not yet supported Activity " + bltDefNode);
+        }
+        
+//        Class actClass = Class.forName(bltDefNode.provideRuntimeActivity());
+    }
+    
 }
