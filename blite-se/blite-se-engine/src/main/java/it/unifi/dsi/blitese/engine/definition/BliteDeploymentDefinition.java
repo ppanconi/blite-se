@@ -14,7 +14,7 @@
  */
 package it.unifi.dsi.blitese.engine.definition;
 
-import it.unifi.dsi.blitese.parser.BLTDEFProcessInstanceMY;
+import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
 import java.util.Set;
 
 /**
@@ -24,7 +24,7 @@ import java.util.Set;
  */
 
 
-public interface BliteProcessDef {
+public interface BliteDeploymentDefinition {
 
     /**
      * An unique (probably absolute) id for the Blite Process Definition
@@ -37,7 +37,7 @@ public interface BliteProcessDef {
      * @return Set<BltDefServiceInstance> the set of statically defined 
      * blite processes instaces.
      */
-    Set<BLTDEFProcessInstanceMY> getDefProcessInstances();
+    Set<BLTDEFServiceInstance> getDefProcessInstances();
     
 }
 

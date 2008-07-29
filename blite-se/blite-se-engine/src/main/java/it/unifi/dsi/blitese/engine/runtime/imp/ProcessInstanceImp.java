@@ -23,17 +23,17 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
-import it.unifi.dsi.blitese.parser.BltDefProcess;
+import it.unifi.dsi.blitese.parser.SimpleNode;
 
 public class ProcessInstanceImp implements ProcessInstance {
     
     private Engine mEngine;
     private ProcessManager mProcessManager;
     private String instanceId; 
-    private BltDefProcess bliteDefinition;
+    private SimpleNode bliteDefinition;
 
     public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
-                              String instanceId, BltDefProcess bliteDefinition) {
+                              String instanceId, SimpleNode bliteDefinition) {
         this.mEngine = mEngine;
         this.mProcessManager = mProcessManager;
         this.instanceId = instanceId;
@@ -45,7 +45,7 @@ public class ProcessInstanceImp implements ProcessInstance {
         
         FlowExecutor executor = new FlowExecutorImp(this);
         
-        BltDefBaseNode myChilDDefNode = bliteDefinition.provideChildNode();
+        BltDefBaseNode myChilDDefNode = (BltDefBaseNode) bliteDefinition.jjtGetChild(0);
                 
         ActivityComponent myChilsActivity = ActivityComponentFactory.getInstance()
                 .makeRuntimeActivity(myChilDDefNode, this, this, executor);

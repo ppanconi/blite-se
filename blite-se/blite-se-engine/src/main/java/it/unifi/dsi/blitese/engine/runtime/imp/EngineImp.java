@@ -15,7 +15,7 @@
 
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
-import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.Engine; 
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
@@ -42,12 +42,12 @@ public class EngineImp implements Engine {
     /**
      * Deployed Blite program definitions
      */
-    private Map<Object, BliteProcessDef> mProcessDefs = new Hashtable<Object, BliteProcessDef>();
+    private Map<Object, BliteDeploymentDefinition> mProcessDefs = new Hashtable<Object, BliteDeploymentDefinition>();
     
     /**
      * The Process Managers, one to one Blite Definition
      */
-    private Map<BliteProcessDef, ProcessManager> mManagers = new Hashtable<BliteProcessDef, ProcessManager>();
+    private Map<BliteDeploymentDefinition, ProcessManager> mManagers = new Hashtable<BliteDeploymentDefinition, ProcessManager>();
     
     /**
      * The internal threadpool for executionFlow
@@ -57,7 +57,7 @@ public class EngineImp implements Engine {
     public EngineImp () {
     }
 
-    public void addProcessDefinition(BliteProcessDef bliteDef, String saName, String suName) {
+    public void addProcessDefinition(BliteDeploymentDefinition bliteDef, String saName, String suName) {
         
         synchronized (mDeployLock) {
             // String id = bpelProcess.getBPELId();
@@ -84,7 +84,7 @@ public class EngineImp implements Engine {
             throw new RuntimeException("Trying to unregister a process that has never been registered");
         }
 
-        BliteProcessDef proc = mProcessDefs.remove(id);
+        BliteDeploymentDefinition proc = mProcessDefs.remove(id);
         mManagers.remove(proc);
     }
 

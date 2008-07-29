@@ -14,11 +14,11 @@
  */
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
-import it.unifi.dsi.blitese.engine.definition.BliteProcessDef;
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
-import it.unifi.dsi.blitese.parser.BLTDEFProcessInstanceMY;
+import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
 
 /**
  * 
@@ -28,12 +28,12 @@ import it.unifi.dsi.blitese.parser.BLTDEFProcessInstanceMY;
 
 public class ProcessManagerImp implements ProcessManager {
     
-    private BliteProcessDef mBliteProcessDef;
+    private BliteDeploymentDefinition mBliteProcessDef;
     private Engine mEngine;
     private String mSaName;
     private String mSuName;
 
-    public ProcessManagerImp(BliteProcessDef bliteProcessDef, Engine engine, String saName, String suName) {
+    public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
         mEngine = engine;
         
@@ -42,7 +42,7 @@ public class ProcessManagerImp implements ProcessManager {
 
         //if the static definition conteins same ready to run instances
         //we start with them
-        for (BLTDEFProcessInstanceMY instDef : bliteProcessDef.getDefProcessInstances()) {
+        for (BLTDEFServiceInstance instDef : bliteProcessDef.getDefProcessInstances()) {
             
             ProcessInstance processInstance = new ProcessInstanceImp(mEngine, this, null, instDef);
             processInstance.activete();
