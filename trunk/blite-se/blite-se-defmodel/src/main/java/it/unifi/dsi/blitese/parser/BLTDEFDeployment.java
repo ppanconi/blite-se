@@ -2,7 +2,13 @@
 
 package it.unifi.dsi.blitese.parser;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class BLTDEFDeployment extends SimpleNode {
+    
+    
+    
   public BLTDEFDeployment(int id) {
     super(id);
   }
@@ -11,4 +17,38 @@ public class BLTDEFDeployment extends SimpleNode {
     super(p, id);
   }
 
+//added code start here
+    private Set<BLTDEFService> services = new HashSet<BLTDEFService>();
+
+    public Set<BLTDEFService> getServices() {
+        return services;
+    }
+
+    public void setServices(Set<BLTDEFService> services) {
+        this.services = services;
+    }
+
+    /**
+     * @return BLTDEFServiceDef the service definition in the deployment
+     * if it exists.
+     */
+    public BLTDEFServiceDef provideServiceDefinition() {
+        for (BLTDEFService service : services) {
+            BLTDEFServiceDef def = service.getServiceDefinition();
+            if (def != null) return def;
+        }
+        return null;
+    }
+    
+    public Set<BLTDEFServiceInstance> provideAllInsatnces() {
+        Set<BLTDEFServiceInstance> ints = new HashSet<BLTDEFServiceInstance>();
+        
+        for (BLTDEFService s : services) {
+            BLTDEFServiceInstance i = s.getServiceInstance();
+            if (i != null) ints.add(i);
+        }
+        
+        return ints;
+    }
+ 
 }
