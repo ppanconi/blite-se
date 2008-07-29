@@ -45,8 +45,6 @@
                             </includes>
                             <sourceDirectory>${project.basedir}/src</sourceDirectory>
                             -->
-                            <interimDirectory>${project.basedir}/src/main/java</interimDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
                             <!--
                             <lookAhead>2</lookAhead>
                             <isStatic>false</isStatic>
@@ -55,6 +53,62 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+                                <for param="genfile">
+                                    <fileset dir="${project.build.directory}/generated-sources/javacc/" includes="**/*.java" />
+                                    <sequential>
+                                        <propertyregex property="usrfile"
+                                                       override="true"
+                                                       input="@{genfile}"
+                                                       regexp="${project.build.directory}/generated-sources/javacc"
+                                                       replace="${project.basedir}/src/main/java"
+                                                       casesensitive="false" 
+                                                       />
+                                                       
+                                        <echo>Generated File: @{genfile}</echo>
+                                        <echo>User File: ${usrfile}</echo>
+                                        
+                                        <if>
+                                            <available file="${usrfile}" />
+                                            <then>
+                                                <echo>The file @{genfile} is also provided by the user so we deleting it</echo>
+                                                <delete file="@{genfile}"/>
+                                                <echo>File @{genfile} DELETED !!</echo>
+                                            </then>
+                                        </if>
+                                        
+
+                                    </sequential>
+                                </for>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-apache-oro</artifactId>
+                        <version>1.7.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+                        
         </plugins>
     </build>
     

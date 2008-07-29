@@ -33,7 +33,7 @@ package it.unifi.dsi.blitese.parser; // Target package of the generated classes:
 public class BliteParser extends AbstractBliteParser {
 
     public BltDefBaseNode parse() throws ParseException {
-        return DefinitionUnit();
+        return CompilationUnit();
     }
 
 }
@@ -758,7 +758,7 @@ TOKEN :
  *****************************************
  *****************************************/
 
-BLTDEFDefinitionUnit DefinitionUnit() :
+BLTDEFCompilationUnit CompilationUnit() :
 {}
 {
     Deployments()
@@ -773,28 +773,45 @@ void Deployments() :
 }
 
 void Deployment() :
-{}
+{ 
+    BLTDEFService service;
+}
 {
-    "{" Service() "}"
+    "{" ( service = Service() ) "}"
+    {
+        jjtThis.setServices(service.getAllServices());
+    }
 }
 
-void Service() #ServiceMY :
-{}
+BLTDEFService Service() #Service :
 {
-    ServiceDef() | ( ServiceInstance()  ( "," Service() )? )
+    BLTDEFService child = null;
+    BLTDEFServiceDef def = null;
+    BLTDEFServiceInstance inst = null;
+}
+{
+    ( def = ServiceDef() | ( inst = ServiceInstance()  ( "," child = Service() )? ) )
+    { 
+        jjtThis.setServiceDefinition(def);
+        jjtThis.setServiceInstance(inst);
+        if (child != null) jjtThis.addServices(child.getAllServices());
+        return jjtThis; 
+    }
 }
 
-void ServiceInstance() #ProcessInstanceMY(1) :
+BLTDEFServiceInstance ServiceInstance() #ServiceInstance(1) :
 {   
 }
 {
     Activity()
+    { return jjtThis; }
 }
 
-void ServiceDef() #ProcessDefinitionMY(1) :
+BLTDEFServiceDef ServiceDef() #ServiceDef(1) :
 {}
 {
     ServiceScope()
+    { return jjtThis; }
 }
 
 void ServiceScope() :
@@ -816,13 +833,13 @@ void StartActivity() :
   | StartSequenceActivity()
 }
 
-void Activity() :
+void Activity() #void :
 {}
 {
     BasicActivity() | SequenceActivity()
 }
 
-void BasicActivity() :
+void BasicActivity() #void :
 {}
 {
     EmptyActivity()
