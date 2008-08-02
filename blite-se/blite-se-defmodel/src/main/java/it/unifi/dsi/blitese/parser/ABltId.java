@@ -15,26 +15,27 @@
 
 package it.unifi.dsi.blitese.parser;
 
-import java.util.Map;
-
 /**
  *
  * @author panks
  */
-public class BltDefBaseNode {
+public abstract class ABltId extends SimpleNode {
+
+    private String name;
     
-    private Map<String, Object> boundSymbs;
-    
-    public String provideRuntimeActivity() {
-        return null;
+    public ABltId(BliteParser p, int i) {
+        super(p, i);
     }
 
-    public Map<String, Object> getBoundSymbs() {
-        return boundSymbs;
+    public ABltId(int i) {
+        super(i);
     }
 
-    public void setBoundSymbs(Map<String, Object> boundSymbs) {
-        this.boundSymbs = boundSymbs;
+    public String getName() {
+        return name;
     }
-    
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
