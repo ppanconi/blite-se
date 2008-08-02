@@ -13,17 +13,12 @@
  * 
  */
 
-package it.unifi.dsi.blitese.engine.runtime.activities.imp;
+package it.unifi.dsi.blitese.engine.runtime;
 
 /**
  *
  * @author panks
  */
-public class InvokeActivity extends ActivityComponentBase {
-
-    public boolean doActivity() {
-        System.out.println("INVOKE!!");
-        return false;
-    }
+public interface RuntimeVariable {
 
 }
