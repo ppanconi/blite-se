@@ -23,6 +23,8 @@ options {
    NODE_EXTENDS = "BltDefBaseNode";
    JAVA_UNICODE_ESCAPE = true;
    NODE_PREFIX = "BLTDEF";
+   VISITOR = true;
+   NODE_SCOPE_HOOK = true;
 }
 
 
@@ -900,7 +902,7 @@ void InvPartners() :
 void PartnerId() :
 {}
 {
-    PartnerLitId() |  <IDENTIFIER>
+    PartnerLitId() |  VarId()
 }
 
 void PartnerLitId() :
@@ -918,24 +920,54 @@ void OperationId() :
 void RecParams() :
 {}
 {
-    <IDENTIFIER>
+    BoundId()
 }
 
 void InvParams() :
 {}
 {
-    <IDENTIFIER> | <STRING_LITERAL>
+    VarId() | <STRING_LITERAL>
 }
 
 
 void AssignActivity() :
 {}
 {
-    <IDENTIFIER> <ASSIGN> Expression()
+    BoundId() <ASSIGN> Expression()
 }
 
 void Expression() :
 {}
 {
-    <IDENTIFIER> | <STRING_LITERAL>
+    VarId() | <STRING_LITERAL>
 }
+
+void VarId() :
+{
+    Token t;
+}
+{
+    t = <IDENTIFIER>
+    {
+        jjtThis.setName(t.image);
+        if (jjtThis.getBoundSymbs().get(jjtThis.getName()) == null) {
+            ParseException ex = 
+                new ParseException("At line " + t.beginLine + " , column " + t.beginColumn + " the variale " + t.image + " is used without initialization");
+            throw ex;
+        }
+    }
+}
+
+void BoundId()  :
+{
+    Token t;
+}
+{
+    t = <IDENTIFIER>
+    {
+        jjtThis.setName(t.image);
+        jjtThis.getBoundSymbs().put(jjtThis.getName(), jjtThis);
+    }
+}
+
+
