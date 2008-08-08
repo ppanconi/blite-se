@@ -55,6 +55,8 @@ public class ActivityComponentFactory {
             activity.setContext(context);
             activity.setExecutor(executor);
             activity.setParentComponent(parentComponent);
+            
+            activity.init();
 
             return activity;
 

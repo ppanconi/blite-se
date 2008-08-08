@@ -876,9 +876,18 @@ void ReceiveActivity() :
 }
 
 void InvokeActivity() :
-{}
 {
-    <INVOKE> InvPartners() OperationId() InvParams()
+    BLTDEFInvPartners partners;
+    BLTDEFOperationId operationId;
+    BLTDEFInvParams params;
+}
+{
+    <INVOKE> partners = InvPartners() operationId = OperationId() params = InvParams()
+    {
+        jjtThis.setPartners(partners);
+        jjtThis.setOperationId(operationId);
+        jjtThis.setParams(params);
+    }
 }
 
 void ExitActivity() :
@@ -893,10 +902,11 @@ void RecPartners() :
     "<" PartnerLitId() ( "," PartnerId() )? ">"
 }
 
-void InvPartners() :
+BLTDEFInvPartners InvPartners() :
 {}
 {
     "<" PartnerId() ( "," PartnerLitId() )? ">"
+    { return jjtThis; }
 }
 
 void PartnerId() :
@@ -911,10 +921,11 @@ void PartnerLitId() :
     <STRING_LITERAL>
 }
 
-void OperationId() :
+BLTDEFOperationId OperationId() :
 {}
 {
     <IDENTIFIER>
+    { return jjtThis; }
 }
 
 void RecParams() :
@@ -923,10 +934,11 @@ void RecParams() :
     BoundId()
 }
 
-void InvParams() :
+BLTDEFInvParams InvParams() :
 {}
 {
     VarId() | <STRING_LITERAL>
+    { return jjtThis; }
 }
 
 

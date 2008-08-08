@@ -62,4 +62,5 @@ public abstract class ActivityComponentBase implements ActivityComponent {
         this.parentComponent = parentComponent;
     }
     
+    public void init() {}
 }
