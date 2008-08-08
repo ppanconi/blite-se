@@ -1,0 +1,30 @@
+This document defines the Blite language grammar in 
+developer to machine form. 
+
+This's a simplified version of the languages, it focus only
+service definitions, basic activities and communications primitives.
+
+<deployments> 		::= 
+			"{" <service> "}" ("||" "{" <service> "}")*
+
+<service>		::=
+			"[" <start_activity> "]"
+
+<activity>		::=
+			<basic_activity>
+		|
+			<sequence_activity>
+
+<basic_activity>	::=
+			<empty_activity>
+		|
+			<exit_activity>
+		|
+			<invoke_activity>
+		|
+			<receive_activity>
+		|
+			<assign_activity>
+
+<sequence_activity>	::=
+			"{" (<activity> ";" 
