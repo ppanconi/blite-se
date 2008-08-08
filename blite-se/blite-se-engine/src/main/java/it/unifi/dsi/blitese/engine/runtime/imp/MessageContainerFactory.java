@@ -13,18 +13,14 @@
  * 
  */
 
-package it.unifi.dsi.blitese.engine.runtime;
+package it.unifi.dsi.blitese.engine.runtime.imp;
 
 /**
- *
+ * This class create the appropriate instances of MessageContainer
+ * objects.
+ * 
  * @author panks
  */
-public interface RuntimeVariable {
-    
-    Object getValute();
-    
-    String getVariable();
-    
-    VariableScope getScope();
+public class MessageContainerFactory {
 
 }

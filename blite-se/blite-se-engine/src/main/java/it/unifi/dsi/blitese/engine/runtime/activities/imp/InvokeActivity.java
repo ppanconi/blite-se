@@ -15,15 +15,29 @@
 
 package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
+import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
+
 /**
  *
  * @author panks
  */
 public class InvokeActivity extends ActivityComponentBase {
+    
+    private BLTDEFInvokeActivity activityDef;
+
+    @Override
+    public void init() {
+        super.init();
+        
+        activityDef = (BLTDEFInvokeActivity) getBltDefNode();
+    }
+    
+    
 
     public boolean doActivity() {
-        System.out.println("INVOKE!!");
-        return false;
+        System.out.println("INVOKE on " + activityDef.getPartners() + " operation " + activityDef.getOperationId() + " passing " + activityDef.getParams());
+        getExecutor().setCurrentActivity(getParentComponent());
+        return true;
     }
 
 }

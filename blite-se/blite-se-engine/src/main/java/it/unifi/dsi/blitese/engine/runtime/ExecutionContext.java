@@ -19,6 +19,8 @@ package it.unifi.dsi.blitese.engine.runtime;
  *
  * @author panks
  */
-public interface ExecutionContext {
+public interface ExecutionContext extends VariableScope {
+    
+    ProcessInstance getProcessInstance();
 
 }

@@ -15,7 +15,6 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
-import it.unifi.dsi.blitese.parser.ABltId;
 import java.util.Map;
 
 /**
@@ -38,7 +37,7 @@ public interface VariableScope {
      * @param variable The variable for which RuntimeVariable is needed
      * @return The corresponding RuntimeVariable. Null if no match is found.
      */
-    public RuntimeVariable getRuntimeVariable(ABltId variable); 
+    public RuntimeVariable getRuntimeVariable(String variable); 
    
    /**
      * Sets the value of the variable. Delegates the setting to a parent
@@ -70,6 +69,7 @@ public interface VariableScope {
      * @param variable
      * @return
      */
-    RuntimeVariable createRuntimeVariable(ABltId variable);
+    RuntimeVariable createRuntimeVariable(String variable);
     
+    RuntimeVariable createNaddRuntimeVariable(String variable, Object value);
 }
