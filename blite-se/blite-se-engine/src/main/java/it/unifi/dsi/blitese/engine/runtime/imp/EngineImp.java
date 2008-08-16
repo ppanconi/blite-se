@@ -17,6 +17,7 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.Engine; 
+import it.unifi.dsi.blitese.engine.runtime.EngineChannel;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import java.util.Hashtable;
@@ -39,6 +40,8 @@ public class EngineImp implements Engine {
     
     private Object mDeployLock = new Object(); //onjext used as monitor in un/deployment phase
     private boolean mNewAddedDep = false; //one state marker for eventually persistence synch.
+    private EngineChannel mChannel; //the comunication Channel
+    
     /**
      * Deployed Blite program definitions
      */
@@ -97,6 +100,15 @@ public class EngineImp implements Engine {
         executorService.execute(new FlowExecutorRunnable(executor));
         
     }
+
+    public EngineChannel getChannel() {
+        return mChannel;
+    }
+
+    public void setChannel(EngineChannel channel) {
+        this.mChannel = channel;
+    }
+    
     
     /**
      * Internal class to map the Java 5 concurrency tecnology to

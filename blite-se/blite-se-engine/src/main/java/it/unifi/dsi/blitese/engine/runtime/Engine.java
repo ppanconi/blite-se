@@ -39,6 +39,10 @@ public interface Engine {
      */
     void removeProcessDefinition(Object id);
     
+    EngineChannel getChannel();
+    
+    void setChannel(EngineChannel channel);
+    
 //    /**
 //     * Add a Blite DefDeployment 
 //     * @param deployment
