@@ -16,6 +16,7 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
@@ -44,11 +45,17 @@ public class ProcessManagerImp implements ProcessManager {
         //we start with them
         for (BLTDEFServiceInstance instDef : bliteProcessDef.getDefProcessInstances()) {
             
-            ProcessInstance processInstance = new ProcessInstanceImp(mEngine, this, null, instDef);
-            processInstance.activete();
+            ProcessInstance processInstance = 
+                    new ProcessInstanceImp(mEngine, this, null, bliteProcessDef);
+            processInstance.activete(instDef);
             
         }
         
+    }
+
+    public Object invoke(Object runtimePartnerLink, String operation, MessageContainer messageContainer, ProcessInstance instance) {
+        return mEngine.getChannel()
+                    .invoke(runtimePartnerLink, operation, messageContainer, instance);
     }
 
    

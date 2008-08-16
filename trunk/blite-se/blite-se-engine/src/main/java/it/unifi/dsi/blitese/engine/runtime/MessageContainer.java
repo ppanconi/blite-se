@@ -23,7 +23,7 @@ package it.unifi.dsi.blitese.engine.runtime;
  */
 public interface MessageContainer {
 
-    enum Type {
+    public enum Type {
         MESSAGE, 
         FAULT, 
         STATUS_DONE, 
@@ -48,6 +48,6 @@ public interface MessageContainer {
     /**
      * @return the type of the message
      */
-    public Type getType();
+    public MessageContainer.Type getType();
     
 }

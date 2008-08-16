@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.ActivityComponentFactory;
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
@@ -35,22 +36,27 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
     private Engine mEngine;
     private ProcessManager mProcessManager;
     private String instanceId; 
-    private SimpleNode bliteDefinition;
+    private BliteDeploymentDefinition deploymentDefinition;
+    private BltDefBaseNode bliteDefinition;
 
     public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
-                              String instanceId, SimpleNode bliteDefinition) {
+                              String instanceId, 
+                              //SimpleNode bliteDefinition, 
+                              BliteDeploymentDefinition deploymentDefinition) {
         this.mEngine = mEngine;
         this.mProcessManager = mProcessManager;
         this.instanceId = instanceId;
-        this.bliteDefinition = bliteDefinition;
-       
+//        this.bliteDefinition = bliteDefinition;
+        this.deploymentDefinition = deploymentDefinition;
     }
     
-    public void activete() {
-        
+    public void activete(BltDefBaseNode defStartNode) {
+
+        this.bliteDefinition = defStartNode;
         FlowExecutor executor = new FlowExecutorImp(this);
         
-        BltDefBaseNode myChilDDefNode = (BltDefBaseNode) bliteDefinition.jjtGetChild(0);
+        BltDefBaseNode myChilDDefNode = (BltDefBaseNode) 
+                ((SimpleNode)bliteDefinition).jjtGetChild(0);
                 
         ActivityComponent myChilsActivity = ActivityComponentFactory.getInstance()
                 .makeRuntimeActivity(myChilDDefNode, this, this, executor);
@@ -70,7 +76,10 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         return false;
     }
 
-    
+
+    public BliteDeploymentDefinition getDeploymentDefinition() {
+        return this.deploymentDefinition;
+    }
     ////////////////////////////////////////////////////////////////////////////
     // VariableScope implemetation
     private Map<String, RuntimeVariable> runTimaVars = 

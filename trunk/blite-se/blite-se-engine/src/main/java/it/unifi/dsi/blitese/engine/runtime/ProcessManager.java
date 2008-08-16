@@ -17,5 +17,18 @@ package it.unifi.dsi.blitese.engine.runtime;
 
 public interface ProcessManager {
 
+    /**
+     * Execute the invoke operation on the provided Partner Link 
+     * with the provided Operation and passing the provided Message Container. 
+     * 
+     * @param runtimePartnerLink the key object to locate the target partner link,
+     *        
+     * @param operation
+     * @param messageContainer
+     * @param instance 
+     * @return
+     */
+    public Object invoke(Object runtimePartnerLink, String operation, 
+            MessageContainer messageContainer, ProcessInstance instance);
 }
 
