@@ -24,5 +24,6 @@
     <module>blite-se-engine</module>
     <module>blite-se-jbiadapter</module>
     <module>blite-se-defmodel</module>
+    <module>blite-se-localenv</module>
   </modules>
 </project>
