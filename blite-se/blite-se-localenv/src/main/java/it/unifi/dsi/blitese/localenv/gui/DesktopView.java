@@ -4,6 +4,12 @@
 
 package it.unifi.dsi.blitese.localenv.gui;
 
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.definition.imp.BliteDeploymentDefinitionImp;
+import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
+import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
+import it.unifi.dsi.blitese.parser.ParseException;
+import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Action;
@@ -15,15 +21,16 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.Timer;
 import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.text.JTextComponent;
 
 
 /**
@@ -35,7 +42,8 @@ public class DesktopView extends FrameView {
         super(app);
 
         initComponents();
-
+        treeManager = new TreeViewManager(envTree);
+        
         //file chooser Init
         fc = new JFileChooser();
         
@@ -44,6 +52,7 @@ public class DesktopView extends FrameView {
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                System.out.println("Clearing status...");
                 statusMessageLabel.setText("");
             }
         });
@@ -125,10 +134,10 @@ public class DesktopView extends FrameView {
         mainSplitPane = new javax.swing.JSplitPane();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        envTree = new javax.swing.JTree();
+        filesTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        reportArea = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -200,22 +209,22 @@ public class DesktopView extends FrameView {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jTree1.setName("jTree1"); // NOI18N
-        jScrollPane1.setViewportView(jTree1);
+        envTree.setName("envTree"); // NOI18N
+        jScrollPane1.setViewportView(envTree);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
 
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
-        jSplitPane1.setRightComponent(jTabbedPane1);
+        filesTabbedPane.setName("filesTabbedPane"); // NOI18N
+        jSplitPane1.setRightComponent(filesTabbedPane);
 
         mainSplitPane.setLeftComponent(jSplitPane1);
 
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane2.setViewportView(jTextArea1);
+        reportArea.setColumns(20);
+        reportArea.setRows(5);
+        reportArea.setName("reportArea"); // NOI18N
+        jScrollPane2.setViewportView(reportArea);
 
         mainSplitPane.setBottomComponent(jScrollPane2);
 
@@ -298,7 +307,7 @@ public class DesktopView extends FrameView {
 
     @Action
     public void newDef() {
-        jTabbedPane1.addTab("new definition...", new JTextArea());
+        filesTabbedPane.addTab("new definition...", new JTextArea());
     }
 
     @Action
@@ -348,19 +357,29 @@ public class DesktopView extends FrameView {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             //This is where a real application would open the file.
-            JTextArea area = new JTextArea();
             try {
-                area.read(new FileReader(file), file.getAbsolutePath());
+                filesTabbedPane.addTab(file.getName(), sourcesManager.addSource(file));
             } catch (IOException ex) {
                 Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
+                reportExection(ex);
             }
-            jTabbedPane1.addTab(file.getName(), area);
+            
         }
         
     }
 
     @Action
     public void saveFile() {
+        JComponent targetComponent = (JComponent) filesTabbedPane.getSelectedComponent();
+        try {
+            
+            File file = sourcesManager.saveSource(targetComponent);
+            statusMessageLabel.setText("File " + file + " saved");
+            
+        } catch (IOException ex) {
+            Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
+            reportExection(ex);
+        }
     }
 
     @Action
@@ -369,22 +388,41 @@ public class DesktopView extends FrameView {
     }
 
     private class BuildFileTask extends org.jdesktop.application.Task<Object, Void> {
+        
+        JComponent targetComponent;
+        
         BuildFileTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to BuildFileTask fields, here.
             super(app);
+            
+            targetComponent = (JComponent) filesTabbedPane.getSelectedComponent();
         }
-        @Override protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            return null;  // return your result
+        @Override protected Object doInBackground()  {
+            try {
+                // Your Task's code here.  This method runs
+                // on a background thread, so don't reference
+                // the Swing GUI from here.
+                return sourcesManager.buildSource(targetComponent);
+            } catch (Exception ex) {
+                Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
+                reportExection(ex);
+            }
+            return null;
+            
         }
         @Override protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
+            if (result != null) {
+                setMessage("Build Successful");
+                BLTDEFCompilationUnit compilationUnit = (BLTDEFCompilationUnit) result;
+                treeManager.synchCompilationUnit(compilationUnit);
+                
+            }
         }
+        
     }
 
     @Action
@@ -415,20 +453,20 @@ public class DesktopView extends FrameView {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buildButton;
     private javax.swing.JToolBar.Separator buttonsSeparator1;
+    private javax.swing.JTree envTree;
+    private javax.swing.JTabbedPane filesTabbedPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JTree jTree1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton newButton;
     private javax.swing.JButton openButton;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JTextArea reportArea;
     private javax.swing.JButton runButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JLabel statusAnimationLabel;
@@ -445,4 +483,21 @@ public class DesktopView extends FrameView {
     private JDialog aboutBox;
     
     private JFileChooser fc;
+    
+    //my Models manager
+    private SourcesFacadeManager sourcesManager = new SourcesFacadeManager();
+    private TreeViewManager treeManager;
+    
+    private void reportExection(Exception ex) {
+        reportArea.append("\n");
+        reportArea.append(ex.getMessage());
+    }
+    
+    private void reportMessage(String message) {
+        reportArea.append("\n");
+        reportArea.append(message);
+    }
+    
+    
+    
 }
