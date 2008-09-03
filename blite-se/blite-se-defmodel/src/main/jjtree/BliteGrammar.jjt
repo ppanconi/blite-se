@@ -912,29 +912,50 @@ void RecPartners() :
 }
 
 BLTDEFInvPartners InvPartners() :
-{}
 {
-    "<" PartnerId() ( "," PartnerLitId() )? ">"
-    { return jjtThis; }
+    BLTDEFPartnerId other;
+}
+{
+    "<" other = PartnerId() ( "," PartnerLitId() )? ">"
+    {   
+        jjtThis.setOther(other);
+        return jjtThis; 
+    }
 }
 
-void PartnerId() :
-{}
+BLTDEFPartnerId PartnerId() :
 {
-    PartnerLitId() |  VarId()
+    ABltId varId = null;
+    Token literalValue = null;
+}
+{
+    (literalValue = PartnerLitId() | varId = VarId())
+    { 
+        if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
+        if (varId != null) jjtThis.setVarableName(varId.getName());
+        return jjtThis; 
+    }
 }
 
-void PartnerLitId() :
-{}
+Token PartnerLitId() :
+{   
+    Token t = null;
+}
 {
-    <STRING_LITERAL>
+    t  = <STRING_LITERAL>
+    { return t;}
 }
 
 BLTDEFOperationId OperationId() :
-{}
 {
-    <IDENTIFIER>
-    { return jjtThis; }
+    Token t = null;
+}
+{
+    t = <IDENTIFIER>
+    {   
+        jjtThis.setName(t.image);
+        return jjtThis;
+    }
 }
 
 void RecParams() :
@@ -944,10 +965,17 @@ void RecParams() :
 }
 
 BLTDEFInvParams InvParams() :
-{}
 {
-    VarId() | <STRING_LITERAL>
-    { return jjtThis; }
+    ABltId varId = null;
+    Token literalValue = null;
+}
+{
+    ( varId = VarId() | literalValue = <STRING_LITERAL> )
+    {
+        if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
+        if (varId != null) jjtThis.setVarableName(varId.getName());
+        return jjtThis; 
+    }
 }
 
 
@@ -963,7 +991,7 @@ void Expression() :
     VarId() | <STRING_LITERAL>
 }
 
-void VarId() :
+BLTDEFVarId VarId() :
 {
     Token t;
 }
@@ -977,6 +1005,7 @@ void VarId() :
             throw ex;
         }
     }
+    { return jjtThis; }
 }
 
 void BoundId()  :

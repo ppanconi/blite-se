@@ -23,7 +23,7 @@ public class DefNode extends BaseNode {
     
     static final String icon = "envTree.def.icon";
 
-    public DefNode(String title, String iconResName) {
+    public DefNode(String title) {
         super(title, icon);
     }
 

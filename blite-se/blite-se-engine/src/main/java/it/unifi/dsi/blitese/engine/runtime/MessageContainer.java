@@ -50,4 +50,9 @@ public interface MessageContainer {
      */
     public MessageContainer.Type getType();
     
+    /**
+     * @return An object rappresenting a logic message id at application level
+     */
+    public Object getApplicationTraceId();
+    
 }

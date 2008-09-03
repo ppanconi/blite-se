@@ -23,7 +23,7 @@ public class FileNode extends BaseNode{
     
     static final String icon = "envTree.file.icon";
 
-    public FileNode(String title, String iconResName) {
+    public FileNode(String title) {
         super(title, icon);
     }
 

@@ -19,7 +19,12 @@ import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
+import it.unifi.dsi.blitese.engine.runtime.ResponseInComingEventKey;
+import it.unifi.dsi.blitese.engine.runtime.VariableScope;
+import it.unifi.dsi.blitese.parser.ABltValueHolder;
+import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
+import java.util.Map;
 
 /**
  * 
@@ -33,6 +38,8 @@ public class ProcessManagerImp implements ProcessManager {
     private Engine mEngine;
     private String mSaName;
     private String mSuName;
+    
+    private Object processLevelLock = new Object();
 
     public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
@@ -56,6 +63,20 @@ public class ProcessManagerImp implements ProcessManager {
     public Object invoke(Object runtimePartnerLink, String operation, MessageContainer messageContainer, ProcessInstance instance) {
         return mEngine.getChannel()
                     .invoke(runtimePartnerLink, operation, messageContainer, instance);
+    }
+
+    public Object resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope) {
+        
+        ABltValueHolder vh = partnersDef.getOther();
+        return RuntimeValueFactory.makeRuntimeValue(vh, variableScope);
+    }
+
+    public Object getProcessLevelLock() {
+        return processLevelLock;
+    }
+
+    public Map<ResponseInComingEventKey, MessageContainer> getEventDoneMap() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
    

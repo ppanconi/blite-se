@@ -13,18 +13,15 @@
  * 
  */
 
-package it.unifi.dsi.blitese.localenv.gui.nodes;
+package it.unifi.dsi.blitese.engine.runtime.imp;
 
 /**
- *
+ * A Factory class to create the key for incoming event
+ * 
  * @author panks
  */
-public class EnvNode extends BaseNode {
+public class InComingEventKeyFactory {
+    
+    
 
-    static final String icon = "envTree.env.icon";
-    
-    public EnvNode(String title) {
-        super(title, icon);
-    }
-    
 }

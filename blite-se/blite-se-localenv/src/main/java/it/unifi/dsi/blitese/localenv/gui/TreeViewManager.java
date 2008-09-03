@@ -14,6 +14,12 @@
  */
 package it.unifi.dsi.blitese.localenv.gui;
 
+import it.unifi.dsi.blitese.localenv.gui.nodes.BaseNode;
+import it.unifi.dsi.blitese.localenv.gui.nodes.DefNode;
+import it.unifi.dsi.blitese.localenv.gui.nodes.DepNode;
+import it.unifi.dsi.blitese.localenv.gui.nodes.EnvNode;
+import it.unifi.dsi.blitese.localenv.gui.nodes.FileNode;
+import it.unifi.dsi.blitese.localenv.gui.nodes.InstNode;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceDef;
@@ -49,7 +55,7 @@ public class TreeViewManager {
     public TreeViewManager(JTree tree) {
         this.tree = tree;
 
-        DefaultMutableTreeNode _root = new DefaultMutableTreeNode("Env");
+        DefaultMutableTreeNode _root = new DefaultMutableTreeNode(new EnvNode("Env"));
         root = _root;
 
         model = new DefaultTreeModel(root);
@@ -64,7 +70,7 @@ public class TreeViewManager {
             model.removeNodeFromParent(node);
         }
         
-        node = new DefaultMutableTreeNode(compilationUnit.getResource());
+        node = new DefaultMutableTreeNode(new FileNode(compilationUnit.getResource().toString()));
         
         
         model.insertNodeInto(node, root, root.getChildCount());
@@ -72,21 +78,21 @@ public class TreeViewManager {
         
         int i = 0;
         for (BLTDEFDeployment dep : compilationUnit.getDeployments()) {
-            DefaultMutableTreeNode depNode = new DefaultMutableTreeNode("Dep. " + (i + 1));
+            DefaultMutableTreeNode depNode = new DefaultMutableTreeNode(new DepNode("Dep. " + (i + 1)));
             model.insertNodeInto(depNode, node, i++);
             tree.scrollPathToVisible(new TreePath(depNode.getPath()));
             
             int j = 0;
             BLTDEFServiceDef serviceDefinition = dep.provideServiceDefinition();
             if (serviceDefinition != null) {
-                DefaultMutableTreeNode defNode = new DefaultMutableTreeNode("Def. " + (j + 1));
+                DefaultMutableTreeNode defNode = new DefaultMutableTreeNode(new DefNode("Def. " + (j + 1)));
                 model.insertNodeInto(defNode, depNode, j++);
                 tree.scrollPathToVisible(new TreePath(defNode.getPath()));
             }
             
             j = 0;
             for (BLTDEFServiceInstance serInst : dep.provideAllInsatnces()) {
-                DefaultMutableTreeNode instNode = new DefaultMutableTreeNode("Inst. " + (j + 1));
+                DefaultMutableTreeNode instNode = new DefaultMutableTreeNode(new InstNode("Inst. " + (j + 1)));
                 model.insertNodeInto(instNode, depNode, j++);
                 tree.scrollPathToVisible(new TreePath(instNode.getPath()));
             }
@@ -104,11 +110,12 @@ public class TreeViewManager {
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
            
-//            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-//            node.get
-//            
-//            setIcon(resourceMap.getIcon("envTree.dep.icon"));
-//            
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+            BaseNode bn = (BaseNode) node.getUserObject();
+            
+            setIcon(resourceMap.getIcon(bn.getIconResName()));
+            setText(bn.getTitle());
+            
             return this;
         }
         

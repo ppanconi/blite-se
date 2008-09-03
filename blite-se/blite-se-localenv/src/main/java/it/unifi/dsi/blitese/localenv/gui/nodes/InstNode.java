@@ -23,7 +23,7 @@ public class InstNode extends BaseNode {
     
     static final String icon = "envTree.inst.icon";
 
-    public InstNode(String title, String iconResName) {
+    public InstNode(String title) {
         super(title, icon);
     }
     
