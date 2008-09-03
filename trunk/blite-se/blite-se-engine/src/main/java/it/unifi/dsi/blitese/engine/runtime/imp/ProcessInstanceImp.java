@@ -50,6 +50,11 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         this.deploymentDefinition = deploymentDefinition;
     }
     
+    public ProcessManager getManager() {
+        return mProcessManager;
+    }
+
+    
     public void activete(BltDefBaseNode defStartNode) {
 
         this.bliteDefinition = defStartNode;

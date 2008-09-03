@@ -13,18 +13,12 @@
  * 
  */
 
-package it.unifi.dsi.blitese.localenv.gui.nodes;
+package it.unifi.dsi.blitese.engine.runtime;
 
 /**
  *
  * @author panks
  */
-public class EnvNode extends BaseNode {
+public interface ResponseInComingEventKey {
 
-    static final String icon = "envTree.env.icon";
-    
-    public EnvNode(String title) {
-        super(title, icon);
-    }
-    
 }

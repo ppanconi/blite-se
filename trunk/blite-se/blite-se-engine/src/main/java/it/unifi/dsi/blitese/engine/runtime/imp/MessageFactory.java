@@ -15,17 +15,22 @@
 
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
-import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
+import it.unifi.dsi.blitese.parser.ABltValueHolder;
+import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 
 /**
- * This class create the appropriate instances of MessageContainer
- * objects.
- * 
+ *
  * @author panks
  */
-public class MessageContainerFactory {
+public class MessageFactory {
 
-    static public MessageContainer createMessageContainer(Object contect, Object applicationTraceId) {
-        return new MessageContainerImp(contect, MessageContainer.Type.MESSAGE, applicationTraceId);
+    static public Object createInvokeMessage(ExecutionContext context, BLTDEFInvokeActivity activity) {
+        
+        ABltValueHolder vh = activity.getParams();
+        
+        return RuntimeValueFactory.makeRuntimeValue(vh, context);
+        
     }
+    
 }

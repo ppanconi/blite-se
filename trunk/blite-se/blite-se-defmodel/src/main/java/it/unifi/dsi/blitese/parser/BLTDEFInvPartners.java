@@ -19,5 +19,23 @@ public class BLTDEFInvPartners extends SimpleNode {
   
     ////////////////////////////////////////////////////////////////////////////
     //added code start here
-  
+    private BLTDEFPartnerId other;
+    private BLTDEFPartnerLitId me;
+
+    public BLTDEFPartnerLitId getMe() {
+        return me;
+    }
+
+    public void setMe(BLTDEFPartnerLitId me) {
+        this.me = me;
+    }
+
+    public BLTDEFPartnerId getOther() {
+        return other;
+    }
+
+    public void setOther(BLTDEFPartnerId other) {
+        this.other = other;
+    }
+    
 }
