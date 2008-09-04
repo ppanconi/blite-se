@@ -19,9 +19,12 @@ import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.Engine; 
 import it.unifi.dsi.blitese.engine.runtime.EngineChannel;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -41,6 +44,9 @@ public class EngineImp implements Engine {
     private Object mDeployLock = new Object(); //onjext used as monitor in un/deployment phase
     private boolean mNewAddedDep = false; //one state marker for eventually persistence synch.
     private EngineChannel mChannel; //the comunication Channel
+    
+    private ConcurrentMap<InComingEventKey, FlowExecutor>
+                mEventWaitingExecutor = new ConcurrentHashMap<InComingEventKey, FlowExecutor>();
     
     /**
      * Deployed Blite program definitions
@@ -126,6 +132,19 @@ public class EngineImp implements Engine {
             executor.executeCurrentActivity();
         }
         
+    }
+
+    
+    
+    /**
+     * Add FlowExecutor to waithing the Incoming Event refered by the passed key
+     * 
+     * @param executor
+     * @param eventKey
+     */
+    //synchronized 
+    public void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey) {
+        mEventWaitingExecutor.put(eventKey, executor);
     }
            
     

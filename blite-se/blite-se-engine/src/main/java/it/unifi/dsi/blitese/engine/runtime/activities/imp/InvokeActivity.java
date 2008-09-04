@@ -15,8 +15,10 @@
 
 package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
+import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
+import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.imp.MessageContainerFactory;
 import it.unifi.dsi.blitese.engine.runtime.imp.MessageFactory;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
@@ -29,21 +31,28 @@ public class InvokeActivity extends ActivityComponentBase {
     
     private BLTDEFInvokeActivity activityDef;
 
+    private InComingEventKey eventKey = null;
+    private ProcessManager myManager;
+    
     @Override
     public void init() {
         super.init();
         
         activityDef = (BLTDEFInvokeActivity) getBltDefNode();
+        myManager = getContext().getProcessInstance().getManager();
     }
     
     
 
     public boolean doActivity() {
 
-        invoke();
-        getExecutor().setCurrentActivity(getParentComponent());
+        if (eventKey == null) {
+            return invoke();
+        } else {
+            MessageContainer resp = myManager.getEventDoneMap().get(eventKey);
+            return processStatus(resp);
+        }
         
-        return true;
     }
     
     /**
@@ -66,24 +75,31 @@ public class InvokeActivity extends ActivityComponentBase {
         //menage the correlation here
         //TODO
         
-        ProcessManager myManager = getContext().getProcessInstance().getManager();
-        
-        Object rtPartnerLink = myManager.resovleParterLink(activityDef.getPartners(), getContext());
+        ServiceIdentifier service = myManager.resovleParterLink(activityDef.getPartners(), getContext());
         
         //execute the invoke using the manager Facade interface.
-        Object messageExchangeId = myManager.invoke(rtPartnerLink, operation, mc, getContext().getProcessInstance());
+        eventKey = 
+                myManager.invoke(service, operation, mc, getContext().getProcessInstance());
         
-        Object lock = myManager.getProcessLevelLock();
+        System.out.println("INVOKE on " + service + " operation " + operation + " passing " + m);
         
-        //we have to check if we have the ack
-        synchronized (lock) {
+        synchronized (myManager.getDefinitionProcessLevelLock()) {
             
+            MessageContainer resp = myManager.getEventDoneMap().get(eventKey);
             
+            if (resp != null) {
+                return processStatus(resp);
+            } else {
+                //we start to waiting
+                myManager.getEngine().addFlowWaitingEvent(getExecutor(), eventKey);
+                return false;
+            }
             
         }
-        
-        System.out.println("INVOKE on " + rtPartnerLink + " operation " + operation + " passing " + m);
-        return false;
     }
 
+    private boolean processStatus(MessageContainer mc) {
+        getExecutor().setCurrentActivity(getParentComponent());
+        return true;
+    }
 }

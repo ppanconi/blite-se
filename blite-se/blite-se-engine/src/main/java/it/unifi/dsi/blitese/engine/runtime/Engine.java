@@ -56,6 +56,7 @@ public interface Engine {
      * @param executor
      */
     void queueFlowExecutor(FlowExecutor executor);
-
+    
+    void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey);
 }
 

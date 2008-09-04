@@ -15,6 +15,8 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
+import javax.xml.namespace.QName;
+
 /**
  * This is interface represents the communication channel between 
  * the Engine and the Communication Environment.  
@@ -25,16 +27,17 @@ public interface EngineChannel {
 
     /**
      * 
-     * @param runtimePartnerLink
      * @param operation
      * @param messageContainer
      * @param instance
-     * @return Object the indetificator key for the protocol state communication.
-     *         (In this particular case the communication pattern is the only One-way
+     * @return Object messageExchangeId 
+     *         the indetificator key for the protocol state communication.
+     *         
+     * (In this particular case the communication pattern is the only One-way
      *          so it's the key for the connection state object on which recive the
      *          ack status response)
      */
-    public Object invoke(Object runtimePartnerLink, String operation, 
+    public Object invoke(ServiceIdentifier serviceId, String operation, 
             MessageContainer messageContainer, ProcessInstance instance);
     
     
@@ -42,8 +45,8 @@ public interface EngineChannel {
      * Send done status for the response from the server for the invoke from
      * this SE as a client.
      * 
-     * @param msgExchangeId 
+     * @param  inComingEventKey
      */
-    public  void sendResponseDoneStatus(Object msgExchangeId);
+    public  void sendResponseDoneStatus(Object messageExchangeId);
 
 }
