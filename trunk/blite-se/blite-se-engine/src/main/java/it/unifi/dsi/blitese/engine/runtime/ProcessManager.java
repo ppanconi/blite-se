@@ -19,6 +19,8 @@ import java.util.Map;
 
 
 public interface ProcessManager {
+    
+    public Engine getEngine();
 
     /**
      * Execute the invoke operation on the provided Partner Link 
@@ -29,9 +31,12 @@ public interface ProcessManager {
      * @param operation
      * @param messageContainer
      * @param instance 
-     * @return
+     * 
+     * @return InComingEventKey. The evet key for the next step comuniaction protocol.
+     *         Actual only one-way invoke are present so the the next event will be only
+     *         an StatusDone or StatusError
      */
-    public Object invoke(Object runtimePartnerLink, String operation, 
+    public InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
             MessageContainer messageContainer, ProcessInstance instance);
     
     
@@ -42,16 +47,15 @@ public interface ProcessManager {
      * @param variableScope Runtime variable scope
      * 
      * @return Object the runtime partner link.
-     * TODO specialize this type
      */
-    public Object resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope);
+    public ServiceIdentifier resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope);
     
     /**
      * Provide a lock at Process definition Level
      * 
      * @return Object the object used to get a lock at process definition level.
      */
-    public Object getProcessLevelLock();
+    public Object getDefinitionProcessLevelLock();
     
     /**
      * Map with the response MessageContainer for invoke done ack statuss. 
@@ -59,6 +63,6 @@ public interface ProcessManager {
      * 
      * @return
      */
-    public Map<ResponseInComingEventKey, MessageContainer> getEventDoneMap(); 
+    public Map<InComingEventKey, MessageContainer> getEventDoneMap(); 
 }
 

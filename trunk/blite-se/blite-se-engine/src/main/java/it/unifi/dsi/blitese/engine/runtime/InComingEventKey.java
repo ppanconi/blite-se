@@ -19,6 +19,6 @@ package it.unifi.dsi.blitese.engine.runtime;
  *
  * @author panks
  */
-public interface ResponseInComingEventKey {
+public interface InComingEventKey {
 
 }

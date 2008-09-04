@@ -16,10 +16,11 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
-import it.unifi.dsi.blitese.engine.runtime.ResponseInComingEventKey;
+import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
 import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
@@ -39,7 +40,7 @@ public class ProcessManagerImp implements ProcessManager {
     private String mSaName;
     private String mSuName;
     
-    private Object processLevelLock = new Object();
+    private Object definitionProcessLevelLock = new Object();
 
     public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
@@ -60,26 +61,35 @@ public class ProcessManagerImp implements ProcessManager {
         
     }
 
-    public Object invoke(Object runtimePartnerLink, String operation, MessageContainer messageContainer, ProcessInstance instance) {
-        return mEngine.getChannel()
-                    .invoke(runtimePartnerLink, operation, messageContainer, instance);
-    }
 
-    public Object resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope) {
+    public ServiceIdentifier resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope) {
         
         ABltValueHolder vh = partnersDef.getOther();
-        return RuntimeValueFactory.makeRuntimeValue(vh, variableScope);
+
+        //NOTE TO EXPLORE THIS OPERATION
+        //JUST A SIMPLE SOLUTION
+        return new ServiceIdentifier(null, RuntimeValueFactory.makeRuntimeValue(vh, variableScope).toString());
     }
 
-    public Object getProcessLevelLock() {
-        return processLevelLock;
+    public Object getDefinitionProcessLevelLock() {
+        return definitionProcessLevelLock;
     }
 
-    public Map<ResponseInComingEventKey, MessageContainer> getEventDoneMap() {
+    public Map<InComingEventKey, MessageContainer> getEventDoneMap() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-   
-    
+    public Engine getEngine() {
+        return mEngine;
+    }
+
+    public InComingEventKey invoke(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer, ProcessInstance instance) {
+//             return mEngine.getChannel()
+//                    .invoke(serviceId, operation, messageContainer, instance);
+        
+        //TODO Use the Engine to execute this operation
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
 

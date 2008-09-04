@@ -31,7 +31,8 @@ public interface MessageContainer {
     };
     
     /**
-     * gets ID
+     * gets Id of the message exchange sequence where the actual
+     * message belong.
      *
      * @return String message container ID
      */
