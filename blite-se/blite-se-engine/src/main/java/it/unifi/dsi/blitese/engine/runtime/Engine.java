@@ -53,10 +53,41 @@ public interface Engine {
     /**
      * Add a ready to run executor to queue where the working threads get
      * the current works.
-     * @param executor
+     * @param executorbig breast archive
      */
     void queueFlowExecutor(FlowExecutor executor);
     
     void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey);
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Engine Comunication Interface
+    
+    //--------------------------------------------------------------------------
+    //                 From Eviroment to Processes
+    
+    void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer);
+    
+    void processExchange(MessageContainer messageContainer);
+    
+    //--------------------------------------------------------------------------
+    
+    //--------------------------------------------------------------------------
+    //From Processes to Envirment
+    
+    InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
+            MessageContainer messageContainer, ProcessInstance instance);
+
+    MessageContainer cosumeEvent(InComingEventKey inComingEventKey);
+    
+    /**
+     * Send done status for the response from the server for the invoke from
+     * this SE as a client.
+     * 
+     * @param  inComingEventKey
+     */
+    public  void sendResponseDoneStatus(InComingEventKey inComingEventKey);
+
+    //--------------------------------------------------------------------------
 }
 

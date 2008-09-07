@@ -36,8 +36,9 @@ public interface MessageContainer {
      *
      * @return String message container ID
      */
-    public String getId();
+    public Object getId();
 
+    public void setId(Object id);
     /**
      * gets content
      *

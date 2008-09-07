@@ -24,7 +24,7 @@ import it.unifi.dsi.blitese.engine.runtime.MessageContainer.Type;
  */
 public class MessageContainerImp implements MessageContainer {
     
-    private String id;
+    private Object id;
     private Object content;
     private MessageContainer.Type type;
     private Object applicationTraceId;
@@ -35,7 +35,7 @@ public class MessageContainerImp implements MessageContainer {
         this.applicationTraceId = applicationTraceId;
     }
 
-    public MessageContainerImp(String id, Object content, Type type, Object applicationTraceId) {
+    public MessageContainerImp(Object id, Object content, Type type, Object applicationTraceId) {
         this.id = id;
         this.content = content;
         this.type = type;
@@ -50,12 +50,17 @@ public class MessageContainerImp implements MessageContainer {
         return content;
     }
 
-    public String getId() {
+    public Object getId() {
         return id;
     }
 
     public Type getType() {
         return type;
     }
+
+    public void setId(Object id) {
+        this.id = id;
+    }
+    
     
 }

@@ -50,6 +50,8 @@ public interface ProcessManager {
      */
     public ServiceIdentifier resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope);
     
+    MessageContainer cosumeEvent(InComingEventKey inComingEventKey);
+    
     /**
      * Provide a lock at Process definition Level
      * 
@@ -57,12 +59,6 @@ public interface ProcessManager {
      */
     public Object getDefinitionProcessLevelLock();
     
-    /**
-     * Map with the response MessageContainer for invoke done ack statuss. 
-     * The keys are the ResponseInComingEventKey.
-     * 
-     * @return
-     */
-    public Map<InComingEventKey, MessageContainer> getEventDoneMap(); 
+    
 }
 

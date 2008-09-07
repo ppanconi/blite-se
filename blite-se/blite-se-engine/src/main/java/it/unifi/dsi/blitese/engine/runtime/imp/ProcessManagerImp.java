@@ -25,7 +25,6 @@ import it.unifi.dsi.blitese.engine.runtime.VariableScope;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
 import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
-import java.util.Map;
 
 /**
  * 
@@ -75,10 +74,6 @@ public class ProcessManagerImp implements ProcessManager {
         return definitionProcessLevelLock;
     }
 
-    public Map<InComingEventKey, MessageContainer> getEventDoneMap() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public Engine getEngine() {
         return mEngine;
     }
@@ -87,8 +82,11 @@ public class ProcessManagerImp implements ProcessManager {
 //             return mEngine.getChannel()
 //                    .invoke(serviceId, operation, messageContainer, instance);
         
-        //TODO Use the Engine to execute this operation
-        throw new UnsupportedOperationException("Not supported yet.");
+        return mEngine.invoke(serviceId, operation, messageContainer, instance);
+    }
+
+    public MessageContainer cosumeEvent(InComingEventKey inComingEventKey) {
+        return mEngine.cosumeEvent(inComingEventKey);
     }
 
 }
