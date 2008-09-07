@@ -20,7 +20,10 @@ import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.EngineChannel;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
+import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
+import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,6 +50,13 @@ public class EngineImp implements Engine {
     
     private ConcurrentMap<InComingEventKey, FlowExecutor>
                 mEventWaitingExecutor = new ConcurrentHashMap<InComingEventKey, FlowExecutor>();
+    
+    private ConcurrentHashMap<Object, ProcessManager>
+                mMExchangeToProcessManager = new ConcurrentHashMap<Object, ProcessManager>();
+    
+    private ConcurrentHashMap<InComingEventKey, MessageContainer>
+                mInComingEvent = new ConcurrentHashMap<InComingEventKey, MessageContainer>();
+    
     
     /**
      * Deployed Blite program definitions
@@ -146,7 +156,65 @@ public class EngineImp implements Engine {
     public void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey) {
         mEventWaitingExecutor.put(eventKey, executor);
     }
-           
+
+    public void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void processExchange(MessageContainer messageContainer) {
+        
+        Object messageExchangeId = messageContainer.getId();
+        ProcessManager targetProcess = mMExchangeToProcessManager.get(messageExchangeId);
+        InComingEventKey icek = InComingEventKeyFactory.createDoneStatusInComingEventKey(messageExchangeId);
+        
+        synchronized (targetProcess.getDefinitionProcessLevelLock()) {
+            
+            mInComingEvent.put(icek, messageContainer);
+            
+            //we notifay the incoming event
+            FlowExecutor executor = mEventWaitingExecutor.remove(icek);
+            if (executor != null )
+                queueFlowExecutor(executor);
+            
+        }
+        
+    }
+    
+    public MessageContainer cosumeEvent(InComingEventKey inComingEventKey) {
+        
+        if (inComingEventKey instanceof DoneStatusInComingEventKey) {
+            //in this case we have also to  free the pending resource
+            
+            DoneStatusInComingEventKey doneStatusInComingEventKey = (DoneStatusInComingEventKey) inComingEventKey;
+            
+            MessageContainer mc = mInComingEvent.remove(doneStatusInComingEventKey);
+            mChannel.closeExchange(mc.getId());
+            
+            
+            return mc;
+        }
+        
+        throw new UnsupportedOperationException("Not supported yet.");
+    }    
+
+    
+    public InComingEventKey invoke(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer, ProcessInstance instance) {
+        Object meId = mChannel.createExchange(serviceId, operation, instance);
+        messageContainer.setId(meId);
+        
+        mMExchangeToProcessManager.put(meId, instance.getManager());
+        
+        InComingEventKey icek = InComingEventKeyFactory.createDoneStatusInComingEventKey(meId);
+        
+        mChannel.sendIntoExchange(meId, messageContainer);
+        
+        return icek;
+    }
+
+    public void sendResponseDoneStatus(InComingEventKey inComingEventKey) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     
 
 }

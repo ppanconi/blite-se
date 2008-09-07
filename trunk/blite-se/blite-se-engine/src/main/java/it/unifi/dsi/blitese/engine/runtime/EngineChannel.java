@@ -26,27 +26,30 @@ import javax.xml.namespace.QName;
 public interface EngineChannel {
 
     /**
+     * This method initialize a communication exchange from 
+     * the process invoking process the requested endpoint
      * 
      * @param operation
      * @param messageContainer
-     * @param instance
+     * @param instance the Process Instance initiatin the echange.
+     * 
      * @return Object messageExchangeId 
      *         the indetificator key for the protocol state communication.
      *         
-     * (In this particular case the communication pattern is the only One-way
-     *          so it's the key for the connection state object on which recive the
-     *          ack status response)
      */
-    public Object invoke(ServiceIdentifier serviceId, String operation, 
-            MessageContainer messageContainer, ProcessInstance instance);
-    
-    
+     public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance);
+   
     /**
      * Send done status for the response from the server for the invoke from
      * this SE as a client.
      * 
      * @param  inComingEventKey
      */
-    public  void sendResponseDoneStatus(Object messageExchangeId);
+    public  void sendIntoExchange(Object messageExchangeId, MessageContainer messageContainer);
 
+    /**
+     * 
+     * @param messageExchangeId
+     */
+    public void closeExchange(Object messageExchangeId);
 }

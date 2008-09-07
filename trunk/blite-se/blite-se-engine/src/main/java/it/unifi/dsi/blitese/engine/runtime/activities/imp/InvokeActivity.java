@@ -49,7 +49,7 @@ public class InvokeActivity extends ActivityComponentBase {
         if (eventKey == null) {
             return invoke();
         } else {
-            MessageContainer resp = myManager.getEventDoneMap().get(eventKey);
+            MessageContainer resp = myManager.cosumeEvent(eventKey);
             return processStatus(resp);
         }
         
@@ -85,7 +85,7 @@ public class InvokeActivity extends ActivityComponentBase {
         
         synchronized (myManager.getDefinitionProcessLevelLock()) {
             
-            MessageContainer resp = myManager.getEventDoneMap().get(eventKey);
+            MessageContainer resp = myManager.cosumeEvent(eventKey);
             
             if (resp != null) {
                 return processStatus(resp);

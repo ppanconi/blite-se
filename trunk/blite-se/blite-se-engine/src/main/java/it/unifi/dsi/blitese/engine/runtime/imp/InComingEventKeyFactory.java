@@ -22,6 +22,11 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
  */
 public class InComingEventKeyFactory {
     
-    
+    static public DoneStatusInComingEventKey createDoneStatusInComingEventKey(Object meId) {
+      
+        return new DoneStatusInComingEventKey(meId);
+        
+        
+    }
 
 }

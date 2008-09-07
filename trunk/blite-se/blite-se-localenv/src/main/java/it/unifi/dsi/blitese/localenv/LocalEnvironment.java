@@ -15,11 +15,19 @@
 
 package it.unifi.dsi.blitese.localenv;
 
+import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
+
 /**
  *
  * @author panks
  */
 public class LocalEnvironment {
+    
+    
+    public Engine provideServiceEngine(ServiceIdentifier serviceId) {
+        throw new RuntimeException("Not implemeted yet");
+    }
     
     
 }
