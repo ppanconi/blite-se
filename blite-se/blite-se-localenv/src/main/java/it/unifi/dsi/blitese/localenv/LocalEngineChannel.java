@@ -39,7 +39,7 @@ public class LocalEngineChannel implements EngineChannel {
     private LocalEnvironment environment;
     private ExecutorService exService = Executors.newFixedThreadPool(1);
 
-    Boolean running;
+    Boolean open;
     
     
     public LocalEngineChannel(LocalEnvironment environment) {
@@ -49,9 +49,10 @@ public class LocalEngineChannel implements EngineChannel {
 
             public void run() {
                 
-                while (running) {
+                while (open) {
                     try {
-                        MessageEnvelop envelop = mMedia.poll(100, TimeUnit.MILLISECONDS);
+                        
+                        MessageEnvelop envelop = mMedia.poll(300, TimeUnit.MILLISECONDS);
                     
                         if (envelop != null) {
                              Long meId = envelop.meId;
@@ -66,13 +67,13 @@ public class LocalEngineChannel implements EngineChannel {
                                  mc.getType() == MessageContainer.Type.FAULT) {
                                  
                                  destEngine = connection.provider;
-                                 
-                                 
                                  destEngine.processRequest(envelop.serviceId, envelop.operation, mc);
                                  
                              } else {
+                                 
                                  destEngine = connection.consumer;
                                  destEngine.processExchange(mc);
+                                 
                              }
                              
                              
@@ -97,6 +98,37 @@ public class LocalEngineChannel implements EngineChannel {
     private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingDeque<MessageEnvelop>();
     
     
+    public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance) {
+        Long meId = nextMEId();
+        
+        Engine consumer = instance.getManager().getEngine();
+        Engine provider = environment.provideServiceEngine(serviceId);
+        
+        connections.put(meId, new EnginesConnection(meId, consumer, provider, serviceId, operation));
+        
+        return meId;
+    }
+
+    public void sendIntoExchange(Object meId, MessageContainer mc) {
+        
+        EnginesConnection con = connections.get(meId);
+        
+        MessageEnvelop envelop =
+                new MessageEnvelop((Long)meId, con.serviceId, con.operation, mc);
+        try {
+
+            mMedia.put(envelop);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(LocalEngineChannel.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+    }
+
+    public void closeExchange(Object messageExchangeId) {
+        connections.remove(messageExchangeId);
+    }
+    
+
     private static class EnginesConnection {
         
         Long meId;
@@ -130,38 +162,6 @@ public class LocalEngineChannel implements EngineChannel {
         }
         
     }
-
-    public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance) {
-        Long meId = nextMEId();
-        
-        Engine consumer = instance.getManager().getEngine();
-        Engine provider = environment.provideServiceEngine(serviceId);
-        
-        connections.put(meId, new EnginesConnection(meId, consumer, provider, serviceId, operation));
-        
-        return meId;
-    }
-
-    public void sendIntoExchange(Object meId, MessageContainer mc) {
-        
-        EnginesConnection con = connections.get(meId);
-        
-        MessageEnvelop envelop =
-                new MessageEnvelop((Long)meId, con.serviceId, con.operation, mc);
-        try {
-
-            mMedia.put(envelop);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(LocalEngineChannel.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex.getMessage(), ex);
-        }
-    }
-
-    public void closeExchange(Object messageExchangeId) {
-        connections.remove(messageExchangeId);
-    }
-    
-
   
     
 
