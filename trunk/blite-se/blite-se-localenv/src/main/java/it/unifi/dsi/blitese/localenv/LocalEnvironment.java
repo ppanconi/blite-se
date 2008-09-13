@@ -17,12 +17,18 @@ package it.unifi.dsi.blitese.localenv;
 
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
+import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 
 /**
  *
  * @author panks
  */
 public class LocalEnvironment {
+    
+    
+    public void addCompilationUnit(BLTDEFCompilationUnit compilationUnit) {
+        
+    }
     
     
     public Engine provideServiceEngine(ServiceIdentifier serviceId) {
