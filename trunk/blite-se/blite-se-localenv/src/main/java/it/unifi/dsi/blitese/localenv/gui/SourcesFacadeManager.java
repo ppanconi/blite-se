@@ -72,8 +72,10 @@ public class SourcesFacadeManager {
         
         if (parser == null)
             parser = (BliteParser) AbstractBliteParser.provideInstance(inputStream);
-        else 
+        else {
             parser.ReInit(inputStream);
+            AbstractBliteParser.cleanTables();
+        }
         
         BLTDEFCompilationUnit compilationUnit = (BLTDEFCompilationUnit) parser.parse();
         compilationUnit.setResource(file.toURI().toURL());

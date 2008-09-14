@@ -28,6 +28,15 @@ public abstract class AbstractBliteParser {
     static Map<AServiceElement, Map<String, Object>> sSymbolTables = new HashMap<AServiceElement, Map<String, Object>>();
     static AServiceElement currentServEle;
     
+    //
+    static Map<String, AServiceElement> mPortsToServices = new HashMap<String, AServiceElement>();
+    
+    public static void cleanTables() {
+        sSymbolTables = new HashMap<AServiceElement, Map<String, Object>>();
+        currentServEle = null;
+        mPortsToServices = new HashMap<String, AServiceElement>();
+    }
+    
     static public AbstractBliteParser provideInstance(InputStream stream) {
         BliteParser bliteParser = new BliteParser(stream);
         return bliteParser;
@@ -61,9 +70,33 @@ public abstract class AbstractBliteParser {
             currentServEle = null;
         }
     }
-
+    
+    /**
+     * Add the current recive Activity definition to the current Service Element Definition
+     * It checks also the deployments well-formed constrant on the definition.
+     * 
+     * @param receiveActivity
+     * @throws it.unifi.dsi.blitese.parser.ParseException
+     */
+    static void addPort(BLTDEFReceiveActivity receiveActivity) throws ParseException {
+        
+        String portId = receiveActivity.getPartners().getPortId();
+        
+        AServiceElement previous = mPortsToServices.get(portId);
+        if (previous == null) {
+            previous = currentServEle;
+            mPortsToServices.put(portId, currentServEle);
+        } else if (!previous.equals(currentServEle)) {
+            
+            Token t = receiveActivity.getPartners().getPortToken();
+            throw new ParseException("The deployments are not well-formated. " +
+                    "The port id " + portId + " definined at line " + t.beginLine + " , column " + t.beginColumn + " is used in other Deploy/ServiceInsatance definition");
+        }
+        
+        currentServEle.addPort(receiveActivity);
+        
+    }
     
     abstract public BltDefBaseNode parse() throws ParseException;
-
     
 }
