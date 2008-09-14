@@ -878,10 +878,17 @@ void EmptyActivity() :
     <EMPTY>
 }
 
-void ReceiveActivity() :
-{}
+BLTDEFReceiveActivity ReceiveActivity() :
 {
-    <RECEIVE> RecPartners() OperationId() RecParams()
+    BLTDEFRecPartners partners;
+}
+{
+    <RECEIVE> partners = RecPartners() OperationId() RecParams()
+    {
+        jjtThis.setPartners(partners);
+        addPort(jjtThis);
+        return jjtThis;
+    }
 }
 
 void InvokeActivity() :
@@ -905,10 +912,15 @@ void ExitActivity() :
     <EXIT>
 }
 
-void RecPartners() :
-{}
+BLTDEFRecPartners RecPartners() :
+{   Token recPort = null;
+}
 {
-    "<" PartnerLitId() ( "," PartnerId() )? ">"
+    "<" recPort = PartnerLitId() ( "," PartnerId() )? ">"
+    {
+        jjtThis.setPortToken(recPort);
+        return jjtThis;
+    }
 }
 
 BLTDEFInvPartners InvPartners() :

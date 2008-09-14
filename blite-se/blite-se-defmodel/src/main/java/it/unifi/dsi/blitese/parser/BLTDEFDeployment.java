@@ -2,6 +2,7 @@
 
 package it.unifi.dsi.blitese.parser;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +50,10 @@ public class BLTDEFDeployment extends SimpleNode {
         }
         
         return ints;
+    }
+    
+    public URL getLocation() {
+        return null;
     }
  
 }

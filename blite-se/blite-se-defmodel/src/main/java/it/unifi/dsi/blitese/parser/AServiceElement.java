@@ -15,11 +15,16 @@
 
 package it.unifi.dsi.blitese.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author panks
  */
 public abstract class AServiceElement extends SimpleNode {
+
+    private List<BLTDEFReceiveActivity> ports = new ArrayList<BLTDEFReceiveActivity>();
 
     public AServiceElement(BliteParser p, int i) {
         super(p, i);
@@ -31,5 +36,9 @@ public abstract class AServiceElement extends SimpleNode {
 
     public SimpleNode getUniqueChild() {
         return (SimpleNode) jjtGetChild(0);
+    }
+    
+    public void addPort(BLTDEFReceiveActivity port) {
+        ports.add(port);
     }
 }

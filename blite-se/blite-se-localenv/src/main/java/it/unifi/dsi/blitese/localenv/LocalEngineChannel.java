@@ -37,9 +37,18 @@ import java.util.logging.Logger;
 public class LocalEngineChannel implements EngineChannel {
     
     private LocalEnvironment environment;
-    private ExecutorService exService = Executors.newFixedThreadPool(1);
+    private ExecutorService exService = Executors.newFixedThreadPool(5);
 
-    Boolean open;
+    private Boolean open;
+    
+    private long messageExchangeCounter = 0L;
+    synchronized private Long nextMEId() {
+        return new Long(messageExchangeCounter++);
+    }
+    
+    private ConcurrentMap<Long, EnginesConnection> connections = new ConcurrentHashMap<Long, EnginesConnection>();
+    private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingDeque<MessageEnvelop>();
+    
     
     
     public LocalEngineChannel(LocalEnvironment environment) {
@@ -75,8 +84,6 @@ public class LocalEngineChannel implements EngineChannel {
                                  destEngine.processExchange(mc);
                                  
                              }
-                             
-                             
                         }
                         
                     } catch (InterruptedException ex) {
@@ -88,14 +95,6 @@ public class LocalEngineChannel implements EngineChannel {
             }
         });
     }
-    
-    private long messageExchangeCounter = 0L;
-    synchronized private Long nextMEId() {
-        return new Long(messageExchangeCounter++);
-    }
-    
-    private ConcurrentMap<Long, EnginesConnection> connections = new ConcurrentHashMap<Long, EnginesConnection>();
-    private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingDeque<MessageEnvelop>();
     
     
     public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance) {
