@@ -16,7 +16,9 @@
 package it.unifi.dsi.blitese.engine.definition.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
+import it.unifi.dsi.blitese.parser.BLTDEFServiceDef;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
 import java.util.Set;
 
@@ -25,22 +27,22 @@ import java.util.Set;
  * @author panks
  */
 public class BliteDeploymentDefinitionImp implements BliteDeploymentDefinition {
-    
-    private BLTDEFDeployment mDEFDeployment;
+
+    private AServiceElement serviceElement;
     private Object id;
 
-    public BliteDeploymentDefinitionImp(BLTDEFDeployment dEFDeployment) {
-        if (dEFDeployment == null)
-            throw new IllegalArgumentException("BLTDEFDeployment NULL");
-        
-        this.mDEFDeployment = dEFDeployment;
+    public BliteDeploymentDefinitionImp(AServiceElement serviceElement) {
+        if (serviceElement == null)
+            throw new IllegalArgumentException("AServiceElement NULL");
+            
+        this.serviceElement = serviceElement;
     }
 
-    public BliteDeploymentDefinitionImp(BLTDEFDeployment mDEFDeployment, Object id) {
-        if (mDEFDeployment == null)
-            throw new IllegalArgumentException("BLTDEFDeployment NULL");
+    public BliteDeploymentDefinitionImp(AServiceElement serviceElement, Object id) {
+        if (serviceElement == null)
+            throw new IllegalArgumentException("AServiceElement NULL");
 
-        this.mDEFDeployment = mDEFDeployment;
+        this.serviceElement = serviceElement;
         this.id = id;
     }
 
@@ -48,8 +50,28 @@ public class BliteDeploymentDefinitionImp implements BliteDeploymentDefinition {
         return id;
     }
 
-    public Set<BLTDEFServiceInstance> getDefProcessInstances() {
-        return mDEFDeployment.provideAllInsatnces();
+    public AServiceElement getServiceElement() {
+        return serviceElement;
     }
+
+    public BLTDEFServiceDef provideServiceDefinition() {
+        if (serviceElement instanceof BLTDEFServiceDef) {
+            BLTDEFServiceDef bLTDEFServiceDef = (BLTDEFServiceDef) serviceElement;
+            return bLTDEFServiceDef;
+        } else
+            return null;
+    }
+
+    public BLTDEFServiceInstance provideServiceInstance() {
+        if (serviceElement instanceof BLTDEFServiceInstance) {
+            BLTDEFServiceInstance bLTDEFServiceInstance = (BLTDEFServiceInstance) serviceElement;
+            return bLTDEFServiceInstance;
+        } else
+            return null;
+    }
+
+//    public Set<BLTDEFServiceInstance> getDefProcessInstances() {
+//        return mDEFDeployment.provideAllInsatnces();
+//    }
 
 }

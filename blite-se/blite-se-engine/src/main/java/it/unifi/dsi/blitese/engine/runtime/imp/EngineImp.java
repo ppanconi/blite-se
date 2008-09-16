@@ -76,7 +76,7 @@ public class EngineImp implements Engine {
     public EngineImp () {
     }
 
-    public void addProcessDefinition(BliteDeploymentDefinition bliteDef, String saName, String suName) {
+    public void deployProcessDefinition(BliteDeploymentDefinition bliteDef, String saName, String suName) {
         
         synchronized (mDeployLock) {
             // String id = bpelProcess.getBPELId();
@@ -157,6 +157,13 @@ public class EngineImp implements Engine {
         mEventWaitingExecutor.put(eventKey, executor);
     }
 
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Engine Comunication Interface
+    
+    //--------------------------------------------------------------------------
+    //                 From Eviroment to Processes
+    
     public void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -179,6 +186,11 @@ public class EngineImp implements Engine {
         }
         
     }
+    
+    //--------------------------------------------------------------------------
+    
+    //--------------------------------------------------------------------------
+    //From Processes to Envirment
     
     public MessageContainer cosumeEvent(InComingEventKey inComingEventKey) {
         
@@ -215,7 +227,7 @@ public class EngineImp implements Engine {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    
+    //--------------------------------------------------------------------------
 
 }
 

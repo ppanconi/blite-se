@@ -15,9 +15,12 @@
 
 package it.unifi.dsi.blitese.localenv;
 
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.definition.imp.BliteDeploymentDefinitionImp;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.imp.EngineImp;
+import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
 import java.net.URL;
@@ -35,6 +38,8 @@ public class LocalEnvironment {
     //
     private Map<EngineLocation, Engine> mLocToEngine = new HashMap<EngineLocation, Engine>();
     
+    private Map<String, Engine> mPortIdToEngine = new HashMap<String, Engine>();
+    
     private LocalEngineChannel channel;
 
     public LocalEnvironment() {
@@ -46,7 +51,7 @@ public class LocalEnvironment {
      * 
      * @param compilationUnit to add
      */
-    public void addCompilationUnit(BLTDEFCompilationUnit compilationUnit) {
+    public void addCompilationUnit(BLTDEFCompilationUnit compilationUnit)  throws IncompatibleCompUnitException {
         
         URL res = compilationUnit.getResource();
         
@@ -67,7 +72,28 @@ public class LocalEnvironment {
                     mLocToEngine.put(loc, engine);
                 }
                 
-                
+                //we have to map the port id defined in the current deploy to
+                //the relative Engine
+                for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
+                    
+                    for (String portId : aServiceEle.provideAllPortIds()) {
+                        
+                        Engine poe = mPortIdToEngine.get(portId);
+                        if (poe == null) {
+                            poe = engine;
+                            mPortIdToEngine.put(portId, engine);
+                        } else if (!poe.equals(engine)) {
+                            throw new IncompatibleCompUnitException("The compilation unit is not compatible with " +
+                                    "the actual Eviroment. It defines the portId " + portId + " yet present in the Enviroment");
+                        }
+                    }
+                    
+                    //now we deploy the ServiceElement to the Engine.
+                    BliteDeploymentDefinition deploymentDefinition =
+                            new BliteDeploymentDefinitionImp(aServiceEle);
+                    
+                    engine.deployProcessDefinition(deploymentDefinition, null, null);
+                }
             }
         }
         
@@ -75,7 +101,16 @@ public class LocalEnvironment {
     
     
     public Engine provideServiceEngine(ServiceIdentifier serviceId) {
-        throw new RuntimeException("Not implemeted yet");
+        
+        //:( The portId in blite it's the same of Endpont
+        //this's a strange view of WS world... 
+        String portId = serviceId.getEndpointName();
+        
+        Engine engine = mPortIdToEngine.get(portId);
+        if (engine == null) 
+            throw new IllegalStateException("PortId " + portId + " not have a Engine!! THIS IS IMPLEMETATION BUG!!");
+        
+        return engine;
     }
     
     

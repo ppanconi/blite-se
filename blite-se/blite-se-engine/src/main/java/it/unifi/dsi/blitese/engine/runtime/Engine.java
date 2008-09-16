@@ -31,7 +31,7 @@ public interface Engine {
      * @param saName
      * @param suName
      */
-    void addProcessDefinition(BliteDeploymentDefinition def, String saName, String suName);
+    void deployProcessDefinition(BliteDeploymentDefinition def, String saName, String suName);
     
     /**
      * Undeply a Blite Process Definition from the Engine.

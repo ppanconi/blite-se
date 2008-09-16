@@ -52,6 +52,23 @@ public class BLTDEFDeployment extends SimpleNode {
         return ints;
     }
     
+    /**
+     * @return The Set of abstract AServiceElements defined in this deploy.
+     * They are the BLTDEFServiceDef if present and all BLTDEFServiceInstance
+     * mixed in the same collectiom returned.
+     */
+    public Set<AServiceElement> provideAllServiceElement() {
+        
+        Set<AServiceElement> elements = new HashSet<AServiceElement>();
+        
+        BLTDEFServiceDef def = provideServiceDefinition();
+        if (def != null) elements.add(def);
+        
+        elements.addAll(provideAllInsatnces());
+        
+        return elements;
+    }
+    
     public URL getLocation() {
         return null;
     }

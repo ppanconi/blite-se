@@ -41,4 +41,18 @@ public abstract class AServiceElement extends SimpleNode {
     public void addPort(BLTDEFReceiveActivity port) {
         ports.add(port);
     }
+    
+    public List<BLTDEFReceiveActivity> getPorts() {
+        return ports;
+    }
+    
+    public List<String> provideAllPortIds() {
+        List<String> ids = new ArrayList<String>(ports.size());
+        
+        for (BLTDEFReceiveActivity port : getPorts()) {
+            ids.add(port.getPartners().getPortId());
+        }
+        
+        return ids;
+    }
 }
