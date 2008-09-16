@@ -70,9 +70,9 @@ public class TrivialExecutionTest extends TestCase {
             BLTDEFCompilationUnit bliteTree = (BLTDEFCompilationUnit) parser.parse();
             BLTDEFDeployment deployment = (BLTDEFDeployment) bliteTree.getDeployments().get(2);
             
-            BliteDeploymentDefinition def = new BliteDeploymentDefinitionImp(deployment, "TrivialProcess");
-            engine.addProcessDefinition(def, null, null);
-            
+//            BliteDeploymentDefinition def = new BliteDeploymentDefinitionImp(deployment, "TrivialProcess");
+//            engine.addProcessDefinition(def, null, null);
+//            
             
         } catch (ParseException ex) {
             ex.printStackTrace();

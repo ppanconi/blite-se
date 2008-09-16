@@ -14,16 +14,21 @@
  */
 package it.unifi.dsi.blitese.engine.definition;
 
+import it.unifi.dsi.blitese.parser.AServiceElement;
+import it.unifi.dsi.blitese.parser.BLTDEFServiceDef;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
-import java.util.Set;
 
 /**
- * This the interface for the static definition of a Blite process (program).
+ * This the interface for the static definition of a Blite process (program)
+ * (an object of abstract typeAServiceElement). 
+ * 
+ * The definition could be a real process definition (BLTDEFServiceDef) but also
+ * a instance definition (BLTDEFServiceInstance) ready to run,
+ * 
+ * One of this object could be deployated on an Engine instance.
  *
  * @author panks
  */
-
-
 public interface BliteDeploymentDefinition {
 
     /**
@@ -33,11 +38,29 @@ public interface BliteDeploymentDefinition {
      */
     Object getBliteId();
     
+//    /**
+//     * @return Set<BltDefServiceInstance> the set of statically defined 
+//     * blite processes instaces.
+//     */
+//    Set<BLTDEFServiceInstance> getDefProcessInstances();
+    
+    AServiceElement getServiceElement();
+    
     /**
-     * @return Set<BltDefServiceInstance> the set of statically defined 
-     * blite processes instaces.
+     * The BLTDEFServiceDef if the AServiceElement is of that type,
+     * null otherwise.
+     * 
+     * @return BLTDEFServiceDef
      */
-    Set<BLTDEFServiceInstance> getDefProcessInstances();
+    BLTDEFServiceDef provideServiceDefinition();
+    
+    /**
+     * The BLTDEFServiceInstance if the AServiceElement is of that type,
+     * null otherwise.
+     * 
+     * @return BLTDEFServiceInstance
+     */
+    BLTDEFServiceInstance provideServiceInstance();
     
 }
 

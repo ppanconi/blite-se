@@ -48,15 +48,15 @@ public class ProcessManagerImp implements ProcessManager {
         mSaName = (saName != null) ? saName : "unavailable";
 	mSuName = (suName != null) ? suName : "unavailable";
 
-        //if the static definition conteins same ready to run instances
-        //we start with them
-        for (BLTDEFServiceInstance instDef : bliteProcessDef.getDefProcessInstances()) {
-            
-            ProcessInstance processInstance = 
-                    new ProcessInstanceImp(mEngine, this, null, bliteProcessDef);
-            processInstance.activete(instDef);
-            
-        }
+//        //if the static definition conteins same ready to run instances
+//        //we start with them
+//        for (BLTDEFServiceInstance instDef : bliteProcessDef.getDefProcessInstances()) {
+//            
+//            ProcessInstance processInstance = 
+//                    new ProcessInstanceImp(mEngine, this, null, bliteProcessDef);
+//            processInstance.activete(instDef);
+//            
+//        }
         
     }
 
