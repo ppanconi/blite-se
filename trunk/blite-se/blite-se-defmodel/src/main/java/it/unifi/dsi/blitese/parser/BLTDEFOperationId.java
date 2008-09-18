@@ -19,13 +19,20 @@ public class BLTDEFOperationId extends SimpleNode {
   
  //added code start here ////////////////////////////////////////////////////////
     private String name;
+    private Token token;
 
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+    
     public String getName() {
-        return name;
+        return token.image;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    
     
 }

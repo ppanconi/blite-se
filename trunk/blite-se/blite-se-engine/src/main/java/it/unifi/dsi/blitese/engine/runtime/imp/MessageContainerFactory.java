@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 
 /**
  * This class create the appropriate instances of MessageContainer
@@ -25,7 +26,20 @@ import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
  */
 public class MessageContainerFactory {
 
+    private static MessageContainer createMessageContainer(Object contect, Object applicationTraceId, 
+            Object exchangeId, MessageContainer.Type type) {
+       return new MessageContainerImp(exchangeId, contect, type, applicationTraceId);
+    }
+    
     static public MessageContainer createMessageContainer(Object contect, Object applicationTraceId) {
         return new MessageContainerImp(contect, MessageContainer.Type.MESSAGE, applicationTraceId);
+    }
+    
+    static public MessageContainer createMessageContainerForInvalidDestinatioPort(ServiceIdentifier serviceId, Object exchangeId) {
+        
+        String content = "Invalid Service Identification: " + serviceId;
+        
+        return createMessageContainer(content, null, exchangeId, MessageContainer.Type.STATUS_ERROR);
+        
     }
 }

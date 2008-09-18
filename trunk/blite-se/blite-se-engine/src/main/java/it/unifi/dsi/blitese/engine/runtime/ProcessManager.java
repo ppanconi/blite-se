@@ -15,7 +15,6 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
-import java.util.Map;
 
 
 public interface ProcessManager {
@@ -25,6 +24,7 @@ public interface ProcessManager {
     /**
      * Execute the invoke operation on the provided Partner Link 
      * with the provided Operation and passing the provided Message Container. 
+     * This mathod is called by the instance to invoke the remote provider.
      * 
      * @param runtimePartnerLink the key object to locate the target partner link,
      *        TODO specialize this type       
@@ -59,6 +59,11 @@ public interface ProcessManager {
      */
     public Object getDefinitionProcessLevelLock();
     
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Engine to Process notification
+    
+    public void manageRequest(String operation, MessageContainer messageContainer);
     
 }
 

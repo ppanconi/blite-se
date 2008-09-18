@@ -881,12 +881,18 @@ void EmptyActivity() :
 BLTDEFReceiveActivity ReceiveActivity() :
 {
     BLTDEFRecPartners partners;
+    BLTDEFOperationId operation;
+    BLTDEFRecParams params;
 }
 {
-    <RECEIVE> partners = RecPartners() OperationId() RecParams()
+    <RECEIVE> partners = RecPartners() operation = OperationId() params = RecParams()
     {
         jjtThis.setPartners(partners);
+        jjtThis.setOperation(operation);
+        jjtThis.setParams(params);
+
         addPort(jjtThis);
+
         return jjtThis;
     }
 }
@@ -965,15 +971,21 @@ BLTDEFOperationId OperationId() :
 {
     t = <IDENTIFIER>
     {   
-        jjtThis.setName(t.image);
+        jjtThis.setToken(t);
         return jjtThis;
     }
 }
 
-void RecParams() :
-{}
+BLTDEFRecParams RecParams() :
+{ 
+    BLTDEFBoundId fparam;
+}
 {
-    BoundId()
+    fparam = BoundId()
+    {
+        jjtThis.addFormalParam(fparam);
+        return jjtThis;
+    }
 }
 
 BLTDEFInvParams InvParams() :
@@ -1020,7 +1032,7 @@ BLTDEFVarId VarId() :
     { return jjtThis; }
 }
 
-void BoundId()  :
+BLTDEFBoundId BoundId()  :
 {
     Token t;
 }
@@ -1029,6 +1041,7 @@ void BoundId()  :
     {
         jjtThis.setName(t.image);
         jjtThis.getBoundSymbs().put(jjtThis.getName(), jjtThis);
+        return jjtThis;
     }
 }
 

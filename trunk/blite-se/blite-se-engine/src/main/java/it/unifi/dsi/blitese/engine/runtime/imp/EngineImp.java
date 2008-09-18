@@ -24,6 +24,7 @@ import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,7 +73,10 @@ public class EngineImp implements Engine {
      * The internal threadpool for executionFlow
      */
     private ExecutorService executorService = Executors.newFixedThreadPool(INTERNAL_THREADPOOL_SIZE_DEFAULT);
-
+    
+    private Map<String, ProcessManager> mPortIdToManagers = new HashMap<String, ProcessManager>();
+    
+    
     public EngineImp () {
     }
 
@@ -90,9 +94,20 @@ public class EngineImp implements Engine {
 
             ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName);
             Object retObj = mManagers.put(bliteDef, processManager);
+            
             if (retObj != null) {
                 throw new RuntimeException("Fatal Error: this process is already loaded process Id: " + bliteDef.getBliteId());
+            } 
+            
+            for (String portId : bliteDef.getServiceElement().provideAllPortIds()) {
+                
+                if (mPortIdToManagers.get(portId) != null)
+                    throw new IllegalStateException("Duplicated portId " + portId);
+                
+                mPortIdToManagers.put(portId, processManager);
+                
             }
+            
             mNewAddedDep = true;
         }
 
@@ -105,6 +120,10 @@ public class EngineImp implements Engine {
 
         BliteDeploymentDefinition proc = mProcessDefs.remove(id);
         mManagers.remove(proc);
+
+        for (String portId : proc.getServiceElement().provideAllPortIds()) {
+            mPortIdToManagers.remove(portId);
+        }
     }
 
 //    public void addDeploymentDefinition(BltDefDeployment deployment) {
@@ -141,10 +160,7 @@ public class EngineImp implements Engine {
         public void run() {
             executor.executeCurrentActivity();
         }
-        
     }
-
-    
     
     /**
      * Add FlowExecutor to waithing the Incoming Event refered by the passed key
@@ -164,8 +180,29 @@ public class EngineImp implements Engine {
     //--------------------------------------------------------------------------
     //                 From Eviroment to Processes
     
+    /**
+     * Process the incoming request rooting it to the corret Process Manager
+     * 
+     * @param serviceId
+     * @param operation
+     * @param messageContainer
+     */
     public void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        String portId = serviceId.providePortId();
+        
+        ProcessManager m = mPortIdToManagers.get(portId);
+        
+        if (m == null) {
+            //we report error to the requester
+            Object exchangeId = messageContainer.getId();
+            MessageContainer errorStatusMC = MessageContainerFactory.createMessageContainerForInvalidDestinatioPort(serviceId, exchangeId);
+            getChannel().sendIntoExchange(exchangeId, errorStatusMC);
+        } else {
+            //we delyvery the request to the ProcessManager
+            m.manageRequest(operation, messageContainer);
+        }
+        
     }
 
     public void processExchange(MessageContainer messageContainer) {

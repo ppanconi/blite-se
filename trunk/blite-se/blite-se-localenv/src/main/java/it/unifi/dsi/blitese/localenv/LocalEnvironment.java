@@ -104,7 +104,7 @@ public class LocalEnvironment {
         
         //:( The portId in blite it's the same of Endpont
         //this's a strange view of WS world... 
-        String portId = serviceId.getEndpointName();
+        String portId = serviceId.providePortId();
         
         Engine engine = mPortIdToEngine.get(portId);
         if (engine == null) 
