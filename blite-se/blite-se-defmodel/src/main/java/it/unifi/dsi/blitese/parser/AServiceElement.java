@@ -15,7 +15,9 @@
 
 package it.unifi.dsi.blitese.parser;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +27,9 @@ import java.util.List;
 public abstract class AServiceElement extends SimpleNode {
 
     private List<BLTDEFReceiveActivity> ports = new ArrayList<BLTDEFReceiveActivity>();
+    //map 
+    private HashMap<String, List<BLTDEFReceiveActivity>> mOperationToRec = new HashMap<String, List<BLTDEFReceiveActivity>>();
+    
 
     public AServiceElement(BliteParser p, int i) {
         super(p, i);
@@ -40,6 +45,9 @@ public abstract class AServiceElement extends SimpleNode {
     
     public void addPort(BLTDEFReceiveActivity port) {
         ports.add(port);
+        
+        if (!checkOperationConfomity(port)) throw new IllegalArgumentException("Not Conform port " + port);
+        provideListForOperation(port.getOperation().getName()).add(port);
     }
     
     public List<BLTDEFReceiveActivity> getPorts() {
@@ -55,4 +63,32 @@ public abstract class AServiceElement extends SimpleNode {
         
         return ids;
     }
+    
+    public boolean checkOperationConfomity(BLTDEFReceiveActivity activity) {
+        
+        String operation = activity.getOperation().getName();
+        
+        List<BLTDEFReceiveActivity> l = provideListForOperation(operation);
+        if (l.size() > 0) {
+            BLTDEFReceiveActivity previous = l.get(0);
+            BLTDEFRecParams prevParams = previous.getParams();
+            BLTDEFRecParams curParam = activity.getParams();
+            
+            return prevParams.checkConformity(curParam);
+        }
+        return true;
+    }
+    
+    
+    public List<BLTDEFReceiveActivity> provideListForOperation(String operationId) {
+        List<BLTDEFReceiveActivity> l = mOperationToRec.get(operationId);
+        
+        if (l == null) {
+            l = new ArrayList<BLTDEFReceiveActivity>();
+            mOperationToRec.put(operationId, l);
+        }
+        
+        return l;
+    }
+    
 }

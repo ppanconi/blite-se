@@ -75,6 +75,9 @@ public abstract class AbstractBliteParser {
      * Add the current recive Activity definition to the current Service Element Definition
      * It checks also the deployments well-formed constrant on the definition.
      * 
+     * And Also check the conformity of actual operration with the eventual previous
+     * defined one.
+     * 
      * @param receiveActivity
      * @throws it.unifi.dsi.blitese.parser.ParseException
      */
@@ -93,9 +96,20 @@ public abstract class AbstractBliteParser {
                     "The port id " + portId + " definined at line " + t.beginLine + " , column " + t.beginColumn + " is used in other Deploy/ServiceInsatance definition");
         }
         
+        boolean portConformity = currentServEle.checkOperationConfomity(receiveActivity);
+        
+        if (!portConformity) {
+            Token t = receiveActivity.getOperation().getToken();
+            throw new ParseException("The operation at " +
+                     + t.beginLine + " , column " + t.beginColumn + " has not a conform signature to previous ones definitions");
+        }
+        
         currentServEle.addPort(receiveActivity);
         
+        
     }
+    
+    
     
     abstract public BltDefBaseNode parse() throws ParseException;
     

@@ -26,6 +26,7 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
+import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 import it.unifi.dsi.blitese.parser.SimpleNode;
 import java.util.HashMap;
@@ -37,7 +38,6 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
     private ProcessManager mProcessManager;
     private String instanceId; 
     private BliteDeploymentDefinition deploymentDefinition;
-    private BltDefBaseNode bliteDefinition;
 
     public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
                               String instanceId, 
@@ -54,19 +54,22 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         return mProcessManager;
     }
 
+    public String getInstanceId() {
+        return instanceId;
+    }
     
-    public void activete(BltDefBaseNode defStartNode) {
+    public void activete() {
 
-        this.bliteDefinition = defStartNode;
+        AServiceElement startElement = deploymentDefinition.getServiceElement();
+        
         FlowExecutor executor = new FlowExecutorImp(this);
         
-        BltDefBaseNode myChilDDefNode = (BltDefBaseNode) 
-                ((SimpleNode)bliteDefinition).jjtGetChild(0);
+        BltDefBaseNode startDefNode = (BltDefBaseNode) startElement.getUniqueChild();
                 
-        ActivityComponent myChilsActivity = ActivityComponentFactory.getInstance()
-                .makeRuntimeActivity(myChilDDefNode, this, this, executor);
+        ActivityComponent startActivity = ActivityComponentFactory.getInstance()
+                .makeRuntimeActivity(startDefNode, this, this, executor);
         
-        executor.setCurrentActivity(myChilsActivity);
+        executor.setCurrentActivity(startActivity);
         mEngine.queueFlowExecutor(executor);
         
     }

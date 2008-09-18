@@ -24,7 +24,12 @@ import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
 import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
+import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -40,6 +45,10 @@ public class ProcessManagerImp implements ProcessManager {
     private String mSuName;
     
     private Object definitionProcessLevelLock = new Object();
+    private Map<String, ProcessInstance> mInstances = new HashMap<String, ProcessInstance>();
+    private Map<String, BLTDEFReceiveActivity> mPortIdToPortDef = new HashMap<String, BLTDEFReceiveActivity>();
+    
+    
 
     public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
@@ -48,15 +57,16 @@ public class ProcessManagerImp implements ProcessManager {
         mSaName = (saName != null) ? saName : "unavailable";
 	mSuName = (suName != null) ? suName : "unavailable";
 
-//        //if the static definition conteins same ready to run instances
-//        //we start with them
-//        for (BLTDEFServiceInstance instDef : bliteProcessDef.getDefProcessInstances()) {
-//            
-//            ProcessInstance processInstance = 
-//                    new ProcessInstanceImp(mEngine, this, null, bliteProcessDef);
-//            processInstance.activete(instDef);
-//            
-//        }
+        
+        
+//        //if the static definition conteins same ready to run instance
+//        //we start with it
+        BLTDEFServiceInstance readyToRunInstance = bliteProcessDef.provideServiceInstance();
+        
+        if (readyToRunInstance != null) {
+            ProcessInstance instance = createInstance();
+            instance.activete();
+        }
         
     }
 
@@ -89,5 +99,21 @@ public class ProcessManagerImp implements ProcessManager {
         return mEngine.cosumeEvent(inComingEventKey);
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Utility 
+    private Long instNumber;
+    synchronized  private ProcessInstance createInstance() {
+        ProcessInstance i = new ProcessInstanceImp(mEngine, this, "" + mBliteProcessDef.getBliteId() + instNumber++ , mBliteProcessDef);
+        mInstances.put(i.getInstanceId(), i);
+        return i;
+    }
+
+    public void manageRequest(String operation, MessageContainer messageContainer) {
+        
+        Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Mmanaging Request ...");
+        
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
 }
 

@@ -20,7 +20,9 @@ public class BLTDEFReceiveActivity extends SimpleNode {
 //added code start here ////////////////////////////////////////////////////////
   
     private BLTDEFRecPartners recPartners;
-
+    private BLTDEFOperationId operation;
+    private BLTDEFRecParams params;
+    
     public BLTDEFRecPartners getPartners() {
         return recPartners;
     }
@@ -28,5 +30,22 @@ public class BLTDEFReceiveActivity extends SimpleNode {
     public void setPartners(BLTDEFRecPartners partners) {
         this.recPartners = partners;
     }
+
+    public BLTDEFOperationId getOperation() {
+        return operation;
+    }
+
+    public void setOperation(BLTDEFOperationId operation) {
+        this.operation = operation;
+    }
+
+    public BLTDEFRecParams getParams() {
+        return params;
+    }
+
+    public void setParams(BLTDEFRecParams params) {
+        this.params = params;
+    }
+    
     
 }
