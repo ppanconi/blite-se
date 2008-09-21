@@ -38,7 +38,7 @@ public class LocalEnvironment {
     //
     private Map<EngineLocation, Engine> mLocToEngine = new HashMap<EngineLocation, Engine>();
     
-    private Map<String, Engine> mPortIdToEngine = new HashMap<String, Engine>();
+    private Map<String, Engine> mServiceNameToEngine = new HashMap<String, Engine>();
     
     private LocalEngineChannel channel;
 
@@ -76,15 +76,15 @@ public class LocalEnvironment {
                 //the relative Engine
                 for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
                     
-                    for (String portId : aServiceEle.provideAllPortIds()) {
+                    for (String serviceName : aServiceEle.provideAllServiceName()) {
                         
-                        Engine poe = mPortIdToEngine.get(portId);
+                        Engine poe = mServiceNameToEngine.get(serviceName);
                         if (poe == null) {
                             poe = engine;
-                            mPortIdToEngine.put(portId, engine);
+                            mServiceNameToEngine.put(serviceName, engine);
                         } else if (!poe.equals(engine)) {
                             throw new IncompatibleCompUnitException("The compilation unit is not compatible with " +
-                                    "the actual Eviroment. It defines the portId " + portId + " yet present in the Enviroment");
+                                    "the actual Eviroment. It defines the portId " + serviceName + " yet present in the Enviroment");
                         }
                     }
                     
@@ -104,11 +104,11 @@ public class LocalEnvironment {
         
         //:( The portId in blite it's the same of Endpont
         //this's a strange view of WS world... 
-        String portId = serviceId.providePortId();
+        String serviceName = serviceId.provideStringServiceName();
         
-        Engine engine = mPortIdToEngine.get(portId);
+        Engine engine = mServiceNameToEngine.get(serviceName);
         if (engine == null) 
-            throw new IllegalStateException("PortId " + portId + " not have a Engine!! THIS IS IMPLEMETATION BUG!!");
+            throw new IllegalStateException("Service " + serviceName + " not have a Engine!! THIS IS IMPLEMETATION BUG!!");
         
         return engine;
     }

@@ -24,8 +24,11 @@ import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -49,14 +52,14 @@ public class EngineImp implements Engine {
     private boolean mNewAddedDep = false; //one state marker for eventually persistence synch.
     private EngineChannel mChannel; //the comunication Channel
     
-    private ConcurrentMap<InComingEventKey, FlowExecutor>
-                mEventWaitingExecutor = new ConcurrentHashMap<InComingEventKey, FlowExecutor>();
+    private ConcurrentMap<InComingEventKey, List<FlowExecutor>>
+                mEventWaitingExecutor = new ConcurrentHashMap<InComingEventKey, List<FlowExecutor>>();
     
     private ConcurrentHashMap<Object, ProcessManager>
                 mMExchangeToProcessManager = new ConcurrentHashMap<Object, ProcessManager>();
     
-    private ConcurrentHashMap<InComingEventKey, MessageContainer>
-                mInComingEvent = new ConcurrentHashMap<InComingEventKey, MessageContainer>();
+    private ConcurrentHashMap<InComingEventKey, List<MessageContainer>>
+                mInComingEvent = new ConcurrentHashMap<InComingEventKey, List<MessageContainer>>();
     
     
     /**
@@ -74,7 +77,7 @@ public class EngineImp implements Engine {
      */
     private ExecutorService executorService = Executors.newFixedThreadPool(INTERNAL_THREADPOOL_SIZE_DEFAULT);
     
-    private Map<String, ProcessManager> mPortIdToManagers = new HashMap<String, ProcessManager>();
+    private Map<String, ProcessManager> mServiceNameToManagers = new HashMap<String, ProcessManager>();
     
     
     public EngineImp () {
@@ -99,12 +102,12 @@ public class EngineImp implements Engine {
                 throw new RuntimeException("Fatal Error: this process is already loaded process Id: " + bliteDef.getBliteId());
             } 
             
-            for (String portId : bliteDef.getServiceElement().provideAllPortIds()) {
+            for (String serviceName : bliteDef.getServiceElement().provideAllServiceName()) {
                 
-                if (mPortIdToManagers.get(portId) != null)
-                    throw new IllegalStateException("Duplicated portId " + portId);
+                if (mServiceNameToManagers.get(serviceName) != null)
+                    throw new IllegalStateException("Duplicated portId " + serviceName);
                 
-                mPortIdToManagers.put(portId, processManager);
+                mServiceNameToManagers.put(serviceName, processManager);
                 
             }
             
@@ -121,8 +124,8 @@ public class EngineImp implements Engine {
         BliteDeploymentDefinition proc = mProcessDefs.remove(id);
         mManagers.remove(proc);
 
-        for (String portId : proc.getServiceElement().provideAllPortIds()) {
-            mPortIdToManagers.remove(portId);
+        for (String serviceName : proc.getServiceElement().provideAllServiceName()) {
+            mServiceNameToManagers.remove(serviceName);
         }
     }
 
@@ -170,9 +173,41 @@ public class EngineImp implements Engine {
      */
     //synchronized 
     public void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey) {
-        mEventWaitingExecutor.put(eventKey, executor);
+        
+        List<FlowExecutor> l = mEventWaitingExecutor.get(eventKey);
+        if (l == null) {
+            l = new LinkedList<FlowExecutor>();
+            mEventWaitingExecutor.put(eventKey, l);
+        }
+        
+        l.add(executor);
     }
 
+    public List<FlowExecutor> resumeFlowWaitingEvent(InComingEventKey eventKey) {
+        List<FlowExecutor> l = mEventWaitingExecutor.remove(eventKey);
+        
+        if (l != null) {
+            
+            for (FlowExecutor flowExecutor : l) {
+                queueFlowExecutor(flowExecutor);
+            }
+            
+        } else {
+            l = new ArrayList<FlowExecutor>();
+        }
+        
+        return l;
+    }
+
+    public void addEventSubjet(InComingEventKey eventKey, MessageContainer mc) {
+        List<MessageContainer> l = mInComingEvent.get(eventKey);
+        if (l == null) {
+            l = new LinkedList<MessageContainer>();
+            mInComingEvent.put(eventKey, l);
+        }
+        l.add(mc);
+    }
+    
     
     ////////////////////////////////////////////////////////////////////////////
     // Engine Comunication Interface
@@ -189,9 +224,9 @@ public class EngineImp implements Engine {
      */
     public void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
         
-        String portId = serviceId.providePortId();
+        String serviceName = serviceId.provideStringServiceName();
         
-        ProcessManager m = mPortIdToManagers.get(portId);
+        ProcessManager m = mServiceNameToManagers.get(serviceName);
         
         if (m == null) {
             //we report error to the requester
@@ -200,7 +235,7 @@ public class EngineImp implements Engine {
             getChannel().sendIntoExchange(exchangeId, errorStatusMC);
         } else {
             //we delyvery the request to the ProcessManager
-            m.manageRequest(operation, messageContainer);
+            m.manageRequest(serviceId, operation, messageContainer);
         }
         
     }
@@ -213,12 +248,14 @@ public class EngineImp implements Engine {
         
         synchronized (targetProcess.getDefinitionProcessLevelLock()) {
             
-            mInComingEvent.put(icek, messageContainer);
+            addEventSubjet(icek, messageContainer);
             
             //we notifay the incoming event
-            FlowExecutor executor = mEventWaitingExecutor.remove(icek);
-            if (executor != null )
-                queueFlowExecutor(executor);
+//            FlowExecutor executor = mEventWaitingExecutor.remove(icek);
+//            if (executor != null )
+//                queueFlowExecutor(executor);
+//            
+            resumeFlowWaitingEvent(icek);
             
         }
         
@@ -236,15 +273,40 @@ public class EngineImp implements Engine {
             
             DoneStatusInComingEventKey doneStatusInComingEventKey = (DoneStatusInComingEventKey) inComingEventKey;
             
-            MessageContainer mc = mInComingEvent.remove(doneStatusInComingEventKey);
-            mChannel.closeExchange(mc.getId());
+            List<MessageContainer> l = mInComingEvent.remove(doneStatusInComingEventKey);
+            if (l == null) return null;
+             
+            if (l.size() > 1) throw new IllegalStateException("Multiple Event was asked as a single event");
             
+            
+            MessageContainer mc = l.get(0);
+            mChannel.closeExchange(mc.getId());
             
             return mc;
         }
         
         throw new UnsupportedOperationException("Not supported yet.");
-    }    
+    }
+
+    public void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer) {
+        List<MessageContainer> l = provideEvents(inComingEventKey);
+        
+        for (MessageContainer mc : l) {
+            if (mc.equals(messageContainer)) {
+                l.remove(mc);
+                //if we have no more event subjetc we clean the stuff...
+                if (l.size() == 0) mInComingEvent.remove(inComingEventKey);
+            }
+        }
+    }
+
+    public List<MessageContainer> provideEvents(InComingEventKey inComingEventKey) {
+        List<MessageContainer> l = mInComingEvent.get(inComingEventKey);
+        
+        if (l == null) l = new ArrayList<MessageContainer>();
+        
+        return l;
+    }
 
     
     public InComingEventKey invoke(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer, ProcessInstance instance) {

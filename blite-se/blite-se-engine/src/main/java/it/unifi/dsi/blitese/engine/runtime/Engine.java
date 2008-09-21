@@ -15,6 +15,7 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import java.util.List;
 
 
 /**
@@ -57,7 +58,22 @@ public interface Engine {
      */
     void queueFlowExecutor(FlowExecutor executor);
     
+    /**
+     * Put the executor in the waiting queue for the incoming event.
+     * 
+     * @param executor
+     * @param eventKey
+     */
     void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey);
+    
+    /**
+     * Resume the executors waitng for the specified event key
+     * @param eventKey
+     */
+    public List<FlowExecutor> resumeFlowWaitingEvent(InComingEventKey eventKey);
+    
+    
+    public void addEventSubjet(InComingEventKey eventKey, MessageContainer mc);
     
     
     ////////////////////////////////////////////////////////////////////////////
@@ -78,7 +94,34 @@ public interface Engine {
     InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
             MessageContainer messageContainer, ProcessInstance instance);
 
+    /**
+     * Try to consume the UNIQUE event with the specified key.
+     * 
+     * If with that key there are more than one Event then an exception is thrown.
+     *
+     * If no event content is present for this event null is returned.
+     * 
+     * @param inComingEventKey
+     * @return The Event Subject or null
+     */
     MessageContainer cosumeEvent(InComingEventKey inComingEventKey);
+    
+    
+    /**
+     * Consume the multiple event/key.
+     *  
+     * @param inComingEventKey
+     * @param messageContainer
+     */
+    void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer);
+    
+    /**
+     * Return the list all Event related to the provieded key
+     * @param inComingEventKey
+     * @return
+     */
+    List<MessageContainer> provideEvents(InComingEventKey inComingEventKey);
+    
     
     /**
      * Send done status for the response from the server for the invoke from

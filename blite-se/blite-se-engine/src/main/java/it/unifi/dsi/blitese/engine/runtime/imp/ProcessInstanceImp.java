@@ -125,5 +125,11 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         return this;
     }
 
+    public boolean matchCorrelation(String variable, Object value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    
+
 }
 

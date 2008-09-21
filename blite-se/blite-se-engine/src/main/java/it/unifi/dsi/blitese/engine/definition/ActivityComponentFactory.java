@@ -19,7 +19,9 @@ import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ActivityComponentBase;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,6 +79,8 @@ public class ActivityComponentFactory {
         
         if (bltDefNode instanceof BLTDEFInvokeActivity ) {
             return InvokeActivity.class;
+        } else if (bltDefNode instanceof BLTDEFReceiveActivity) {
+            return ReceiveActivity.class;
         } else {
             throw new RuntimeException("Not yet supported Activity " + bltDefNode);
         }

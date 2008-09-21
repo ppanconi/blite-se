@@ -15,6 +15,9 @@
 
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
+import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
+
 /**
  * A Factory class to create the key for incoming event
  * 
@@ -22,11 +25,15 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
  */
 public class InComingEventKeyFactory {
     
+    public static final String DONE_STATUS_PREFIX = "DONE";
+    public static final String IN_REQUEST_PREFIX = "REQ";
+    
     static public DoneStatusInComingEventKey createDoneStatusInComingEventKey(Object meId) {
-      
         return new DoneStatusInComingEventKey(meId);
-        
-        
     }
 
+    static public RequestInComingEventKey createRequestInComingEventKey(ServiceIdentifier sid, String portId) {
+        return new RequestInComingEventKey(sid, portId);
+    }
+    
 }

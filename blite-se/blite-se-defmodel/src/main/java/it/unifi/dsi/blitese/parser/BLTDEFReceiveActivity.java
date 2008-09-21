@@ -47,5 +47,13 @@ public class BLTDEFReceiveActivity extends SimpleNode {
         this.params = params;
     }
     
+    public String getPortId() {
+        return makePortId(getPartners().getServiceName(), getOperation().getName());
+    }
     
+    static public String makePortId(String serviceName, String operationName) {
+        
+        return serviceName + "/" + operationName;
+        
+    }
 }

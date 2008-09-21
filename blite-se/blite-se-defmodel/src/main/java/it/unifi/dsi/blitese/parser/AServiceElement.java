@@ -15,7 +15,6 @@
 
 package it.unifi.dsi.blitese.parser;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +26,10 @@ import java.util.List;
 public abstract class AServiceElement extends SimpleNode {
 
     private List<BLTDEFReceiveActivity> ports = new ArrayList<BLTDEFReceiveActivity>();
-    //map 
-    private HashMap<String, List<BLTDEFReceiveActivity>> mOperationToRec = new HashMap<String, List<BLTDEFReceiveActivity>>();
     
-
+    //map the portId to the the definition list
+    private HashMap<String, List<BLTDEFReceiveActivity>> mPortIdToDef = new HashMap<String, List<BLTDEFReceiveActivity>>();
+    
     public AServiceElement(BliteParser p, int i) {
         super(p, i);
     }
@@ -47,28 +46,32 @@ public abstract class AServiceElement extends SimpleNode {
         ports.add(port);
         
         if (!checkOperationConfomity(port)) throw new IllegalArgumentException("Not Conform port " + port);
-        provideListForOperation(port.getOperation().getName()).add(port);
+        provideListForPort(port.getPortId()).add(port);
     }
     
     public List<BLTDEFReceiveActivity> getPorts() {
         return ports;
     }
     
-    public List<String> provideAllPortIds() {
-        List<String> ids = new ArrayList<String>(ports.size());
+    public HashMap<String, List<BLTDEFReceiveActivity>> getPortMapping() {
+        return mPortIdToDef;
+    }
+    
+    public List<String> provideAllServiceName() {
+        List<String> names = new ArrayList<String>(ports.size());
         
         for (BLTDEFReceiveActivity port : getPorts()) {
-            ids.add(port.getPartners().getPortId());
+            names.add(port.getPartners().getServiceName());
         }
         
-        return ids;
+        return names;
     }
     
     public boolean checkOperationConfomity(BLTDEFReceiveActivity activity) {
         
-        String operation = activity.getOperation().getName();
+        String portId = activity.getPortId();
         
-        List<BLTDEFReceiveActivity> l = provideListForOperation(operation);
+        List<BLTDEFReceiveActivity> l = provideListForPort(portId);
         if (l.size() > 0) {
             BLTDEFReceiveActivity previous = l.get(0);
             BLTDEFRecParams prevParams = previous.getParams();
@@ -80,15 +83,18 @@ public abstract class AServiceElement extends SimpleNode {
     }
     
     
-    public List<BLTDEFReceiveActivity> provideListForOperation(String operationId) {
-        List<BLTDEFReceiveActivity> l = mOperationToRec.get(operationId);
+    public List<BLTDEFReceiveActivity> provideListForPort(String portId) {
+        List<BLTDEFReceiveActivity> l = mPortIdToDef.get(portId);
         
         if (l == null) {
             l = new ArrayList<BLTDEFReceiveActivity>();
-            mOperationToRec.put(operationId, l);
+            mPortIdToDef.put(portId, l);
         }
         
         return l;
     }
     
+    public boolean isCreateInstancePort(String portId) {
+        return false;
+    }
 }

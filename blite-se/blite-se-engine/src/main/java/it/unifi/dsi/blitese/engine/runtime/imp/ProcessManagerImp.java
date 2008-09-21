@@ -27,6 +27,7 @@ import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +47,7 @@ public class ProcessManagerImp implements ProcessManager {
     
     private Object definitionProcessLevelLock = new Object();
     private Map<String, ProcessInstance> mInstances = new HashMap<String, ProcessInstance>();
-    private Map<String, BLTDEFReceiveActivity> mPortIdToPortDef = new HashMap<String, BLTDEFReceiveActivity>();
+    private HashMap<String, List<BLTDEFReceiveActivity>> mPortIdToPortDef = new HashMap<String, List<BLTDEFReceiveActivity>>();
     
     
 
@@ -57,10 +58,11 @@ public class ProcessManagerImp implements ProcessManager {
         mSaName = (saName != null) ? saName : "unavailable";
 	mSuName = (suName != null) ? suName : "unavailable";
 
+        //we record the mapping
+        mPortIdToPortDef = bliteProcessDef.getServiceElement().getPortMapping();
         
-        
-//        //if the static definition conteins same ready to run instance
-//        //we start with it
+        //if the static definition conteins same ready to run instance
+        //we start with it
         BLTDEFServiceInstance readyToRunInstance = bliteProcessDef.provideServiceInstance();
         
         if (readyToRunInstance != null) {
@@ -99,6 +101,16 @@ public class ProcessManagerImp implements ProcessManager {
         return mEngine.cosumeEvent(inComingEventKey);
     }
 
+    public void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer) {
+        mEngine.consumeEvent(inComingEventKey, messageContainer);
+    }
+
+    public List<MessageContainer> provideEvents(InComingEventKey inComingEventKey) {
+        return mEngine.provideEvents(inComingEventKey);
+    }
+    
+    
+
     ////////////////////////////////////////////////////////////////////////////
     // Utility 
     private Long instNumber;
@@ -108,9 +120,49 @@ public class ProcessManagerImp implements ProcessManager {
         return i;
     }
 
-    public void manageRequest(String operation, MessageContainer messageContainer) {
+    public void manageRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
         
-        Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Mmanaging Request ...");
+        //we locate the target port for this request
+        String portId = BLTDEFReceiveActivity.makePortId(serviceId.provideStringServiceName(), operation);
+        
+        RequestInComingEventKey icek = 
+                    InComingEventKeyFactory.createRequestInComingEventKey(serviceId, portId);
+        icek.setMc(messageContainer);        
+            
+        Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Managing Request to port " + portId);
+        
+        //test if we target a create instance
+        if (mBliteProcessDef.getServiceElement().isCreateInstancePort(portId)) {
+            //we create a new instance
+
+            Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Creationg New Instance for port " + portId);
+            
+            ProcessInstance pi = createInstance();
+            
+            Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Created with id " + pi.getInstanceId());
+            
+            synchronized (getDefinitionProcessLevelLock()) {
+                getEngine().addEventSubjet(icek, messageContainer);
+            }
+            
+            pi.activete();
+            
+        } else {
+            //we notify the incoming event
+            
+            synchronized (getDefinitionProcessLevelLock()) {
+                
+                getEngine().addEventSubjet(icek, messageContainer);
+                getEngine().resumeFlowWaitingEvent(icek);
+                
+            }        
+            
+        }
+        
+        
+        
+        
+        
         
         throw new UnsupportedOperationException("Not supported yet.");
     }

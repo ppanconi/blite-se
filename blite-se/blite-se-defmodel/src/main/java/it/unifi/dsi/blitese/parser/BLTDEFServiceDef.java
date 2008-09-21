@@ -2,6 +2,8 @@
 
 package it.unifi.dsi.blitese.parser;
 
+import java.util.HashMap;
+
 public class BLTDEFServiceDef extends AServiceElement {
   public BLTDEFServiceDef(int id) {
     super(id);
@@ -16,4 +18,23 @@ public class BLTDEFServiceDef extends AServiceElement {
   public Object jjtAccept(BliteParserVisitor visitor, Object data) {
     return visitor.visit(this, data);
   }
+  
+//added code start here ////////////////////////////////////////////////////////
+  
+    //map to mark the create instances recive
+    private HashMap<String, Object> mPortIdCreate = new HashMap<String, Object>();   
+    
+    public boolean markAsCreateInstance(BLTDEFReceiveActivity receiveActivity) {
+        
+        String portId = receiveActivity.getPortId();
+        return null == mPortIdCreate.put(portId, receiveActivity);
+        
+    }
+
+    @Override
+    public boolean isCreateInstancePort(String portId) {
+        return null == mPortIdCreate.get(portId);
+    }
+    
+    
 }

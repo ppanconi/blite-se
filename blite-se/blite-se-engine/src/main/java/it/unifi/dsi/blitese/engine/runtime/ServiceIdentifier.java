@@ -55,7 +55,7 @@ public class ServiceIdentifier {
         return s;
     }
     
-    public String providePortId() {
+    public String provideStringServiceName() {
         return getEndpointName();
     }
     
