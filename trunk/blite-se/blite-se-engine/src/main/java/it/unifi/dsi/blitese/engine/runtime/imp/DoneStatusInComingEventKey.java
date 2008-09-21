@@ -33,7 +33,13 @@ public class DoneStatusInComingEventKey implements InComingEventKey {
 
     @Override
     public int hashCode() {
-        return meId.hashCode();
+        return (InComingEventKeyFactory.DONE_STATUS_PREFIX + meId.toString()).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //TODO
+        return super.equals(obj);
     }
 
     public Object getMeId() {

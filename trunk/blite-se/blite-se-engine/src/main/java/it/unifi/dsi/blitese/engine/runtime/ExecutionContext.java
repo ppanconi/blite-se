@@ -22,5 +22,7 @@ package it.unifi.dsi.blitese.engine.runtime;
 public interface ExecutionContext extends VariableScope {
     
     ProcessInstance getProcessInstance();
+    
+    boolean matchCorrelation(String variable, Object value);
 
 }

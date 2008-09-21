@@ -19,23 +19,19 @@ public class BLTDEFRecPartners extends SimpleNode {
   
 //added code start here ////////////////////////////////////////////////////////
   
-    private Token portToken;
-//    private String portId;
+    private Token recPartToken;
 
-    public Token getPortToken() {
-        return portToken;
+    public Token getRecPartToken() {
+        return recPartToken;
     }
 
-    public void setPortToken(Token portToken) {
-        this.portToken = portToken;
-    }
-    
-    public String getPortId() {
-        return portToken.image;
+    public void setRecPartToken(Token recPartToken) {
+        this.recPartToken = recPartToken;
     }
 
-//    public void setPortId(String portId) {
-//        this.portId = portId;
-//    }
+    public String getServiceName() {
+        return recPartToken.image;
+    }
+
     
 }

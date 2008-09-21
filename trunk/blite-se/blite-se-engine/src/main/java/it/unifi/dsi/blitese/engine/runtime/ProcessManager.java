@@ -15,6 +15,7 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
+import java.util.List;
 
 
 public interface ProcessManager {
@@ -50,7 +51,28 @@ public interface ProcessManager {
      */
     public ServiceIdentifier resovleParterLink(BLTDEFInvPartners partnersDef, VariableScope variableScope);
     
+    /**
+     * 
+     * @param inComingEventKey
+     * @return
+     */
     MessageContainer cosumeEvent(InComingEventKey inComingEventKey);
+    
+    /**
+     * Consume the multiple event/key.
+     *  
+     * @param inComingEventKey
+     * @param messageContainer
+     */
+    void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer);
+    
+    /**
+     * Return the list all Event related to the provieded key
+     * @param inComingEventKey
+     * @return
+     */
+    List<MessageContainer> provideEvents(InComingEventKey inComingEventKey);
+    
     
     /**
      * Provide a lock at Process definition Level
@@ -63,7 +85,8 @@ public interface ProcessManager {
     ////////////////////////////////////////////////////////////////////////////
     // Engine to Process notification
     
-    public void manageRequest(String operation, MessageContainer messageContainer);
+    public void manageRequest(ServiceIdentifier serviceId, String operation, 
+                              MessageContainer messageContainer);
     
 }
 

@@ -861,9 +861,13 @@ void BasicActivity() #void :
 }
 
 void StartSequenceActivity() :
-{}
 {
-    <SEQBEGIN> ReceiveActivity() ( ";" Activity() )* <SEQEND>
+    BLTDEFReceiveActivity createRecive;
+}
+{
+    <SEQBEGIN> createRecive = ReceiveActivity() { markReciveAsCreateInst(createRecive); }
+    ( ";" Activity() )* 
+    <SEQEND>
 }
 
 void SequenceActivity() :
@@ -919,12 +923,12 @@ void ExitActivity() :
 }
 
 BLTDEFRecPartners RecPartners() :
-{   Token recPort = null;
+{   Token recPart = null;
 }
 {
-    "<" recPort = PartnerLitId() ( "," PartnerId() )? ">"
+    "<" recPart = PartnerLitId() ( "," PartnerId() )? ">"
     {
-        jjtThis.setPortToken(recPort);
+        jjtThis.setRecPartToken(recPart);
         return jjtThis;
     }
 }

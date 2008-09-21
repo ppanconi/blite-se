@@ -29,12 +29,12 @@ public abstract class AbstractBliteParser {
     static AServiceElement currentServEle;
     
     //
-    static Map<String, AServiceElement> mPortsToServices = new HashMap<String, AServiceElement>();
+    static Map<String, AServiceElement> mServiceNameToServices = new HashMap<String, AServiceElement>();
     
     public static void cleanTables() {
         sSymbolTables = new HashMap<AServiceElement, Map<String, Object>>();
         currentServEle = null;
-        mPortsToServices = new HashMap<String, AServiceElement>();
+        mServiceNameToServices = new HashMap<String, AServiceElement>();
     }
     
     static public AbstractBliteParser provideInstance(InputStream stream) {
@@ -81,19 +81,19 @@ public abstract class AbstractBliteParser {
      * @param receiveActivity
      * @throws it.unifi.dsi.blitese.parser.ParseException
      */
-    static void addPort(BLTDEFReceiveActivity receiveActivity) throws ParseException {
+    public static void addPort(BLTDEFReceiveActivity receiveActivity) throws ParseException {
         
-        String portId = receiveActivity.getPartners().getPortId();
+        String serviceName = receiveActivity.getPartners().getServiceName();
         
-        AServiceElement previous = mPortsToServices.get(portId);
+        AServiceElement previous = mServiceNameToServices.get(serviceName);
         if (previous == null) {
             previous = currentServEle;
-            mPortsToServices.put(portId, currentServEle);
+            mServiceNameToServices.put(serviceName, currentServEle);
         } else if (!previous.equals(currentServEle)) {
             
-            Token t = receiveActivity.getPartners().getPortToken();
+            Token t = receiveActivity.getPartners().getRecPartToken();
             throw new ParseException("The deployments are not well-formated. " +
-                    "The port id " + portId + " definined at line " + t.beginLine + " , column " + t.beginColumn + " is used in other Deploy/ServiceInsatance definition");
+                    "The service name " + serviceName + " definined at line " + t.beginLine + " , column " + t.beginColumn + " is used in other Deploy/ServiceInsatance definition");
         }
         
         boolean portConformity = currentServEle.checkOperationConfomity(receiveActivity);
@@ -109,7 +109,13 @@ public abstract class AbstractBliteParser {
         
     }
     
-    
+    public static void markReciveAsCreateInst(BLTDEFReceiveActivity receiveActivity) {
+        
+        BLTDEFServiceDef processDef = (BLTDEFServiceDef) currentServEle;
+        
+        processDef.markAsCreateInstance(receiveActivity);
+        
+    }
     
     abstract public BltDefBaseNode parse() throws ParseException;
     
