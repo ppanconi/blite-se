@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.parser;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class BLTDEFService extends SimpleNode {
@@ -70,5 +71,8 @@ public class BLTDEFService extends SimpleNode {
     public void setServiceInstance(BLTDEFServiceInstance serviceInstance) {
         this.serviceInstance = serviceInstance;
     }
-   
+ 
+    public void setCorrelationSet(List<String> cset) {
+        //TODO
+    }
 }

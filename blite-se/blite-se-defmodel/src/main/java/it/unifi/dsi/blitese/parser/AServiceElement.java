@@ -30,6 +30,8 @@ public abstract class AServiceElement extends SimpleNode {
     //map the portId to the the definition list
     private HashMap<String, List<BLTDEFReceiveActivity>> mPortIdToDef = new HashMap<String, List<BLTDEFReceiveActivity>>();
     
+    private List<String> correlationSet = new ArrayList<String>();
+    
     public AServiceElement(BliteParser p, int i) {
         super(p, i);
     }
@@ -97,4 +99,14 @@ public abstract class AServiceElement extends SimpleNode {
     public boolean isCreateInstancePort(String portId) {
         return false;
     }
+
+    public List<String> getCorrelationSet() {
+        return correlationSet;
+    }
+
+    public void setCorrelationSet(List<String> correlationSet) {
+        this.correlationSet = correlationSet;
+    }
+    
+    
 }

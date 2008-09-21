@@ -785,14 +785,29 @@ BLTDEFDeployments Deployments() :
 BLTDEFDeployment Deployment() :
 { 
     BLTDEFService service;
+    BLTDEFCorrelationSet cset = null;
 }
 {
-    "{" ( service = Service() ) "}"
+    "{" ( service = Service() ) "}" ( cset = CorrelationSet() )?
     {
+        if (cset != null) service.setCorrelationSet(cset.getCorrelationSet());
         jjtThis.setServices(service.getAllServices());
     }
     { return jjtThis; }
 }
+
+BLTDEFCorrelationSet CorrelationSet() :
+{
+    Token t;
+}
+{
+    "(" 
+        t = <IDENTIFIER> { jjtThis.addVarToCorrelationSet(t.image); } 
+  ( "," t = <IDENTIFIER> { jjtThis.addVarToCorrelationSet(t.image); } )* 
+    ")"
+    { return jjtThis; }
+}
+
 
 BLTDEFService Service() #Service :
 {
