@@ -72,14 +72,10 @@ public class InvokeActivity extends ActivityComponentBase {
         //we create the message container
         MessageContainer mc = MessageContainerFactory.createMessageContainer(m, null);
 
-        //menage the correlation here
-        //TODO
-        
         ServiceIdentifier service = myManager.resovleParterLink(activityDef.getPartners(), getContext());
         
         //execute the invoke using the manager Facade interface.
-        eventKey = 
-                myManager.invoke(service, operation, mc, getContext().getProcessInstance());
+        eventKey =  myManager.invoke(service, operation, mc, getContext().getProcessInstance());
         
         System.out.println("INVOKE on " + service + " operation " + operation + " passing " + m);
         

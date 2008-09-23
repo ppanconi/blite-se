@@ -17,7 +17,9 @@ package it.unifi.dsi.blitese.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -30,7 +32,7 @@ public abstract class AServiceElement extends SimpleNode {
     //map the portId to the the definition list
     private HashMap<String, List<BLTDEFReceiveActivity>> mPortIdToDef = new HashMap<String, List<BLTDEFReceiveActivity>>();
     
-    private List<String> correlationSet = new ArrayList<String>();
+    private Set<String> correlationSet = new HashSet<String>();
     
     public AServiceElement(BliteParser p, int i) {
         super(p, i);
@@ -100,11 +102,11 @@ public abstract class AServiceElement extends SimpleNode {
         return false;
     }
 
-    public List<String> getCorrelationSet() {
+    public Set<String> getCorrelationSet() {
         return correlationSet;
     }
 
-    public void setCorrelationSet(List<String> correlationSet) {
+    public void setCorrelationSet(Set<String> correlationSet) {
         this.correlationSet = correlationSet;
     }
     

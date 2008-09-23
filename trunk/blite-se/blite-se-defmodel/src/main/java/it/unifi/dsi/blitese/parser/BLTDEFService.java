@@ -12,7 +12,6 @@
  *  permissions and limitations under the License.
  * 
  */
-
 package it.unifi.dsi.blitese.parser;
 
 import java.util.HashSet;
@@ -71,8 +70,16 @@ public class BLTDEFService extends SimpleNode {
     public void setServiceInstance(BLTDEFServiceInstance serviceInstance) {
         this.serviceInstance = serviceInstance;
     }
+    
+    private void putCset(Set<String> cset) {
+        if (serviceInstance != null) serviceInstance.setCorrelationSet(cset);
+        if (serviceDefinition != null) serviceDefinition.setCorrelationSet(cset);
+    }
  
-    public void setCorrelationSet(List<String> cset) {
-        //TODO
+    public void setCorrelationSetToAll(Set<String> cset) {
+        
+        for (BLTDEFService s : getAllServices()) {
+            s.putCset(cset);
+        }
     }
 }
