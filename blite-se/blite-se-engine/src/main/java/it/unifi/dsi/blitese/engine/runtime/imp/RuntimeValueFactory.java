@@ -15,6 +15,7 @@
 
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
+import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
 
@@ -31,8 +32,19 @@ public class RuntimeValueFactory {
         
         String vName = bltValueHolder.getVarableName();
         
-        return variableScope.getRuntimeVariable(vName).getValute();
+        RuntimeVariable rv = variableScope.getRuntimeVariable(vName);
+        
+        if (rv != null) {
+            return rv.getValute();
+        } else {
+            return null;
+        }
         
     }
+    
+    public static RuntimeVariable makeRuntimeValue(String variableName, Object value) {
+       return new RuntimeVariableImp(value, variableName);
+    }
+    
 
 }

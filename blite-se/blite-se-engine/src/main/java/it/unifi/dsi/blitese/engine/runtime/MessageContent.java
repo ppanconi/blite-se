@@ -15,16 +15,14 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
+import java.io.Serializable;
+
 /**
  *
  * @author panks
  */
-public interface ExecutionContext extends VariableScope {
-    
-    ProcessInstance getProcessInstance();
-    
-    boolean matchCorrelation(String variable, Object value);
+public interface MessageContent extends Cloneable, Serializable {
 
-    
+    Object[] getParts();
     
 }

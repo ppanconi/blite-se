@@ -28,11 +28,13 @@ public class MessageContainerFactory {
 
     private static MessageContainer createMessageContainer(Object contect, Object applicationTraceId, 
             Object exchangeId, MessageContainer.Type type) {
-       return new MessageContainerImp(exchangeId, contect, type, applicationTraceId);
+//       return new MessageContainerImp(exchangeId, contect, type, applicationTraceId);
+        throw new RuntimeException("Not Yet Imp");
     }
     
     static public MessageContainer createMessageContainer(Object contect, Object applicationTraceId) {
-        return new MessageContainerImp(contect, MessageContainer.Type.MESSAGE, applicationTraceId);
+//        return new MessageContainerImp(contect, MessageContainer.Type.MESSAGE, applicationTraceId);
+        throw new RuntimeException("Not Yet Imp");
     }
     
     static public MessageContainer createMessageContainerForInvalidDestinatioPort(ServiceIdentifier serviceId, Object exchangeId) {

@@ -790,7 +790,7 @@ BLTDEFDeployment Deployment() :
 {
     "{" ( service = Service() ) "}" ( cset = CorrelationSet() )?
     {
-        if (cset != null) service.setCorrelationSet(cset.getCorrelationSet());
+        if (cset != null) service.setCorrelationSetToAll(cset.getCorrelationSet());
         jjtThis.setServices(service.getAllServices());
     }
     { return jjtThis; }

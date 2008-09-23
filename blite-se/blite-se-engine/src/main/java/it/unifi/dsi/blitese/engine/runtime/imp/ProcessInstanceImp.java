@@ -28,9 +28,11 @@ import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
 import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
-import it.unifi.dsi.blitese.parser.SimpleNode;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, VariableScope {
     
@@ -38,6 +40,8 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
     private ProcessManager mProcessManager;
     private String instanceId; 
     private BliteDeploymentDefinition deploymentDefinition;
+    
+    private Set<String> correlationSet = new HashSet<String>();
 
     public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
                               String instanceId, 
@@ -48,6 +52,8 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         this.instanceId = instanceId;
 //        this.bliteDefinition = bliteDefinition;
         this.deploymentDefinition = deploymentDefinition;
+        this.correlationSet = deploymentDefinition.getServiceElement().getCorrelationSet();
+        
     }
     
     public ProcessManager getManager() {
@@ -125,8 +131,18 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         return this;
     }
 
-    public boolean matchCorrelation(String variable, Object value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean matchCorrelation(String variable, Object incomingValue) {
+        
+        Object currentValue = null;
+        if (getRuntimeVariable(variable) != null) currentValue = getRuntimeVariable(variable).getValute();
+        
+        if (correlationSet != null && correlationSet.contains(variable)) {
+            if (currentValue == null || !currentValue.equals(incomingValue))
+                return false;
+            
+        }
+        
+        return true;
     }
     
     

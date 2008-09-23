@@ -44,7 +44,7 @@ public interface MessageContainer {
      *
      * @return Object content
      */
-    public Object getContent();
+    public MessageContent getContent();
     
     
     /**

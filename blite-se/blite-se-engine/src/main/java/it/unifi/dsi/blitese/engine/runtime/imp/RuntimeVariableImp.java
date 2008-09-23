@@ -39,6 +39,11 @@ public class RuntimeVariableImp implements RuntimeVariable {
         this.variable = variable;
         this.scope = scope;
     }
+
+    public RuntimeVariableImp(Object value, String variable) {
+        this.value = value;
+        this.variable = variable;
+    }
     
     public RuntimeVariableImp(Object value, String variable, VariableScope scope) {
         this.value = value;

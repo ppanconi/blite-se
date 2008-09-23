@@ -3,7 +3,9 @@
 package it.unifi.dsi.blitese.parser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BLTDEFCorrelationSet extends SimpleNode {
   public BLTDEFCorrelationSet(int id) {
@@ -22,15 +24,15 @@ public class BLTDEFCorrelationSet extends SimpleNode {
   
 //added code start here ////////////////////////////////////////////////////////
   
-    private List<String> correlationSet = new ArrayList<String>();
+    private Set<String> correlationSet = new HashSet<String>();
 
-    public List<String> getCorrelationSet() {
+    public Set<String> getCorrelationSet() {
         return correlationSet;
     }
 
-    public void setCorrelationSet(List<String> correlationSet) {
-        this.correlationSet = correlationSet;
-    }
+//    public void setCorrelationSet(Set<String> correlationSet) {
+//        this.correlationSet = correlationSet;
+//    }
     
     public void addVarToCorrelationSet(String var) {
         correlationSet.add(var);
