@@ -1,0 +1,9 @@
+{
+    [
+        rcv <"s1"> mathod1 y
+    ]
+}
+||
+{
+    inv <"s1"> method1 "HELLO WORLD"
+}

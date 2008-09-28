@@ -38,8 +38,10 @@ public class DoneStatusInComingEventKey implements InComingEventKey {
 
     @Override
     public boolean equals(Object obj) {
-        //TODO
-        return super.equals(obj);
+        
+        if (obj == null) return false;
+        
+        return hashCode() == obj.hashCode();
     }
 
     public Object getMeId() {

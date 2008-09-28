@@ -23,6 +23,8 @@ import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import it.unifi.dsi.blitese.parser.Node;
+import it.unifi.dsi.blitese.parser.SimpleNode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,10 +52,10 @@ public class ActivityComponentFactory {
             ActivityComponent parentComponent,
             FlowExecutor executor) {
         try {
-            Class actClass = provideActivityClass(bltDefNode);
-            ActivityComponentBase activity = (ActivityComponentBase) actClass.newInstance();
+            DefClass actClass = provideActivityClass(bltDefNode);
+            ActivityComponentBase activity = (ActivityComponentBase) actClass.clazz.newInstance();
             
-            activity.setBltDefNode(bltDefNode);
+            activity.setBltDefNode(actClass.def);
             activity.setContext(context);
             activity.setExecutor(executor);
             activity.setParentComponent(parentComponent);
@@ -75,17 +77,39 @@ public class ActivityComponentFactory {
 
     }
     
-    private Class provideActivityClass(BltDefBaseNode bltDefNode) {
+    private DefClass provideActivityClass(BltDefBaseNode bltDefNode) {
         
         if (bltDefNode instanceof BLTDEFInvokeActivity ) {
-            return InvokeActivity.class;
+            return new DefClass(InvokeActivity.class, bltDefNode);
         } else if (bltDefNode instanceof BLTDEFReceiveActivity) {
-            return ReceiveActivity.class;
+            return new DefClass(ReceiveActivity.class, bltDefNode);
         } else {
-            throw new RuntimeException("Not yet supported Activity " + bltDefNode);
+            
+            //throw new RuntimeException("Not yet supported Activity " + bltDefNode);
+            //we try fisiting the tree
+            Node node = (Node) bltDefNode; 
+            int nc = node.jjtGetNumChildren();
+            
+            for (int i = 0; i < nc; i++) {
+                BltDefBaseNode kid = (BltDefBaseNode) node.jjtGetChild(i);
+                DefClass dc = provideActivityClass(kid);
+                if (dc != null) return dc;
+            }
+            
         }
         
+        return null;
 //        Class actClass = Class.forName(bltDefNode.provideRuntimeActivity());
     }
     
+    private class DefClass  {
+        Class clazz;
+        BltDefBaseNode def;
+
+        public DefClass(Class clazz, BltDefBaseNode def) {
+            this.clazz = clazz;
+            this.def = def;
+        }
+        
+    }
 }

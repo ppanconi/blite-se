@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
+import it.unifi.dsi.blitese.engine.runtime.MessageContent;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 
@@ -23,14 +24,29 @@ import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
  *
  * @author panks
  */
-public class MessageFactory {
+public class MessageContentFactory {
 
-    static public Object createInvokeMessage(ExecutionContext context, BLTDEFInvokeActivity activity) {
+    static public MessageContent createInvokeMC(ExecutionContext context, BLTDEFInvokeActivity activity) {
         
         ABltValueHolder vh = activity.getParams();
         
-        return RuntimeValueFactory.makeRuntimeValue(vh, context);
+        Object o = RuntimeValueFactory.makeRuntimeValue(vh, context);
         
+        if (o instanceof String) {
+            String string = (String) o;
+            return createStringMC(string);
+        } 
+        
+        
+        throw new RuntimeException("Not Yet supported");
     }
+    
+    static public MessageContent createStringMC(String string) {
+        StringBuffer s = new StringBuffer(string);
+        return new MessageContentImp(s);
+    }
+    
+    
+    
     
 }

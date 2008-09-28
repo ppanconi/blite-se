@@ -1,4 +1,4 @@
-package it.unifi.dsi.blitese;
+package it.unifi.dsi.blitese.localenv;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

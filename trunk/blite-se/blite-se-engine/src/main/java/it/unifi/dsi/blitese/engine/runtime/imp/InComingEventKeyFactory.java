@@ -32,7 +32,13 @@ public class InComingEventKeyFactory {
         return new DoneStatusInComingEventKey(meId);
     }
 
-    static public RequestInComingEventKey createRequestInComingEventKey(ServiceIdentifier sid, String portId) {
+//    static public RequestInComingEventKey createRequestInComingEventKey(ServiceIdentifier sid, 
+//            String portId, MessageContainer mc) {
+//        return new RequestInComingEventKey(sid, portId, mc);
+//    }
+    
+    static public RequestInComingEventKey createRequestInComingEventKey(ServiceIdentifier sid, 
+            String portId) {
         return new RequestInComingEventKey(sid, portId);
     }
     

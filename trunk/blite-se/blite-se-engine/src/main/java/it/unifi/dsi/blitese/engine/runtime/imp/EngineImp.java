@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -97,6 +98,7 @@ public class EngineImp implements Engine {
 
             ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName);
             Object retObj = mManagers.put(bliteDef, processManager);
+            
             
             if (retObj != null) {
                 throw new RuntimeException("Fatal Error: this process is already loaded process Id: " + bliteDef.getBliteId());
@@ -181,19 +183,26 @@ public class EngineImp implements Engine {
         }
         
         l.add(executor);
+        LOGGER.log(Level.INFO, "WAITED Flow on event " + eventKey.hashCode());
+        
     }
 
     public List<FlowExecutor> resumeFlowWaitingEvent(InComingEventKey eventKey) {
+        
+        LOGGER.log(Level.INFO, "LOOKING for Flow on event " + eventKey.hashCode());
+        
         List<FlowExecutor> l = mEventWaitingExecutor.remove(eventKey);
         
         if (l != null) {
             
             for (FlowExecutor flowExecutor : l) {
                 queueFlowExecutor(flowExecutor);
+                LOGGER.log(Level.INFO, "RESUMED Flow on event " + eventKey.hashCode());
             }
             
         } else {
             l = new ArrayList<FlowExecutor>();
+            LOGGER.log(Level.INFO, "NOT FOUND Flow on event " + eventKey.hashCode());
         }
         
         return l;
@@ -225,8 +234,10 @@ public class EngineImp implements Engine {
     public void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
         
         String serviceName = serviceId.provideStringServiceName();
+        Object messageExchangeId = messageContainer.getId();
         
         ProcessManager m = mServiceNameToManagers.get(serviceName);
+        mMExchangeToProcessManager.put(messageExchangeId, m);
         
         if (m == null) {
             //we report error to the requester
@@ -242,21 +253,27 @@ public class EngineImp implements Engine {
 
     public void processExchange(MessageContainer messageContainer) {
         
+        MessageContainer.Type mtype = messageContainer.getType();
         Object messageExchangeId = messageContainer.getId();
-        ProcessManager targetProcess = mMExchangeToProcessManager.get(messageExchangeId);
-        InComingEventKey icek = InComingEventKeyFactory.createDoneStatusInComingEventKey(messageExchangeId);
         
-        synchronized (targetProcess.getDefinitionProcessLevelLock()) {
+        
+        if (mtype == MessageContainer.Type.STATUS_DONE) {
+            ProcessManager targetProcess = mMExchangeToProcessManager.remove(messageExchangeId);
+            InComingEventKey icek = InComingEventKeyFactory.createDoneStatusInComingEventKey(messageExchangeId);
             
-            addEventSubjet(icek, messageContainer);
+            LOGGER.log(Level.INFO, "Waiting STATUS_DONE Event ...");
             
-            //we notifay the incoming event
-//            FlowExecutor executor = mEventWaitingExecutor.remove(icek);
-//            if (executor != null )
-//                queueFlowExecutor(executor);
-//            
-            resumeFlowWaitingEvent(icek);
+            synchronized (targetProcess.getDefinitionProcessLevelLock()) {
+                LOGGER.log(Level.INFO, "Adding STATUS_DONE Event ...");
+                
+                addEventSubjet(icek, messageContainer);
+                resumeFlowWaitingEvent(icek);
+                
+            }
             
+        } else {
+
+            throw new RuntimeException("Not yet supported");
         }
         
     }
@@ -322,8 +339,12 @@ public class EngineImp implements Engine {
         return icek;
     }
 
-    public void sendResponseDoneStatus(InComingEventKey inComingEventKey) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void sendResponseDoneStatus(InComingEventKey inComingEventKey, Object meId) {
+        
+        MessageContainer messageContainer = MessageContainerFactory.createMessageContainerForDoneStatus(meId);
+        
+        mChannel.sendIntoExchange(meId, messageContainer);
+        
     }
 
     //--------------------------------------------------------------------------
