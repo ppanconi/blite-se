@@ -36,6 +36,17 @@ public class MessageContainerImp implements MessageContainer {
         this.applicationTraceId = applicationTraceId;
     }
 
+    public MessageContainerImp(Object id, MessageContent content, Type type) {
+        this.id = id;
+        this.content = content;
+        this.type = type;
+    }
+
+    public MessageContainerImp(MessageContent content, Type type) {
+        this.content = content;
+        this.type = type;
+    }
+
     public MessageContainerImp(Object id, MessageContent content, Type type, Object applicationTraceId) {
         this.id = id;
         this.content = content;

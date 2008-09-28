@@ -13,16 +13,20 @@
  * 
  */
 
-package it.unifi.dsi.blitese.engine.runtime;
-
-import java.io.Serializable;
+package it.unifi.dsi.blitese.parser;
 
 /**
  *
  * @author panks
  */
-public interface MessageContent extends Serializable {
+public abstract class AScope extends SimpleNode {
 
-    Object[] getParts();
-    
+    public AScope(BliteParser p, int i) {
+        super(p, i);
+    }
+
+    public AScope(int i) {
+        super(i);
+    }
+
 }

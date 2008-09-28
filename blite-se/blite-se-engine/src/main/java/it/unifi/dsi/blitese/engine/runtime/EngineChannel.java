@@ -15,8 +15,6 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
-import javax.xml.namespace.QName;
-
 /**
  * This is interface represents the communication channel between 
  * the Engine and the Communication Environment.  

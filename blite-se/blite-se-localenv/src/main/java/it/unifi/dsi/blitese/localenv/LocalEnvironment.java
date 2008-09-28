@@ -26,12 +26,15 @@ import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  *
  * @author panks
  */
 public class LocalEnvironment {
+    
+    private static final Logger LOGGER = Logger.getLogger(LocalEnvironment.class.getName());
     
     private Map<URL, BLTDEFCompilationUnit> mCompUnits = new HashMap<URL, BLTDEFCompilationUnit>(); 
     
@@ -41,6 +44,8 @@ public class LocalEnvironment {
     private Map<String, Engine> mServiceNameToEngine = new HashMap<String, Engine>();
     
     private LocalEngineChannel channel;
+    
+    private Object deploymentLock = new Object();
 
     public LocalEnvironment() {
         channel = new LocalEngineChannel(this);
@@ -55,45 +60,60 @@ public class LocalEnvironment {
         
         URL res = compilationUnit.getResource();
         
-        if (mCompUnits.get(res) != null) {
+        BLTDEFCompilationUnit pc = mCompUnits.get(res);
+        if (pc == null) {
             mCompUnits.put(res, compilationUnit);
             
-            //for each dep definition 
-            for (BLTDEFDeployment deploy : compilationUnit.getDeployments()) {
-                
-                //to starting coding we have a deployment defines a location
-                EngineLocation loc = new EngineLocation();
-                
-                Engine engine = mLocToEngine.get(loc);
-                
-                if (engine == null) {
-                    engine = new EngineImp();
-                    engine.setChannel(channel);
-                    mLocToEngine.put(loc, engine);
-                }
-                
-                //we have to map the port id defined in the current deploy to
-                //the relative Engine
-                for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
-                    
-                    for (String serviceName : aServiceEle.provideAllServiceName()) {
-                        
-                        Engine poe = mServiceNameToEngine.get(serviceName);
-                        if (poe == null) {
-                            poe = engine;
-                            mServiceNameToEngine.put(serviceName, engine);
-                        } else if (!poe.equals(engine)) {
-                            throw new IncompatibleCompUnitException("The compilation unit is not compatible with " +
-                                    "the actual Eviroment. It defines the portId " + serviceName + " yet present in the Enviroment");
+            synchronized (deploymentLock) {
+                LOGGER.info("Start deploy process for " + res);
+            
+                int depCount = 0;
+                //for each dep definition 
+                for (BLTDEFDeployment deploy : compilationUnit.getDeployments()) {
+                    depCount++;
+                    //to starting coding we have a deployment defines a location
+                    EngineLocation loc = new EngineLocation();
+
+                    Engine engine = mLocToEngine.get(loc);
+
+                    if (engine == null) {
+                        engine = new EngineImp();
+                        engine.setChannel(channel);
+                        mLocToEngine.put(loc, engine);
+                        LOGGER.info("Created Engine at location " + loc);
+                    } 
+
+
+                    //we have to map the port id defined in the current deploy to
+                    //the relative Engine
+                    int servCount = 0;
+                    for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
+                        servCount++;
+
+                        for (String serviceName : aServiceEle.provideAllServiceName()) {
+
+                            Engine poe = mServiceNameToEngine.get(serviceName);
+                            if (poe == null) {
+                                poe = engine;
+                                mServiceNameToEngine.put(serviceName, engine);
+                            } else if (!poe.equals(engine)) {
+                                throw new IncompatibleCompUnitException("The compilation unit is not compatible with " +
+                                        "the actual Eviroment. It defines the service " + serviceName + " yet present in the Enviroment");
+                            }
                         }
+
+
+                        String deployId = res.toString() + ":" + depCount + ":" + servCount;
+                        //now we deploy the ServiceElement to the Engine.
+                        BliteDeploymentDefinition deploymentDefinition =
+                                new BliteDeploymentDefinitionImp(aServiceEle, deployId);
+
+                        engine.deployProcessDefinition(deploymentDefinition, null, null);
+                        
+                        LOGGER.info("Deployed " + deployId + " at " + loc);
                     }
-                    
-                    //now we deploy the ServiceElement to the Engine.
-                    BliteDeploymentDefinition deploymentDefinition =
-                            new BliteDeploymentDefinitionImp(aServiceEle);
-                    
-                    engine.deployProcessDefinition(deploymentDefinition, null, null);
                 }
+                LOGGER.info("Finished deploy process for " + res);
             }
         }
         
@@ -102,15 +122,17 @@ public class LocalEnvironment {
     
     public Engine provideServiceEngine(ServiceIdentifier serviceId) {
         
-        //:( The portId in blite it's the same of Endpont
-        //this's a strange view of WS world... 
-        String serviceName = serviceId.provideStringServiceName();
-        
-        Engine engine = mServiceNameToEngine.get(serviceName);
-        if (engine == null) 
-            throw new IllegalStateException("Service " + serviceName + " not have a Engine!! THIS IS IMPLEMETATION BUG!!");
-        
-        return engine;
+        synchronized (deploymentLock) {
+            //:( The portId in blite it's the same of Endpont
+            //this's a strange view of WS world... 
+            String serviceName = serviceId.provideStringServiceName();
+
+            Engine engine = mServiceNameToEngine.get(serviceName);
+            if (engine == null) 
+                throw new IllegalStateException("Service " + serviceName + " not have a Engine!! THIS IS IMPLEMETATION BUG!!");
+
+            return engine;
+        }
     }
     
     

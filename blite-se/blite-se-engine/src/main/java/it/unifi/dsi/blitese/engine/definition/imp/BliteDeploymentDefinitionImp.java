@@ -50,6 +50,11 @@ public class BliteDeploymentDefinitionImp implements BliteDeploymentDefinition {
         return id;
     }
 
+    public void setId(Object id) {
+        this.id = id;
+    }
+    
+
     public AServiceElement getServiceElement() {
         return serviceElement;
     }

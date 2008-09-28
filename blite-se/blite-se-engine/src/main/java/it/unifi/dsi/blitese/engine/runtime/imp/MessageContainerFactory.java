@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.MessageContent;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 
 /**
@@ -26,22 +27,39 @@ import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
  */
 public class MessageContainerFactory {
 
-    private static MessageContainer createMessageContainer(Object contect, Object applicationTraceId, 
-            Object exchangeId, MessageContainer.Type type) {
-//       return new MessageContainerImp(exchangeId, contect, type, applicationTraceId);
-        throw new RuntimeException("Not Yet Imp");
+    private static MessageContainer createMessageContainer(MessageContent content, 
+                                                           Object messageExchangeId, 
+                                                           MessageContainer.Type type) {
+        return new MessageContainerImp(messageExchangeId, content, type);
     }
     
-    static public MessageContainer createMessageContainer(Object contect, Object applicationTraceId) {
-//        return new MessageContainerImp(contect, MessageContainer.Type.MESSAGE, applicationTraceId);
-        throw new RuntimeException("Not Yet Imp");
+    
+    static public  MessageContainer createMessageContainer(MessageContent content, 
+                                                           MessageContainer.Type type) {
+       return new MessageContainerImp(content, type);
     }
     
-    static public MessageContainer createMessageContainerForInvalidDestinatioPort(ServiceIdentifier serviceId, Object exchangeId) {
+//    static public MessageContainer createMessageContainer(Object content, Object applicationTraceId) {
+//       return new MessageContainerImp(contect, MessageContainer.Type.MESSAGE, applicationTraceId);
+//        throw new RuntimeException("Not Yet Imp");
+//    }
+    
+    static public MessageContainer createMessageContainerForInvalidDestinatioPort(ServiceIdentifier serviceId, 
+            Object exchangeId) {
         
-        String content = "Invalid Service Identification: " + serviceId;
+        String s = "Invalid Service Identification: " + serviceId;
+        MessageContent content = MessageContentFactory.createStringMC(s);
         
-        return createMessageContainer(content, null, exchangeId, MessageContainer.Type.STATUS_ERROR);
+        return createMessageContainer(content, exchangeId, MessageContainer.Type.STATUS_ERROR);
         
     }
+    
+    static public MessageContainer createMessageContainerForDoneStatus(Object mexchangeId) {
+        
+        String s = "Ok DONE_STATUS for me : " + mexchangeId;
+        MessageContent content = MessageContentFactory.createStringMC(s);
+        
+        return createMessageContainer(content, mexchangeId, MessageContainer.Type.STATUS_DONE);
+    }
+    
 }

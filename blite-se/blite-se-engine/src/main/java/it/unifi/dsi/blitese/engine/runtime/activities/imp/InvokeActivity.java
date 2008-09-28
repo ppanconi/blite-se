@@ -17,17 +17,21 @@ package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
 import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.MessageContent;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.imp.MessageContainerFactory;
-import it.unifi.dsi.blitese.engine.runtime.imp.MessageFactory;
+import it.unifi.dsi.blitese.engine.runtime.imp.MessageContentFactory;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
+import java.util.logging.Logger;
 
 /**
  *
  * @author panks
  */
 public class InvokeActivity extends ActivityComponentBase {
+    
+    private static final Logger LOGGER = Logger.getLogger(InvokeActivity.class.getName());
     
     private BLTDEFInvokeActivity activityDef;
 
@@ -67,17 +71,17 @@ public class InvokeActivity extends ActivityComponentBase {
         String operation = activityDef.getOperationId().getName();
         
         //we obtain the runtime message for this invoke
-        Object m = MessageFactory.createInvokeMessage(getContext(), activityDef);
+        MessageContent m = MessageContentFactory.createInvokeMC(getContext(), activityDef);
         
         //we create the message container
-        MessageContainer mc = MessageContainerFactory.createMessageContainer(m, null);
+        MessageContainer mc = MessageContainerFactory.createMessageContainer(m, MessageContainer.Type.MESSAGE);
 
         ServiceIdentifier service = myManager.resovleParterLink(activityDef.getPartners(), getContext());
         
+        LOGGER.info("INVOKE on " + service + " operation " + operation + " passing " + m);
+        
         //execute the invoke using the manager Facade interface.
         eventKey =  myManager.invoke(service, operation, mc, getContext().getProcessInstance());
-        
-        System.out.println("INVOKE on " + service + " operation " + operation + " passing " + m);
         
         synchronized (myManager.getDefinitionProcessLevelLock()) {
             
@@ -95,6 +99,8 @@ public class InvokeActivity extends ActivityComponentBase {
     }
 
     private boolean processStatus(MessageContainer mc) {
+        
+        LOGGER.info("REVIVED STATUS_DONE for INVOKE");
         getExecutor().setCurrentActivity(getParentComponent());
         return true;
     }

@@ -12,7 +12,6 @@
  *  permissions and limitations under the License.
  * 
  */
-
 package it.unifi.dsi.blitese.localenv;
 
 import it.unifi.dsi.blitese.engine.runtime.Engine;
@@ -35,85 +34,86 @@ import java.util.logging.Logger;
  * @author panks
  */
 public class LocalEngineChannel implements EngineChannel {
-    
+
+    private static final Logger LOGGER = Logger.getLogger(LocalEngineChannel.class.getName());
     private LocalEnvironment environment;
     private ExecutorService exService = Executors.newFixedThreadPool(5);
-
-    private Boolean open;
-    
+    private Boolean open = true;
     private long messageExchangeCounter = 0L;
+
     synchronized private Long nextMEId() {
         return new Long(messageExchangeCounter++);
     }
-    
     private ConcurrentMap<Long, EnginesConnection> connections = new ConcurrentHashMap<Long, EnginesConnection>();
     private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingDeque<MessageEnvelop>();
-    
-    
-    
+
     public LocalEngineChannel(LocalEnvironment environment) {
         this.environment = environment;
-        
+
         exService.execute(new Runnable() {
 
             public void run() {
-                
+
                 while (open) {
                     try {
-                        
+
                         MessageEnvelop envelop = mMedia.poll(300, TimeUnit.MILLISECONDS);
-                    
+
                         if (envelop != null) {
-                             Long meId = envelop.meId;
-                             EnginesConnection connection = connections.get(meId);
-                             
-                             MessageContainer mc = envelop.messageContainer;
-                             mc.setId(meId);
-                             
-                             Engine destEngine = null;
-                             
-                             if (mc.getType() == MessageContainer.Type.MESSAGE ||
-                                 mc.getType() == MessageContainer.Type.FAULT) {
-                                 
-                                 destEngine = connection.provider;
-                                 destEngine.processRequest(envelop.serviceId, envelop.operation, mc);
-                                 
-                             } else {
-                                 
-                                 destEngine = connection.consumer;
-                                 destEngine.processExchange(mc);
-                                 
-                             }
+                            
+                            Long meId = envelop.meId;
+                            EnginesConnection connection = connections.get(meId);
+
+                            MessageContainer mc = envelop.messageContainer;
+                            mc.setId(meId);
+
+                            Engine destEngine = null;
+
+                            if (mc.getType() == MessageContainer.Type.MESSAGE ||
+                                    mc.getType() == MessageContainer.Type.FAULT) {
+
+                                LOGGER.info("Removed MESSAGE form Channel: " + envelop); 
+                                destEngine = connection.provider;
+                                destEngine.processRequest(envelop.serviceId, envelop.operation, mc);
+
+                            } else {
+
+                                LOGGER.info("Removed STATUS form Channel: " + envelop); 
+                                destEngine = connection.consumer;
+                                destEngine.processExchange(mc);
+                                
+                            }
                         }
-                        
+
                     } catch (InterruptedException ex) {
                         Logger.getLogger(LocalEngineChannel.class.getName()).log(Level.SEVERE, null, ex);
                         throw new RuntimeException(ex.getMessage(), ex);
                     }
                 }
-                
+
             }
         });
     }
-    
-    
+
     public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance) {
         Long meId = nextMEId();
-        
+
         Engine consumer = instance.getManager().getEngine();
         Engine provider = environment.provideServiceEngine(serviceId);
-        
+
         connections.put(meId, new EnginesConnection(meId, consumer, provider, serviceId, operation));
+        
+        LOGGER.info("Created MessageExchange " + meId);
         
         return meId;
     }
 
     public void sendIntoExchange(Object meId, MessageContainer mc) {
-        
+
         EnginesConnection con = connections.get(meId);
-        
+
         MessageEnvelop envelop =
-                new MessageEnvelop((Long)meId, con.serviceId, con.operation, mc);
+                new MessageEnvelop((Long) meId, con.serviceId, con.operation, mc);
         try {
 
             mMedia.put(envelop);
@@ -121,15 +121,17 @@ public class LocalEngineChannel implements EngineChannel {
             Logger.getLogger(LocalEngineChannel.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex.getMessage(), ex);
         }
+        
+        LOGGER.info("Pulled Envelop in Channel " + envelop);
+        
     }
 
     public void closeExchange(Object messageExchangeId) {
         connections.remove(messageExchangeId);
     }
-    
 
     private static class EnginesConnection {
-        
+
         Long meId;
         Engine consumer;
         Engine provider;
@@ -143,11 +145,10 @@ public class LocalEngineChannel implements EngineChannel {
             this.serviceId = serviceId;
             this.operation = operation;
         }
-        
     }
-    
+
     private static class MessageEnvelop {
-        
+
         Long meId;
         ServiceIdentifier serviceId;
         String operation;
@@ -159,9 +160,5 @@ public class LocalEngineChannel implements EngineChannel {
             this.operation = operation;
             this.messageContainer = messageContainer;
         }
-        
     }
-  
-    
-
 }

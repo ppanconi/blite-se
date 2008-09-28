@@ -34,6 +34,12 @@ public class RequestInComingEventKey implements InComingEventKey {
         this.portId = portId;
     }
 
+    public RequestInComingEventKey(ServiceIdentifier sid, String portId, MessageContainer mc) {
+        this.sid = sid;
+        this.portId = portId;
+        this.mc = mc;
+    }
+
     public MessageContainer getMc() {
         return mc;
     }
@@ -60,8 +66,9 @@ public class RequestInComingEventKey implements InComingEventKey {
 
     @Override
     public boolean equals(Object obj) {
-        //TODO
-        return super.equals(obj);
+        if (obj == null) return false;
+        
+        return hashCode() == obj.hashCode();
     }
 
     @Override

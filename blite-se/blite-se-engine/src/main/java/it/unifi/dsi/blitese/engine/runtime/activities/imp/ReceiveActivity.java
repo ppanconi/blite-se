@@ -103,6 +103,7 @@ public class ReceiveActivity extends ActivityComponentBase {
             } else {
                 //we haven't found anything we continue to wait...
                 manager.getEngine().addFlowWaitingEvent(getExecutor(), icek);
+                
                 return false;
             }
         }
@@ -123,6 +124,7 @@ public class ReceiveActivity extends ActivityComponentBase {
             
         }
         
+        getExecutor().setCurrentActivity(getParentComponent());
         return true;
         
     }

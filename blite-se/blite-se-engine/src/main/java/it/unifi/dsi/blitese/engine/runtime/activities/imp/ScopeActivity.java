@@ -13,16 +13,16 @@
  * 
  */
 
-package it.unifi.dsi.blitese.engine.runtime;
-
-import java.io.Serializable;
+package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
 /**
  *
  * @author panks
  */
-public interface MessageContent extends Serializable {
+public class ScopeActivity extends ActivityComponentBase {
 
-    Object[] getParts();
-    
+    public boolean doActivity() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

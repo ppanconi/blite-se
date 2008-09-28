@@ -40,6 +40,8 @@ import java.util.logging.Logger;
 
 public class ProcessManagerImp implements ProcessManager {
     
+    private static final Logger LOGGER = Logger.getLogger(ProcessManagerImp.class.getName());
+    
     private BliteDeploymentDefinition mBliteProcessDef;
     private Engine mEngine;
     private String mSaName;
@@ -48,8 +50,6 @@ public class ProcessManagerImp implements ProcessManager {
     private Object definitionProcessLevelLock = new Object();
     private Map<String, ProcessInstance> mInstances = new HashMap<String, ProcessInstance>();
     private HashMap<String, List<BLTDEFReceiveActivity>> mPortIdToPortDef = new HashMap<String, List<BLTDEFReceiveActivity>>();
-    
-    
 
     public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
@@ -67,6 +67,7 @@ public class ProcessManagerImp implements ProcessManager {
         
         if (readyToRunInstance != null) {
             ProcessInstance instance = createInstance();
+            LOGGER.info("Created deploy ready to run instance: " + instance.getInstanceId());
             instance.activete();
         }
         
@@ -113,9 +114,9 @@ public class ProcessManagerImp implements ProcessManager {
 
     ////////////////////////////////////////////////////////////////////////////
     // Utility 
-    private Long instNumber;
+    private Long instNumber = 0L;
     synchronized  private ProcessInstance createInstance() {
-        ProcessInstance i = new ProcessInstanceImp(mEngine, this, "" + mBliteProcessDef.getBliteId() + instNumber++ , mBliteProcessDef);
+        ProcessInstance i = new ProcessInstanceImp(mEngine, this, "" + mBliteProcessDef.getBliteId() + ":" + instNumber++ , mBliteProcessDef);
         mInstances.put(i.getInstanceId(), i);
         return i;
     }
@@ -129,17 +130,15 @@ public class ProcessManagerImp implements ProcessManager {
                     InComingEventKeyFactory.createRequestInComingEventKey(serviceId, portId);
         icek.setMc(messageContainer);        
             
-        Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Managing Request to port " + portId);
+        LOGGER.info("Managing Request to port " + portId);
         
         //test if we target a create instance
         if (mBliteProcessDef.getServiceElement().isCreateInstancePort(portId)) {
             //we create a new instance
 
-            Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Creationg New Instance for port " + portId);
-            
             ProcessInstance pi = createInstance();
             
-            Logger.getLogger(ProcessManagerImp.class.toString()).log(Level.INFO, "Created with id " + pi.getInstanceId());
+            LOGGER.info("Created new instance with id " + pi.getInstanceId() + " for request to port " + portId);
             
             synchronized (getDefinitionProcessLevelLock()) {
                 getEngine().addEventSubjet(icek, messageContainer);
@@ -159,12 +158,9 @@ public class ProcessManagerImp implements ProcessManager {
             
         }
         
+        //we send the done the one-way protocol is done.
+        mEngine.sendResponseDoneStatus(icek, messageContainer.getId());
         
-        
-        
-        
-        
-        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
