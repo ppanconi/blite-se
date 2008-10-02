@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * @author panks
  */
-public abstract class AbstractBliteParser {
+public class AbstractBliteParser {
     
     static Map<AServiceElement, Map<String, Object>> sSymbolTables = new HashMap<AServiceElement, Map<String, Object>>();
     static AServiceElement currentServEle;
@@ -37,10 +37,10 @@ public abstract class AbstractBliteParser {
         mServiceNameToServices = new HashMap<String, AServiceElement>();
     }
     
-    static public AbstractBliteParser provideInstance(InputStream stream) {
-        BliteParser bliteParser = new BliteParser(stream);
-        return bliteParser;
-    }
+//    static public AbstractBliteParser provideInstance(InputStream stream) {
+//        BliteParser bliteParser = new BliteParser(stream);
+//        return bliteParser;
+//    }
     
     static void jjtreeOpenNodeScope(Node n) {
         
@@ -117,6 +117,6 @@ public abstract class AbstractBliteParser {
         
     }
     
-    abstract public BltDefBaseNode parse() throws ParseException;
+    
     
 }

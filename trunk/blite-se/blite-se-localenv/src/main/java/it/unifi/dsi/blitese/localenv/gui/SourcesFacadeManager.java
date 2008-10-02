@@ -61,7 +61,7 @@ public class SourcesFacadeManager {
    
     }
     
-    private BliteParser parser = null;
+//    private BliteParser parser = null;
                 
         
     public BLTDEFCompilationUnit buildSource(JComponent component) throws FileNotFoundException, ParseException, MalformedURLException {
@@ -70,14 +70,15 @@ public class SourcesFacadeManager {
         
         FileInputStream inputStream = new FileInputStream(file);
         
-        if (parser == null)
-            parser = (BliteParser) AbstractBliteParser.provideInstance(inputStream);
-        else {
-            parser.ReInit(inputStream);
-            AbstractBliteParser.cleanTables();
-        }
+//        if (parser == null)
+//            parser = (BliteParser) AbstractBliteParser.provideInstance(inputStream);
+//        else {
+//            parser.ReInit(inputStream);
+//            AbstractBliteParser.cleanTables();
+//        }
+        BliteParser.init(inputStream);
         
-        BLTDEFCompilationUnit compilationUnit = (BLTDEFCompilationUnit) parser.parse();
+        BLTDEFCompilationUnit compilationUnit = (BLTDEFCompilationUnit) BliteParser.parse();
         compilationUnit.setResource(file.toURI().toURL());
         
         return  compilationUnit;

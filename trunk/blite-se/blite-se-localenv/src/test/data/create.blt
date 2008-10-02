@@ -5,5 +5,5 @@
 }
 ||
 {
-    inv <"s1"> method1 "HELLO WORLD"
+    inv <"s1"> mathod1 "HELLO WORLD"
 }

@@ -64,7 +64,7 @@ public interface ProcessManager {
      * @param inComingEventKey
      * @param messageContainer
      */
-    void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer);
+//    void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer);
     
     /**
      * Return the list all Event related to the provieded key

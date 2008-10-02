@@ -82,7 +82,7 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
 
     public void flowCompleted() {
         
-        System.out.println("Process Instance " + instanceId + " completed");
+        System.out.println("Process Instance_______________________________________: " + instanceId + " COMPLETED SUCCESSFUL");
         
     }
 
@@ -134,9 +134,12 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
     public boolean matchCorrelation(String variable, Object incomingValue) {
         
         Object currentValue = null;
-        if (getRuntimeVariable(variable) != null) currentValue = getRuntimeVariable(variable).getValute();
+        if (getRuntimeVariable(variable) != null) 
+            currentValue = getRuntimeVariable(variable).getValute();
+        
         
         if (correlationSet != null && correlationSet.contains(variable)) {
+            
             if (currentValue == null || !currentValue.equals(incomingValue))
                 return false;
             

@@ -33,7 +33,7 @@ public class BLTDEFServiceDef extends AServiceElement {
 
     @Override
     public boolean isCreateInstancePort(String portId) {
-        return null == mPortIdCreate.get(portId);
+        return null != mPortIdCreate.get(portId);
     }
     
     

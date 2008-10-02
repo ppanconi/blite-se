@@ -15,61 +15,55 @@
 
 package it.unifi.dsi.blitese.localenv;
 
-import it.unifi.dsi.blitese.engine.runtime.Engine;
-import it.unifi.dsi.blitese.engine.runtime.imp.EngineImp;
-import it.unifi.dsi.blitese.parser.AbstractBliteParser;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
-import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
+import it.unifi.dsi.blitese.parser.BliteParser;
 import it.unifi.dsi.blitese.parser.ParseException;
 import java.io.File;
 import java.io.FileInputStream;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  *
  * @author panks
  */
-public class Execution1Test extends TestCase {
-    
-    
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public Execution1Test(String testName) {
+public abstract class AExecution extends TestCase {
+
+
+    public AExecution(String testName) {
         super(testName);
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite() {
-        return new TestSuite(Execution1Test.class);
-    }
 
+    /**
+     * Rigourous Test :-)
+     */
+    public void testApp()
+    {
+        assertTrue( true );
+    }
+    
     /**
      * 
      * @throws java.lang.Exception
      */
     public void testExecute() throws Exception {
         
-        File file1 = getBliteTestFile("trivial.blt");
-        AbstractBliteParser parser = 
-                AbstractBliteParser.provideInstance(new FileInputStream(file1));
+        File file1 = getBliteTestFile(getFileName());
+        FileInputStream inputStream = new FileInputStream(file1);
+        
+        
+        BliteParser.init(inputStream);
+       
         
         LocalEnvironment environment = new LocalEnvironment();
         
         try {
-            BLTDEFCompilationUnit cu = (BLTDEFCompilationUnit) parser.parse();
+            BLTDEFCompilationUnit cu = (BLTDEFCompilationUnit) BliteParser.parse();
             cu.setResource(file1.toURI().toURL());
-            
             
             environment.addCompilationUnit(cu);
             
-            Thread.sleep(10000);
+            Thread.sleep(5000);
             
         } catch (ParseException ex) {
             ex.printStackTrace();
@@ -77,6 +71,7 @@ public class Execution1Test extends TestCase {
         }
     }
     
+    abstract String getFileName();
     
     /**
      * return File object with test data dir path appended.
@@ -92,4 +87,5 @@ public class Execution1Test extends TestCase {
         return bliteFile;
     }
 
+    
 }

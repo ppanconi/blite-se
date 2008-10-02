@@ -17,6 +17,7 @@ package it.unifi.dsi.blitese.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -54,11 +55,13 @@ public class TrivialParseTest extends TestCase {
      */
     public void testParse() throws Exception {
         
-        AbstractBliteParser parser = 
-                AbstractBliteParser.provideInstance(new FileInputStream(getBliteTestFile("trivial.blt")));
+        InputStream stream = new FileInputStream(getBliteTestFile("trivial.blt"));
+//        AbstractBliteParser parser = 
+//                AbstractBliteParser.provideInstance());
         
         try {
-            SimpleNode bliteTree = (SimpleNode) parser.parse();
+            BliteParser.init(stream);
+            SimpleNode bliteTree = (SimpleNode) BliteParser.parse();
             bliteTree.dump("+");
             
         } catch (ParseException ex) {
