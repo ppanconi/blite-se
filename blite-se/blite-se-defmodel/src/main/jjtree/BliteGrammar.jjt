@@ -34,10 +34,18 @@ package it.unifi.dsi.blitese.parser; // Target package of the generated classes:
 
 public class BliteParser extends AbstractBliteParser {
 
-    public BltDefBaseNode parse() throws ParseException {
+    static public BltDefBaseNode parse() throws ParseException {
         return CompilationUnit();
     }
 
+    static public void init(java.io.InputStream stream) {
+        if (!jj_initialized_once) {
+            new BliteParser(stream);
+        } else {
+            cleanTables();
+            ReInit(stream);
+        }
+    }
 }
 
 PARSER_END(BliteParser)
@@ -825,7 +833,7 @@ BLTDEFService Service() #Service :
     }
 }
 
-BLTDEFServiceInstance ServiceInstance() #ServiceInstance(1) :
+BLTDEFServiceInstance ServiceInstance()  :
 {   
 }
 {
@@ -833,7 +841,7 @@ BLTDEFServiceInstance ServiceInstance() #ServiceInstance(1) :
     { return jjtThis; }
 }
 
-BLTDEFServiceDef ServiceDef() #ServiceDef(1) :
+BLTDEFServiceDef ServiceDef() :
 {}
 {
     ServiceScope()
@@ -853,19 +861,21 @@ void Scope() :
 }
 
 void StartActivity() :
-{}
 {
-    ReceiveActivity() 
+    BLTDEFReceiveActivity createRecive = null;
+}
+{
+    createRecive = ReceiveActivity() { if (createRecive != null) markReciveAsCreateInst(createRecive); }
   | StartSequenceActivity()
 }
 
-void Activity() #void :
+void Activity() :
 {}
 {
     BasicActivity() | SequenceActivity()
 }
 
-void BasicActivity() #void :
+void BasicActivity() :
 {}
 {
     EmptyActivity()
@@ -1000,9 +1010,10 @@ BLTDEFRecParams RecParams() :
     BLTDEFBoundId fparam;
 }
 {
-    fparam = BoundId()
+    fparam = BoundId() { jjtThis.addFormalParam(fparam);}
+    ( "," fparam = BoundId() { jjtThis.addFormalParam(fparam);} )*
     {
-        jjtThis.addFormalParam(fparam);
+        
         return jjtThis;
     }
 }
@@ -1028,10 +1039,19 @@ void AssignActivity() :
     BoundId() <ASSIGN> Expression()
 }
 
-void Expression() :
-{}
+BLTDEFExpression Expression() :
 {
-    VarId() | <STRING_LITERAL>
+    //TEPORARY ...
+    ABltId varId = null;
+    Token literalValue = null;
+}
+{
+    ( varId = VarId() | literalValue = <STRING_LITERAL> )
+    {
+        if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
+        if (varId != null) jjtThis.setVarableName(varId.getName());
+        return jjtThis; 
+    }
 }
 
 BLTDEFVarId VarId() :

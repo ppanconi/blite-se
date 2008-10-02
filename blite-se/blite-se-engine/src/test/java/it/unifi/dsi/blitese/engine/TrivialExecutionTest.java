@@ -15,18 +15,15 @@
 
 package it.unifi.dsi.blitese.engine;
 
-import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
-import it.unifi.dsi.blitese.engine.definition.imp.BliteDeploymentDefinitionImp;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.imp.EngineImp;
-import it.unifi.dsi.blitese.parser.AbstractBliteParser;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
-import it.unifi.dsi.blitese.parser.BLTDEFDeployments;
+import it.unifi.dsi.blitese.parser.BliteParser;
 import it.unifi.dsi.blitese.parser.ParseException;
-import it.unifi.dsi.blitese.parser.SimpleNode;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -63,11 +60,11 @@ public class TrivialExecutionTest extends TestCase {
      */
     public void testExecute() throws Exception {
         
-        AbstractBliteParser parser = 
-                AbstractBliteParser.provideInstance(new FileInputStream(getBliteTestFile("trivial.blt")));
+        InputStream inputStream = new FileInputStream(getBliteTestFile("trivial.blt"));
+        BliteParser.init(inputStream);
         
         try {
-            BLTDEFCompilationUnit bliteTree = (BLTDEFCompilationUnit) parser.parse();
+            BLTDEFCompilationUnit bliteTree = (BLTDEFCompilationUnit) BliteParser.parse();
             BLTDEFDeployment deployment = (BLTDEFDeployment) bliteTree.getDeployments().get(2);
             
 //            BliteDeploymentDefinition def = new BliteDeploymentDefinitionImp(deployment, "TrivialProcess");

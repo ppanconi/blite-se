@@ -1,7 +1,7 @@
 {
     [
         seq
-            rcv <"s1"> method1 x ;
+            rcv <"s1"> method1 x, z ;
             y := x;
             inv <y> method2 "message";
             exit

@@ -130,6 +130,9 @@ public interface Engine {
      * @param  inComingEventKey
      */
     public  void sendResponseDoneStatus(InComingEventKey inComingEventKey, Object meId);
+    
+    
+    public  void sendResponseErrorStatus(String message, Object meId);
 
     //--------------------------------------------------------------------------
 }

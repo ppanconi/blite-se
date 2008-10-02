@@ -107,6 +107,9 @@ public class ProcessManagerImp implements ProcessManager {
     }
 
     public List<MessageContainer> provideEvents(InComingEventKey inComingEventKey) {
+        
+        LOGGER.log(Level.INFO, "LOOKING for Event Subject with key " + inComingEventKey.hashCode());
+        
         return mEngine.provideEvents(inComingEventKey);
     }
     
@@ -125,6 +128,30 @@ public class ProcessManagerImp implements ProcessManager {
         
         //we locate the target port for this request
         String portId = BLTDEFReceiveActivity.makePortId(serviceId.provideStringServiceName(), operation);
+        Object[] parts = messageContainer.getContent().getParts();
+        
+        if (!mPortIdToPortDef.containsKey(portId)) {
+            LOGGER.info("INVALID portId " + portId + " for service");
+            //we report the error
+            Object exchangeId = messageContainer.getId();
+            String message = "Invalid destination port " + portId;
+            mEngine.sendResponseErrorStatus(message, exchangeId);
+            
+            return;
+        } else {
+            //we test the conformity
+            BLTDEFReceiveActivity recDef = mPortIdToPortDef.get(portId).get(0);
+            
+            if (recDef.getParams().provideFormalParamN() != parts.length) {
+                LOGGER.info("INVALID request for portId " + portId + " mismatch in the number of params");
+                //we report the error
+                Object exchangeId = messageContainer.getId();
+                String message = "Invalid request for portId " + portId + ", mismatch in the number of params";
+                mEngine.sendResponseErrorStatus(message, exchangeId);
+            
+                return;
+            }
+        }
         
         RequestInComingEventKey icek = 
                     InComingEventKeyFactory.createRequestInComingEventKey(serviceId, portId);

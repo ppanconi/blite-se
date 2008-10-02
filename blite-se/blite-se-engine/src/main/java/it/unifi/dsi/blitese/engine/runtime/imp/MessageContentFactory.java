@@ -42,7 +42,7 @@ public class MessageContentFactory {
     }
     
     static public MessageContent createStringMC(String string) {
-        StringBuffer s = new StringBuffer(string);
+        String s = new String(string);
         return new MessageContentImp(s);
     }
     

@@ -21,6 +21,7 @@ import it.unifi.dsi.blitese.engine.runtime.EngineChannel;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
+import it.unifi.dsi.blitese.engine.runtime.MessageContent;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
@@ -106,8 +107,9 @@ public class EngineImp implements Engine {
             
             for (String serviceName : bliteDef.getServiceElement().provideAllServiceName()) {
                 
-                if (mServiceNameToManagers.get(serviceName) != null)
-                    throw new IllegalStateException("Duplicated portId " + serviceName);
+                ProcessManager opm = mServiceNameToManagers.get(serviceName);
+                if (opm != null && opm != processManager)
+                    throw new IllegalStateException("Duplicated service name on different deployments: " + serviceName);
                 
                 mServiceNameToManagers.put(serviceName, processManager);
                 
@@ -213,6 +215,8 @@ public class EngineImp implements Engine {
         if (l == null) {
             l = new LinkedList<MessageContainer>();
             mInComingEvent.put(eventKey, l);
+            
+            LOGGER.log(Level.INFO, "ADDED Event Subject " + mc + " for key " + eventKey.hashCode());
         }
         l.add(mc);
     }
@@ -346,6 +350,18 @@ public class EngineImp implements Engine {
         mChannel.sendIntoExchange(meId, messageContainer);
         
     }
+
+    public void sendResponseErrorStatus(String message, Object meId) {
+        
+        MessageContent content = MessageContentFactory.createStringMC(message);
+        
+        MessageContainer mc = 
+                MessageContainerFactory.createMessageContainer(content, MessageContainer.Type.STATUS_ERROR);
+        
+        mChannel.sendIntoExchange(meId, mc);
+    }
+    
+    
 
     //--------------------------------------------------------------------------
 

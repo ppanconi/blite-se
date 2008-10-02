@@ -14,10 +14,14 @@
  */
 package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
+import it.unifi.dsi.blitese.engine.definition.ActivityComponentFactory;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
+import it.unifi.dsi.blitese.engine.runtime.imp.RuntimeValueFactory;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import it.unifi.dsi.blitese.parser.Node;
 
 /**
  *
@@ -29,6 +33,9 @@ public abstract class ActivityComponentBase implements ActivityComponent {
     private ExecutionContext context;
     private ActivityComponent parentComponent;
     private FlowExecutor executor;
+    protected  int currentChildIndex = 0;
+    private BltDefBaseNode currentChild = null;
+    private Node node = null;
 
     public BltDefBaseNode getBltDefNode() {
         return bltDefNode;
@@ -62,5 +69,28 @@ public abstract class ActivityComponentBase implements ActivityComponent {
         this.parentComponent = parentComponent;
     }
     
-    public void init() {}
+    
+    public void init() {
+        node = (Node) bltDefNode;
+    }
+    
+    protected ActivityComponent nextChildActivity(ExecutionContext _context,
+            FlowExecutor _executor) {
+        if (currentChildIndex >= node.jjtGetNumChildren()) {
+            currentChild = null;
+            return null;
+        } else {
+            currentChild = (BltDefBaseNode) node.jjtGetChild(currentChildIndex++);
+            return ActivityComponentFactory.getInstance().makeRuntimeActivity(currentChild, _context, this, _executor);
+        }
+    }
+    
+    protected void flowParent() {
+        getExecutor().setCurrentActivity(getParentComponent());
+    }
+    
+    protected void assing(String varName, Object value) {
+        RuntimeVariable rv = RuntimeValueFactory.makeRuntimeValue(varName, value);
+        getContext().setRuntimeVariable(rv);
+    }
 }

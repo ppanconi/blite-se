@@ -73,7 +73,9 @@ public class RequestInComingEventKey implements InComingEventKey {
 
     @Override
     public int hashCode() {
-        return (InComingEventKeyFactory.IN_REQUEST_PREFIX + getPortId()).hashCode();
+        
+        String s = (InComingEventKeyFactory.IN_REQUEST_PREFIX + getPortId().toString()).toString();
+        return s.hashCode();
     }
     
     

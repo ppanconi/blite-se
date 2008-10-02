@@ -91,6 +91,7 @@ public class ReceiveActivity extends ActivityComponentBase {
                 }
                 
                 if (! toDiscard) {
+                    mcs.remove(mc); //we consume event
                     matchingMessage = mc;
                     break; //we have found one message we stop searching...
                 }
@@ -98,7 +99,7 @@ public class ReceiveActivity extends ActivityComponentBase {
             
             if (matchingMessage != null) {
                 //we have found samething than we consume it...
-                manager.consumeEvent(icek, matchingMessage);
+//                manager.consumeEvent(icek, matchingMessage);
                 
             } else {
                 //we haven't found anything we continue to wait...
@@ -110,19 +111,20 @@ public class ReceiveActivity extends ActivityComponentBase {
         
         assert matchingMessage != null;
         
-        log.info(" Recived Message " + matchingMessage);
-            
         //we assign the incaming values into the contextual variable scope;
         Object[] parts = matchingMessage.getContent().getParts();
         
+        String vs = "";
         for (int i = 0; i < fparamNames.length; i++) {
             String varName = fparamNames[i];
             Object value = parts[i];
             
-            RuntimeVariable rv = RuntimeValueFactory.makeRuntimeValue(varName, value);
-            getContext().setRuntimeVariable(rv);
+            assing(varName, value);
             
+            vs += "" + value + ", ";
         }
+        
+        log.info("CONSUMED Message " + vs);
         
         getExecutor().setCurrentActivity(getParentComponent());
         return true;
