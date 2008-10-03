@@ -18,6 +18,8 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.MessageContent;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
+import it.unifi.dsi.blitese.parser.BLTDEFInvParam;
+import it.unifi.dsi.blitese.parser.BLTDEFInvParams;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 
 /**
@@ -28,17 +30,25 @@ public class MessageContentFactory {
 
     static public MessageContent createInvokeMC(ExecutionContext context, BLTDEFInvokeActivity activity) {
         
-        ABltValueHolder vh = activity.getParams();
+        BLTDEFInvParams params = activity.getParams();
         
-        Object o = RuntimeValueFactory.makeRuntimeValue(vh, context);
+        int n = params.getActualParams().size();
+        Object[] parts = new Object[n];
+        int i = 0;
+        for (BLTDEFInvParam param : params.getActualParams()) {
+            Object o = RuntimeValueFactory.makeRuntimeValue(param, context);
+            
+            if (o instanceof String) {
+                String s = (String) o;
+                String v = new String(s);
+                parts[i++] = v;
+            } else {
+                throw new RuntimeException("Not Yet supported");
+            }
+        }
         
-        if (o instanceof String) {
-            String string = (String) o;
-            return createStringMC(string);
-        } 
+        return new MessageContentImp(parts);
         
-        
-        throw new RuntimeException("Not Yet supported");
     }
     
     static public MessageContent createStringMC(String string) {

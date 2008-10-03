@@ -1,0 +1,12 @@
+{
+    [
+        rcv <"s1"> mathod1(y)
+    ]
+}
+||
+{
+    seq
+        empty;
+        inv <"s1"> mathod1("HELLO WORLD")
+    qes 
+}

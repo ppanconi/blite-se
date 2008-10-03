@@ -1,9 +1,9 @@
 {
     [
-        rcv <"s1"> mathod1 y
+        rcv <"s1"> mathod1(y)
     ]
 }
 ||
 {
-    inv <"s1"> mathod1 "HELLO WORLD"
+    inv <"s1"> mathod1("HELLO WORLD")
 }

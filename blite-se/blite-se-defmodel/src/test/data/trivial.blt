@@ -1,9 +1,9 @@
 {
     [
         seq
-            rcv <"s1"> method1 x, z ;
+            rcv <"s1"> method1(x, z);
             y := x;
-            inv <y> method2 "message";
+            inv <y> method2("message");
             exit
         qes
     ]
@@ -12,12 +12,12 @@
 {
     [
         seq
-            rcv <"s2"> mathod2 y;
+            rcv <"s2"> mathod2(y);
             empty
         qes
     ]
 }
 ||
 {
-    inv <"s1"> method1 "s2"
+    inv <"s1"> method1("s2")
 }

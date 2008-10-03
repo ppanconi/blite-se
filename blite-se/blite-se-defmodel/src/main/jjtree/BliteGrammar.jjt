@@ -914,7 +914,7 @@ BLTDEFReceiveActivity ReceiveActivity() :
     BLTDEFRecParams params;
 }
 {
-    <RECEIVE> partners = RecPartners() operation = OperationId() params = RecParams()
+    <RECEIVE> partners = RecPartners() operation = OperationId() "(" params = RecParams() ")"
     {
         jjtThis.setPartners(partners);
         jjtThis.setOperation(operation);
@@ -933,7 +933,7 @@ void InvokeActivity() :
     BLTDEFInvParams params;
 }
 {
-    <INVOKE> partners = InvPartners() operationId = OperationId() params = InvParams()
+    <INVOKE> partners = InvPartners() operationId = OperationId() "(" params = InvParams() ")"
     {
         jjtThis.setPartners(partners);
         jjtThis.setOperationId(operationId);
@@ -1005,8 +1005,7 @@ BLTDEFOperationId OperationId() :
     }
 }
 
-BLTDEFRecParams RecParams() :
-{ 
+BLTDEFRecParams RecParams() : { 
     BLTDEFBoundId fparam;
 }
 {
@@ -1019,6 +1018,19 @@ BLTDEFRecParams RecParams() :
 }
 
 BLTDEFInvParams InvParams() :
+{
+    BLTDEFInvParam aparam = null;
+}
+{
+    aparam = InvParam() { jjtThis.addActualParam(aparam); }
+    ( "," aparam = InvParam() { jjtThis.addActualParam(aparam); } )*
+    {
+        return jjtThis;
+    }
+}
+
+
+BLTDEFInvParam InvParam() :
 {
     ABltId varId = null;
     Token literalValue = null;

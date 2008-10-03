@@ -72,16 +72,18 @@
                                                        replace="${project.basedir}/src/main/java"
                                                        casesensitive="false" 
                                                        />
-                                                       
+                                        
+                                        <!--
                                         <echo>Generated File: @{genfile}</echo>
                                         <echo>User File: ${usrfile}</echo>
+                                        -->
                                         
                                         <if>
                                             <available file="${usrfile}" />
                                             <then>
-                                                <echo>The file @{genfile} is also provided by the user so we deleting it</echo>
+                                                <!--<echo>The file @{genfile} is also provided by the user so we deleting it</echo>-->
                                                 <delete file="@{genfile}"/>
-                                                <echo>File @{genfile} DELETED !!</echo>
+                                                <!--<echo>File @{genfile} DELETED !!</echo>-->
                                             </then>
                                         </if>
                                         
