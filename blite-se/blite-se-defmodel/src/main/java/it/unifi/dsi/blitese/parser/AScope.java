@@ -29,4 +29,35 @@ public abstract class AScope extends SimpleNode {
         super(i);
     }
 
+//added code start here ////////////////////////////////////////////////////////  
+    
+    private BLTDEFActivity mainActivity;
+    private BLTDEFActivity faultHandler;
+    private BLTDEFActivity compensationHandler;
+
+    public BLTDEFActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(BLTDEFActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
+    public BLTDEFActivity getCompensationHandler() {
+        return compensationHandler;
+    }
+
+    public void setCompensationHandler(BLTDEFActivity compensationHandler) {
+        this.compensationHandler = compensationHandler;
+    }
+
+    public BLTDEFActivity getFaultHandler() {
+        return faultHandler;
+    }
+
+    public void setFaultHandler(BLTDEFActivity faultHandler) {
+        this.faultHandler = faultHandler;
+    }
+    
+    
 }

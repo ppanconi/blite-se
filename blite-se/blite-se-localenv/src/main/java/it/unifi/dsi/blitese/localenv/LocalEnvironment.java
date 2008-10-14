@@ -84,8 +84,8 @@ public class LocalEnvironment {
                     } 
 
 
-                    //we have to map the port id defined in the current deploy to
-                    //the relative Engine
+                    //we have to map the service name defined in 
+                    //the current deploy to the relative Engine
                     int servCount = 0;
                     for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
                         servCount++;
@@ -98,7 +98,8 @@ public class LocalEnvironment {
                                 mServiceNameToEngine.put(serviceName, engine);
                             } else if (!poe.equals(engine)) {
                                 throw new IncompatibleCompUnitException("The compilation unit is not compatible with " +
-                                        "the actual Eviroment. It defines the service " + serviceName + " yet present in the Enviroment");
+                                        "the actual Eviroment. It defines the service " + serviceName + 
+                                        " yet present in the Enviroment in different location");
                             }
                         }
 

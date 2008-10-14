@@ -5,7 +5,7 @@
 }
 ||
 {
-    seq
+    :: seq
         empty;
         inv <"s1"> mathod1("HELLO WORLD")
     qes 

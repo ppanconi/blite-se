@@ -74,6 +74,9 @@ TOKEN :
 | < EMPTY: "empty" >
 | < THORW: "throw" >
 | < EXIT: "exit" >
+| < FH: "fh:" >
+| < CH: "ch:" >
+| < IST: "::" >
 }
 
 /* SEPARATORS */
@@ -82,6 +85,9 @@ TOKEN :
 {
   < SEQBEGIN: "seq" >
 | < SEQEND:   "qes" >
+| < FLOWBEGIN: "flw" >
+| < FLOWEND: "wlf|" >
+| < FLOWSEP: "|" >
 }
 
 /* OPERATORS */
@@ -837,7 +843,7 @@ BLTDEFServiceInstance ServiceInstance()  :
 {   
 }
 {
-    Activity()
+    <IST> Activity()
     { return jjtThis; }
 }
 
@@ -849,30 +855,73 @@ BLTDEFServiceDef ServiceDef() :
 }
 
 void ServiceScope() :
-{}
+{   
+    BLTDEFActivity startActivity = null;
+    BLTDEFActivity faultHandler = null;
+}
 {
-    "[" StartActivity() "]"
+    "[" startActivity = StartActivity() ( <FH> faultHandler = Activity() )? "]"
+    {
+        jjtThis.setMainActivity(startActivity);
+        jjtThis.setFaultHandler(faultHandler);
+        
+    }
 }
 
 void Scope() :
-{}
 {
-    "[" Activity() "]"
+    BLTDEFActivity mainActivity = null;
+    BLTDEFActivity faultHandler = null;
+    BLTDEFActivity compensationHandler = null;
+}
+{
+    "[" mainActivity = Activity() ( <FH> faultHandler = Activity() )? ( <CH> compensationHandler = Activity() )? "]"
+    {
+        jjtThis.setMainActivity(mainActivity);
+        jjtThis.setFaultHandler(faultHandler);
+        jjtThis.setCompensationHandler(compensationHandler);
+    }
 }
 
-void StartActivity() :
+void StartScopeActivity() :
+{
+    BLTDEFActivity mainActivity = null;
+    BLTDEFActivity faultHandler = null;
+    BLTDEFActivity compensationHandler = null;
+}
+{
+    "[" mainActivity = StartActivity() ( <FH> faultHandler = Activity() )? ( <CH> compensationHandler = Activity() )? "]"
+    {
+        jjtThis.setMainActivity(mainActivity);
+        jjtThis.setFaultHandler(faultHandler);
+        jjtThis.setCompensationHandler(compensationHandler);
+    }
+}
+
+BLTDEFStartActivity StartActivity() :
 {
     BLTDEFReceiveActivity createRecive = null;
 }
 {
-    createRecive = ReceiveActivity() { if (createRecive != null) markReciveAsCreateInst(createRecive); }
-  | StartSequenceActivity()
+  (
+      createRecive = ReceiveActivity() 
+            { if (createRecive != null) markReciveAsCreateInst(createRecive); }
+    |
+      StartSequenceActivity()
+    |
+      StartScopeActivity()
+    |
+      StartFlowActivity()
+  )
+  { return jjtThis; }
 }
 
-void Activity() :
-{}
+BLTDEFActivity Activity() :
+{ 
+}
 {
-    BasicActivity() | SequenceActivity()
+    ( BasicActivity() | SequenceActivity() | Scope() | FlowActivity())
+    { return jjtThis; }
 }
 
 void BasicActivity() :
@@ -890,15 +939,29 @@ void StartSequenceActivity() :
     BLTDEFReceiveActivity createRecive;
 }
 {
-    <SEQBEGIN> createRecive = ReceiveActivity() { markReciveAsCreateInst(createRecive); }
-    ( ";" Activity() )* 
+    <SEQBEGIN> 
+    StartActivity()
+    /*createRecive = ReceiveActivity() { markReciveAsCreateInst(createRecive); } */
+    ( ";"  (Activity())? )* 
     <SEQEND>
 }
 
 void SequenceActivity() :
 {}
 {
-   <SEQBEGIN> Activity() ( ";" Activity()   )* <SEQEND>
+   <SEQBEGIN> Activity() ( ";" (Activity())?   )* <SEQEND>
+}
+
+void StartFlowActivity() :
+{}
+{
+    <FLOWBEGIN> StartActivity() ( <FLOWSEP> StartActivity() )+ <FLOWEND>
+}
+
+void FlowActivity() :
+{}
+{
+    <FLOWBEGIN> Activity() ( <FLOWSEP> Activity() )+ <FLOWEND>
 }
 
 void EmptyActivity() :
