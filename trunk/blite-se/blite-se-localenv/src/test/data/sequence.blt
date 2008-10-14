@@ -11,7 +11,7 @@
 }
 ||
 {
-    seq
+    :: seq
         inv <"s1"> mathod1("HELLO SERVICE S1");
         inv <"s2"> mathod1("HELLO SERVICE S2")
     qes

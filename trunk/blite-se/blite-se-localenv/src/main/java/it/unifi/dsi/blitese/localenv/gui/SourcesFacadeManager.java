@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
@@ -47,6 +48,7 @@ public class SourcesFacadeManager {
     
     private Map<JComponent, File> mCompToFile = new HashMap<JComponent, File>();
     private Map<File, JComponent> mFileToComp = new HashMap<File, JComponent>();
+    private Map<JComponent, BLTDEFCompilationUnit> mCompToCompUnit = new HashMap<JComponent, BLTDEFCompilationUnit>();
     
     
     public JComponent addSource(File source) throws IOException {
@@ -80,6 +82,8 @@ public class SourcesFacadeManager {
         
         BLTDEFCompilationUnit compilationUnit = (BLTDEFCompilationUnit) BliteParser.parse();
         compilationUnit.setResource(file.toURI().toURL());
+        
+        mCompToCompUnit.put(component, compilationUnit);
         
         return  compilationUnit;
         
@@ -115,5 +119,9 @@ public class SourcesFacadeManager {
     
     private String getText(File file) {
         return mFileToText.get(file).getText();
+    }
+    
+    public Collection<BLTDEFCompilationUnit> proviedeCompiledUnits() {
+        return mCompToCompUnit.values();
     }
 }

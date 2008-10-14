@@ -38,7 +38,20 @@ public class LocalEngineChannel implements EngineChannel {
     private static final Logger LOGGER = Logger.getLogger(LocalEngineChannel.class.getName());
     private LocalEnvironment environment;
     private ExecutorService exService = Executors.newFixedThreadPool(5);
-    private Boolean open = true;
+    private boolean open = true;
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void open() {
+        this.open = true;
+    }
+    
+    public void close() {
+        this.open = false;
+    }
+    
     private long messageExchangeCounter = 0L;
 
     synchronized private Long nextMEId() {

@@ -19,5 +19,5 @@
 }
 ||
 {
-    inv <"s1"> method1("s2")
+    :: inv <"s1"> method1("s2")
 }
