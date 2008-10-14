@@ -16,7 +16,14 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 /**
+ * This class represents an activity execution context.
  *
+ * This could be the Process Instance itself but also other
+ * structured activities like scope activity.
+ * 
+ * At run time Execution Contexts are in tree 
+ * 
+ * 
  * @author panks
  */
 public interface ExecutionContext extends VariableScope {
@@ -25,6 +32,14 @@ public interface ExecutionContext extends VariableScope {
     
     boolean matchCorrelation(String variable, Object value);
 
+    ExecutionContext getParent();
     
+    void notifyFault(Fault fault);
+    
+    void registerFlow(FlowExecutor flow);
+    
+    void registerInnerContext(ExecutionContext child);
+    
+    void resumeWaithingFlows();
     
 }
