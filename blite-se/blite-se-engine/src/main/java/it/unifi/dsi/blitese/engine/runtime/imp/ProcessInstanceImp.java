@@ -20,6 +20,7 @@ import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
+import it.unifi.dsi.blitese.engine.runtime.Fault;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance; 
 
@@ -30,11 +31,10 @@ import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, VariableScope {
+public class ProcessInstanceImp extends ABaseContext implements ProcessInstance, ExecutionContext, VariableScope {
     
     private Engine mEngine;
     private ProcessManager mProcessManager;
@@ -147,6 +147,12 @@ public class ProcessInstanceImp implements ProcessInstance, ExecutionContext, Va
         
         return true;
     }
+
+    public void notifyFault(Fault fault) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    
     
     
 

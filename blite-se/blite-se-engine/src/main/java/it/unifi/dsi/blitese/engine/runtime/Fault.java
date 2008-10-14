@@ -13,18 +13,12 @@
  * 
  */
 
-package it.unifi.dsi.blitese.engine.runtime.activities.imp;
+package it.unifi.dsi.blitese.engine.runtime;
 
 /**
  *
  * @author panks
  */
-public class ScopeActivity extends ActivityComponentBase {
-    
-    
-
-    public boolean doActivity() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+public interface Fault {
 
 }
