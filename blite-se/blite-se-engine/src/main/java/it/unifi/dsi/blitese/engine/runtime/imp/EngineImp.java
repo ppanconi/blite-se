@@ -63,6 +63,8 @@ public class EngineImp implements Engine {
     private ConcurrentHashMap<InComingEventKey, List<MessageContainer>>
                 mInComingEvent = new ConcurrentHashMap<InComingEventKey, List<MessageContainer>>();
     
+    private ConcurrentHashMap<FlowExecutor, InComingEventKey>
+                mWaitingFlowToEvent = new ConcurrentHashMap<FlowExecutor, InComingEventKey>();
     
     /**
      * Deployed Blite program definitions
@@ -178,6 +180,12 @@ public class EngineImp implements Engine {
     //synchronized 
     public void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey) {
         
+        InComingEventKey _pre = mWaitingFlowToEvent.get(executor);
+        if (_pre != null) 
+            throw new IllegalStateException("Flow " + executor + " is still waiting on event " + _pre);
+        
+        mWaitingFlowToEvent.put(executor, eventKey);
+        
         List<FlowExecutor> l = mEventWaitingExecutor.get(eventKey);
         if (l == null) {
             l = new LinkedList<FlowExecutor>();
@@ -198,7 +206,10 @@ public class EngineImp implements Engine {
         if (l != null) {
             
             for (FlowExecutor flowExecutor : l) {
+                
+                mWaitingFlowToEvent.remove(flowExecutor);
                 queueFlowExecutor(flowExecutor);
+                
                 LOGGER.log(Level.INFO, "RESUMED Flow on event " + eventKey.hashCode());
             }
             
@@ -209,6 +220,22 @@ public class EngineImp implements Engine {
         
         return l;
     }
+
+    public void resumeWaitingFlow(FlowExecutor flow) {
+        InComingEventKey icek = mWaitingFlowToEvent.remove(flow);
+        
+        if (icek != null) {
+            List<FlowExecutor> l = mEventWaitingExecutor.get(icek);
+            
+            if (l != null) {
+                l.remove(flow);
+            }
+            
+            queueFlowExecutor(flow);
+        }
+    }
+    
+    
 
     public void addEventSubjet(InComingEventKey eventKey, MessageContainer mc) {
         List<MessageContainer> l = mInComingEvent.get(eventKey);

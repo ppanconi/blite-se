@@ -15,6 +15,8 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
+import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext.ContextState;
+
 /**
  * This class represents an activity execution context.
  *
@@ -32,7 +34,7 @@ public interface ExecutionContext extends VariableScope {
     
     boolean matchCorrelation(String variable, Object value);
 
-    ExecutionContext getParent();
+    ExecutionContext getParentContext();
     
     void notifyFault(Fault fault);
     
@@ -41,5 +43,11 @@ public interface ExecutionContext extends VariableScope {
     void registerInnerContext(ExecutionContext child);
     
     void resumeWaithingFlows();
+    
+    public ContextState getState();
+    
+    public void setSate(ContextState state);
+    
+    public boolean isInAFaultedBranch();
     
 }

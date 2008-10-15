@@ -72,6 +72,12 @@ public class ReceiveActivity extends ActivityComponentBase {
         MessageContainer matchingMessage = null;
         synchronized (manager.getDefinitionProcessLevelLock()) {
             
+            if (getContext().isInAFaultedBranch()) {
+                log.info("Terminated activity " + this);
+                flowParent();
+                return true;
+            }
+            
             List<MessageContainer> mcs = manager.provideEvents(icek);
             
             for (MessageContainer mc : mcs) {
@@ -97,11 +103,7 @@ public class ReceiveActivity extends ActivityComponentBase {
                 }
             }
             
-            if (matchingMessage != null) {
-                //we have found samething than we consume it...
-//                manager.consumeEvent(icek, matchingMessage);
-                
-            } else {
+            if (matchingMessage == null) {
                 //we haven't found anything we continue to wait...
                 manager.getEngine().addFlowWaitingEvent(getExecutor(), icek);
                 
@@ -111,22 +113,28 @@ public class ReceiveActivity extends ActivityComponentBase {
         
         assert matchingMessage != null;
         
-        //we assign the incaming values into the contextual variable scope;
-        Object[] parts = matchingMessage.getContent().getParts();
-        
-        String vs = "";
-        for (int i = 0; i < fparamNames.length; i++) {
-            String varName = fparamNames[i];
-            Object value = parts[i];
+        if (!getContext().isInAFaultedBranch()) {
+
+            //we assign the incaming values into the contextual variable scope;
+            Object[] parts = matchingMessage.getContent().getParts();
+
+            String vs = "";
+            for (int i = 0; i < fparamNames.length; i++) {
+                String varName = fparamNames[i];
+                Object value = parts[i];
+
+                assing(varName, value);
+
+                vs += "" + value + ", ";
+            }
+
+            log.info("CONSUMED Message " + vs);
             
-            assing(varName, value);
-            
-            vs += "" + value + ", ";
+        }else {
+            log.info("Terminated activity " + this);
         }
         
-        log.info("CONSUMED Message " + vs);
-        
-        getExecutor().setCurrentActivity(getParentComponent());
+        flowParent();
         return true;
         
     }

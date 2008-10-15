@@ -15,10 +15,19 @@
 
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
+import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
+import it.unifi.dsi.blitese.engine.runtime.Fault;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
+import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
+import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ActivityComponentBase;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Abstract utility class that provides the base functionalities 
@@ -26,17 +35,48 @@ import java.util.List;
  * 
  * @author panks
  */
-public abstract class ABaseContext implements ExecutionContext {
+public abstract class ABaseContext extends ActivityComponentBase implements ExecutionContext {
+    
+    static public enum ContextState {
+        STARTED,
+        RUNNING,
+        COMPLETED,
+        TEMINATED,
+        FAULTED
+    }
+    
+    private ContextState currentSate = ContextState.STARTED;
 
-    private ExecutionContext parent;
-    private List<ExecutionContext> innerContexts = new ArrayList<ExecutionContext>();
-    private List<FlowExecutor> registeredFlow = new ArrayList<FlowExecutor>();
-
-    public void setParent(ExecutionContext parent) {
-        this.parent = parent;
+    public ContextState getState() {
+        return currentSate;
     }
 
-    public ExecutionContext getParent() {
+    public void setSate(ContextState state) {
+        this.currentSate = state;
+    }
+    
+    private ExecutionContext parent;
+    private Set<ExecutionContext> innerContexts = new HashSet<ExecutionContext>();
+    private List<FlowExecutor> registeredFlow = new ArrayList<FlowExecutor>();
+
+    public void setParentContext(ExecutionContext parent) {
+        this.parent = parent;
+        parent.registerInnerContext(this);
+    }
+
+    /**
+     * The Execution Context of this object as Activity is the parent Context
+     * of these objects as Contexts.
+     * 
+     * @param context
+     */
+    @Override
+    public void setContext(ExecutionContext context) {
+        super.setContext(context);
+        setParentContext(context);
+    }
+
+    public ExecutionContext getParentContext() {
         return parent;
     }
 
@@ -49,6 +89,71 @@ public abstract class ABaseContext implements ExecutionContext {
     }
 
     public void resumeWaithingFlows() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        for (ExecutionContext innerContext : innerContexts) {
+            innerContext.resumeWaithingFlows();
+        }
+        
+        for (FlowExecutor flow : registeredFlow) {
+            
+            ProcessManager manager = getProcessInstance().getManager();
+            Engine engine = manager.getEngine();
+            
+            //!!IMPORTANT!! To terminate the the next wating
+            // activities valuate to close this operation in a Process Level Mutual Exclusion
+            //block.
+            synchronized (manager.getDefinitionProcessLevelLock()) {
+                engine.resumeWaitingFlow(flow);
+            }
+            
+        }
     }
+
+    public void notifyFault(Fault fault) {
+        setSate(ContextState.FAULTED);
+        resumeWaithingFlows();
+    }
+
+    public boolean isInAFaultedBranch() {
+        
+        if (getState() == ContextState.FAULTED) 
+            return true;
+                
+        if (getParentContext()!= null)
+            return getParentContext().isInAFaultedBranch();
+        else return false;
+    }
+
+    public ProcessInstance getProcessInstance() {
+        return getParentContext().getProcessInstance();
+    }
+
+    public boolean matchCorrelation(String variable, Object value) {
+        return getParentContext().matchCorrelation(variable, value);
+    }
+
+    public RuntimeVariable createNaddRuntimeVariable(String variable, Object value) {
+        return getParentContext().createNaddRuntimeVariable(variable, value);
+    }
+
+    public RuntimeVariable createRuntimeVariable(String variable) {
+        return getParentContext().createRuntimeVariable(variable);
+    }
+
+    public RuntimeVariable getRuntimeVariable(String variable) {
+        return getParentContext().getRuntimeVariable(variable);
+    }
+
+    public Map getRuntimeVariables() {
+        return getParentContext().getRuntimeVariables();
+    }
+
+    public void setRuntimeVariable(RuntimeVariable runtimeVariable) {
+        getParentContext().setRuntimeVariable(runtimeVariable);
+    }
+    
+    
+    
+    
+    
 }

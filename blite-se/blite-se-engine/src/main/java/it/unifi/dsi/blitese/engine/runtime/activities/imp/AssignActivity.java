@@ -39,12 +39,15 @@ public class AssignActivity extends ActivityComponentBase {
 
     public boolean doActivity() {
         
-        BLTDEFBoundId var = (BLTDEFBoundId) assignDef.jjtGetChild(0);
-        BLTDEFExpression expr = (BLTDEFExpression) assignDef.jjtGetChild(1);
+        //we check if we had the input to terminate
+        if (!getContext().isInAFaultedBranch()) {
+            BLTDEFBoundId var = (BLTDEFBoundId) assignDef.jjtGetChild(0);
+            BLTDEFExpression expr = (BLTDEFExpression) assignDef.jjtGetChild(1);
         
-        Object exprValue = ExpressionInterpreter.evaluate(getContext(), expr);
+            Object exprValue = ExpressionInterpreter.evaluate(getContext(), expr);
         
-        assing(var.getName(), exprValue);
+            assing(var.getName(), exprValue);
+        }
         
         flowParent();
         return true;

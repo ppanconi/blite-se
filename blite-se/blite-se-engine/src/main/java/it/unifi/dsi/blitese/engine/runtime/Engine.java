@@ -71,7 +71,8 @@ public interface Engine {
      * @param eventKey
      */
     public List<FlowExecutor> resumeFlowWaitingEvent(InComingEventKey eventKey);
-    
+
+    public void resumeWaitingFlow(FlowExecutor flow);
     
     public void addEventSubjet(InComingEventKey eventKey, MessageContainer mc);
     
