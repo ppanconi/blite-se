@@ -50,6 +50,12 @@ public class InvokeActivity extends ActivityComponentBase {
 
     public boolean doActivity() {
 
+        if (getContext().isInAFaultedBranch()) {
+            LOGGER.info("Terminated activity " + this);
+            flowParent();
+            return true;
+        }
+        
         if (eventKey == null) {
             return invoke();
         } else {

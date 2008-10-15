@@ -31,6 +31,12 @@ public class SequenceActivity extends ActivityComponentBase {
 
     public boolean doActivity() {
         
+        if (getContext().isInAFaultedBranch()) {
+            LOGGER.info("Terminated activity " + this);
+            flowParent();
+            return true;
+        }
+        
         ActivityComponent _nextAct = nextChildActivity(getContext(), getExecutor());
         
         LOGGER.log(Level.FINE, "SequenceActivity doActivity");
