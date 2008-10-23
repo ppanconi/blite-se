@@ -1,0 +1,16 @@
+{
+    [
+        seq
+            rcv <"s1"> start(y);
+            throw;
+            inv <"s2"> corre(y)
+        qes
+    ]
+} 
+||
+{
+    :: seq
+        inv <"s1"> start("HELLO WORLD!");
+        rcv <"s2"> corre(x)
+    qes
+} (x)

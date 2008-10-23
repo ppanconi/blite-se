@@ -932,6 +932,7 @@ void BasicActivity() :
   | InvokeActivity()
   | ExitActivity()
   | AssignActivity()
+  | ThrowActivity()
 }
 
 void StartSequenceActivity() :
@@ -1009,6 +1010,13 @@ void ExitActivity() :
 {
     <EXIT>
 }
+
+void ThrowActivity() :
+{}
+{
+    <THORW>
+}
+
 
 BLTDEFRecPartners RecPartners() :
 {   Token recPart = null;
