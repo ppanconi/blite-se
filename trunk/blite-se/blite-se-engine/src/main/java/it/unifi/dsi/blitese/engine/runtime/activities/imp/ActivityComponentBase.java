@@ -85,6 +85,11 @@ public abstract class ActivityComponentBase implements ActivityComponent {
         }
     }
     
+    protected boolean hasNextChildActivity() {
+       if (currentChildIndex >= node.jjtGetNumChildren()) return false;
+       else return true;
+    }
+    
     protected void flowParent() {
         getExecutor().setCurrentActivity(getParentComponent());
     }

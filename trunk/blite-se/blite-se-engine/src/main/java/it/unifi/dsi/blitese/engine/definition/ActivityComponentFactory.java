@@ -20,6 +20,7 @@ import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ActivityComponentBase;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.AssignActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.EmptyActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.FlowActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
@@ -29,6 +30,7 @@ import it.unifi.dsi.blitese.parser.ABTLDEFSequenceActivity;
 import it.unifi.dsi.blitese.parser.AScope;
 import it.unifi.dsi.blitese.parser.BLTDEFAssignActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFEmptyActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFFlowActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFThrowActivity;
@@ -115,6 +117,10 @@ public class ActivityComponentFactory {
         } else if (bltDefNode instanceof BLTDEFThrowActivity ) {
             
             return new DefClass(ThrowActivity.class, bltDefNode);
+            
+        } else if (bltDefNode instanceof BLTDEFFlowActivity ) {
+            
+            return new DefClass(FlowActivity.class, bltDefNode);
             
         } else {
             
