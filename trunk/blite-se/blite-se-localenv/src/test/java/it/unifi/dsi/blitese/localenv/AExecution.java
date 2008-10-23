@@ -63,6 +63,7 @@ public abstract class AExecution extends TestCase {
             
             environment.addCompilationUnit(cu);
             
+            // ---------------- waiting 5 sec
             Thread.sleep(5000);
             
         } catch (ParseException ex) {

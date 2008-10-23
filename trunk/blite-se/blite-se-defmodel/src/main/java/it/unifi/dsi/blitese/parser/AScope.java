@@ -31,32 +31,34 @@ public abstract class AScope extends SimpleNode {
 
 //added code start here ////////////////////////////////////////////////////////  
     
-    private BLTDEFActivity mainActivity;
-    private BLTDEFActivity faultHandler;
-    private BLTDEFActivity compensationHandler;
+    private BltDefBaseNode mainActivity;
+    //The Dafult fault Handler reThrow the exception
+    private BltDefBaseNode faultHandler = new BLTDEFThrowActivity();
+    private BltDefBaseNode compensationHandler;
 
-    public BLTDEFActivity getMainActivity() {
+    public BltDefBaseNode getMainActivity() {
         return mainActivity;
     }
 
-    public void setMainActivity(BLTDEFActivity mainActivity) {
+    public void setMainActivity(BltDefBaseNode mainActivity) {
         this.mainActivity = mainActivity;
     }
 
-    public BLTDEFActivity getCompensationHandler() {
+    public BltDefBaseNode getCompensationHandler() {
         return compensationHandler;
     }
 
-    public void setCompensationHandler(BLTDEFActivity compensationHandler) {
+    public void setCompensationHandler(BltDefBaseNode compensationHandler) {
         this.compensationHandler = compensationHandler;
     }
 
-    public BLTDEFActivity getFaultHandler() {
+    public BltDefBaseNode getFaultHandler() {
         return faultHandler;
     }
 
-    public void setFaultHandler(BLTDEFActivity faultHandler) {
-        this.faultHandler = faultHandler;
+    public void setFaultHandler(BltDefBaseNode faultHandler) {
+        if (faultHandler != null)
+            this.faultHandler = faultHandler;
     }
     
     

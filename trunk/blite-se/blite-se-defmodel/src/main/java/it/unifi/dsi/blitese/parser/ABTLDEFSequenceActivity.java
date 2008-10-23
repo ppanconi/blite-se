@@ -28,6 +28,6 @@ public abstract class ABTLDEFSequenceActivity extends SimpleNode {
     public ABTLDEFSequenceActivity(int i) {
         super(i);
     }
-
+    
 //added code start here ////////////////////////////////////////////////////////    
 }

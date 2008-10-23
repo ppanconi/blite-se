@@ -21,6 +21,8 @@ import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext;
 import it.unifi.dsi.blitese.engine.runtime.imp.ProtecedScope;
 import it.unifi.dsi.blitese.parser.AScope;
 import it.unifi.dsi.blitese.parser.BLTDEFActivity;
+import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,6 +30,8 @@ import it.unifi.dsi.blitese.parser.BLTDEFActivity;
  */
 public class ScopeActivity extends ABaseContext {
 
+    static Logger LOGGER = Logger.getLogger(ScopeActivity.class.getName()); 
+    
     private AScope scopeDef;
     @Override
     public void init() {
@@ -41,8 +45,10 @@ public class ScopeActivity extends ABaseContext {
             if (getState() == ContextState.FAULTED) {
                 
                 //TODO WE HAVE TO START Compesation/Faluts Handlers
-                //TEMP we put the fault Hadler
-                BLTDEFActivity falutHadlerDef = scopeDef.getFaultHandler();
+                //TEMP we put the fault Hadler only
+                BltDefBaseNode falutHadlerDef = scopeDef.getFaultHandler();
+                
+                LOGGER.info("Scope " + this + " FAULTED starting FaultHandler");
                 
                 ProtecedScope ps = 
                         new ProtecedScope(falutHadlerDef, getParentContext(), getParentComponent(), getExecutor());
@@ -53,6 +59,7 @@ public class ScopeActivity extends ABaseContext {
             } else {
                 setSate(ContextState.TEMINATED);
                 
+                LOGGER.info("Scope " + this + " TERMINATED");
                 //WHAT WE HAVE TO DO HERE??? 
                 //THE Blite doesn't say much...
                 flowParent();
@@ -64,7 +71,9 @@ public class ScopeActivity extends ABaseContext {
             if (getState() == ContextState.STARTED) {
                 setSate(ContextState.RUNNING);
                 
-                BLTDEFActivity mainActDef = scopeDef.getMainActivity();
+                LOGGER.info("Scope " + this + " RUNNING");
+                
+                BltDefBaseNode mainActDef = scopeDef.getMainActivity();
                  
                 ActivityComponent mainAct = ActivityComponentFactory.getInstance()
                         .makeRuntimeActivity(mainActDef, this, this, getExecutor());
@@ -76,6 +85,7 @@ public class ScopeActivity extends ABaseContext {
                 setSate(ContextState.COMPLETED);
                 
                 //TODO put this scope as COMPLETED in the context 
+                LOGGER.info("Scope " + this + " COMPLETED");
                 
                 flowParent();
                 return true;

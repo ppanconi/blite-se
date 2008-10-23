@@ -18,21 +18,29 @@ import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.Fault;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFEmptyActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFScope;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 
 /**
  *
  * @author panks
  */
-public class ProtecedScope extends ABaseContext {
+public class ProtecedScope extends ScopeActivity
+        //ABaseContext 
+{
 
-    public ProtecedScope(BltDefBaseNode bltDefNode, ExecutionContext parentContext,
+    public ProtecedScope(BltDefBaseNode mainAct, ExecutionContext parentContext,
                          ActivityComponent parentComponent, FlowExecutor executor) {
         
+        BltDefBaseNode scopeDef = new BLTDEFScope(mainAct, new BLTDEFEmptyActivity(), null);
+        
         setContext(parentContext);
-        setBltDefNode(bltDefNode);
+        setBltDefNode(scopeDef);
         setParentComponent(parentComponent);
         setExecutor(executor);
+        init();
         
     }
 
@@ -55,7 +63,7 @@ public class ProtecedScope extends ABaseContext {
     /**
      * Overriding the normal Scope behavior.
      * In conformity of Blite semantics we let
-     * the falut raise up and so we notify the parent Context
+     * the fault raise up and so we notify the parent Context
      * 
      * The notification to wake our waiting flow
      * is let to the parent Context, it'll invoke <tt>resumeWaithingFlows</tt>
@@ -70,7 +78,4 @@ public class ProtecedScope extends ABaseContext {
         
     }
 
-    public boolean doActivity() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

@@ -33,8 +33,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class ProcessInstanceImp extends ABaseContext implements ProcessInstance, ExecutionContext, VariableScope {
+    
+    static Logger LOGGER = Logger.getLogger(ProcessInstanceImp.class.getName()); 
     
     private Engine mEngine;
     private ProcessManager mProcessManager;
@@ -70,7 +73,7 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         
         FlowExecutor executor = new FlowExecutorImp(this);
         setExecutor(executor);
-//        registerFlow(executor); not needed 
+        setSate(ContextState.RUNNING);
         
         BltDefBaseNode startDefNode = (BltDefBaseNode) startElement.getUniqueChild();
                 
@@ -84,12 +87,15 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
 
     public void flowCompleted() {
         
-        System.out.println("Process Instance_______________________________________: " + instanceId + " COMPLETED SUCCESSFUL");
+        if (getState() != ContextState.FAULTED) {
+            setSate(ContextState.COMPLETED);
+        }
         
+        LOGGER.info("Process Instance_______________________________________: " + instanceId + " " + getState().name());
     }
 
     public boolean doActivity() {
-        return false;
+        throw new RuntimeException("The ProcessInstance never doActivity");
     }
 
 
@@ -149,14 +155,6 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         
         return true;
     }
-
-    public void notifyFault(Fault fault) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    
-    
-    
 
 }
 
