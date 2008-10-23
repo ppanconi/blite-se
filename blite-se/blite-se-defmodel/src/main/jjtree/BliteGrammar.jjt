@@ -86,7 +86,7 @@ TOKEN :
   < SEQBEGIN: "seq" >
 | < SEQEND:   "qes" >
 | < FLOWBEGIN: "flw" >
-| < FLOWEND: "wlf|" >
+| < FLOWEND: "wlf" >
 | < FLOWSEP: "|" >
 }
 

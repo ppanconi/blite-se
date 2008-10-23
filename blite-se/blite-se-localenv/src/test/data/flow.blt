@@ -1,0 +1,16 @@
+{
+    [
+        seq
+            rcv <"s1"> start(y);
+            empty
+        qes
+    ]
+} 
+||
+{
+    :: flw
+           inv <"s1">  start("HELLO")
+         |
+           inv <"s1">  start("HELLO")
+       wlf
+}
