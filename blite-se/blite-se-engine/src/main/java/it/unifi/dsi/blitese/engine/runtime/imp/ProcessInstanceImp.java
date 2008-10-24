@@ -73,6 +73,7 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         
         FlowExecutor executor = new FlowExecutorImp(this);
         setExecutor(executor);
+        registerFlow(executor);
         setSate(ContextState.RUNNING);
         
         BltDefBaseNode startDefNode = (BltDefBaseNode) startElement.getUniqueChild();

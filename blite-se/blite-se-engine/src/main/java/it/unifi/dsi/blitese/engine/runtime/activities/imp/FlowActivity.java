@@ -44,12 +44,19 @@ public class FlowActivity extends ActivityComponentBase implements FlowOwner {
         
         LOGGER.info("Staring Flow Activity");
         
+        if (getContext().isInAFaultedBranch()) {
+            LOGGER.info("Terminated activity " + this);
+            flowParent();
+            return true;
+        }
+        
         while (hasNextChildActivity()) {
             //we start our parallel child flow... I'm their owner and
             //they have my same context
             childFlowNumber++;
             
             FlowExecutor flowExecutor = new FlowExecutorImp(this);
+            getContext().registerFlow(flowExecutor);
             ActivityComponent flowActivity = nextChildActivity(getContext(), flowExecutor);
 
             flowExecutor.setCurrentActivity(flowActivity);
