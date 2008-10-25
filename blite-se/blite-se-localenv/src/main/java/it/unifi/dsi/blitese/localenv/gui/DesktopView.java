@@ -4,12 +4,9 @@
 
 package it.unifi.dsi.blitese.localenv.gui;
 
-import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
-import it.unifi.dsi.blitese.engine.definition.imp.BliteDeploymentDefinitionImp;
+import it.unifi.dsi.blitese.localenv.IncompatibleCompUnitException;
+import it.unifi.dsi.blitese.localenv.LocalEnvironment;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
-import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
-import it.unifi.dsi.blitese.parser.ParseException;
-import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Action;
@@ -21,7 +18,6 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -30,7 +26,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-import javax.swing.text.JTextComponent;
 
 
 /**
@@ -441,7 +436,14 @@ public class DesktopView extends FrameView {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
-            
+            Logger.getLogger(DesktopView.class.getName()).log(Level.INFO, "Deploing Units");
+            for (BLTDEFCompilationUnit unit : sourcesManager.proviedeCompiledUnits()) {
+                try {
+                    environment.addCompilationUnit(unit);
+                } catch (IncompatibleCompUnitException ex) {
+                    Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             
             return null;  // return your result
         }
@@ -489,6 +491,7 @@ public class DesktopView extends FrameView {
     //my Models manager
     private SourcesFacadeManager sourcesManager = new SourcesFacadeManager();
     private TreeViewManager treeManager;
+    private LocalEnvironment environment = new LocalEnvironment();
     
     private void reportExection(Exception ex) {
         reportArea.append("\n");

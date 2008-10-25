@@ -72,7 +72,7 @@ public class LocalEnvironment {
                 for (BLTDEFDeployment deploy : compilationUnit.getDeployments()) {
                     depCount++;
                     //to starting coding we have a deployment defines a location
-                    EngineLocation loc = new EngineLocation();
+                    EngineLocation loc = new EngineLocation(res.toString() + ":" + depCount);
 
                     Engine engine = mLocToEngine.get(loc);
 
@@ -104,7 +104,8 @@ public class LocalEnvironment {
                         }
 
 
-                        String deployId = res.toString() + ":" + depCount + ":" + servCount;
+                        //TODO use a ServiceElement name instaed of servCount 
+                        String deployId = loc.toString() + "/" + servCount; 
                         //now we deploy the ServiceElement to the Engine.
                         BliteDeploymentDefinition deploymentDefinition =
                                 new BliteDeploymentDefinitionImp(aServiceEle, deployId);

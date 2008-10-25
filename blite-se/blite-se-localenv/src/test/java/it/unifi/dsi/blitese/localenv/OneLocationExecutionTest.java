@@ -15,34 +15,32 @@
 
 package it.unifi.dsi.blitese.localenv;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 /**
  *
  * @author panks
  */
-public class EngineLocation {
-    
-    private String locationName;
-    
-    public EngineLocation() {
-    }
-    
-    public EngineLocation(String locationName) {
-        this.locationName = locationName;
-    }
-    
-    public String getLocationName() {
-        return locationName;
+public class OneLocationExecutionTest extends AExecution {
+
+    public OneLocationExecutionTest(String testName) {
+        super(testName);
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    
+    /**
+     * @return the suite of tests being tested
+     */
+    public static Test suite() {
+        return new TestSuite(OneLocationExecutionTest.class);
     }
 
     @Override
-    public String toString() {
-        return getLocationName();
+    String getFileName() {
+        return "onelocation.blt";
     }
+
     
-    
-        
 }
+
