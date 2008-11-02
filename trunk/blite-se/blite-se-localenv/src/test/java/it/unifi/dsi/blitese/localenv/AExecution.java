@@ -62,6 +62,7 @@ public abstract class AExecution extends TestCase {
             cu.setResource(file1.toURI().toURL());
             
             environment.addCompilationUnit(cu);
+            environment.startAllReadyToRunDefinitions();
             
             // ---------------- waiting 5 sec
             Thread.sleep(5000);

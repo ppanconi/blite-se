@@ -32,17 +32,17 @@ public interface Engine {
      * @param saName
      * @param suName
      */
-    void deployProcessDefinition(BliteDeploymentDefinition def, String saName, String suName);
+    public void deployProcessDefinition(BliteDeploymentDefinition def, String saName, String suName);
     
     /**
      * Undeply a Blite Process Definition from the Engine.
      * @param id the Process Definition Unique id.
      */
-    void removeProcessDefinition(Object id);
+    public void removeProcessDefinition(Object id);
     
-    EngineChannel getChannel();
+    public EngineChannel getChannel();
     
-    void setChannel(EngineChannel channel);
+    public void setChannel(EngineChannel channel);
     
 //    /**
 //     * Add a Blite DefDeployment 
@@ -56,7 +56,7 @@ public interface Engine {
      * the current works.
      * @param executorbig breast archive
      */
-    void queueFlowExecutor(FlowExecutor executor);
+    public void queueFlowExecutor(FlowExecutor executor);
     
     /**
      * Put the executor in the waiting queue for the incoming event.
@@ -64,7 +64,7 @@ public interface Engine {
      * @param executor
      * @param eventKey
      */
-    void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey);
+    public void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey);
     
     /**
      * Resume the executors waitng for the specified event key
@@ -83,16 +83,32 @@ public interface Engine {
     //--------------------------------------------------------------------------
     //                 From Eviroment to Processes
     
-    void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer);
+    public void processRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer);
     
-    void processExchange(MessageContainer messageContainer);
+    public void processExchange(MessageContainer messageContainer);
     
+    /**
+     * Start the readyToRun definition. Thi invocation have a real effect 
+     * only if the precessManager definition is oof type ReadyToRun
+     * 
+     * @param deloyId the id of the definition also refered as bliteId 
+     * in the <tt>BliteDeploymentDefinition</tt> inteface.
+     * 
+     * @return Objetc the Instace id for the startd definition
+     */
+    public Object startReadyToRunDefinition(Object deployId);
+    
+    /**
+     * Utility mathod for testing. It starts all the readyToRun Definition
+     * deployed into the Engine. It create one instance for readyToRun definition.
+     */
+    public void startAllReadyToRunDefinitions();
     //--------------------------------------------------------------------------
     
     //--------------------------------------------------------------------------
     //From Processes to Envirment
     
-    InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
+    public InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
             MessageContainer messageContainer, ProcessInstance instance);
 
     /**
@@ -105,7 +121,7 @@ public interface Engine {
      * @param inComingEventKey
      * @return The Event Subject or null
      */
-    MessageContainer cosumeEvent(InComingEventKey inComingEventKey);
+    public MessageContainer cosumeEvent(InComingEventKey inComingEventKey);
     
     
     /**
@@ -114,14 +130,14 @@ public interface Engine {
      * @param inComingEventKey
      * @param messageContainer
      */
-    void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer);
+    public void consumeEvent(InComingEventKey inComingEventKey, MessageContainer messageContainer);
     
     /**
      * Return the list all Event related to the provieded key
      * @param inComingEventKey
      * @return
      */
-    List<MessageContainer> provideEvents(InComingEventKey inComingEventKey);
+    public List<MessageContainer> provideEvents(InComingEventKey inComingEventKey);
     
     
     /**
