@@ -27,10 +27,12 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -97,24 +99,27 @@ public class EngineImp implements Engine {
                         "not allowed in an engine. Business Process " + id.toString() + " id already registered");
             }
 
-            mProcessDefs.put(id, bliteDef);
-
             ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName);
-            Object retObj = mManagers.put(bliteDef, processManager);
             
-            
-            if (retObj != null) {
-                throw new RuntimeException("Fatal Error: this process is already loaded process Id: " + bliteDef.getBliteId());
-            } 
-            
+            Set<String> names = new HashSet<String>();
             for (String serviceName : bliteDef.getServiceElement().provideAllServiceName()) {
                 
                 ProcessManager opm = mServiceNameToManagers.get(serviceName);
-                if (opm != null && opm != processManager)
+                if (opm != null 
+//                        && opm != processManager
+                    )
                     throw new IllegalStateException("Duplicated service name on different deployments: " + serviceName);
                 
+                //mServiceNameToManagers.put(serviceName, processManager);
+                names.add(serviceName);
+            }
+            
+            //we have passed all the checks we can start mapping the new definition
+            mProcessDefs.put(id, bliteDef);
+            Object retObj = mManagers.put(bliteDef, processManager);
+            
+            for (String serviceName : names) {
                 mServiceNameToManagers.put(serviceName, processManager);
-                
             }
             
             mNewAddedDep = true;
@@ -309,6 +314,23 @@ public class EngineImp implements Engine {
         
     }
     
+    public Object startReadyToRunDefinition(Object deployId) {
+        BliteDeploymentDefinition def = mProcessDefs.get(deployId);
+        if (def != null) {
+            ProcessManager manager = mManagers.get(def);
+            if (manager != null)
+                return manager.startReadyToRunDefinition();
+        }
+        return null;
+    }
+
+    public void startAllReadyToRunDefinitions() {
+        for (ProcessManager processManager : mManagers.values()) {
+            processManager.startReadyToRunDefinition();
+        }
+    }
+    
+    
     //--------------------------------------------------------------------------
     
     //--------------------------------------------------------------------------
@@ -387,8 +409,7 @@ public class EngineImp implements Engine {
         
         mChannel.sendIntoExchange(meId, mc);
     }
-    
-    
+
 
     //--------------------------------------------------------------------------
 

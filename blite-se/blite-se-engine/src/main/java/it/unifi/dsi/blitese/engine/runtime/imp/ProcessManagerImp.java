@@ -48,9 +48,13 @@ public class ProcessManagerImp implements ProcessManager {
     private String mSuName;
     
     private Object definitionProcessLevelLock = new Object();
+    //
     private Map<String, ProcessInstance> mInstances = new HashMap<String, ProcessInstance>();
     private HashMap<String, List<BLTDEFReceiveActivity>> mPortIdToPortDef = new HashMap<String, List<BLTDEFReceiveActivity>>();
 
+    //This not null only if the definition is readyToRun type
+    private BLTDEFServiceInstance readyToRunInstance;
+    
     public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
         mEngine = engine;
@@ -63,14 +67,18 @@ public class ProcessManagerImp implements ProcessManager {
         
         //if the static definition conteins same ready to run instance
         //we start with it
-        BLTDEFServiceInstance readyToRunInstance = bliteProcessDef.provideServiceInstance();
+        readyToRunInstance = bliteProcessDef.provideServiceInstance();
         
+    }
+    
+    public Object startReadyToRunDefinition() {
         if (readyToRunInstance != null) {
             ProcessInstance instance = createInstance();
             LOGGER.info("Created deploy ready to run instance: " + instance.getInstanceId());
             instance.activete();
+            return instance.getInstanceId();
         }
-        
+        return null;
     }
 
 
@@ -189,6 +197,8 @@ public class ProcessManagerImp implements ProcessManager {
         mEngine.sendResponseDoneStatus(icek, messageContainer.getId());
         
     }
+
+    
     
 }
 

@@ -6,6 +6,7 @@ package it.unifi.dsi.blitese.localenv.gui;
 
 import it.unifi.dsi.blitese.localenv.IncompatibleCompUnitException;
 import it.unifi.dsi.blitese.localenv.LocalEnvironment;
+import it.unifi.dsi.blitese.localenv.gui.log.SetUpLogging;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,6 +97,8 @@ public class DesktopView extends FrameView {
                 }
             }
         });
+        
+        SetUpLogging.initializeLogging(reportArea);
     }
 
     @Action
@@ -356,7 +359,7 @@ public class DesktopView extends FrameView {
                 filesTabbedPane.addTab(file.getName(), sourcesManager.addSource(file));
             } catch (IOException ex) {
                 Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
-                reportExection(ex);
+//                reportExection(ex);
             }
             
         }
@@ -373,7 +376,7 @@ public class DesktopView extends FrameView {
             
         } catch (IOException ex) {
             Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
-            reportExection(ex);
+//            reportExection(ex);
         }
     }
 
@@ -402,7 +405,7 @@ public class DesktopView extends FrameView {
                 return sourcesManager.buildSource(targetComponent);
             } catch (Exception ex) {
                 Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
-                reportExection(ex);
+//                reportExection(ex);
             }
             return null;
             
@@ -444,6 +447,7 @@ public class DesktopView extends FrameView {
                     Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            environment.startAllReadyToRunDefinitions();
             
             return null;  // return your result
         }
@@ -493,15 +497,15 @@ public class DesktopView extends FrameView {
     private TreeViewManager treeManager;
     private LocalEnvironment environment = new LocalEnvironment();
     
-    private void reportExection(Exception ex) {
-        reportArea.append("\n");
-        reportArea.append(ex.getMessage());
-    }
-    
-    private void reportMessage(String message) {
-        reportArea.append("\n");
-        reportArea.append(message);
-    }
+//    private void reportExection(Exception ex) {
+//        reportArea.append("\n");
+//        reportArea.append(ex.getMessage());
+//    }
+//    
+//    private void reportMessage(String message) {
+//        reportArea.append("\n");
+//        reportArea.append(message);
+//    }
     
     
     

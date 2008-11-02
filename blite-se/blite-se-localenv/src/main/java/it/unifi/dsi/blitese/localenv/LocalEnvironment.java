@@ -138,4 +138,13 @@ public class LocalEnvironment {
     }
     
     
+    /**
+     * Utility mathod for testing. It starts all the readyToRun Definition
+     * deployed into the Engine. It create one instance for readyToRun definition.
+     */
+    public void startAllReadyToRunDefinitions() {
+        for (Engine engine : mLocToEngine.values()) {
+            engine.startAllReadyToRunDefinitions();
+        }
+    }
 }

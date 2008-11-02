@@ -88,5 +88,12 @@ public interface ProcessManager {
     public void manageRequest(ServiceIdentifier serviceId, String operation, 
                               MessageContainer messageContainer);
     
+    /**
+     * Start the readyToRun definition. Thi invocation have a real effect 
+     * only if the precessManager definition is oof type ReadyToRun
+     * 
+     * @return Objetc the Instace id for the startd definition
+     */
+    public Object startReadyToRunDefinition();
 }
 
