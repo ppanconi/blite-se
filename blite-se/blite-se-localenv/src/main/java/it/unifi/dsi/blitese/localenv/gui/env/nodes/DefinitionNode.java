@@ -16,23 +16,36 @@
 package it.unifi.dsi.blitese.localenv.gui.env.nodes;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.localenv.EngineLocation;
+import it.unifi.dsi.blitese.localenv.gui.DesktopApplication;
+import it.unifi.dsi.blitese.localenv.gui.DesktopView;
 import it.unifi.dsi.blitese.localenv.gui.env.EnvModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.View;
 
 /**
  *
  * @author panks
  */
-public class DefinitionNode extends EnvBaseNode implements ActionListener {
+public class DefinitionNode extends EnvBaseNode  {
+    
+    static ResourceMap resourceMap = DesktopApplication.getInstance().getContext().getResourceMap(DesktopView.class, View.class);
     
     private BliteDeploymentDefinition definition;
+    private EngineLocation engineLocation;
 
-    public DefinitionNode(EnvModel envModel, BliteDeploymentDefinition definition) {
-        super(definition.toString(), null, envModel);
+    public DefinitionNode(EnvModel envModel, EngineLocation engineLocationo, BliteDeploymentDefinition definition) {
+        super(definition.toString(), "envTree.df.icon", envModel);
         this.definition = definition;
+        this.engineLocation = engineLocationo;
+        if (definition.provideServiceInstance() != null) {
+            setIconResName("envTree.rtr.icon");
+        }
     }
 
     public BliteDeploymentDefinition getDefinition() {
@@ -47,8 +60,12 @@ public class DefinitionNode extends EnvBaseNode implements ActionListener {
         
             JPopupMenu popup = new JPopupMenu();
             JMenuItem menuItem;
-            menuItem = new JMenuItem("Start");
-            menuItem.addActionListener(this);
+            menuItem = new JMenuItem("Launch an Instance", resourceMap.getIcon("popmenu.launch.icon"));
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    launchRtRInsatnce();
+                }
+            });
             popup.add(menuItem);
 
             return popup;
@@ -56,8 +73,8 @@ public class DefinitionNode extends EnvBaseNode implements ActionListener {
         return null;
     }
 
-    public void actionPerformed(ActionEvent e) {
-        
+    private void launchRtRInsatnce() {
+        Engine engine = getEnvModel().getEnv().provideEngineAt(engineLocation);
+        engine.startReadyToRunDefinition(definition.getBliteId());
     }
-
 }

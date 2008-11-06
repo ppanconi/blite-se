@@ -28,7 +28,7 @@ public class EngineNode extends EnvBaseNode {
     private EngineLocation engineLocation;
     
     public EngineNode(EngineLocation engineLocation, EnvModel envModel) {
-        super("" + engineLocation, null, envModel);
+        super("" + engineLocation, "envTree.server.icon", envModel);
         this.engineLocation = engineLocation;
     }
 

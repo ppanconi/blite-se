@@ -25,7 +25,7 @@ import javax.swing.JPopupMenu;
 public class RootNode extends EnvBaseNode {
     
     public RootNode(EnvModel envModel) {
-        super("Enviroment", null, envModel);
+        super("Enviroment", "envTree.env.icon", envModel);
     }
 
     @Override

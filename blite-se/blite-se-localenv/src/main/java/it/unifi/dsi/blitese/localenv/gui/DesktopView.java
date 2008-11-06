@@ -6,6 +6,7 @@ package it.unifi.dsi.blitese.localenv.gui;
 
 import it.unifi.dsi.blitese.localenv.IncompatibleCompUnitException;
 import it.unifi.dsi.blitese.localenv.LocalEnvironment;
+import it.unifi.dsi.blitese.localenv.gui.env.EnvComponent;
 import it.unifi.dsi.blitese.localenv.gui.log.SetUpLogging;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import java.util.logging.Level;
@@ -39,6 +40,9 @@ public class DesktopView extends FrameView {
 
         initComponents();
         treeManager = new TreeViewManager(envTree);
+        envComponent = new EnvComponent();
+        
+        treeTabbedPane.add("Engines", envComponent);
         
         //file chooser Init
         fc = new JFileChooser();
@@ -98,6 +102,8 @@ public class DesktopView extends FrameView {
             }
         });
         
+        
+        
         SetUpLogging.initializeLogging(reportArea);
     }
 
@@ -131,9 +137,10 @@ public class DesktopView extends FrameView {
         runButton = new javax.swing.JButton();
         mainSplitPane = new javax.swing.JSplitPane();
         jSplitPane1 = new javax.swing.JSplitPane();
+        filesTabbedPane = new javax.swing.JTabbedPane();
+        treeTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         envTree = new javax.swing.JTree();
-        filesTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         reportArea = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -203,17 +210,22 @@ public class DesktopView extends FrameView {
         mainSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         mainSplitPane.setName("mainSplitPane"); // NOI18N
 
+        jSplitPane1.setDividerLocation(150);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
+
+        filesTabbedPane.setName("filesTabbedPane"); // NOI18N
+        jSplitPane1.setRightComponent(filesTabbedPane);
+
+        treeTabbedPane.setName("treeTabbedPane"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         envTree.setName("envTree"); // NOI18N
         jScrollPane1.setViewportView(envTree);
 
-        jSplitPane1.setLeftComponent(jScrollPane1);
+        treeTabbedPane.addTab(resourceMap.getString("jScrollPane1.TabConstraints.tabTitle"), jScrollPane1); // NOI18N
 
-        filesTabbedPane.setName("filesTabbedPane"); // NOI18N
-        jSplitPane1.setRightComponent(filesTabbedPane);
+        jSplitPane1.setLeftComponent(treeTabbedPane);
 
         mainSplitPane.setLeftComponent(jSplitPane1);
 
@@ -238,7 +250,7 @@ public class DesktopView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE))
+                .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -439,15 +451,15 @@ public class DesktopView extends FrameView {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
-            Logger.getLogger(DesktopView.class.getName()).log(Level.INFO, "Deploing Units");
-            for (BLTDEFCompilationUnit unit : sourcesManager.proviedeCompiledUnits()) {
-                try {
-                    environment.addCompilationUnit(unit);
-                } catch (IncompatibleCompUnitException ex) {
-                    Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            environment.startAllReadyToRunDefinitions();
+//            Logger.getLogger(DesktopView.class.getName()).log(Level.INFO, "Deploing Units");
+//            for (BLTDEFCompilationUnit unit : sourcesManager.proviedeCompiledUnits()) {
+//                try {
+//                    environment.addCompilationUnit(unit);
+//                } catch (IncompatibleCompUnitException ex) {
+//                    Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//            environment.startAllReadyToRunDefinitions();
             
             return null;  // return your result
         }
@@ -480,6 +492,7 @@ public class DesktopView extends FrameView {
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JTabbedPane treeTabbedPane;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
@@ -495,7 +508,8 @@ public class DesktopView extends FrameView {
     //my Models manager
     private SourcesFacadeManager sourcesManager = new SourcesFacadeManager();
     private TreeViewManager treeManager;
-    private LocalEnvironment environment = new LocalEnvironment();
+//    private LocalEnvironment environment = new LocalEnvironment();
+    private EnvComponent envComponent;
     
 //    private void reportExection(Exception ex) {
 //        reportArea.append("\n");

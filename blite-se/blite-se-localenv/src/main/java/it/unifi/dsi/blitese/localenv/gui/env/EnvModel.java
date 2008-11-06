@@ -78,7 +78,7 @@ public class EnvModel implements TreeModel {
             
             BliteDeploymentDefinition def = engine.provideDefinitions().get(index);
             
-            return new DefinitionNode(this, def);
+            return new DefinitionNode(this, en.getEngineLocation(), def);
              
         }
         return null;
