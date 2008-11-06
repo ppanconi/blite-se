@@ -19,11 +19,11 @@ package it.unifi.dsi.blitese.localenv.gui.nodes;
  *
  * @author panks
  */
-public class EnvNode extends BaseNode {
+public class RootNode extends BaseNode {
 
     static final String icon = "envTree.env.icon";
     
-    public EnvNode(String title) {
+    public RootNode(String title) {
         super(title, icon);
     }
     
