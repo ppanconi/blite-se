@@ -51,13 +51,10 @@ public abstract class AExecution extends TestCase {
         File file1 = getBliteTestFile(getFileName());
         FileInputStream inputStream = new FileInputStream(file1);
         
-        
-        BliteParser.init(inputStream);
-       
-        
-        LocalEnvironment environment = new LocalEnvironment();
-        
         try {
+            BliteParser.init(inputStream);
+            LocalEnvironment environment = new LocalEnvironment();
+        
             BLTDEFCompilationUnit cu = (BLTDEFCompilationUnit) BliteParser.parse();
             cu.setResource(file1.toURI().toURL());
             
@@ -70,6 +67,8 @@ public abstract class AExecution extends TestCase {
         } catch (ParseException ex) {
             ex.printStackTrace();
             throw ex;
+        } finally {
+            if (inputStream != null) inputStream.close();
         }
     }
     

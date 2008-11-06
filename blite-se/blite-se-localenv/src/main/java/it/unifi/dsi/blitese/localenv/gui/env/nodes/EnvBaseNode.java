@@ -17,6 +17,7 @@ package it.unifi.dsi.blitese.localenv.gui.env.nodes;
 
 import it.unifi.dsi.blitese.localenv.gui.env.EnvModel;
 import it.unifi.dsi.blitese.localenv.gui.nodes.BaseNode;
+import javax.swing.JPopupMenu;
 
 /**
  *
@@ -46,6 +47,6 @@ public abstract  class EnvBaseNode extends BaseNode {
         this.envModel = envModel;
     }
     
-    
+    abstract public JPopupMenu getPopupMenu();
 
 }

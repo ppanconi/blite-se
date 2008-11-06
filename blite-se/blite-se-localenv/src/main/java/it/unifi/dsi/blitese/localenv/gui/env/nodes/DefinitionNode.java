@@ -15,10 +15,49 @@
 
 package it.unifi.dsi.blitese.localenv.gui.env.nodes;
 
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.localenv.gui.env.EnvModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
 /**
  *
  * @author panks
  */
-public class DefinitionNode extends EnvBaseNode {
+public class DefinitionNode extends EnvBaseNode implements ActionListener {
+    
+    private BliteDeploymentDefinition definition;
+
+    public DefinitionNode(EnvModel envModel, BliteDeploymentDefinition definition) {
+        super(definition.toString(), null, envModel);
+        this.definition = definition;
+    }
+
+    public BliteDeploymentDefinition getDefinition() {
+        return definition;
+    }
+
+    @Override
+    public JPopupMenu getPopupMenu() {
+        
+        
+        if (definition.provideServiceInstance() != null) {
+        
+            JPopupMenu popup = new JPopupMenu();
+            JMenuItem menuItem;
+            menuItem = new JMenuItem("Start");
+            menuItem.addActionListener(this);
+            popup.add(menuItem);
+
+            return popup;
+        }
+        return null;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        
+    }
 
 }

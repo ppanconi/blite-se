@@ -26,6 +26,7 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -72,6 +73,9 @@ public class EngineImp implements Engine {
      * Deployed Blite program definitions
      */
     private Map<Object, BliteDeploymentDefinition> mProcessDefs = new Hashtable<Object, BliteDeploymentDefinition>();
+    // The list with the deployed definition in a semsible order
+    private List<BliteDeploymentDefinition> definitionsList = new ArrayList<BliteDeploymentDefinition>();
+    
     
     /**
      * The Process Managers, one to one Blite Definition
@@ -118,6 +122,9 @@ public class EngineImp implements Engine {
             mProcessDefs.put(id, bliteDef);
             Object retObj = mManagers.put(bliteDef, processManager);
             
+            definitionsList.add(bliteDef);
+            Collections.sort(definitionsList, new BliteDeploymentDefinition.DefComparator());
+            
             for (String serviceName : names) {
                 mServiceNameToManagers.put(serviceName, processManager);
             }
@@ -134,7 +141,8 @@ public class EngineImp implements Engine {
 
         BliteDeploymentDefinition proc = mProcessDefs.remove(id);
         mManagers.remove(proc);
-
+        definitionsList.remove(proc);
+        
         for (String serviceName : proc.getServiceElement().provideAllServiceName()) {
             mServiceNameToManagers.remove(serviceName);
         }
@@ -410,6 +418,13 @@ public class EngineImp implements Engine {
         mChannel.sendIntoExchange(meId, mc);
     }
 
+    public BliteDeploymentDefinition provideDefinition(Object deployId) {
+        return mProcessDefs.get(deployId);
+    }
+
+    public List<BliteDeploymentDefinition> provideDefinitions() {
+        return definitionsList;
+    }
 
     //--------------------------------------------------------------------------
 
