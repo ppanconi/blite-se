@@ -14,31 +14,23 @@
  */
 package it.unifi.dsi.blitese.localenv.gui;
 
-import it.unifi.dsi.blitese.localenv.gui.nodes.BaseNode;
 import it.unifi.dsi.blitese.localenv.gui.nodes.DefNode;
 import it.unifi.dsi.blitese.localenv.gui.nodes.DepNode;
-import it.unifi.dsi.blitese.localenv.gui.nodes.EnvNode;
+import it.unifi.dsi.blitese.localenv.gui.nodes.RootNode;
 import it.unifi.dsi.blitese.localenv.gui.nodes.FileNode;
 import it.unifi.dsi.blitese.localenv.gui.nodes.InstNode;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceDef;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
-import java.awt.Component;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
-import org.jdesktop.application.ResourceMap;
-import org.jdesktop.application.View;
 
 /**
  *
@@ -55,7 +47,7 @@ public class TreeViewManager {
     public TreeViewManager(JTree tree) {
         this.tree = tree;
 
-        DefaultMutableTreeNode _root = new DefaultMutableTreeNode(new EnvNode("Env"));
+        DefaultMutableTreeNode _root = new DefaultMutableTreeNode(new RootNode("Files"));
         root = _root;
 
         model = new DefaultTreeModel(root);
@@ -92,7 +84,7 @@ public class TreeViewManager {
             
             j = 0;
             for (BLTDEFServiceInstance serInst : dep.provideAllInsatnces()) {
-                DefaultMutableTreeNode instNode = new DefaultMutableTreeNode(new InstNode("Inst. " + (j + 1)));
+                DefaultMutableTreeNode instNode = new DefaultMutableTreeNode(new InstNode("RtR Def." + (j + 1)));
                 model.insertNodeInto(instNode, depNode, j++);
                 tree.scrollPathToVisible(new TreePath(instNode.getPath()));
             }
@@ -100,26 +92,4 @@ public class TreeViewManager {
         
     }
     
-    static ResourceMap resourceMap =
-        DesktopApplication.getInstance().getContext().getResourceMap(DesktopView.class, View.class);
-    
-    
-    private class BliteTreeCellRederer extends DefaultTreeCellRenderer {
-
-        @Override
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-           
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-            BaseNode bn = (BaseNode) node.getUserObject();
-            
-            setIcon(resourceMap.getIcon(bn.getIconResName()));
-            setText(bn.getTitle());
-            
-            return this;
-        }
-        
-        
-        
-    }
 }

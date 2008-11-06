@@ -21,9 +21,11 @@ package it.unifi.dsi.blitese.localenv.gui.nodes;
  */
 public abstract class BaseNode {
     
-    private String title;
+    private String title = "This's a BaseNode";
     private String iconResName;
 
+    public BaseNode() {
+    }
     
     public BaseNode(String title, String iconResName) {
         this.title = title;

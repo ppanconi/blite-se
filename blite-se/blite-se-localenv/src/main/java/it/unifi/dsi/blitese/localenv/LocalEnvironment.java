@@ -24,8 +24,11 @@ import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.logging.Logger;
 
 /**
@@ -138,6 +141,7 @@ public class LocalEnvironment {
     }
     
     
+    
     /**
      * Utility mathod for testing. It starts all the readyToRun Definition
      * deployed into the Engine. It create one instance for readyToRun definition.
@@ -146,5 +150,9 @@ public class LocalEnvironment {
         for (Engine engine : mLocToEngine.values()) {
             engine.startAllReadyToRunDefinitions();
         }
+    }
+    
+    public List<EngineLocation> provideSortLocation() {
+        return null;
     }
 }
