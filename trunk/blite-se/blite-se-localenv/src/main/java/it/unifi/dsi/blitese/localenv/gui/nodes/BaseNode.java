@@ -15,11 +15,17 @@
 
 package it.unifi.dsi.blitese.localenv.gui.nodes;
 
+import it.unifi.dsi.blitese.localenv.gui.DesktopApplication;
+import it.unifi.dsi.blitese.localenv.gui.DesktopView;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.View;
+
 /**
  *
  * @author panks
  */
 public abstract class BaseNode {
+    
     
     private String title = "This's a BaseNode";
     private String iconResName;

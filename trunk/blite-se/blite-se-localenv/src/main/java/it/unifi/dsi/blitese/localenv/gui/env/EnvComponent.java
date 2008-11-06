@@ -11,6 +11,7 @@ import it.unifi.dsi.blitese.localenv.gui.env.nodes.EnvBaseNode;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreePath;
 
@@ -20,7 +21,7 @@ import javax.swing.tree.TreePath;
  * 
  * @author  panks
  */
-public class EnvComponent extends javax.swing.JPanel {
+public class EnvComponent extends javax.swing.JPanel implements Serializable {
 //    private LocalEnvironment environment;
     private EnvModel envModel;
 
@@ -95,6 +96,7 @@ public class EnvComponent extends javax.swing.JPanel {
                 TreePath path = jTree.getPathForLocation(x, y);
                 if (path != null) {
                     EnvBaseNode node = (EnvBaseNode) path.getLastPathComponent();
+                    jTree.setSelectionPath(path);
                     JPopupMenu jpm = node.getPopupMenu();
                     if (jpm != null) {
                         jpm.show(e.getComponent(), x, y);

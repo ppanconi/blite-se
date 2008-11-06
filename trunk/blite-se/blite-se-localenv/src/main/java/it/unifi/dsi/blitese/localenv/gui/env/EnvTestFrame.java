@@ -6,11 +6,11 @@
 
 package it.unifi.dsi.blitese.localenv.gui.env;
 
+import it.unifi.dsi.blitese.localenv.gui.log.SetUpLogging;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BliteParser;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +27,9 @@ public class EnvTestFrame extends javax.swing.JFrame {
         try {
             
             initComponents();
+            
+            SetUpLogging.initializeLogging(jTextArea1);
+            
             envComponent = new EnvComponent();
             jSplitPane1.setLeftComponent(envComponent);
             File file1 = getBliteTestFile("correlation.blt");
