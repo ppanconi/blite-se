@@ -40,6 +40,17 @@ public interface Engine {
      */
     public void removeProcessDefinition(Object id);
     
+    /**
+     * @param deployId
+     * @return THe Porcess definition
+     */
+    public BliteDeploymentDefinition provideDefinition(Object deployId);
+    
+    /**
+     * @return a List of Definitions in convenient order.
+     */
+    public List<BliteDeploymentDefinition> provideDefinitions();
+    
     public EngineChannel getChannel();
     
     public void setChannel(EngineChannel channel);

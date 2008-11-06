@@ -15,10 +15,30 @@
 
 package it.unifi.dsi.blitese.localenv.gui.env.nodes;
 
+import it.unifi.dsi.blitese.localenv.EngineLocation;
+import it.unifi.dsi.blitese.localenv.gui.env.EnvModel;
+import javax.swing.JPopupMenu;
+
 /**
  *
  * @author panks
  */
 public class EngineNode extends EnvBaseNode {
+    
+    private EngineLocation engineLocation;
+    
+    public EngineNode(EngineLocation engineLocation, EnvModel envModel) {
+        super("" + engineLocation, null, envModel);
+        this.engineLocation = engineLocation;
+    }
+
+    public EngineLocation getEngineLocation() {
+        return engineLocation;
+    }
+
+    @Override
+    public JPopupMenu getPopupMenu() {
+        return null;
+    }
 
 }

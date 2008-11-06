@@ -25,10 +25,10 @@ import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 import java.util.logging.Logger;
 
 /**
@@ -152,7 +152,14 @@ public class LocalEnvironment {
         }
     }
     
-    public List<EngineLocation> provideSortLocation() {
-        return null;
+    //TODO inprove this has not perfomance
+    public List<EngineLocation> provideSortLocations() {
+        List<EngineLocation> locs = new ArrayList<EngineLocation>(mLocToEngine.keySet());
+        Collections.sort(locs);
+        return locs;
+    }
+    
+    public Engine provideEngineAt(EngineLocation location) {
+        return mLocToEngine.get(location);
     }
 }

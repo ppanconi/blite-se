@@ -17,6 +17,7 @@ package it.unifi.dsi.blitese.engine.definition;
 import it.unifi.dsi.blitese.parser.AServiceElement;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceDef;
 import it.unifi.dsi.blitese.parser.BLTDEFServiceInstance;
+import java.util.Comparator;
 
 /**
  * This the interface for the static definition of a Blite process (program)
@@ -61,6 +62,14 @@ public interface BliteDeploymentDefinition {
      * @return BLTDEFServiceInstance
      */
     BLTDEFServiceInstance provideServiceInstance();
+    
+    public class DefComparator implements Comparator<BliteDeploymentDefinition> {
+
+        public int compare(BliteDeploymentDefinition o1, BliteDeploymentDefinition o2) {
+            return o1.getBliteId().toString().compareTo(o2.getBliteId().toString());
+        }
+        
+    }
     
 }
 

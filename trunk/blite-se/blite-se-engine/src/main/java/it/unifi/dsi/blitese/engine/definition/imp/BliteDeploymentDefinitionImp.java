@@ -75,8 +75,15 @@ public class BliteDeploymentDefinitionImp implements BliteDeploymentDefinition {
             return null;
     }
 
+    @Override
+    public String toString() {
+        return "" + getBliteId();
+    }
+
 //    public Set<BLTDEFServiceInstance> getDefProcessInstances() {
 //        return mDEFDeployment.provideAllInsatnces();
 //    }
+    
+    
 
 }

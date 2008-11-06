@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.localenv.gui.env.nodes;
 
 import it.unifi.dsi.blitese.localenv.gui.env.EnvModel;
+import javax.swing.JPopupMenu;
 
 /**
  *
@@ -25,6 +26,11 @@ public class RootNode extends EnvBaseNode {
     
     public RootNode(EnvModel envModel) {
         super("Enviroment", null, envModel);
+    }
+
+    @Override
+    public JPopupMenu getPopupMenu() {
+        return null;
     }
 
 }
