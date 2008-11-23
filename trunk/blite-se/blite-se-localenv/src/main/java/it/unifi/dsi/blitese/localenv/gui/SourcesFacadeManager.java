@@ -15,7 +15,6 @@
 
 package it.unifi.dsi.blitese.localenv.gui;
 
-import it.unifi.dsi.blitese.parser.AbstractBliteParser;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import it.unifi.dsi.blitese.parser.BliteParser;
 import it.unifi.dsi.blitese.parser.ParseException;
@@ -30,8 +29,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -110,11 +109,17 @@ public class SourcesFacadeManager {
     
     private JTextComponent putText(File file) throws IOException {
         
-        JTextArea jTextArea = new JTextArea();
-        jTextArea.read(new FileReader(file), file);
-        mFileToText.put(file, jTextArea);
+        JEditorPane editorPane = new JEditorPane();
+        mFileToText.put(file, editorPane);
+        editorPane.setContentType("text/java");
+        editorPane.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
+        editorPane.read(new FileReader(file), file);
         
-        return jTextArea;
+//        JTextArea jTextArea = new JTextArea();
+//        jTextArea.read(new FileReader(file), file);
+//        mFileToText.put(file, jTextArea);
+//        
+        return editorPane;
     }
     
     private String getText(File file) {
