@@ -4,8 +4,6 @@
 
 package it.unifi.dsi.blitese.localenv.gui;
 
-import it.unifi.dsi.blitese.localenv.IncompatibleCompUnitException;
-import it.unifi.dsi.blitese.localenv.LocalEnvironment;
 import it.unifi.dsi.blitese.localenv.gui.env.EnvComponent;
 import it.unifi.dsi.blitese.localenv.gui.log.SetUpLogging;
 import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
@@ -25,9 +23,12 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import jsyntaxpane.DefaultSyntaxKit;
 
 
 /**
@@ -105,6 +106,7 @@ public class DesktopView extends FrameView {
         
         
         SetUpLogging.initializeLogging(reportArea);
+        DefaultSyntaxKit.initKit();
     }
 
     @Action
@@ -317,7 +319,20 @@ public class DesktopView extends FrameView {
 
     @Action
     public void newDef() {
-        filesTabbedPane.addTab("new definition...", new JTextArea());
+        
+        JScrollPane jScrollPane = new javax.swing.JScrollPane();
+        JEditorPane jEdtTest = new javax.swing.JEditorPane();
+         jEdtTest.setContentType("text/java");
+        jEdtTest.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
+        jEdtTest.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                System.out.println("Oo!");
+            }
+        });
+        jScrollPane.setViewportView(jEdtTest);
+        
+        
+        filesTabbedPane.addTab("new definition...", jScrollPane);
     }
 
     @Action
