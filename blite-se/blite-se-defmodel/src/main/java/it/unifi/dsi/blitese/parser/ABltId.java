@@ -20,7 +20,7 @@ package it.unifi.dsi.blitese.parser;
  * @author panks
  */
 public abstract class ABltId extends SimpleNode {
-
+    
     private String name;
     
     public ABltId(BliteParser p, int i) {
