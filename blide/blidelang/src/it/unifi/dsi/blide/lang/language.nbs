@@ -1,0 +1,104 @@
+
+# definition of tokens
+TOKEN:whitespace:( [" " "\t" "\n" "\r"]+ )
+TOKEN:keyword:( "inv" | "rcv" | "empty" | "throw" | "exit" | "fh:" | "ch:" | "::" )
+
+TOKEN:braces:(
+"{"
+|  "}"
+| "["
+| "]"
+| "<"
+| ">"
+| "seq"
+| "qes"
+| "flw"
+| "wlf"
+)
+TOKEN:separator:(
+ "|"
+| ","
+| "||"
+| ";"
+| "("
+| ")"
+)
+
+TOKEN:assign:(":=")
+
+TOKEN:identifier:( ["a"-"z"] ["a"-"z" "0"-"9"]* )
+
+
+TOKEN:string:(
+    "\"" (
+        [^ "\\" "\"" "\n" "\r"] |
+        ("\\" (
+            . |
+            (["0"-"7"] ["0"-"7"] ["0"-"7"]) |
+            ("x" ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"]) |
+            ("u" ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"])
+        ))
+    )*
+    "\""
+)
+
+# parser should ignore whitespaces
+SKIP:whitespace
+
+# definition of grammar
+#S = (Statement)*;
+#Statement = WhileStatement | IfStatement | ExpressionStatement;
+#WhileStatement = "while" "(" ConditionalExpression ")" Block;
+#IfStatement = "if" "(" ConditionalExpression ")" Block ["else" Block];
+#Block = "{" (Statement)* "}";
+#ConditionalExpression = <identifier>;
+#ExpressionStatement = <identifier>;
+
+# code folding
+#FOLD:Block
+
+# navigator support
+#NAVIGATOR:WhileStatement: {
+#    display_name: "$ConditionalExpression$";
+#}
+
+# brace completion
+COMPLETE "{:}"
+COMPLETE "(:)"
+COMPLETE "[:]"
+COMPLETE "<:>"
+COMPLETE "seq:qes"
+COMPLETE "flw:wlf"
+COMPLETE "inv:<s> operation(x)"
+COMPLETE "rcv:<\"on_me\"> operation(x)"
+
+# brace matching
+BRACE "{:}"
+BRACE "(:)"
+BRACE "[:]"
+BRACE "<:>"
+BRACE "seq:qes"
+BRACE "flw:wlf"
+
+
+# indentation support
+INDENT "{:}"
+#INDENT "(:)"
+#INDENT "\\s*(((if|while)\\s*\\(|else\\s*|else\\s+if\\s*\\(|for\\s*\\(.*\\))[^{;]*)"
+INDENT "[:]"
+INDENT "seq:qes"
+INDENT "flw:wlf"
+
+# code completion
+#COMPLETION:keyword, operator, identifier, whitespace: {
+#    text1:"while";
+#    text2:"if";
+#    text3:"else";
+#
+#}
+
+COLOR:braces:{
+    #foreground_color:"0x1C0078";
+    #background_color:"0xff0f1d";
+    font_type:"bold";
+}
