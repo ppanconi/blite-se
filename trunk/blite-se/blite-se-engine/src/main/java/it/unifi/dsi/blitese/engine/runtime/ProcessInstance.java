@@ -14,9 +14,17 @@
  */
 package it.unifi.dsi.blitese.engine.runtime;
 
+import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+
 
 public interface ProcessInstance extends FlowOwner, ActivityComponent, ExecutionContext {
 
     void activete();
+    
+    BliteDeploymentDefinition getDeploymentDefinition();
+    
+    ProcessManager getManager();
+    
+    String getInstanceId();
 }
 
