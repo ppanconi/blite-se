@@ -4,11 +4,8 @@
  */
 package it.unifi.dsi.blide.lang;
 
-import it.unifi.dsi.blitese.parser.BliteParser;
 import it.unifi.dsi.blitese.parser.ParseException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
@@ -17,22 +14,26 @@ import org.openide.util.NbBundle;
 import org.openide.util.actions.CookieAction;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
-import org.openide.windows.TopComponent;
 
 public final class CompileAction extends CookieAction {
 
     protected void performAction(Node[] activatedNodes) {
         BliteDataObject bliteDataObject = activatedNodes[0].getLookup().lookup(BliteDataObject.class);
-        InputStream stream = null;
+//        InputStream stream = null;
         InputOutput output = IOProvider.getDefault().getIO(bliteDataObject.getName(), false);
         
         try {
             output.getOut().reset();
             output.getOut().write("Compiling file '" + bliteDataObject.getName() + "'... \n");
-            stream = bliteDataObject.getPrimaryFile().getInputStream();
+//            stream = bliteDataObject.getPrimaryFile().getInputStream();
 
-            BliteParser.init(stream);
-            BliteParser.parse();
+//            BliteParser.init(stream);
+//            BliteParser.parse();
+
+            BliteDefModelProvider modelProvider =
+                    bliteDataObject.getNodeDelegate().getLookup().lookup(BliteDefModelProvider.class);
+
+            modelProvider.compile();
 
             output.getOut().write("----------------------------------------\n");
             output.getOut().write("COMPILE SUCCESSFUL\n");
@@ -50,15 +51,16 @@ public final class CompileAction extends CookieAction {
             } catch (IOException ex1) {
                 Exceptions.printStackTrace(ex1);
             }
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
         }
+//        finally {
+//            if (stream != null) {
+//                try {
+//                    stream.close();
+//                } catch (IOException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//            }
+//        }
     }
 
     protected int mode() {

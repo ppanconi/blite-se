@@ -79,7 +79,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>it.unifi.dsi.blide.lang</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

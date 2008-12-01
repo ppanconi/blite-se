@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: it.unifi.dsi.blide.run
+OpenIDE-Module-Layer: it/unifi/dsi/blide/run/layer.xml
+OpenIDE-Module-Localizing-Bundle: it/unifi/dsi/blide/run/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

@@ -41,11 +41,11 @@ public class BliteOutputListener implements OutputListener {
 
     public void outputLineAction(OutputEvent ev) {
 
-        if (realLineNo > -1) {
+        if (realLineNo > 0) {
             LineCookie lc = dObj.getCookie(org.openide.cookies.LineCookie.class);
             Line line = lc.getLineSet().getOriginal(realLineNo - 1);
-            if (pos > -1)
-                line.show(Line.ShowOpenType.OPEN,  Line.ShowVisibilityType.FOCUS, pos);
+            if (pos > 0)
+                line.show(Line.ShowOpenType.OPEN,  Line.ShowVisibilityType.FOCUS, pos - 1);
             else 
                 line.show(Line.ShowOpenType.OPEN,  Line.ShowVisibilityType.FOCUS);
         }
@@ -81,14 +81,14 @@ public class BliteOutputListener implements OutputListener {
         return new int[] {l, c};
     }
 
-    public static void main(String[] args) {
-        String errMsg = "Compiling file 'sample'... " +
-                "Compilation Error: Encountered \"::\" at line 12, column 5." +
-                "Was expecting:    \"{\" ...";
-
-        int[] lc = parseLineNColum(errMsg);
-
-        System.out.println("Line: " + lc[0] + " column: " + lc[1]);
-
-    }
+//    public static void main(String[] args) {
+//        String errMsg = "Compiling file 'sample'... " +
+//                "Compilation Error: Encountered \"::\" at line 12, column 5." +
+//                "Was expecting:    \"{\" ...";
+//
+//        int[] lc = parseLineNColum(errMsg);
+//
+//        System.out.println("Line: " + lc[0] + " column: " + lc[1]);
+//
+//    }
 }
