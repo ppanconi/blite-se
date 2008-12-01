@@ -1158,7 +1158,7 @@ BLTDEFVarId VarId() :
         jjtThis.setName(t.image);
         if (jjtThis.getBoundSymbs().get(jjtThis.getName()) == null) {
             ParseException ex = 
-                new ParseException("At line " + t.beginLine + " , column " + t.beginColumn + " the variale " + t.image + " is used without initialization");
+                new ParseException("Error at line " + t.beginLine + ", column " + t.beginColumn + ". The variale " + t.image + " is used without initialization");
             throw ex;
         }
     }
