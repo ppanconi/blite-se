@@ -18,6 +18,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.Lookups;
@@ -30,16 +31,20 @@ import org.openide.util.lookup.ProxyLookup;
 public class BliteDataNode extends DataNode {
 
     private BliteDefModelProviderImp modelProvider;
+
     public BliteDataNode(BliteDataObject obj, Lookup  lookup) {
         super(obj, Children.LEAF,  new ProxyLookup(lookup, Lookups.fixed(new Object[]{new BliteDefModelProviderImp(obj)})));
         modelProvider = getLookup().lookup(BliteDefModelProviderImp.class);
         modelProvider.setDataNode(this);
+
+
 
         FileObject file = obj.getPrimaryFile();
         file.addFileChangeListener(FileUtil.weakFileChangeListener(modelProvider, file));
     }
 
     private static final String NEEDS_COMPILE = "it/unifi/dsi/blide/lang/needs-compile.png";
+    private static final String ERRORS_BADGE = "it/unifi/dsi/blide/lang/error-badge.png";
 
     @Override
     public Image getIcon (int type) {
@@ -48,9 +53,20 @@ public class BliteDataNode extends DataNode {
         if (modelProvider.getDefinitionModel() == null) {
 
             Image errorBadge = ImageUtilities.loadImage (NEEDS_COMPILE);
-            return ImageUtilities.mergeImages(original, errorBadge, 12, 0);
+            Image badged = ImageUtilities.mergeImages(original, errorBadge, 12, 0);
+
+            if (modelProvider.isIsWithError()) {
+                errorBadge = ImageUtilities.loadImage(ERRORS_BADGE);
+                badged = ImageUtilities.mergeImages(badged, errorBadge, 0, 7);
+            }
+
+            return badged;
         } else 
             return original;
+    }
+
+    public BliteDefModelProvider getBliteDefModelProvider() {
+        return modelProvider;
     }
 
 
@@ -58,12 +74,17 @@ public class BliteDataNode extends DataNode {
      *
      */
     static private class BliteDefModelProviderImp extends FileChangeAdapter implements
-            BliteDefModelProvider {
+            BliteDefModelProvider, Node.Cookie {
 
         private BliteDataObject dataObject;
         private BliteDataNode dataNode;
         //cache for compilation
         private BLTDEFCompilationUnit definitionModel;
+        private boolean isWithError = false;
+
+        public boolean isIsWithError() {
+            return isWithError;
+        }
 
         public BliteDefModelProviderImp(BliteDataObject dataObject) {
             this.dataObject = dataObject;
@@ -74,8 +95,10 @@ public class BliteDataNode extends DataNode {
         }
 
         public void reset() {
+//            isWithError = false;
             definitionModel = null;
             dataNode.fireIconChange();
+            dataNode.fireCookieChange();
         }
 
         public BLTDEFCompilationUnit getDefinitionModel() {
@@ -95,9 +118,13 @@ public class BliteDataNode extends DataNode {
                 BliteParser.init(stream);
                 //parse and cache the result
                 definitionModel = (BLTDEFCompilationUnit) BliteParser.parse();
+                isWithError = false;
                 dataNode.fireIconChange();
-                
-
+                dataNode.fireCookieChange();
+            } catch (ParseException pe) {
+                isWithError = true;
+                dataNode.fireIconChange();
+                throw pe;
             } catch (FileNotFoundException ex) {
                 Exceptions.printStackTrace(ex);
             } finally {

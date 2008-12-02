@@ -4,6 +4,7 @@
     <folder name="Actions">
         <folder name="Other">
             <file name="it-unifi-dsi-blide-lang-CompileAction.instance"/>
+            <file name="it-unifi-dsi-blide-lang-DeployAction.instance"/>
         </folder>
     </folder>
     <folder name="Editors">
@@ -29,6 +30,10 @@
                     <file name="it-unifi-dsi-blide-lang-CompileAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-lang-CompileAction.instance"/>
                         <attr name="position" intvalue="150"/>
+                    </file>
+                    <file name="it-unifi-dsi-blide-lang-DeployAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-lang-DeployAction.instance"/>
+                        <attr name="position" intvalue="162"/>
                     </file>
                     <file name="org-openide-actions-CopyAction.instance">
                         <attr name="position" intvalue="400"/>
@@ -104,6 +109,10 @@
                 <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-lang-CompileAction.instance"/>
                 <attr name="position" intvalue="1750"/>
             </file>
+            <file name="it-unifi-dsi-blide-lang-DeployAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-lang-DeployAction.instance"/>
+                <attr name="position" intvalue="1762"/>
+            </file>
         </folder>
     </folder>
     <folder name="Navigator">
@@ -139,6 +148,11 @@
             <file name="it-unifi-dsi-blide-lang-CompileAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-lang-CompileAction.instance"/>
                 <attr name="position" intvalue="500"/>
+            </file>
+            <!-- -->
+            <file name="it-unifi-dsi-blide-lang-DeployAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-lang-DeployAction.instance"/>
+                <attr name="position" intvalue="600"/>
             </file>
         </folder>
     </folder>

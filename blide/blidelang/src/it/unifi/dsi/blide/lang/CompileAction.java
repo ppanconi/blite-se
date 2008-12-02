@@ -21,7 +21,7 @@ public final class CompileAction extends CookieAction {
         BliteDataObject bliteDataObject = activatedNodes[0].getLookup().lookup(BliteDataObject.class);
 //        InputStream stream = null;
         InputOutput output = IOProvider.getDefault().getIO(bliteDataObject.getName(), false);
-        
+
         try {
             output.getOut().reset();
             output.getOut().write("Compiling file '" + bliteDataObject.getName() + "'... \n");
@@ -40,11 +40,11 @@ public final class CompileAction extends CookieAction {
             output.getOut().write("----------------------------------------\n");
 
             StatusDisplayer.getDefault().setStatusText("File '" + bliteDataObject.getName() + "' compiled successfully");
-            
+
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (ParseException ex) {
-            
+
             String errMsg = ex.getMessage();
             try {
                 output.getErr().println("Compilation Error: " + errMsg, new BliteOutputListener(bliteDataObject, errMsg), true);
@@ -87,6 +87,22 @@ public final class CompileAction extends CookieAction {
     @Override
     protected boolean asynchronous() {
         return true;
+    }
+
+    @Override
+    protected boolean enable(Node[] activatedNodes) {
+        boolean enab = super.enable(activatedNodes);
+
+        if (enab) {
+
+            BliteDefModelProvider mp = activatedNodes[0].getLookup().lookup(BliteDefModelProvider.class);
+
+            if (mp.getDefinitionModel() != null) {
+                enab = false;
+            }
+        }
+
+        return enab;
     }
 }
 
