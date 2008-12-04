@@ -6,14 +6,15 @@
 package it.unifi.dsi.blide.run.imp;
 
 import it.unifi.dsi.blide.lang.BliteDataObject;
+import it.unifi.dsi.blide.lang.BliteDefModelProvider;
 import it.unifi.dsi.blide.lang.BliteEnvProviderService;
 import it.unifi.dsi.blide.lang.BliteIncompatibleUnitException;
+import it.unifi.dsi.blitese.localenv.IncompatibleCompUnitException;
+import it.unifi.dsi.blitese.localenv.LocalEnvironment;
+import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.openide.filesystems.FileStateInvalidException;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -21,40 +22,48 @@ import org.openide.filesystems.FileStateInvalidException;
  */
 public class BliteLocalEnvProviderService implements BliteEnvProviderService {
 
-    private Map<URL, Object> deployed = new HashMap<URL, Object>();
+    private LocalEnvironment localEnviroment = BliteLocalEnvTopComponent.findInstance().getEnvironment();
+
+    // -------------------------------------------------------------------------
 
     public boolean isInstaled(BliteDataObject dataObject) {
         try {
             URL url = dataObject.getPrimaryFile().getURL();
-            return (null != deployed.get(url));
+            return null != localEnviroment.getInsatlledUnit(url);
         } catch (FileStateInvalidException ex) {
-            Logger.getLogger(BliteLocalEnvProviderService.class.getName()).log(Level.SEVERE, null, ex);
+            Exceptions.printStackTrace(ex);
             throw new RuntimeException(ex);
         }
     }
 
     public void deploy(BliteDataObject dataObject) throws BliteIncompatibleUnitException {
-        try {
-            URL url = dataObject.getPrimaryFile().getURL();
-            deployed.put(url, dataObject);
 
-            System.out.println("Deployed " + url);
-        } catch (FileStateInvalidException ex) {
-            Logger.getLogger(BliteLocalEnvProviderService.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
+        BliteDefModelProvider modelProvider =
+                    dataObject.getNodeDelegate().getLookup().lookup(BliteDefModelProvider.class);
+
+        BLTDEFCompilationUnit cu = modelProvider.getDefinitionModel();
+
+        if (cu != null) {
+            try {
+                URL url = dataObject.getPrimaryFile().getURL();
+                cu.setResource(url);
+
+                localEnviroment.addCompilationUnit(cu);
+
+            } catch (IncompatibleCompUnitException ex) {
+
+                throw new BliteIncompatibleUnitException(ex.getMessage());
+
+            } catch (FileStateInvalidException ex) {
+                Exceptions.printStackTrace(ex);
+                throw new RuntimeException(ex);
+            }
         }
     }
 
     public void remove(BliteDataObject dataObject) {
-        try {
-            URL url = dataObject.getPrimaryFile().getURL();
-            deployed.remove(url);
-
-            System.out.println("Undeployed " + url);
-        } catch (FileStateInvalidException ex) {
-            Logger.getLogger(BliteLocalEnvProviderService.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
 
 }

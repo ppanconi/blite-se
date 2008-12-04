@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: it.unifi.dsi.blitese.localenv
+OpenIDE-Module-Localizing-Bundle: it/unifi/dsi/blitese/localenv/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

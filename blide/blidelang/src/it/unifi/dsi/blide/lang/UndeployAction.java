@@ -6,32 +6,24 @@ package it.unifi.dsi.blide.lang;
 
 import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CookieAction;
 
-public final class DeployAction extends CookieAction {
+public final class UndeployAction extends CookieAction {
 
     protected void performAction(Node[] activatedNodes) {
         BliteDataObject bliteDataObject = activatedNodes[0].getLookup().lookup(BliteDataObject.class);
-
         BliteEnvProviderService envService = Lookup.getDefault().lookup(BliteEnvProviderService.class);
-//        BliteDataNode bliteDataNode = activatedNodes[0].getLookup().lookup(BliteDataNode.class);
         BliteDefModelProvider mp = activatedNodes[0].getLookup().lookup(BliteDefModelProvider.class);
 
         if (envService != null) {
-            try {
-                envService.deploy(bliteDataObject);
-                mp.fireActionsChange();
+            envService.remove(bliteDataObject);
+            mp.fireActionsChange();
 
-                StatusDisplayer.getDefault().setStatusText("File '" + bliteDataObject.getName() + "' deployed successfully");
-            } catch (BliteIncompatibleUnitException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            StatusDisplayer.getDefault().setStatusText("File '" + bliteDataObject.getName() + "' undeployed successfully");
         }
-  
     }
 
     protected int mode() {
@@ -39,7 +31,7 @@ public final class DeployAction extends CookieAction {
     }
 
     public String getName() {
-        return NbBundle.getMessage(DeployAction.class, "CTL_DeployAction");
+        return NbBundle.getMessage(UndeployAction.class, "CTL_UndeployAction");
     }
 
     protected Class[] cookieClasses() {
@@ -48,7 +40,7 @@ public final class DeployAction extends CookieAction {
 
     @Override
     protected String iconResource() {
-        return "it/unifi/dsi/blide/lang/deploy.png";
+        return "it/unifi/dsi/blide/lang/undeploy.png";
     }
 
     public HelpCtx getHelpCtx() {
@@ -60,26 +52,23 @@ public final class DeployAction extends CookieAction {
         return true;
     }
 
-
-
     @Override
     protected boolean enable(Node[] activatedNodes) {
         boolean enab = super.enable(activatedNodes);
 
         if (enab) {
-            if (null == Lookup.getDefault().lookup(BliteEnvProviderService.class))
+            BliteEnvProviderService localProvider = Lookup.getDefault().lookup(BliteEnvProviderService.class);
+            BliteDataObject bliteDataObject = activatedNodes[0].getLookup().lookup(BliteDataObject.class);
+            if (null == localProvider) {
                 enab = false;
-            else {
-                BliteDefModelProvider mp = activatedNodes[0].getLookup().lookup(BliteDefModelProvider.class);
-
-                if (mp.getDefinitionModel() == null)
+            } else {
+                if (!localProvider.isInstaled(bliteDataObject)) {
                     enab = false;
+                }
             }
         }
 
         return enab;
     }
-
-
 }
 

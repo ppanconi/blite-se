@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="it-unifi-dsi-blide-run-imp-BliteLocalEnvAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.run.Bundle"/>
+                <attr name="component" methodvalue="it.unifi.dsi.blide.run.imp.BliteLocalEnvTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="it.unifi.dsi.blide.run.imp.Bundle#CTL_BliteLocalEnvAction"/>
+                <attr name="iconBase" stringvalue="it/unifi/dsi/blide/run/imp/servers.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="BliteLocalEnvAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/it-unifi-dsi-blide-run-imp-BliteLocalEnvAction.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="BliteLocalEnvTopComponent.settings" url="BliteLocalEnvTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="explorer">
+                <file name="BliteLocalEnvTopComponent.wstcref" url="BliteLocalEnvTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

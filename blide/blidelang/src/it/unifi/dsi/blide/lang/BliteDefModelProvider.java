@@ -17,4 +17,6 @@ public interface BliteDefModelProvider {
     public void compile() throws ParseException;
 
     public BLTDEFCompilationUnit getDefinitionModel();
+
+    public void fireActionsChange();
 }

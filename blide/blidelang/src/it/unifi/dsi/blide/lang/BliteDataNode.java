@@ -24,6 +24,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ProxyLookup;
+
 /**
  *
  * @author panks
@@ -32,8 +33,8 @@ public class BliteDataNode extends DataNode {
 
     private BliteDefModelProviderImp modelProvider;
 
-    public BliteDataNode(BliteDataObject obj, Lookup  lookup) {
-        super(obj, Children.LEAF,  new ProxyLookup(lookup, Lookups.fixed(new Object[]{new BliteDefModelProviderImp(obj)})));
+    public BliteDataNode(BliteDataObject obj, Lookup lookup) {
+        super(obj, Children.LEAF, new ProxyLookup(lookup, Lookups.fixed(new Object[]{new BliteDefModelProviderImp(obj)})));
         modelProvider = getLookup().lookup(BliteDefModelProviderImp.class);
         modelProvider.setDataNode(this);
 
@@ -42,17 +43,16 @@ public class BliteDataNode extends DataNode {
         FileObject file = obj.getPrimaryFile();
         file.addFileChangeListener(FileUtil.weakFileChangeListener(modelProvider, file));
     }
-
     private static final String NEEDS_COMPILE = "it/unifi/dsi/blide/lang/needs-compile.png";
     private static final String ERRORS_BADGE = "it/unifi/dsi/blide/lang/error-badge.png";
 
     @Override
-    public Image getIcon (int type) {
-        Image original = super.getIcon (type);
+    public Image getIcon(int type) {
+        Image original = super.getIcon(type);
 
         if (modelProvider.getDefinitionModel() == null) {
 
-            Image errorBadge = ImageUtilities.loadImage (NEEDS_COMPILE);
+            Image errorBadge = ImageUtilities.loadImage(NEEDS_COMPILE);
             Image badged = ImageUtilities.mergeImages(original, errorBadge, 12, 0);
 
             if (modelProvider.isIsWithError()) {
@@ -61,14 +61,14 @@ public class BliteDataNode extends DataNode {
             }
 
             return badged;
-        } else 
+        } else {
             return original;
+        }
     }
 
     public BliteDefModelProvider getBliteDefModelProvider() {
         return modelProvider;
     }
-
 
     /*------------------------------------------------------
      *
@@ -94,11 +94,15 @@ public class BliteDataNode extends DataNode {
             this.dataNode = dataNode;
         }
 
+        public void fireActionsChange() {
+            dataNode.fireCookieChange();
+        }
+
         public void reset() {
 //            isWithError = false;
             definitionModel = null;
             dataNode.fireIconChange();
-            dataNode.fireCookieChange();
+            fireActionsChange();
         }
 
         public BLTDEFCompilationUnit getDefinitionModel() {
@@ -120,7 +124,7 @@ public class BliteDataNode extends DataNode {
                 definitionModel = (BLTDEFCompilationUnit) BliteParser.parse();
                 isWithError = false;
                 dataNode.fireIconChange();
-                dataNode.fireCookieChange();
+                fireActionsChange();
             } catch (ParseException pe) {
                 isWithError = true;
                 dataNode.fireIconChange();
@@ -144,7 +148,5 @@ public class BliteDataNode extends DataNode {
             super.fileChanged(fe);
             reset();
         }
-
-
     }
 }

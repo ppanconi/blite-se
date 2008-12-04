@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>it.unifi.dsi.blitese.localenv</code-name-base>
+            <suite-component/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>it.unifi.dsi.blitese.engine</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>it.unifi.dsi.blitese.parser</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <public-packages>
+                <package>it.unifi.dsi.blitese.localenv</package>
+                <package>it.unifi.dsi.blitese.localenv.gui</package>
+                <package>it.unifi.dsi.blitese.localenv.gui.env</package>
+                <package>it.unifi.dsi.blitese.localenv.gui.env.nodes</package>
+                <package>it.unifi.dsi.blitese.localenv.gui.log</package>
+                <package>it.unifi.dsi.blitese.localenv.gui.nodes</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/blite-se-localenv-1.0-SNAPSHOT.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/blite-se-localenv-1.0-SNAPSHOT.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>
