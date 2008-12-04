@@ -27,9 +27,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -48,7 +51,7 @@ public class LocalEnvironment {
     
     private LocalEngineChannel channel;
     
-    private Object deploymentLock = new Object();
+    private final Object deploymentLock = new Object();
 
     public LocalEnvironment() {
         channel = new LocalEngineChannel(this);
@@ -65,7 +68,6 @@ public class LocalEnvironment {
         
         BLTDEFCompilationUnit pc = mCompUnits.get(res);
         if (pc == null) {
-            mCompUnits.put(res, compilationUnit);
             
             synchronized (deploymentLock) {
                 LOGGER.info("Start deploy process for " + res);
@@ -98,7 +100,6 @@ public class LocalEnvironment {
                             Engine poe = mServiceNameToEngine.get(serviceName);
                             if (poe == null) {
                                 poe = engine;
-                                mServiceNameToEngine.put(serviceName, engine);
                             } else if (!poe.equals(engine)) {
                                 throw new IncompatibleCompUnitException("The compilation unit is not compatible with " +
                                         "the actual Eviroment. It defines the service " + serviceName + 
@@ -113,17 +114,37 @@ public class LocalEnvironment {
                         BliteDeploymentDefinition deploymentDefinition =
                                 new BliteDeploymentDefinitionImp(aServiceEle, deployId);
 
+                        //OK we can deploy the deployment definition a store the service names
+                        //in local chaches
+
+                        //FIXME WE HAVE TO DEPLOY THE DEFINITION AFTER WE ARE SURE
+                        //THE ALL THE COMPILATION UNIT IS VALID
                         engine.deployProcessDefinition(deploymentDefinition, null, null);
+                        for (String serviceName : aServiceEle.provideAllServiceName()) {
+                            mServiceNameToEngine.put(serviceName, engine);
+                        }
                         
                         LOGGER.info("Deployed " + deployId + " at " + loc);
-                    }
-                }
+                    
+                    } // -- end Service for a deployment
+
+                } // -- end all deployment
+
                 LOGGER.info("Finished deploy process for " + res);
-            }
+
+            } // -- End Critic Section
+            
+            mCompUnits.put(res, compilationUnit);
+            // -- notifay the changes in deploiments
+            fire();
         }
-        
+
+
     }
-    
+
+    public BLTDEFCompilationUnit getInsatlledUnit(URL url) {
+        return mCompUnits.get(url);
+    }
     
     public Engine provideServiceEngine(ServiceIdentifier serviceId) {
         
@@ -161,5 +182,24 @@ public class LocalEnvironment {
     
     public Engine provideEngineAt(EngineLocation location) {
         return mLocToEngine.get(location);
+    }
+
+    // -------------------------------------------------------------------------
+    private static List <ChangeListener> listeners =
+            Collections.<ChangeListener>synchronizedList(new
+            LinkedList <ChangeListener>());
+    public void addChangeListener (ChangeListener l) {
+        listeners.add (l);
+    }
+
+    public void removeChangeListener (ChangeListener l) {
+        listeners.remove (l);
+    }
+
+    private void fire() {
+        ChangeListener[] l = listeners.toArray (new ChangeListener[0]);
+        for (int i=0; i < l.length; i++) {
+            l[i].stateChanged (new ChangeEvent (this));
+        }
     }
 }
