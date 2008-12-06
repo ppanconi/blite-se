@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.logging.Logger;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.util.Exceptions;
@@ -50,6 +51,7 @@ final class BliteLocalEnvTopComponent extends TopComponent implements ExplorerMa
         setToolTipText(NbBundle.getMessage(BliteLocalEnvTopComponent.class, "HINT_BliteLocalEnvTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
+        associateLookup(ExplorerUtils.createLookup(mamager, getActionMap()));
         mamager.setRootContext(new EnvNode(localEnviroment));
     }
 

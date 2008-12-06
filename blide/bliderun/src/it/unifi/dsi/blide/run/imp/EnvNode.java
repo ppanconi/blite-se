@@ -54,7 +54,7 @@ public class EnvNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(EngineLocation key) {
-            return new Node[] { new EngineNode(le.provideEngineAt(key), key)};
+            return new Node[] { new EngineNode(le, le.provideEngineAt(key), key)};
         }
 
         public void stateChanged(ChangeEvent e) {
