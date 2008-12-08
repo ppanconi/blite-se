@@ -24,6 +24,10 @@ public class BliteLocalEnvProviderService implements BliteEnvProviderService {
 
     private LocalEnvironment localEnviroment = BliteLocalEnvTopComponent.findInstance().getEnvironment();
 
+    public LocalEnvironment getLocalEnvironment() {
+        return localEnviroment;
+    }
+
     // -------------------------------------------------------------------------
 
     public boolean isInstaled(BliteDataObject dataObject) {

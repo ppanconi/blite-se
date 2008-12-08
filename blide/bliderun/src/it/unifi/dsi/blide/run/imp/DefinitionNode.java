@@ -6,14 +6,18 @@
 package it.unifi.dsi.blide.run.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.runtime.DefinitionMonitor;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
+import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.util.Lookup;
+import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -28,7 +32,7 @@ public class DefinitionNode extends AbstractNode {
     private boolean isReadyToRun = false;
 
     public DefinitionNode(Engine engine, BliteDeploymentDefinition definition) {
-        super(Children.LEAF, Lookups.fixed(engine, definition));
+        super(new DefinitionChildrens(engine, definition), Lookups.fixed(engine, definition));
 
         setName("" + definition.getBliteId());
 
@@ -39,7 +43,6 @@ public class DefinitionNode extends AbstractNode {
             isReadyToRun = false;
             setIconBaseWithExtension(ICON_DEF);
         }
-
 
     }
 
@@ -67,6 +70,47 @@ public class DefinitionNode extends AbstractNode {
         return acts;
     }
 
+    private static class DefinitionChildrens extends Children.Keys<ProcessInstance>
+            implements DefinitionMonitor {
 
+        private Engine engine;
+        
+        private BliteDeploymentDefinition definition;
+
+        private List<ProcessInstance> instances = new ArrayList<ProcessInstance>();
+
+        private java.util.Map<Object, InstanceNode> mNodes = new HashMap<Object, InstanceNode>();
+
+        public DefinitionChildrens(Engine engine, BliteDeploymentDefinition definition) {
+            this.engine = engine;
+            this.definition = definition;
+            engine.setMonitor(this);
+        }
+
+        @Override
+        protected Node[] createNodes(ProcessInstance key) {
+            return new Node[] {mNodes.get(key.getInstanceId())};
+        }
+
+        public BliteDeploymentDefinition getDefinition() {
+            return definition;
+        }
+
+        public InstanceMonitor instanceCreate(ProcessInstance newInstance) {
+
+            instances.add(newInstance);
+            InstanceNode node = new InstanceNode(newInstance);
+            mNodes.put(newInstance.getInstanceId(), node);
+
+            setKeys(instances);
+
+            return node;
+        }
+
+    }
+
+    public BliteDeploymentDefinition getDefinition() {
+        return getLookup().lookup(BliteDeploymentDefinition.class);
+    }
 
 }

@@ -4,6 +4,14 @@
     <folder name="Actions">
         <folder name="Other">
             <file name="it-unifi-dsi-blide-run-imp-RunOneDefAction.instance"/>
+            <file name="it-unifi-dsi-blide-run-imp-SingleStepAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.run.Bundle"/>
+                <attr name="delegate" newvalue="it.unifi.dsi.blide.run.imp.SingleStepAction"/>
+                <attr name="displayName" bundlevalue="it.unifi.dsi.blide.run.imp.Bundle#CTL_SingleStepAction"/>
+                <attr name="iconBase" stringvalue="it/unifi/dsi/blide/run/imp/run.png"/>
+                <!--<attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>-->
+                <attr name="noIconInMenu" stringvalue="false"/>
+            </file>
         </folder>
         <folder name="Window">
             <file name="it-unifi-dsi-blide-run-imp-BliteLocalEnvAction.instance">
@@ -43,6 +51,10 @@
             <file name="it-unifi-dsi-blide-run-imp-RunOneDefAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-run-imp-RunOneDefAction.instance"/>
                 <attr name="position" intvalue="800"/>
+            </file>
+            <file name="it-unifi-dsi-blide-run-imp-SingleStepAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Other/it-unifi-dsi-blide-run-imp-SingleStepAction.instance"/>
+                <attr name="position" intvalue="900"/>
             </file>
         </folder>
     </folder>
