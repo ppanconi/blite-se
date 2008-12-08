@@ -22,6 +22,7 @@ import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.Fault;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance; 
 
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
@@ -45,6 +46,8 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
     private BliteDeploymentDefinition deploymentDefinition;
     
     private Set<String> correlationSet = new HashSet<String>();
+
+    private InstanceMonitor monitor;
 
     public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
                               String instanceId, 
@@ -156,6 +159,21 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         
         return true;
     }
+
+    public void setMonitor(InstanceMonitor monitor) {
+        this.monitor = monitor;
+    }
+
+    public InstanceMonitor getMonitor() {
+        return monitor;
+    }
+
+    @Override
+    public void setSate(ContextState state) {
+        super.setSate(state);
+        if (monitor != null) monitor.stateChanged();
+    }
+
 
 }
 

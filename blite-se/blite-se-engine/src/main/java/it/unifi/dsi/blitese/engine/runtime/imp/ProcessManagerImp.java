@@ -15,8 +15,10 @@
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.runtime.DefinitionMonitor;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
+import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
@@ -54,13 +56,16 @@ public class ProcessManagerImp implements ProcessManager {
 
     //This not null only if the definition is readyToRun type
     private BLTDEFServiceInstance readyToRunInstance;
+
+    private DefinitionMonitor monitor;
     
-    public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
+    public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName,
+                             DefinitionMonitor monitor) {
         mBliteProcessDef = bliteProcessDef;
         mEngine = engine;
         
         mSaName = (saName != null) ? saName : "unavailable";
-	mSuName = (suName != null) ? suName : "unavailable";
+        mSuName = (suName != null) ? suName : "unavailable";
 
         //we record the mapping
         mPortIdToPortDef = bliteProcessDef.getServiceElement().getPortMapping();
@@ -68,7 +73,8 @@ public class ProcessManagerImp implements ProcessManager {
         //if the static definition conteins same ready to run instance
         //we start with it
         readyToRunInstance = bliteProcessDef.provideServiceInstance();
-        
+
+        this.monitor = monitor;
     }
     
     public Object startReadyToRunDefinition() {
@@ -127,8 +133,14 @@ public class ProcessManagerImp implements ProcessManager {
     // Utility 
     private Long instNumber = 0L;
     synchronized  private ProcessInstance createInstance() {
-        ProcessInstance i = new ProcessInstanceImp(mEngine, this, "" + mBliteProcessDef.getBliteId() + ":" + instNumber++ , mBliteProcessDef);
+        ProcessInstance i = new ProcessInstanceImp(mEngine, this, "" + mBliteProcessDef.getBliteId() + "::" + instNumber++ , mBliteProcessDef);
         mInstances.put(i.getInstanceId(), i);
+
+        if (monitor != null) {
+            InstanceMonitor instanceMonitor = monitor.instanceCreate(i);
+            i.setMonitor(instanceMonitor);
+        }
+        
         return i;
     }
 

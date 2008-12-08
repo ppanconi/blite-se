@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 public class LocalEngineChannel implements EngineChannel {
 
     private static final Logger LOGGER = Logger.getLogger(LocalEngineChannel.class.getName());
-    private LocalEnvironment environment;
+    final private LocalEnvironment environment;
     private ExecutorService exService = Executors.newFixedThreadPool(5);
     private boolean open = true;
 
@@ -60,8 +60,8 @@ public class LocalEngineChannel implements EngineChannel {
     private ConcurrentMap<Long, EnginesConnection> connections = new ConcurrentHashMap<Long, EnginesConnection>();
     private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingDeque<MessageEnvelop>();
 
-    public LocalEngineChannel(LocalEnvironment environment) {
-        this.environment = environment;
+    public LocalEngineChannel(LocalEnvironment env) {
+        this.environment = env;
 
         exService.execute(new Runnable() {
 
@@ -69,10 +69,15 @@ public class LocalEngineChannel implements EngineChannel {
 
                 while (open) {
                     try {
-
+                        
                         MessageEnvelop envelop = mMedia.poll(300, TimeUnit.MILLISECONDS);
+                        
 
                         if (envelop != null) {
+
+                            if (environment.getStepper().isEnabled()) {
+                                environment.getStepper().step();
+                            }
                             
                             Long meId = envelop.meId;
                             EnginesConnection connection = connections.get(meId);
@@ -174,4 +179,5 @@ public class LocalEngineChannel implements EngineChannel {
             this.messageContainer = messageContainer;
         }
     }
+    
 }

@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.runtime.DefinitionMonitor;
 import it.unifi.dsi.blitese.engine.runtime.Engine; 
 import it.unifi.dsi.blitese.engine.runtime.EngineChannel;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
@@ -68,12 +69,15 @@ public class EngineImp implements Engine {
     
     private ConcurrentHashMap<FlowExecutor, InComingEventKey>
                 mWaitingFlowToEvent = new ConcurrentHashMap<FlowExecutor, InComingEventKey>();
-    
+
+    private ConcurrentHashMap<Object, DefinitionMonitor>
+                mDefToMonitor = new ConcurrentHashMap<Object, DefinitionMonitor>();
+
     /**
      * Deployed Blite program definitions
      */
     private Map<Object, BliteDeploymentDefinition> mProcessDefs = new Hashtable<Object, BliteDeploymentDefinition>();
-    // The list with the deployed definition in a semsible order
+    // The list with the deployed definition in a sensible order
     private List<BliteDeploymentDefinition> definitionsList = new ArrayList<BliteDeploymentDefinition>();
     
     
@@ -103,7 +107,8 @@ public class EngineImp implements Engine {
                         "not allowed in an engine. Business Process " + id.toString() + " id already registered");
             }
 
-            ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName);
+            DefinitionMonitor monitor = mDefToMonitor.get(id);
+            ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName, monitor);
             
             Set<String> names = new HashSet<String>();
             for (String serviceName : bliteDef.getServiceElement().provideAllServiceName()) {
@@ -164,6 +169,10 @@ public class EngineImp implements Engine {
 
     public void setChannel(EngineChannel channel) {
         this.mChannel = channel;
+    }
+
+    public void setMonitor(DefinitionMonitor monitor) {
+        mDefToMonitor.put(monitor.getDefinition().getBliteId(), monitor);
     }
     
     

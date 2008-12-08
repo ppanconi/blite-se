@@ -26,5 +26,9 @@ public interface ProcessInstance extends FlowOwner, ActivityComponent, Execution
     ProcessManager getManager();
     
     String getInstanceId();
+
+    void setMonitor(InstanceMonitor monitor);
+
+    InstanceMonitor getMonitor();
 }
 

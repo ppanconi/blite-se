@@ -114,6 +114,15 @@ public interface Engine {
      * deployed into the Engine. It create one instance for readyToRun definition.
      */
     public void startAllReadyToRunDefinitions();
+
+    /**
+     * Set the passed momitor on the referenced Porcess Definition
+     * The definition is retrived by <tt>monitor.getDefinition().</tt>
+     *
+     * @param monitor the monitor
+     */
+    public void setMonitor(DefinitionMonitor monitor);
+
     //--------------------------------------------------------------------------
     
     //--------------------------------------------------------------------------
