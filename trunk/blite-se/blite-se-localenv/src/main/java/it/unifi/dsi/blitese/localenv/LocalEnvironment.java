@@ -53,6 +53,12 @@ public class LocalEnvironment {
     
     private final Object deploymentLock = new Object();
 
+    private SingleStepper stepper = new SingleStepper();
+
+    public SingleStepper getStepper() {
+        return stepper;
+    }
+
     public LocalEnvironment() {
         channel = new LocalEngineChannel(this);
     }

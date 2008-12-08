@@ -38,14 +38,15 @@ public interface EngineChannel {
      public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance);
    
     /**
-     * Send done status for the response from the server for the invoke from
-     * this SE as a client.
+     * Send a message container into the created exchange. This a created post
+     * step in the comunication.
      * 
      * @param  inComingEventKey
      */
     public  void sendIntoExchange(Object messageExchangeId, MessageContainer messageContainer);
 
     /**
+     * Close the exchange.
      * 
      * @param messageExchangeId
      */
