@@ -68,7 +68,7 @@ public class LocalEnvironment {
      * 
      * @param compilationUnit to add
      */
-    public void addCompilationUnit(BLTDEFCompilationUnit compilationUnit)  throws IncompatibleCompUnitException {
+    public void addCompilationUnit(BLTDEFCompilationUnit compilationUnit) throws IncompatibleCompUnitException {
         
         URL res = compilationUnit.getResource();
         
@@ -78,12 +78,12 @@ public class LocalEnvironment {
             synchronized (deploymentLock) {
                 LOGGER.info("Start deploy process for " + res);
             
-                int depCount = 0;
+//                int depCount = 0;
                 //for each dep definition 
                 for (BLTDEFDeployment deploy : compilationUnit.getDeployments()) {
-                    depCount++;
-                    //to starting coding we have a deployment defines a location
-                    EngineLocation loc = new EngineLocation(res.toString() + ":" + depCount);
+//                    depCount++
+
+                    EngineLocation loc = EngineLocation.make(compilationUnit, deploy);
 
                     Engine engine = mLocToEngine.get(loc);
 
@@ -97,9 +97,9 @@ public class LocalEnvironment {
 
                     //we have to map the service name defined in 
                     //the current deploy to the relative Engine
-                    int servCount = 0;
+//                    int servCount = 0;
                     for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
-                        servCount++;
+//                        servCount++;
 
                         for (String serviceName : aServiceEle.provideAllServiceName()) {
 
@@ -115,7 +115,9 @@ public class LocalEnvironment {
 
 
                         //TODO use a ServiceElement name instaed of servCount 
-                        String deployId = loc.toString() + "/" + servCount; 
+//                        String deployId = loc.toString() + "/" + servCount;
+                        Object deployId = deploy.provideDeployId(compilationUnit.provideLocationName(deploy), aServiceEle);
+
                         //now we deploy the ServiceElement to the Engine.
                         BliteDeploymentDefinition deploymentDefinition =
                                 new BliteDeploymentDefinitionImp(aServiceEle, deployId);
@@ -126,6 +128,10 @@ public class LocalEnvironment {
                         //FIXME WE HAVE TO DEPLOY THE DEFINITION AFTER WE ARE SURE
                         //THE ALL THE COMPILATION UNIT IS VALID
                         engine.deployProcessDefinition(deploymentDefinition, null, null);
+
+                        // -- we set a local monitor on the definition
+                        engine.setMonitor(new LocalDefinitionMonitor(deploymentDefinition));
+
                         for (String serviceName : aServiceEle.provideAllServiceName()) {
                             mServiceNameToEngine.put(serviceName, engine);
                         }
@@ -145,7 +151,43 @@ public class LocalEnvironment {
             fire();
         }
 
+    }
 
+    public void removeCompilationUnit(BLTDEFCompilationUnit compilationUnit) {
+        URL res = compilationUnit.getResource();
+
+        synchronized (deploymentLock) {
+            BLTDEFCompilationUnit pc = mCompUnits.remove(res);
+            if (pc != null) {
+
+                for (BLTDEFDeployment deploy : compilationUnit.getDeployments()) {
+
+                    EngineLocation loc = EngineLocation.make(compilationUnit, deploy);
+                    Engine engine = mLocToEngine.get(loc);
+
+                    for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
+
+                        Object deployId = deploy.provideDeployId(loc.getLocationName(), aServiceEle);
+
+                        engine.removeProcessDefinition(deployId);
+
+                        for (String serviceName : aServiceEle.provideAllServiceName()) {
+                                mServiceNameToEngine.remove(serviceName);
+                        }
+                    }
+                }
+
+                //-- we notify the deployment change
+                fire();
+            }
+        }
+    }
+
+    public void synchCompilationUnit(BLTDEFCompilationUnit compilationUnit)  throws IncompatibleCompUnitException  {
+
+        removeCompilationUnit(compilationUnit);
+        addCompilationUnit(compilationUnit);
+        
     }
 
     public BLTDEFCompilationUnit getInsatlledUnit(URL url) {
@@ -208,4 +250,5 @@ public class LocalEnvironment {
             l[i].stateChanged (new ChangeEvent (this));
         }
     }
+
 }

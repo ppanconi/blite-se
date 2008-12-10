@@ -15,6 +15,9 @@
 
 package it.unifi.dsi.blitese.localenv;
 
+import it.unifi.dsi.blitese.parser.BLTDEFCompilationUnit;
+import it.unifi.dsi.blitese.parser.BLTDEFDeployment;
+
 /**
  *
  * @author panks
@@ -26,7 +29,7 @@ public class EngineLocation implements Comparable<EngineLocation> {
 //    public EngineLocation() {
 //    }
 //    
-    public EngineLocation(String locationName) {
+    private EngineLocation(String locationName) {
         setLocationName(locationName);
     }
     
@@ -67,5 +70,12 @@ public class EngineLocation implements Comparable<EngineLocation> {
     }
 
     
-        
+    public static EngineLocation make(BLTDEFCompilationUnit compilationUnit,
+                                      BLTDEFDeployment deployment) {
+
+        String locName = compilationUnit.provideLocationName(deployment);
+        EngineLocation loc = new EngineLocation(locName);
+
+        return loc;
+    }
 }
