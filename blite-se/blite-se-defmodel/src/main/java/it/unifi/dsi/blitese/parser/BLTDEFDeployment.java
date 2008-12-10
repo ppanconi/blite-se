@@ -3,7 +3,10 @@
 package it.unifi.dsi.blitese.parser;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class BLTDEFDeployment extends SimpleNode {
@@ -62,6 +65,7 @@ public class BLTDEFDeployment extends SimpleNode {
         Set<AServiceElement> elements = new HashSet<AServiceElement>();
         
         BLTDEFServiceDef def = provideServiceDefinition();
+
         if (def != null) elements.add(def);
         
         elements.addAll(provideAllInsatnces());
@@ -71,6 +75,11 @@ public class BLTDEFDeployment extends SimpleNode {
     
     public URL getLocation() {
         return null;
+    }
+
+    private int index = 0;
+    public Object provideDeployId(String locationName, AServiceElement serviceElement) {
+        return locationName + "/" + index++;
     }
  
 }
