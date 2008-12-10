@@ -20,5 +20,7 @@ public interface DefinitionMonitor {
     public BliteDeploymentDefinition getDefinition();
 
     public InstanceMonitor instanceCreate(ProcessInstance instance);
+
+    public InstanceMonitor getInstanceMonitor(String instaceId);
     
 }

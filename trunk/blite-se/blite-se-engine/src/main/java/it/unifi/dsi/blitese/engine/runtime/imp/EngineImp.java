@@ -54,46 +54,45 @@ public class EngineImp implements Engine {
     
     private static final Logger LOGGER = Logger.getLogger(EngineImp.class.getName());
     
-    private Object mDeployLock = new Object(); //onjext used as monitor in un/deployment phase
-    private boolean mNewAddedDep = false; //one state marker for eventually persistence synch.
+    final private Object mDeployLock = new Object(); //onjext used as monitor in un/deployment phase
     private EngineChannel mChannel; //the comunication Channel
     
-    private ConcurrentMap<InComingEventKey, List<FlowExecutor>>
-                mEventWaitingExecutor = new ConcurrentHashMap<InComingEventKey, List<FlowExecutor>>();
+    //The internal threadpool for executionFlow
+    private ExecutorService executorService = Executors.newFixedThreadPool(INTERNAL_THREADPOOL_SIZE_DEFAULT);
     
-    private ConcurrentHashMap<Object, ProcessManager>
-                mMExchangeToProcessManager = new ConcurrentHashMap<Object, ProcessManager>();
+    //-------------------------------------------------------------------------|
+    //                           DEFINITION DATA STRUTURES                     |
+    //                                                                         |
+    //Deployed Blite program definitions
+    private Map<Object, BliteDeploymentDefinition> mProcessDefs = new Hashtable<Object, BliteDeploymentDefinition>();
+    // The list with the deployed definition in a sensible order
+    private List<BliteDeploymentDefinition> definitionsList = new ArrayList<BliteDeploymentDefinition>();
+    //The Process Managers, one to one Blite Definition
+    private Map<BliteDeploymentDefinition, ProcessManager> mManagers = new Hashtable<BliteDeploymentDefinition, ProcessManager>();
+    //Map the serviceName to Managers
+    private Map<String, ProcessManager> mServiceNameToManagers = new HashMap<String, ProcessManager>();
+    //Map the bliteId (deployId) to the definition Monitor
+    private ConcurrentHashMap<Object, DefinitionMonitor> mDefToMonitor = new ConcurrentHashMap<Object, DefinitionMonitor>();
+    //                                    END                                  |
+    //-------------------------------------------------------------------------|
+
+
+    //-------------------------------------------------------------------------|
+    //                             RUNTIME DATA STRUTURES                      |
+    //                                                                         |
+    private ConcurrentMap<InComingEventKey, List<FlowExecutor>> mEventWaitingExecutor = new ConcurrentHashMap<InComingEventKey, List<FlowExecutor>>();
+    
+    private ConcurrentHashMap<Object, ProcessManager> mMExchangeToProcessManager = new ConcurrentHashMap<Object, ProcessManager>();
     
     private ConcurrentHashMap<InComingEventKey, List<MessageContainer>>
                 mInComingEvent = new ConcurrentHashMap<InComingEventKey, List<MessageContainer>>();
     
     private ConcurrentHashMap<FlowExecutor, InComingEventKey>
                 mWaitingFlowToEvent = new ConcurrentHashMap<FlowExecutor, InComingEventKey>();
+    //                                    END                                  |
+    //-------------------------------------------------------------------------|
 
-    private ConcurrentHashMap<Object, DefinitionMonitor>
-                mDefToMonitor = new ConcurrentHashMap<Object, DefinitionMonitor>();
 
-    /**
-     * Deployed Blite program definitions
-     */
-    private Map<Object, BliteDeploymentDefinition> mProcessDefs = new Hashtable<Object, BliteDeploymentDefinition>();
-    // The list with the deployed definition in a sensible order
-    private List<BliteDeploymentDefinition> definitionsList = new ArrayList<BliteDeploymentDefinition>();
-    
-    
-    /**
-     * The Process Managers, one to one Blite Definition
-     */
-    private Map<BliteDeploymentDefinition, ProcessManager> mManagers = new Hashtable<BliteDeploymentDefinition, ProcessManager>();
-    
-    /**
-     * The internal threadpool for executionFlow
-     */
-    private ExecutorService executorService = Executors.newFixedThreadPool(INTERNAL_THREADPOOL_SIZE_DEFAULT);
-    
-    private Map<String, ProcessManager> mServiceNameToManagers = new HashMap<String, ProcessManager>();
-    
-    
     public EngineImp () {
     }
 
@@ -107,9 +106,11 @@ public class EngineImp implements Engine {
                         "not allowed in an engine. Business Process " + id.toString() + " id already registered");
             }
 
-            DefinitionMonitor monitor = mDefToMonitor.get(id);
-            ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName, monitor);
             
+            ProcessManager processManager = new ProcessManagerImp(bliteDef, this, saName, suName);
+            DefinitionMonitor monitor = mDefToMonitor.get(id);
+            processManager.setMonitor(monitor);
+
             Set<String> names = new HashSet<String>();
             for (String serviceName : bliteDef.getServiceElement().provideAllServiceName()) {
                 
@@ -134,7 +135,6 @@ public class EngineImp implements Engine {
                 mServiceNameToManagers.put(serviceName, processManager);
             }
             
-            mNewAddedDep = true;
         }
 
     }
@@ -151,6 +151,16 @@ public class EngineImp implements Engine {
         for (String serviceName : proc.getServiceElement().provideAllServiceName()) {
             mServiceNameToManagers.remove(serviceName);
         }
+
+        mDefToMonitor.remove(id);
+    }
+
+    public BliteDeploymentDefinition provideDefinition(Object deployId) {
+        return mProcessDefs.get(deployId);
+    }
+
+    public List<BliteDeploymentDefinition> provideDefinitions() {
+        return definitionsList;
     }
 
 //    public void addDeploymentDefinition(BltDefDeployment deployment) {
@@ -172,7 +182,14 @@ public class EngineImp implements Engine {
     }
 
     public void setMonitor(DefinitionMonitor monitor) {
+        
         mDefToMonitor.put(monitor.getDefinition().getBliteId(), monitor);
+        ProcessManager manager = mManagers.get(monitor.getDefinition());
+        manager.setMonitor(monitor);
+    }
+
+    public DefinitionMonitor getMonitor(Object bliteId) {
+        return mDefToMonitor.get(bliteId);
     }
     
     
@@ -425,14 +442,6 @@ public class EngineImp implements Engine {
                 MessageContainerFactory.createMessageContainer(content, MessageContainer.Type.STATUS_ERROR);
         
         mChannel.sendIntoExchange(meId, mc);
-    }
-
-    public BliteDeploymentDefinition provideDefinition(Object deployId) {
-        return mProcessDefs.get(deployId);
-    }
-
-    public List<BliteDeploymentDefinition> provideDefinitions() {
-        return definitionsList;
     }
 
     //--------------------------------------------------------------------------
