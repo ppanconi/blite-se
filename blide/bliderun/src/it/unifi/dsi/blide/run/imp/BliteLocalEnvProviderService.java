@@ -52,7 +52,7 @@ public class BliteLocalEnvProviderService implements BliteEnvProviderService {
                 URL url = dataObject.getPrimaryFile().getURL();
                 cu.setResource(url);
 
-                localEnviroment.addCompilationUnit(cu);
+                localEnviroment.synchCompilationUnit(cu);
 
             } catch (IncompatibleCompUnitException ex) {
 
@@ -66,7 +66,24 @@ public class BliteLocalEnvProviderService implements BliteEnvProviderService {
     }
 
     public void remove(BliteDataObject dataObject) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        BliteDefModelProvider modelProvider =
+                    dataObject.getNodeDelegate().getLookup().lookup(BliteDefModelProvider.class);
+
+        BLTDEFCompilationUnit cu = modelProvider.getDefinitionModel();
+
+        if (cu != null) {
+            try {
+                URL url = dataObject.getPrimaryFile().getURL();
+                cu.setResource(url);
+
+                localEnviroment.removeCompilationUnit(cu);
+
+            } catch (FileStateInvalidException ex) {
+                Exceptions.printStackTrace(ex);
+                throw new RuntimeException(ex);
+            }
+        }
+
     }
 
 

@@ -14,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -46,7 +47,8 @@ public class EngineNode extends AbstractNode {
         public EngineChildrens(LocalEnvironment le, Engine engine) {
             this.le = le;
             this.engine = engine;
-            le.addChangeListener(this);
+            //IMPORTANT USING WEEK LISTENER PREVENT MEMORYLEAK 
+            le.addChangeListener(WeakListeners.change(this, le));
         }
 
         @Override

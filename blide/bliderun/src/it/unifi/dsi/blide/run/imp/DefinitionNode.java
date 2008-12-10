@@ -10,14 +10,18 @@ import it.unifi.dsi.blitese.engine.runtime.DefinitionMonitor;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
+import it.unifi.dsi.blitese.localenv.LocalDefinitionMonitor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -46,6 +50,10 @@ public class DefinitionNode extends AbstractNode {
 
     }
 
+    public BliteDeploymentDefinition getDefinition() {
+        return getLookup().lookup(BliteDeploymentDefinition.class);
+    }
+
     @Override
     public Action[] getActions(boolean context) {
         Action[] acts = super.getActions(context);
@@ -71,46 +79,37 @@ public class DefinitionNode extends AbstractNode {
     }
 
     private static class DefinitionChildrens extends Children.Keys<ProcessInstance>
-            implements DefinitionMonitor {
+            implements ChangeListener {
 
         private Engine engine;
-        
         private BliteDeploymentDefinition definition;
-
-        private List<ProcessInstance> instances = new ArrayList<ProcessInstance>();
-
-        private java.util.Map<Object, InstanceNode> mNodes = new HashMap<Object, InstanceNode>();
+        private LocalDefinitionMonitor monitor;
 
         public DefinitionChildrens(Engine engine, BliteDeploymentDefinition definition) {
             this.engine = engine;
             this.definition = definition;
-            engine.setMonitor(this);
+            this.monitor = (LocalDefinitionMonitor) engine.getMonitor(definition.getBliteId());
+            monitor.addChangeListener(WeakListeners.change(this, monitor));
         }
 
         @Override
+        protected void addNotify() {
+            setKeys(monitor.getInstances());
+        }
+
+
+
+        @Override
         protected Node[] createNodes(ProcessInstance key) {
-            return new Node[] {mNodes.get(key.getInstanceId())};
+            return new Node[] {new InstanceNode(key)};
         }
 
-        public BliteDeploymentDefinition getDefinition() {
-            return definition;
-        }
-
-        public InstanceMonitor instanceCreate(ProcessInstance newInstance) {
-
-            instances.add(newInstance);
-            InstanceNode node = new InstanceNode(newInstance);
-            mNodes.put(newInstance.getInstanceId(), node);
-
-            setKeys(instances);
-
-            return node;
+        public void stateChanged(ChangeEvent e) {
+            setKeys(monitor.getInstances());
         }
 
     }
 
-    public BliteDeploymentDefinition getDefinition() {
-        return getLookup().lookup(BliteDeploymentDefinition.class);
-    }
+    
 
 }
