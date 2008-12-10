@@ -23,6 +23,14 @@ public interface ProcessManager {
     public Engine getEngine();
 
     /**
+     * The monitor for the menaged definition
+     * @return DefinitionMonitor
+     */
+    public DefinitionMonitor getMonitor();
+
+    public void setMonitor(DefinitionMonitor monitor);
+
+    /**
      * Execute the invoke operation on the provided Partner Link 
      * with the provided Operation and passing the provided Message Container. 
      * This mathod is called by the instance to invoke the remote provider.

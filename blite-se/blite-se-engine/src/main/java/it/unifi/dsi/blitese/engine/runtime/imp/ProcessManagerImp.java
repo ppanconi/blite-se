@@ -59,8 +59,7 @@ public class ProcessManagerImp implements ProcessManager {
 
     private DefinitionMonitor monitor;
     
-    public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName,
-                             DefinitionMonitor monitor) {
+    public ProcessManagerImp(BliteDeploymentDefinition bliteProcessDef, Engine engine, String saName, String suName) {
         mBliteProcessDef = bliteProcessDef;
         mEngine = engine;
         
@@ -73,10 +72,18 @@ public class ProcessManagerImp implements ProcessManager {
         //if the static definition conteins same ready to run instance
         //we start with it
         readyToRunInstance = bliteProcessDef.provideServiceInstance();
+    }
 
+    public DefinitionMonitor getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(DefinitionMonitor monitor) {
         this.monitor = monitor;
     }
+
     
+
     public Object startReadyToRunDefinition() {
         if (readyToRunInstance != null) {
             ProcessInstance instance = createInstance();

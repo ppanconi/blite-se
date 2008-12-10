@@ -123,6 +123,16 @@ public interface Engine {
      */
     public void setMonitor(DefinitionMonitor monitor);
 
+
+    /**
+     * Return the Monitor for the specified Definition if installed
+     * otherowise null.
+     *
+     * @param bliteId the id for the requested definition.
+     * @return DefinitionMonitor it can be also null.
+     */
+    public DefinitionMonitor getMonitor(Object bliteId);
+
     //--------------------------------------------------------------------------
     
     //--------------------------------------------------------------------------
