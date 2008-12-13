@@ -42,7 +42,7 @@ public class BLTDEFCompilationUnit extends SimpleNode {
     }
 
     public String provideLocationName(BLTDEFDeployment deployment) {
-        int index = deployments.indexOf(deployment);
+        int index = deployments.indexOf(deployment) + 1;
         String locName = getResource().toString() + ":" + index;
         return locName;
     }
