@@ -1,12 +1,12 @@
 {
     [
         seq
-            rcv <"s1"> ask(y);
+            rcv <"f"> ask(y);
             throw;
-            inv <"s2"> ok(y)
+            inv <"c"> ok(y)
         qes
         fh:
-            inv <"s2"> no(y)
+            inv <"c"> no(y)
     ]
 
 } 
@@ -14,23 +14,22 @@
 {
     :: seq
            x := "CAN I?";
-           inv <"s1"> ask(x);
+           inv <"f"> ask(x);
            [
              flw
                 seq
-                  rcv <"s2"> ok(x);
+                  rcv <"c"> ok(x);
                   y := "YES";
                   throw;
                 qes
               |
                 seq
-                  rcv <"s2"> no(x);
+                  rcv <"c"> no(x);
                   y := "NO";
                   throw;
                 qes
              wlf
-             fh:
-                empty
+            
            ]
        qes
 } (x)

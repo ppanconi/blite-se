@@ -97,9 +97,9 @@ public class LocalEnvironment {
 
                     //we have to map the service name defined in 
                     //the current deploy to the relative Engine
-//                    int servCount = 0;
+                    int servCount = 0;
                     for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
-//                        servCount++;
+                        servCount++;
 
                         for (String serviceName : aServiceEle.provideAllServiceName()) {
 
@@ -116,7 +116,8 @@ public class LocalEnvironment {
 
                         //TODO use a ServiceElement name instaed of servCount 
 //                        String deployId = loc.toString() + "/" + servCount;
-                        Object deployId = deploy.provideDeployId(compilationUnit.provideLocationName(deploy), aServiceEle);
+                        Object deployId = deploy.provideDeployId(
+                                loc.getLocationName(), aServiceEle, servCount);
 
                         //now we deploy the ServiceElement to the Engine.
                         BliteDeploymentDefinition deploymentDefinition =
@@ -165,9 +166,11 @@ public class LocalEnvironment {
                     EngineLocation loc = EngineLocation.make(compilationUnit, deploy);
                     Engine engine = mLocToEngine.get(loc);
 
+                    int index = 0;
                     for (AServiceElement aServiceEle : deploy.provideAllServiceElement()) {
+                        index++;
 
-                        Object deployId = deploy.provideDeployId(loc.getLocationName(), aServiceEle);
+                        Object deployId = deploy.provideDeployId(loc.getLocationName(), aServiceEle, index);
 
                         engine.removeProcessDefinition(deployId);
 

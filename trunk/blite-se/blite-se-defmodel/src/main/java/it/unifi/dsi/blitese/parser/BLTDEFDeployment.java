@@ -77,9 +77,8 @@ public class BLTDEFDeployment extends SimpleNode {
         return null;
     }
 
-    private int index = 0;
-    public Object provideDeployId(String locationName, AServiceElement serviceElement) {
-        return locationName + "/" + index++;
+    public Object provideDeployId(String locationName, AServiceElement serviceElement, int index) {
+        return locationName + "/" + index;
     }
  
 }

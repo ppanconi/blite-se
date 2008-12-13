@@ -62,7 +62,9 @@ public abstract class AExecution extends TestCase {
             environment.startAllReadyToRunDefinitions();
             
             // ---------------- waiting 5 sec
-            Thread.sleep(5000);
+            Thread.sleep(50);
+
+            environment.removeCompilationUnit(cu);
             
         } catch (ParseException ex) {
             ex.printStackTrace();
