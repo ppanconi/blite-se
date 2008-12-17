@@ -14,4 +14,6 @@ package it.unifi.dsi.blitese.engine.runtime;
 public interface InstanceMonitor {
 
     public void stateChanged();
+
+    public void activityStep(ActivityComponent activity, FlowOwner flowOwner);
 }

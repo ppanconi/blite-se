@@ -5,6 +5,8 @@
 
 package it.unifi.dsi.blitese.localenv;
 
+import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
+import it.unifi.dsi.blitese.engine.runtime.FlowOwner;
 import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import java.util.Collections;
@@ -34,7 +36,7 @@ public class LocalInstanceMonitor implements InstanceMonitor {
     }
 
     // -------------------------------------------------------------------------
-    // We have a series of listeners lisstening to this monitor
+    // We have a series of listeners listening to this monitor
     private static List <ChangeListener> listeners =
             Collections.<ChangeListener>synchronizedList(new
             LinkedList <ChangeListener>());
@@ -51,5 +53,8 @@ public class LocalInstanceMonitor implements InstanceMonitor {
         for (int i=0; i < l.length; i++) {
             l[i].stateChanged (new ChangeEvent (this));
         }
+    }
+
+    public void activityStep(ActivityComponent activity, FlowOwner flowOwner) {
     }
 }
