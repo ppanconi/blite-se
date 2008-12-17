@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <!--
+        <folder name="Window">
+            <file name="it-unifi-dsi-blide-monitor-InstanceAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.monitor.Bundle"/>
+                <attr name="component" methodvalue="it.unifi.dsi.blide.monitor.InstanceTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="it.unifi.dsi.blide.monitor.Bundle#CTL_InstanceAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+        </folder>
+        -->
+    </folder>
+    <folder name="Menu">
+        <!--
+        <folder name="Window">
+            <file name="InstanceAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/it-unifi-dsi-blide-monitor-InstanceAction.instance"/>
+            </file>
+        </folder>
+        -->
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="InstanceTopComponent.settings" url="InstanceTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="InstanceTopComponent.wstcref" url="InstanceTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
