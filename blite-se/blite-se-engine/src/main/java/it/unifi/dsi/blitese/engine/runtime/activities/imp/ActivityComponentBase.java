@@ -18,6 +18,7 @@ import it.unifi.dsi.blitese.engine.definition.ActivityComponentFactory;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
+import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.imp.RuntimeValueFactory;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
@@ -98,4 +99,10 @@ public abstract class ActivityComponentBase implements ActivityComponent {
         RuntimeVariable rv = RuntimeValueFactory.makeRuntimeValue(varName, value);
         getContext().setRuntimeVariable(rv);
     }
+
+    public ProcessInstance getInstance() {
+        return getContext().getProcessInstance();
+    }
+
+    
 }

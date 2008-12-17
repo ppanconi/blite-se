@@ -18,6 +18,7 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.FlowOwner;
+import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 
 /**
  *
@@ -44,10 +45,23 @@ public class FlowExecutorImp implements FlowExecutor {
         return currentActivity;
     }
 
+    /**
+     * This's the core of blite engine execution model.
+     * 
+     * The currente activity is executed until it's not the 
+     * flowOwner.
+     * 
+     * 
+     */
     public void executeCurrentActivity() {
         
         while (!(currentActivity.equals(flowOwner))) {
+
+            ActivityComponent monitoredActivity = prepareActivityToMonitor();
+
             boolean isNewCurrentActivitySet = currentActivity.doActivity();
+
+            if (monitoredActivity != null) notifayMonitor(monitoredActivity);
 
             if (!isNewCurrentActivitySet) {
                 return;
@@ -58,4 +72,27 @@ public class FlowExecutorImp implements FlowExecutor {
 
     }
 
+    /***
+     * If we have an InstanceMonitor we return the current activity to 
+     * monitor, otherwise this mathod return null.
+     * 
+     * @return ActivityComponent if we have to monitor the activity, null
+     * otherwise.
+     */
+    private ActivityComponent prepareActivityToMonitor() {
+
+        InstanceMonitor monitor = currentActivity.getInstance().getMonitor();
+
+        if (monitor != null) return currentActivity;
+        else return null;
+    }
+
+
+    private void notifayMonitor(ActivityComponent activity) {
+        InstanceMonitor monitor = currentActivity.getInstance().getMonitor();
+
+        if (monitor != null) {
+            monitor.activityStep(activity, flowOwner);
+        }
+    }
 }

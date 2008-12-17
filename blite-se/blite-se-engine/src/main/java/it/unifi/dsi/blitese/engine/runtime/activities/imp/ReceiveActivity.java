@@ -17,11 +17,9 @@ package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
-import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.imp.InComingEventKeyFactory;
 import it.unifi.dsi.blitese.engine.runtime.imp.RequestInComingEventKey;
-import it.unifi.dsi.blitese.engine.runtime.imp.RuntimeValueFactory;
 import it.unifi.dsi.blitese.parser.BLTDEFBoundId;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import java.util.List;
