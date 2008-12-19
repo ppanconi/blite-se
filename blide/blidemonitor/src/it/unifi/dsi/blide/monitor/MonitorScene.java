@@ -5,6 +5,7 @@
 
 package it.unifi.dsi.blide.monitor;
 
+import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import org.netbeans.api.visual.graph.GraphPinScene;
 import org.netbeans.api.visual.widget.Widget;
 
@@ -13,6 +14,12 @@ import org.netbeans.api.visual.widget.Widget;
  * @author panks
  */
 public class MonitorScene extends GraphPinScene {
+
+    private InstanceMonitor monitor;
+
+    public MonitorScene(InstanceMonitor monitor) {
+        this.monitor = monitor;
+    }
 
     @Override
     protected Widget attachNodeWidget(Object node) {

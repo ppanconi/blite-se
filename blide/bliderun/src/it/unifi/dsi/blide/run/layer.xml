@@ -21,6 +21,7 @@
                 <attr name="iconBase" stringvalue="it/unifi/dsi/blide/run/imp/servers.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
+            <file name="it-unifi-dsi-blide-run-imp-ViewInstanceAction.instance"/>
         </folder>
     </folder>
     <folder name="Loaders">
@@ -43,6 +44,18 @@
         <folder name="Window">
             <file name="BliteLocalEnvAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/it-unifi-dsi-blide-run-imp-BliteLocalEnvAction.instance"/>
+            </file>
+            <file name="it-unifi-dsi-blide-run-imp-ViewInstanceAction-separatorAfter.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1975"/>
+            </file>
+            <file name="it-unifi-dsi-blide-run-imp-ViewInstanceAction-separatorBefore.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1925"/>
+            </file>
+            <file name="it-unifi-dsi-blide-run-imp-ViewInstanceAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/it-unifi-dsi-blide-run-imp-ViewInstanceAction.instance"/>
+                <attr name="position" intvalue="1950"/>
             </file>
         </folder>
     </folder>

@@ -106,6 +106,7 @@
             </module-dependencies>
             <public-packages>
                 <package>it.unifi.dsi.blide.run.api</package>
+                <package>it.unifi.dsi.blide.run.imp</package>
             </public-packages>
         </data>
     </configuration>

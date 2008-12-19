@@ -29,7 +29,7 @@ final class InstanceTopComponent extends CloneableTopComponent {
         setToolTipText(NbBundle.getMessage(InstanceTopComponent.class, "HINT_InstanceTopComponent"));
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
 
-        MonitorScene scene = new MonitorScene();
+        MonitorScene scene = new MonitorScene(monitor);
 
         myView = scene.createView();
 
