@@ -106,6 +106,13 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
     public BliteDeploymentDefinition getDeploymentDefinition() {
         return this.deploymentDefinition;
     }
+
+    @Override
+    public ProcessInstance getInstance() {
+        return this;
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////
     // VariableScope implemetation
     private Map<String, RuntimeVariable> runTimaVars = 
