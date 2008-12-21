@@ -55,6 +55,14 @@ public class LocalInstanceMonitor implements InstanceMonitor {
         }
     }
 
+    private List<ActivityComponent> execution = new LinkedList<ActivityComponent>();
+
     public void activityStep(ActivityComponent activity, FlowOwner flowOwner) {
+        execution.add(activity);
     }
+
+    public List<ActivityComponent> getExecution() {
+        return execution;
+    }
+
 }
