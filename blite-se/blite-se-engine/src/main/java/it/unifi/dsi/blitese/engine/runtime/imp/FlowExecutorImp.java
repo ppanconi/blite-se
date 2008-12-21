@@ -58,10 +58,9 @@ public class FlowExecutorImp implements FlowExecutor {
         while (!(currentActivity.equals(flowOwner))) {
 
             ActivityComponent monitoredActivity = prepareActivityToMonitor();
+            if (monitoredActivity != null) notifayMonitor(monitoredActivity);
 
             boolean isNewCurrentActivitySet = currentActivity.doActivity();
-
-            if (monitoredActivity != null) notifayMonitor(monitoredActivity);
 
             if (!isNewCurrentActivitySet) {
                 return;

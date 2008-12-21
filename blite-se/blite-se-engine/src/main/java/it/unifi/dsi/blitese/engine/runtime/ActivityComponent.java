@@ -30,4 +30,6 @@ public interface ActivityComponent {
     public boolean doActivity();
 
     public ProcessInstance getInstance();
+
+    public ActivityComponent getParentComponent();
 }
