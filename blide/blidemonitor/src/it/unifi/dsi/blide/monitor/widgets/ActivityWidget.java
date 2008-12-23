@@ -6,6 +6,9 @@
 package it.unifi.dsi.blide.monitor.widgets;
 
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
+import java.awt.Color;
+import org.netbeans.api.visual.border.BorderFactory;
+import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
 
@@ -20,7 +23,12 @@ public class ActivityWidget extends Widget {
     public ActivityWidget(Scene scene, ActivityComponent activity) {
         super(scene);
         this.activity = activity;
+        setLayout(LayoutFactory.createOverlayLayout());
+//        setBorder(BorderFactory.createDashedBorder(Color.CYAN, 1, 1));
     }
 
+    public void add(Widget widget) {
+        addChild(widget);
+    }
 
 }

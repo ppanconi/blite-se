@@ -13,11 +13,20 @@ import org.netbeans.api.visual.widget.Scene;
  *
  * @author panks
  */
-public class ReceiveWidget extends ActivityWidget {
+public class ReceiveWidget extends IconActivityWidget {
 
     public ReceiveWidget(Scene scene, ActivityComponent activity) {
         super(scene, activity);
-        addChild(new LabelWidget(scene, "Receive"));
+    }
+
+    @Override
+    public String getIconPath() {
+        return "it/unifi/dsi/blide/monitor/widgets/resources/receive.default.jpg";
+    }
+
+    @Override
+    public String getLabel() {
+        return "Receive";
     }
 
     

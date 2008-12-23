@@ -13,11 +13,20 @@ import org.netbeans.api.visual.widget.Scene;
  *
  * @author panks
  */
-public class EmptyWidget extends ActivityWidget {
+public class EmptyWidget extends IconActivityWidget {
 
     public EmptyWidget(Scene scene, ActivityComponent activity) {
         super(scene, activity);
-        addChild(new LabelWidget(scene, "Empty"));
+    }
+
+    @Override
+    public String getIconPath() {
+        return "it/unifi/dsi/blide/monitor/widgets/resources/empty.default.jpg";
+    }
+
+    @Override
+    public String getLabel() {
+        return "Empty";
     }
 
     

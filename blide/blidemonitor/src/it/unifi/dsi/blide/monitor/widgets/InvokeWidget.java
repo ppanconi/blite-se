@@ -6,19 +6,26 @@
 package it.unifi.dsi.blide.monitor.widgets;
 
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
-import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 
 /**
  *
  * @author panks
  */
-public class InvokeWidget extends ActivityWidget {
+public class InvokeWidget extends IconActivityWidget {
 
     public InvokeWidget(Scene scene, ActivityComponent activity) {
         super(scene, activity);
+    }
 
-        addChild(new LabelWidget(scene, "Invoke"));
+    @Override
+    public String getIconPath() {
+        return "it/unifi/dsi/blide/monitor/widgets/resources/invoke.default.jpg";
+    }
+
+    @Override
+    public String getLabel() {
+        return "Invoke";
     }
 
     
