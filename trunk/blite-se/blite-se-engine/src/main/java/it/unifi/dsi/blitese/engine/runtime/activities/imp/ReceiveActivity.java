@@ -107,7 +107,7 @@ public class ReceiveActivity extends ActivityComponentBase {
                 
                 return false;
             }
-        }
+        } // END of Syncronized Definition Level Block ------------------------
         
         assert matchingMessage != null;
         
@@ -128,7 +128,7 @@ public class ReceiveActivity extends ActivityComponentBase {
 
             log.info("CONSUMED Message " + vs);
             
-        }else {
+        } else {
             log.info("Terminated activity " + this);
         }
         
