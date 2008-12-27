@@ -31,9 +31,17 @@ public class LocalInstanceMonitor implements InstanceMonitor {
         return instance;
     }
 
+
+    // InstanceMonitor interface -----------------------------------------------
     public void stateChanged() {
         fire();
     }
+
+    public void activityStep(ActivityComponent activity, FlowOwner flowOwner) {
+        execution.add(activity);
+    }
+    // -------------------------------------------------------------------------
+
 
     // -------------------------------------------------------------------------
     // We have a series of listeners listening to this monitor
@@ -55,11 +63,8 @@ public class LocalInstanceMonitor implements InstanceMonitor {
         }
     }
 
-    private List<ActivityComponent> execution = new LinkedList<ActivityComponent>();
-
-    public void activityStep(ActivityComponent activity, FlowOwner flowOwner) {
-        execution.add(activity);
-    }
+    private List<ActivityComponent> execution = Collections.synchronizedList(
+            new LinkedList<ActivityComponent>());
 
     public List<ActivityComponent> getExecution() {
         return execution;
