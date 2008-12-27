@@ -17,4 +17,5 @@ public interface BliteEnvProviderService {
     public void deploy(BliteDataObject dataObject) throws BliteIncompatibleUnitException;
 
     public void remove(BliteDataObject dataObject);
+
 }

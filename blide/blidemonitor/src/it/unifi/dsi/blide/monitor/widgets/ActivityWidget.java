@@ -31,4 +31,14 @@ public class ActivityWidget extends Widget {
         addChild(widget);
     }
 
+    /**
+     * This notifay the possibility to update widget state.
+     * 
+     * Return true if repaint is needed.
+     * 
+     * @return boolean the need to repaint the widget.
+     */
+    public boolean upadte() {
+        return false;
+    }
 }

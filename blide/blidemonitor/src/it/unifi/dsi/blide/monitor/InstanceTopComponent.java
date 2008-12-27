@@ -4,9 +4,13 @@
  */
 package it.unifi.dsi.blide.monitor;
 
+import it.unifi.dsi.blide.run.imp.BliteLocalEnvProviderService;
+import it.unifi.dsi.blitese.localenv.LocalEnvironment;
 import it.unifi.dsi.blitese.localenv.LocalInstanceMonitor;
+import it.unifi.dsi.blitese.localenv.SingleStepper;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
@@ -30,6 +34,10 @@ final class InstanceTopComponent extends CloneableTopComponent {
 //        setIcon(Utilities.loadImage(ICON_PATH, true));
 
         MonitorScene scene = new MonitorScene(monitor);
+
+        // we add the scene as listener for step executions
+        BliteLocalEnvProviderService envService = Lookup.getDefault().lookup(BliteLocalEnvProviderService.class);
+        LocalEnvironment env = envService.getLocalEnvironment();
 
         myView = scene.createView();
 
