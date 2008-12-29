@@ -38,6 +38,8 @@ final class InstanceTopComponent extends CloneableTopComponent {
         // we add the scene as listener for step executions
         BliteLocalEnvProviderService envService = Lookup.getDefault().lookup(BliteLocalEnvProviderService.class);
         LocalEnvironment env = envService.getLocalEnvironment();
+        SingleStepper stepper = env.getStepper();
+        stepper.addChangeListener(scene);
 
         myView = scene.createView();
 
