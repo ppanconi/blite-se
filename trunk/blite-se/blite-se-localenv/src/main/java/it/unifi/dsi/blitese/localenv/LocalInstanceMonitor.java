@@ -38,7 +38,10 @@ public class LocalInstanceMonitor implements InstanceMonitor {
     }
 
     public void activityStep(ActivityComponent activity, FlowOwner flowOwner) {
-        execution.add(activity);
+        synchronized (execution) {
+            execution.add(activity);
+        }
+        
     }
     // -------------------------------------------------------------------------
 
@@ -63,7 +66,7 @@ public class LocalInstanceMonitor implements InstanceMonitor {
         }
     }
 
-    private List<ActivityComponent> execution = Collections.synchronizedList(
+    final private List<ActivityComponent> execution = Collections.synchronizedList(
             new LinkedList<ActivityComponent>());
 
     public List<ActivityComponent> getExecution() {
