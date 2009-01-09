@@ -37,7 +37,8 @@ public class InvokeActivity extends ActivityComponentBase {
 
     private InComingEventKey eventKey = null;
     private ProcessManager myManager;
-    
+    private MessageContainer mc;
+
     @Override
     public void init() {
         super.init();
@@ -80,7 +81,7 @@ public class InvokeActivity extends ActivityComponentBase {
         MessageContent m = MessageContentFactory.createInvokeMC(getContext(), activityDef);
         
         //we create the message container
-        MessageContainer mc = MessageContainerFactory.createMessageContainer(m, MessageContainer.Type.MESSAGE);
+        mc = MessageContainerFactory.createMessageContainer(m, MessageContainer.Type.MESSAGE);
 
         ServiceIdentifier service = myManager.resovleParterLink(activityDef.getPartners(), getContext());
         
@@ -110,4 +111,9 @@ public class InvokeActivity extends ActivityComponentBase {
         getExecutor().setCurrentActivity(getParentComponent());
         return true;
     }
+
+    public MessageContainer getMessageContainer() {
+        return mc;
+    }
+
 }

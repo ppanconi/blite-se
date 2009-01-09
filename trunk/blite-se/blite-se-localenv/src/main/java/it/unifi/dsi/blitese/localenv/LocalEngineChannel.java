@@ -35,9 +35,11 @@ import java.util.logging.Logger;
  */
 public class LocalEngineChannel implements EngineChannel {
 
+    public static final int THREAD_NUM = 4;
+
     private static final Logger LOGGER = Logger.getLogger(LocalEngineChannel.class.getName());
     final private LocalEnvironment environment;
-    private ExecutorService exService = Executors.newFixedThreadPool(5);
+    private ExecutorService exService = Executors.newFixedThreadPool(THREAD_NUM);
     private boolean open = true;
 
     public boolean isOpen() {
@@ -63,54 +65,57 @@ public class LocalEngineChannel implements EngineChannel {
     public LocalEngineChannel(LocalEnvironment env) {
         this.environment = env;
 
-        exService.execute(new Runnable() {
+        for (int i = 0; i < THREAD_NUM; i++) {
 
-            public void run() {
+            exService.execute(new Runnable() {
 
-                while (open) {
-                    try {
-                        
-                        MessageEnvelop envelop = mMedia.poll(300, TimeUnit.MILLISECONDS);
-                        
+                public void run() {
+               
+                    while (open) {
+                        try {
 
-                        if (envelop != null) {
+                            MessageEnvelop envelop = mMedia.poll(300, TimeUnit.MILLISECONDS);
 
-                            if (environment.getStepper().isEnabled()) {
-                                environment.getStepper().step();
+
+                            if (envelop != null) {
+
+                                Long meId = envelop.meId;
+                                EnginesConnection connection = connections.get(meId);
+
+                                MessageContainer mc = envelop.messageContainer;
+                                mc.setId(meId);
+
+                                Engine destEngine = null;
+
+                                if (mc.getType() == MessageContainer.Type.MESSAGE ||
+                                        mc.getType() == MessageContainer.Type.FAULT) {
+
+                                    if (environment.getStepper().isEnabled()) {
+                                        environment.getStepper().step();
+                                    }
+
+                                    LOGGER.info("Removed MESSAGE form Channel: " + envelop);
+                                    destEngine = connection.provider;
+                                    destEngine.processRequest(envelop.serviceId, envelop.operation, mc);
+
+                                } else {
+
+                                    LOGGER.info("Removed STATUS form Channel: " + envelop);
+                                    destEngine = connection.consumer;
+                                    destEngine.processExchange(mc);
+
+                                }
                             }
-                            
-                            Long meId = envelop.meId;
-                            EnginesConnection connection = connections.get(meId);
 
-                            MessageContainer mc = envelop.messageContainer;
-                            mc.setId(meId);
-
-                            Engine destEngine = null;
-
-                            if (mc.getType() == MessageContainer.Type.MESSAGE ||
-                                    mc.getType() == MessageContainer.Type.FAULT) {
-
-                                LOGGER.info("Removed MESSAGE form Channel: " + envelop); 
-                                destEngine = connection.provider;
-                                destEngine.processRequest(envelop.serviceId, envelop.operation, mc);
-
-                            } else {
-
-                                LOGGER.info("Removed STATUS form Channel: " + envelop); 
-                                destEngine = connection.consumer;
-                                destEngine.processExchange(mc);
-                                
-                            }
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(LocalEngineChannel.class.getName()).log(Level.SEVERE, null, ex);
+                            throw new RuntimeException(ex.getMessage(), ex);
                         }
-
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(LocalEngineChannel.class.getName()).log(Level.SEVERE, null, ex);
-                        throw new RuntimeException(ex.getMessage(), ex);
                     }
-                }
 
-            }
-        });
+                }
+            });
+        }
     }
 
     public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance) {
