@@ -37,6 +37,7 @@ public class ReceiveActivity extends ActivityComponentBase {
     private ProcessManager manager;
     private RequestInComingEventKey icek;
     private String portId;
+    private MessageContainer matchingMessage = null;
 
     private String[] fparamNames;
     
@@ -67,7 +68,7 @@ public class ReceiveActivity extends ActivityComponentBase {
         
         log.info(" Try to revice on port " + portId);
         
-        MessageContainer matchingMessage = null;
+        
         synchronized (manager.getDefinitionProcessLevelLock()) {
             
             if (getContext().isInAFaultedBranch()) {
@@ -135,6 +136,10 @@ public class ReceiveActivity extends ActivityComponentBase {
         flowParent();
         return true;
         
+    }
+
+    public MessageContainer getMatchingMessage() {
+        return matchingMessage;
     }
 
 }

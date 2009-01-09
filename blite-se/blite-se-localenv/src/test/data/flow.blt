@@ -1,7 +1,7 @@
 {
     [
         seq
-            rcv <"s1"> start(y);
+            rcv <"ff"> start(y);
             empty
         qes
     ]
@@ -9,8 +9,8 @@
 ||
 {
     :: flw
-           inv <"s1">  start("HELLO")
+           inv <"ff">  start("HELLO")
          |
-           inv <"s1">  start("HELLO")
+           inv <"ff">  start("HELLO")
        wlf
 }
