@@ -9,6 +9,10 @@ import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext.ContextState;
 import it.unifi.dsi.blitese.engine.runtime.imp.ProcessInstanceImp;
 import it.unifi.dsi.blitese.localenv.LocalInstanceMonitor;
 import java.awt.Image;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +23,7 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
+import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -116,6 +121,20 @@ public class InstanceNode extends AbstractNode implements ChangeListener {
         Action act = ViewInstanceAction.get(ViewInstanceAction.class);
         return act;
     }
+
+    public static DataFlavor INSTANCE_MONITOR_FLAVOR = new DataFlavor(LocalInstanceMonitor.class, "LocalInstanceMonitor");
+    @Override
+    public Transferable drag() throws IOException {
+        ExTransferable retValue = ExTransferable.create( super.drag() );
+        //add the 'data' into the Transferable
+        retValue.put( new ExTransferable.Single(INSTANCE_MONITOR_FLAVOR) {
+            protected Object getData() throws IOException, UnsupportedFlavorException {
+                return monitor;
+            }
+        });
+        return retValue;
+    }
+
 
 
 }

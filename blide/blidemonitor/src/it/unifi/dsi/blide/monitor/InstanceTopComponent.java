@@ -44,7 +44,7 @@ final class InstanceTopComponent extends CloneableTopComponent {
         myView = scene.createView();
 
         shapePane.setViewportView(myView);
-        add(scene.createSatelliteView(), BorderLayout.WEST);
+        add(scene.createSatelliteView(), BorderLayout.EAST);
     }
 
     /** This method is called from within the constructor to

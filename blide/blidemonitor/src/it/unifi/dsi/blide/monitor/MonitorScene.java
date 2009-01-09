@@ -5,23 +5,41 @@
 package it.unifi.dsi.blide.monitor;
 
 import it.unifi.dsi.blide.monitor.widgets.ActivityWidget;
+import it.unifi.dsi.blide.monitor.widgets.ExchangeFlowWidget;
+import it.unifi.dsi.blide.monitor.widgets.ExchangeWidget;
 import it.unifi.dsi.blide.monitor.widgets.InstanceWidget;
 import it.unifi.dsi.blide.monitor.widgets.WidgetFactory;
+import it.unifi.dsi.blide.run.imp.InstanceNode;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
+import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.localenv.LocalInstanceMonitor;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
+import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -30,33 +48,62 @@ import org.netbeans.api.visual.widget.Widget;
 public class MonitorScene extends Scene //        GraphPinScene
         implements ChangeListener {
 
-    private LocalInstanceMonitor monitor;
+    private LayerWidget mainLayer;
+    private LayerWidget connectionLayer;
+
+    public LayerWidget getConnectionLayer() {
+        return connectionLayer;
+    }
+
+    public LayerWidget getMainLayer() {
+        return mainLayer;
+    }
+
+    private List<LocalInstanceMonitor> monitors = new ArrayList<LocalInstanceMonitor>();
     private Map<ActivityComponent, ActivityWidget> mActToWidget = new HashMap<ActivityComponent, ActivityWidget>();
 
+    private ExchangeFlowWidget exchangeFlow;
+    private Map<Object, ExchangeWidget> mExIdToWidget = new HashMap<Object, ExchangeWidget>();
+
     public MonitorScene(LocalInstanceMonitor monitor) {
-        this.monitor = monitor;
+        monitors.add(monitor);
 
-        setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 15));
+        mainLayer = new LayerWidget(this);
+        addChild (mainLayer);
+        connectionLayer = new LayerWidget(this);
+        addChild (connectionLayer);
 
+
+        mainLayer.setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 15));
+
+        getActions().addAction(ActionFactory.createAcceptAction(new InstanceAcceptProvider()));
         getActions().addAction(ActionFactory.createZoomAction());
 //        getActions().addAction (ActionFactory.createPanAction ());
         getActions().addAction(ActionFactory.createWheelPanAction());
         getActions().addAction(new RefrashAction());
 
-        setUp(monitor);
+        addInstance(monitor);
 
     }
 
-    private void setUp(LocalInstanceMonitor monitor) {
+    private void addExchangeFlow(ExchangeFlowWidget efw) {
+        Widget w = new Widget(this);
+        w.setMinimumSize(new Dimension(20, 10));
+        mainLayer.addChild(w);
+
+        mainLayer.addChild(efw);
+    }
+
+    private void addInstance(LocalInstanceMonitor monitor) {
 
         Widget w = new Widget(this);
         w.setMinimumSize(new Dimension(20, 10));
-        addChild(w);
+        mainLayer.addChild(w);
 
         ProcessInstance instance = monitor.getInstance();
         InstanceWidget instanceWidget = new InstanceWidget(this, instance);
 
-        addChild(instanceWidget);
+        mainLayer.addChild(instanceWidget);
         mActToWidget.put(instance, instanceWidget);
 
         //BorderFactory.createSwingBorder(this, new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Composite")), BORDER_SHADOW_NORMAL));
@@ -103,17 +150,29 @@ public class MonitorScene extends Scene //        GraphPinScene
         instanceWidget.close();
     }
 
+    public void clear() {
+        mActToWidget.clear();
+        mExIdToWidget.clear();
+        exchangeFlow = null;
+        mainLayer.removeChildren();
+        connectionLayer.removeChildren();
+    }
+
     private void refresh() {
 
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
 
-                System.out.println("===============================>> XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                mActToWidget.clear();
-                removeChildren();
-                setUp(monitor);
+                repaint();
+                clear();
+
+                for (LocalInstanceMonitor monitor : monitors) {
+                    addInstance(monitor);
+                }
+                
                 validate();
+
             }
         });
     }
@@ -152,4 +211,76 @@ public class MonitorScene extends Scene //        GraphPinScene
             return State.CONSUMED;
         }
     }
+
+    private class InstanceAcceptProvider implements AcceptProvider {
+
+        public ConnectorState isAcceptable(Widget widget, Point point, Transferable transferable) {
+
+            if (transferable.isDataFlavorSupported(InstanceNode.INSTANCE_MONITOR_FLAVOR)) {
+                try {
+                    LocalInstanceMonitor monitor =
+                            (LocalInstanceMonitor) transferable.getTransferData(InstanceNode.INSTANCE_MONITOR_FLAVOR);
+
+                    JComponent view = getView();
+                    Graphics2D g2 = (Graphics2D) view.getGraphics();
+                    Rectangle visRect = view.getVisibleRect();
+                    view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
+                    g2.drawImage(ImageUtilities.loadImage("it/unifi/dsi/blide/monitor/widgets/resources/instance-dnd.png"),
+                                AffineTransform.getTranslateInstance(point.getLocation().getX(),
+                                point.getLocation().getY()),
+                                null);
+                } catch (UnsupportedFlavorException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+
+                return ConnectorState.ACCEPT;
+            } else {
+                return ConnectorState.REJECT;
+            }
+        }
+
+        public void accept(Widget widget, Point point, Transferable transferable) {
+
+            LocalInstanceMonitor monitor = null;
+            try {
+                monitor = (LocalInstanceMonitor) transferable.getTransferData(InstanceNode.INSTANCE_MONITOR_FLAVOR);
+            } catch (UnsupportedFlavorException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+
+            if (!monitors.contains(monitor)) {
+                monitors.add(monitor);
+                refresh();
+            }
+        }
+
+    }
+
+    public Widget addExchange(MessageContainer messageContainer) {
+        if (exchangeFlow == null) {
+            exchangeFlow = new ExchangeFlowWidget(this);
+            addExchangeFlow(exchangeFlow);
+        }
+
+        Object meId = messageContainer.getId();
+
+        ExchangeWidget ew = mExIdToWidget.get(meId);
+
+        if (ew == null) {
+            ew = new ExchangeWidget(this, meId);
+            exchangeFlow.addChild(ew);
+            mExIdToWidget.put(meId, ew);
+        }
+
+        return ew;
+    }
+
+//    private static ProcessInstance instanceFromTransferable(Transferable transferable) {
+//        transferable.getTransferData(DataFlavor.javaJVMLocalObjectMimeType);
+//    }
 }
