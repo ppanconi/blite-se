@@ -116,9 +116,9 @@ public class MonitorScene extends Scene //        GraphPinScene
                 if (widget != null) {
     //                System.out.println("Activity yet present on Scene " + activityComponent);
 
-                    if (widget.upadte()) {
-                        widget.repaint();
-                    }
+//                    if (widget.upadte()) {
+//                        widget.repaint();
+//                    }
 
                     continue;
                 }
