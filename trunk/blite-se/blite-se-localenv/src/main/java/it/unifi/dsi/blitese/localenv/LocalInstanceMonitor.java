@@ -40,7 +40,7 @@ public class LocalInstanceMonitor implements InstanceMonitor {
     public void activityStep(ActivityComponent activity, FlowOwner flowOwner) {
         synchronized (execution) {
 
-            System.out.println("??????? " + activity);
+//            System.out.println("??????? " + activity);
             execution.add(activity);
         }
         
