@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
 //import org.openide.util.Utilities;
@@ -39,7 +40,8 @@ final class InstanceTopComponent extends CloneableTopComponent {
         BliteLocalEnvProviderService envService = Lookup.getDefault().lookup(BliteLocalEnvProviderService.class);
         LocalEnvironment env = envService.getLocalEnvironment();
         SingleStepper stepper = env.getStepper();
-        stepper.addChangeListener(scene);
+        //IMPORTANT USING WEEK LISTENER PREVENT MEMORYLEAK
+        stepper.addChangeListener(WeakListeners.change(scene, stepper));
 
         myView = scene.createView();
 
