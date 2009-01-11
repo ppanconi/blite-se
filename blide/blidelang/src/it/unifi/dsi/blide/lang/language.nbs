@@ -1,7 +1,7 @@
 
 # definition of tokens
 TOKEN:whitespace:( [" " "\t" "\n" "\r"]+ )
-TOKEN:keyword:( "inv" | "rcv" | "empty" | "throw" | "exit" | "fh:" | "ch:" | "::" )
+TOKEN:keyword:( "inv" | "rcv" | "empty" | "throw" | "exit" | "::" | "if" | "while" )
 
 TOKEN:braces:(
 "{"
@@ -14,6 +14,8 @@ TOKEN:braces:(
 | "qes"
 | "flw"
 | "wlf"
+| "fh:"
+| "ch:"
 )
 TOKEN:separator:(
  "|"
@@ -88,6 +90,7 @@ INDENT "{:}"
 INDENT "[:]"
 INDENT "seq:qes"
 INDENT "flw:wlf"
+
 
 # code completion
 #COMPLETION:keyword, operator, identifier, whitespace: {

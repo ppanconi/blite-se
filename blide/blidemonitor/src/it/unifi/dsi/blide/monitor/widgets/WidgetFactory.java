@@ -8,6 +8,7 @@ package it.unifi.dsi.blide.monitor.widgets;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.FlowOwner;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.AssignActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ConditionalActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.EmptyActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.FlowActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
@@ -66,6 +67,11 @@ public class WidgetFactory {
             ThrowActivity throwActivity = (ThrowActivity) activityComponent;
 
             widget = new ThrowWidget(scene, activityComponent);
+
+        } else if (activityComponent instanceof ConditionalActivity) {
+            ConditionalActivity conditionalActivity  = (ConditionalActivity) activityComponent;
+
+            widget = new ConditionalWidget(scene, conditionalActivity);
         }
 
         return widget;
