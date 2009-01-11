@@ -19,9 +19,11 @@ import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ActivityComponentBase;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.AssignActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ConditionalActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.EmptyActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.FlowActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.IterationActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.SequenceActivity;
@@ -29,9 +31,11 @@ import it.unifi.dsi.blitese.engine.runtime.activities.imp.ThrowActivity;
 import it.unifi.dsi.blitese.parser.ABTLDEFSequenceActivity;
 import it.unifi.dsi.blitese.parser.AScope;
 import it.unifi.dsi.blitese.parser.BLTDEFAssignActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFConditionalActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFEmptyActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFFlowActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFIterationActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFThrowActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
@@ -122,10 +126,18 @@ public class ActivityComponentFactory {
             
             return new DefClass(FlowActivity.class, bltDefNode);
             
+        } else if (bltDefNode instanceof BLTDEFConditionalActivity ) {
+
+            return new DefClass(ConditionalActivity.class, bltDefNode);
+
+        } else if (bltDefNode instanceof BLTDEFIterationActivity ) {
+
+            return new DefClass(IterationActivity.class, bltDefNode);
+            
         } else {
             
             //throw new RuntimeException("Not yet supported Activity " + bltDefNode);
-            //we try fisiting the tree
+            //we try visiting the tree
             Node node = (Node) bltDefNode; 
             int nc = node.jjtGetNumChildren();
             

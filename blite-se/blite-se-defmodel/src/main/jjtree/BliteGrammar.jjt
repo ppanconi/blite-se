@@ -77,6 +77,8 @@ TOKEN :
 | < FH: "fh:" >
 | < CH: "ch:" >
 | < IST: "::" >
+| < IF: "if" >
+| < WHILE: "while" >
 }
 
 /* SEPARATORS */
@@ -931,7 +933,7 @@ BLTDEFActivity Activity() :
 { 
 }
 {
-    ( BasicActivity() | SequenceActivity() | Scope() | FlowActivity())
+    ( BasicActivity() | SequenceActivity() | Scope() | FlowActivity() | ConditionalActivity() | IterationActivity() )
     { return jjtThis; }
 }
 
@@ -1179,3 +1181,15 @@ BLTDEFBoundId BoundId()  :
 }
 
 
+
+void ConditionalActivity() :
+{}
+{
+    <IF> <PARAMBEGIN> Expression() <PARAMEND> Activity() Activity()
+}
+
+void IterationActivity() :
+{}
+{
+    <WHILE> <PARAMBEGIN> Expression() <PARAMEND> Activity() 
+}
