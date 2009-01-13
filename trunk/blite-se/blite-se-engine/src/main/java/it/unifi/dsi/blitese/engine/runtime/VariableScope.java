@@ -15,6 +15,7 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
+import it.unifi.dsi.blitese.parser.RuntimeValueProvider;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Map;
  * 
  * @author panks
  */
-public interface VariableScope {
+public interface VariableScope extends RuntimeValueProvider {
 
     /**
      * Gets the corresponding RuntimeVariable. If no matching RuntimeVariable is

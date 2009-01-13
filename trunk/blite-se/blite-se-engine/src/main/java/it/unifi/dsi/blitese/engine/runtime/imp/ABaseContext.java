@@ -151,6 +151,15 @@ public abstract class ABaseContext extends ActivityComponentBase implements Exec
     public void setRuntimeVariable(RuntimeVariable runtimeVariable) {
         getParentContext().setRuntimeVariable(runtimeVariable);
     }
+
+    public Object provideValue(String variableName) {
+        RuntimeVariable rv = getRuntimeVariable(variableName);
+        if (rv != null) {
+            return rv.getValute();
+        } else
+            return null;
+
+    }
     
     
     
