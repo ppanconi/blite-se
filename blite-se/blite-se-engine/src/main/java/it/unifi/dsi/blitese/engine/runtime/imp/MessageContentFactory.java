@@ -17,7 +17,7 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
 
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.MessageContent;
-import it.unifi.dsi.blitese.parser.ABltValueHolder;
+import it.unifi.dsi.blitese.parser.BLTDEFExpression;
 import it.unifi.dsi.blitese.parser.BLTDEFInvParam;
 import it.unifi.dsi.blitese.parser.BLTDEFInvParams;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
@@ -36,15 +36,22 @@ public class MessageContentFactory {
         Object[] parts = new Object[n];
         int i = 0;
         for (BLTDEFInvParam param : params.getActualParams()) {
-            Object o = RuntimeValueFactory.makeRuntimeValue(param, context);
-            
-            if (o instanceof String) {
-                String s = (String) o;
-                String v = new String(s);
-                parts[i++] = v;
-            } else {
-                throw new RuntimeException("Not Yet supported");
-            }
+
+             BLTDEFExpression expr = (BLTDEFExpression) param.jjtGetChild(0);
+             Object exprValue = ExpressionInterpreter.evaluate(context, expr);
+//            Object exprValue = RuntimeValueFactory.makeRuntimeValue(param, context);
+
+             //JUST TO RUN-LOCALLY
+//            if (exprValue instanceof String) {
+//                String s = (String) exprValue;
+//                String v = new String(s);
+//                parts[i++] = v;
+//            } else {
+//                throw new RuntimeException("Not Yet supported");
+//            }
+             parts[i++] = exprValue;
+
+
         }
         
         return new MessageContentImp(parts);

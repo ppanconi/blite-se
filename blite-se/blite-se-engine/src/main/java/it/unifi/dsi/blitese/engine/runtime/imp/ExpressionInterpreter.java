@@ -30,15 +30,17 @@ public class ExpressionInterpreter {
     
     static public Object evaluate(VariableScope scope, BLTDEFExpression expression) {
     
-        Object value = expression.getLiteralValue();
-        
-        if (value == null) {
-            String varName = expression.getVarableName();
-            RuntimeVariable rv = scope.getRuntimeVariable(varName);
-            if (rv != null) {
-                value = rv.getValute();
-            }
-        }
+//        Object value = expression.getLiteralValue();
+//
+//        if (value == null) {
+//            String varName = expression.getVarableName();
+//            RuntimeVariable rv = scope.getRuntimeVariable(varName);
+//            if (rv != null) {
+//                value = rv.getValute();
+//            }
+//        }
+
+        Object value = expression.evaluate(scope);
         
         return value;
     }

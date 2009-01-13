@@ -126,6 +126,16 @@ TOKEN :
       )*
       "\""
   >
+|
+  < NUMBER_LITERAL:
+        (["0"-"9"])+ ( "." )? (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+
 }
 
 /* IDENTIFIERS */
@@ -1113,18 +1123,26 @@ BLTDEFInvParams InvParams() :
     }
 }
 
-
+///13/01/09 inv param is an expression
+//BLTDEFInvParam InvParam() :
+//{
+//    ABltId varId = null;
+//    Token literalValue = null;
+//}
+//{
+//    ( varId = VarId() | literalValue = <STRING_LITERAL> )
+//    {
+//        if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
+//        if (varId != null) jjtThis.setVarableName(varId.getName());
+//        return jjtThis;
+//    }
+//}
 BLTDEFInvParam InvParam() :
+{}
 {
-    ABltId varId = null;
-    Token literalValue = null;
-}
-{
-    ( varId = VarId() | literalValue = <STRING_LITERAL> )
+    Expression()
     {
-        if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
-        if (varId != null) jjtThis.setVarableName(varId.getName());
-        return jjtThis; 
+        return jjtThis;
     }
 }
 
@@ -1133,21 +1151,6 @@ void AssignActivity() :
 {}
 {
     BoundId() <ASSIGN> Expression()
-}
-
-BLTDEFExpression Expression() :
-{
-    //TEPORARY ...
-    ABltId varId = null;
-    Token literalValue = null;
-}
-{
-    ( varId = VarId() | literalValue = <STRING_LITERAL> )
-    {
-        if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
-        if (varId != null) jjtThis.setVarableName(varId.getName());
-        return jjtThis; 
-    }
 }
 
 BLTDEFVarId VarId() :
@@ -1192,4 +1195,64 @@ void IterationActivity() :
 {}
 {
     <WHILE> <PARAMBEGIN> Expression() <PARAMEND> Activity() 
+}
+
+BLTDEFExpression Expression() :
+{
+    Expression childExp = null;
+}
+{
+    childExp = BaseExpression()
+    {
+        if (childExp != null) jjtThis.setChildExp(childExp);
+        return jjtThis;
+    }
+}
+
+BLTDEFBaseExpression BaseExpression() :
+{
+    ABltId varId = null;
+    Object literalValue = null;
+    Expression childExp = null;
+}
+{
+    (
+        varId = VarId()
+      | literalValue = Literal()
+      | <PARAMBEGIN> childExp = Expression() <PARAMEND>
+    )
+    {
+        if (literalValue != null) jjtThis.setLiteralValue(literalValue);
+        if (varId != null) jjtThis.setVarableName(varId.getName());
+        if (childExp != null) jjtThis.setChildExp(childExp);
+
+        return jjtThis;
+    }
+}
+
+Object Literal() #void :
+{
+    ALiteral literal = null;
+    Token t = null;
+}
+{
+    (
+        (t = <STRING_LITERAL>
+            {
+                jjtThis.setToken(t);
+                literal = jjtThis;
+            }
+        ) #StringLiteral
+        |
+        (t = <NUMBER_LITERAL>
+            {
+                jjtThis.setToken(t);
+                literal = jjtThis;
+            }
+        ) #NumberLiteral
+    )
+
+    {
+        return literal.parseValue();
+    }
 }
