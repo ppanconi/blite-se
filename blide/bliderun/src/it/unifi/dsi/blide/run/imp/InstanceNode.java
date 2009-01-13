@@ -43,6 +43,7 @@ public class InstanceNode extends AbstractNode implements ChangeListener {
 
         monitor = (LocalInstanceMonitor) instance.getMonitor();
         if (monitor != null) {
+            //IMPORTANT USING WEEK LISTENER PREVENT MEMORYLEAK 
             monitor.addChangeListener(WeakListeners.change(this, monitor));
         }
 
