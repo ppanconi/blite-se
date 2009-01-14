@@ -15,6 +15,13 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.core.output2</code-name-base>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.10.1.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.favorites</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
