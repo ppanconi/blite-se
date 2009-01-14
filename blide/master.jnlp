@@ -3,8 +3,8 @@
 <jnlp spec="1.0+" codebase="$$codebase">
   <information>
       <title>${app.title}</title>
-      <vendor>${app.title} vendor</vendor>
-      <description>${app.name} application</description>
+      <vendor>Universita' degli Studi di Firenze - DSI</vendor>
+      <description>${app.name} light tecnology to fast prototype and test service orchestration</description>
       <icon href="${app.icon}"/>
   </information>
   <security><all-permissions/></security>
