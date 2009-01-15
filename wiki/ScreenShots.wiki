@@ -1,3 +1,7 @@
 = Screenshots =
 
 http://blite-se.googlecode.com/svn/wiki/bgtk1.jpg
+
+http://blite-se.googlecode.com/svn/wiki/bgtk2.jpg
+
+http://blite-se.googlecode.com/svn/wiki/bswing.jpg
