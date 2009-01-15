@@ -9,10 +9,14 @@
    _NB! At the moment to run Blite using Javaweb Start you need a Java 6 Runtime but to run Blide from a downloaded distribution you need just a Java 5 Runtime. Besides the usage of a Java is discouraged. For a better user experience (performances, system look and feel integration) we heartily recommend to use the last version of Java 6 JRE._
 
  * Installation 
-   # On Linux or Windows systems: Download the last version of Blide Zip format distribution from the <a href="http://code.google.com/p/blite-se/downloads/list">Downloads</a> section. Unzip the archive to any directory obtaining a <tt>blite</tt> named subdirectory. This directory will be referred as <tt>BLITE_HOME</tt>.
-   # On Mac OS X: Download the last version of Blide GZ format distribution from the <a href="http://code.google.com/p/blite-se/downloads/list">Downloads</a> section. Save the <tt>{{{blite_*.gz}}}</tt> file on your disk.
+   # On Linux or Windows systems: Download the last version of Blide Zip format distribution from the <a href="http://code.google.com/p/blite-se/downloads/list">Downloads</a> section. Unzip the archive to any directory obtaining a <tt>blide</tt> named subdirectory. This directory will be referred as <tt>{{{<BLIDE_HOME>}}}</tt>.
+   # On Mac OS X: Download the last version of Blide GZ format distribution from the <a href="http://code.google.com/p/blite-se/downloads/list">Downloads</a> section. Save the <tt>{{{blide_*.gz}}}</tt> file on your disk.
 
  * Run Blide
-   # On Linux:
-   # On Windows:
-   # On Mac OS X:
+   # On Linux: in a console terminal:
+     {{{
+cd <BLIDE_HOME>/bin
+./blide
+     }}}
+   # On Windows: open a file explore window on <tt>{{{<BLIDE_HOME>/bin}}}</tt> directory, double click on the file <tt>blide_w.exe</tt>
+   # On Mac OS X: double click the downloaded <tt>{{{blide_*.gz}}}</tt>
