@@ -22,18 +22,19 @@ public class BLTDEFExpression
   }
 
 //added code start here ////////////////////////////////////////////////////////
-    private Expression childExp = null;
-
-    public Expression getChildExp() {
-        return childExp;
-    }
-
-    public void setChildExp(Expression childExp) {
-        this.childExp = childExp;
-    }
+//    private Expression childExp = null;
+//
+//    public Expression getChildExp() {
+//        return childExp;
+//    }
+//
+//    public void setChildExp(Expression childExp) {
+//        this.childExp = childExp;
+//    }
 
 
     public Object evaluate(RuntimeValueProvider valueProvider) {
-        return getChildExp().evaluate(valueProvider);
+        Expression childExp = (Expression) jjtGetChild(0);
+        return childExp.evaluate(valueProvider);
     }
 }

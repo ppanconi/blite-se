@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +60,7 @@ public class LocalEngineChannel implements EngineChannel {
         return new Long(messageExchangeCounter++);
     }
     private ConcurrentMap<Long, EnginesConnection> connections = new ConcurrentHashMap<Long, EnginesConnection>();
-    private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingDeque<MessageEnvelop>();
+    private BlockingQueue<MessageEnvelop> mMedia = new LinkedBlockingQueue<MessageEnvelop>();
 
     public LocalEngineChannel(LocalEnvironment env) {
         this.environment = env;
