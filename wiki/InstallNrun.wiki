@@ -3,5 +3,12 @@
 = Install and Run Blide =
 
  * Prerequisites
-   # An operation system 
-
+   # An operation system supporting a Java 5 Platform. Linux, Mac OS X, MS Windows, Solaris or OpenSolaris ...
+   # A Java 5 (or superior) Runtime installed. You can download the last stable version
+ * Installation 
+   # On Linux or Windows systems:
+   # On Mac OS X:
+ * Run Blide
+   # On Linux:
+   # On Windows:
+   # On Mac OS X:
