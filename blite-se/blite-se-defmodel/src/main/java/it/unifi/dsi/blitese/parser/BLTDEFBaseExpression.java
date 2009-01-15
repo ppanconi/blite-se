@@ -18,19 +18,23 @@ public class BLTDEFBaseExpression extends ABltValueHolder implements Expression 
   }
 
 //added code start here ////////////////////////////////////////////////////////
-    private Expression childExp;
-
-    public Expression getChildExp() {
-        return childExp;
-    }
-
-    public void setChildExp(Expression childExp) {
-        this.childExp = childExp;
-    }
+//    private Expression childExp;
+//
+//    public Expression getChildExp() {
+//        return childExp;
+//    }
+//
+//    public void setChildExp(Expression childExp) {
+//        this.childExp = childExp;
+//    }
 
     public Object evaluate(RuntimeValueProvider valueProvider) {
+
         if (getLiteralValue() != null) return getLiteralValue();
         if (getVarableName() != null) return valueProvider.provideValue(getVarableName());
-        return getChildExp().evaluate(valueProvider);
+
+        Expression childExp = (Expression) jjtGetChild(0);
+
+        return childExp.evaluate(valueProvider);
     }
 }

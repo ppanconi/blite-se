@@ -114,6 +114,10 @@ TOKEN :
 
 TOKEN :
 {
+  < TRUELITERAL: "true" >
+|
+  < FALSELITERAL: "false" >
+|
   < STRING_LITERAL:
       "\""
       (   (~["\"","\\","\n","\r"])
@@ -1197,34 +1201,71 @@ void IterationActivity() :
     <WHILE> <PARAMBEGIN> Expression() <PARAMEND> Activity() 
 }
 
-BLTDEFExpression Expression() :
+void Expression() :
 {
-    Expression childExp = null;
+//    Expression childExp = null;
 }
 {
-    childExp = BaseExpression()
-    {
-        if (childExp != null) jjtThis.setChildExp(childExp);
-        return jjtThis;
-    }
+    //childExp =
+    AdditiveExpression()
+//    {
+//        if (childExp != null) jjtThis.setChildExp(childExp);
+//        //return jjtThis;
+//    }
 }
 
-BLTDEFBaseExpression BaseExpression() :
+void AdditiveExpression() #void :
+{}
+{
+  MultiplicativeExpression()
+  (
+    "+" MultiplicativeExpression() #AddNode(2)
+   |
+    "-" MultiplicativeExpression() #SubtractNode(2)
+  )*
+}
+
+
+void MultiplicativeExpression() #void :
+{}
+{
+  UnaryExpression()
+  (
+    "*" UnaryExpression() #MulNode(2)
+   |
+    "/" UnaryExpression() #DivNode(2)
+//   |
+//    "%" UnaryExpression() #ModNode(2)
+  )*
+}
+
+void UnaryExpression() #void :
+{}
+{
+  "!" UnaryExpression() #NotNode(1)
+|
+  BaseExpression()
+}
+
+BLTDEFBaseExpression BaseExpression() #BaseExpression(1) :
 {
     ABltId varId = null;
     Object literalValue = null;
-    Expression childExp = null;
+    //Expression childExp = null;
 }
 {
     (
         varId = VarId()
       | literalValue = Literal()
-      | <PARAMBEGIN> childExp = Expression() <PARAMEND>
+      | <PARAMBEGIN>
+            //childExp =
+            Expression()
+        <PARAMEND>
     )
     {
         if (literalValue != null) jjtThis.setLiteralValue(literalValue);
         if (varId != null) jjtThis.setVarableName(varId.getName());
-        if (childExp != null) jjtThis.setChildExp(childExp);
+        //if (childExp != null) jjtThis.setChildExp(childExp);
 
         return jjtThis;
     }
@@ -1250,9 +1291,25 @@ Object Literal() #void :
                 literal = jjtThis;
             }
         ) #NumberLiteral
+        |
+        (literal = BooleanLiteral()
+        )
     )
 
     {
         return literal.parseValue();
+    }
+}
+
+BLTDEFBooleanLiteral BooleanLiteral() :
+{
+    Token t = null;
+}
+{
+
+    ( t  = < TRUELITERAL> | <FALSELITERAL> )
+    {
+        jjtThis.setToken(t);
+        return jjtThis;
     }
 }
