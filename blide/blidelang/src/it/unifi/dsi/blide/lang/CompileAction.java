@@ -5,6 +5,7 @@
 package it.unifi.dsi.blide.lang;
 
 import it.unifi.dsi.blitese.parser.ParseException;
+import it.unifi.dsi.blitese.parser.TokenMgrError;
 import java.io.IOException;
 import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
@@ -45,6 +46,13 @@ public final class CompileAction extends CookieAction {
             Exceptions.printStackTrace(ex);
         } catch (ParseException ex) {
 
+            String errMsg = ex.getMessage();
+            try {
+                output.getErr().println("Compilation Error: " + errMsg, new BliteOutputListener(bliteDataObject, errMsg), true);
+            } catch (IOException ex1) {
+                Exceptions.printStackTrace(ex1);
+            }
+        } catch (TokenMgrError ex) {
             String errMsg = ex.getMessage();
             try {
                 output.getErr().println("Compilation Error: " + errMsg, new BliteOutputListener(bliteDataObject, errMsg), true);

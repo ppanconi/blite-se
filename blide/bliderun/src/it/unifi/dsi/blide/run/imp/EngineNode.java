@@ -29,7 +29,13 @@ public class EngineNode extends AbstractNode {
         super(new EngineChildrens(le, engine), Lookups.singleton(engine) );
 
         setIconBaseWithExtension(ICON_PATH);
-        setName("" + location);
+
+        String desc = location.toString();
+
+        String name = desc.substring(desc.lastIndexOf("/") + 1);
+        
+        setName(name);
+        setShortDescription(desc);
     }
 
     public Engine getEngine() {

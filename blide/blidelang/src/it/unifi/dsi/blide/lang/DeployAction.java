@@ -4,9 +4,10 @@
  */
 package it.unifi.dsi.blide.lang;
 
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -28,7 +29,12 @@ public final class DeployAction extends CookieAction {
 
                 StatusDisplayer.getDefault().setStatusText("File '" + bliteDataObject.getName() + "' deployed successfully");
             } catch (BliteIncompatibleUnitException ex) {
-                Exceptions.printStackTrace(ex);
+
+                NotifyDescriptor d = new NotifyDescriptor.
+                        Message("Impossible to deploy Blite definition \"" + bliteDataObject.getName() + "\": " + ex.getMessage() +
+                        "\nRename the services, compile and try to redeploy.", NotifyDescriptor.ERROR_MESSAGE);
+                DialogDisplayer.getDefault().notify(d);
+                //Exceptions.printStackTrace(ex);
             }
         }
   

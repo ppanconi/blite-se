@@ -35,7 +35,11 @@ public class DefinitionNode extends AbstractNode {
     public DefinitionNode(Engine engine, BliteDeploymentDefinition definition) {
         super(new DefinitionChildrens(engine, definition), Lookups.fixed(engine, definition));
 
-        setName("" + definition.getBliteId());
+        String desc = "" + definition.getBliteId();
+        String name = "Definition " + desc.substring(desc.lastIndexOf("/") + 1);
+
+        setName(name);
+        setShortDescription(desc);
 
         if (definition.provideServiceInstance() != null) {
             isReadyToRun = true;
