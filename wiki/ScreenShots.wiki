@@ -1,10 +1,10 @@
 = Screenshots =
 
 http://blite-se.googlecode.com/svn/wiki/bgtk1.jpg
-*Blide* Editor in GTK ubuntu style.
+<br/>_*Blide* Editor in GTK ubuntu style._
 
 http://blite-se.googlecode.com/svn/wiki/bgtk2.jpg
-*Blide* Visual Instance Monitor in GTK ubuntu style.
+<br/>*Blide* Visual Instance Monitor in GTK ubuntu style.
 
 http://blite-se.googlecode.com/svn/wiki/bswing.jpg
-*Blide* Editor in default Swing style.
+<br/>*Blide* Editor in default Swing style.
