@@ -9,5 +9,5 @@ http://blite-se.googlecode.com/svn/wiki/bgtk2.jpg
 http://blite-se.googlecode.com/svn/wiki/bswing.jpg
 <br/>_*Blide* Editor in default Swing style._
 
-http://blite-se.googlecode.com/svn/wiki/bnimbus.jpg
+http://blite-se.googlecode.com/svn/wiki/bnimbus.jpeg
 <br/>_*Blide* in fantastic Solaris Nimbus style._
