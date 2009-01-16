@@ -1,7 +1,7 @@
 {
     [
         seq
-            rcv <"s1"> start(y);
+            rcv <"s3"> start(y);
             inv <"s2"> corre(y)
         qes
     ]
@@ -10,7 +10,7 @@
 {
     :: seq
         x := "HELLO WORLD!";
-        inv <"s1"> start(x);
+        inv <"s3"> start(x);
         rcv <"s2"> corre(x)
     qes
 } (x)
