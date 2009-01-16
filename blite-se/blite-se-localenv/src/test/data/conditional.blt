@@ -1,0 +1,19 @@
+{
+    [
+        seq
+            rcv <"cond"> start(y);
+        qes
+    ]
+} 
+||
+{
+    :: seq
+        b := 0 + 1;
+        if (b)
+            seq
+                inv <"cond"> start(b);
+                empty
+            qes
+            throw;
+       qes
+}

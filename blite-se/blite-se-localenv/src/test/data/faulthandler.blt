@@ -8,12 +8,11 @@
         fh:
             inv <"c"> no(y)
     ]
-
 } 
 ||
 {
     :: seq
-           x := "CAN I?";
+           x := ("CAN I?");
            inv <"f"> ask(x);
            [
              flw
