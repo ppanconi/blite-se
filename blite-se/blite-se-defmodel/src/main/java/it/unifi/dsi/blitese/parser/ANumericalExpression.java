@@ -26,32 +26,12 @@ public abstract class ANumericalExpression extends SimpleNode implements Express
         Object o1 = exp1.evaluate(valueProvider);
         Object o2 = exp2.evaluate(valueProvider);
 
-        Number n1 = deriveNumber(o1);
-        Number n2 = deriveNumber(o2);
+        Number n1 = ImplicitTypeConversion.deriveNumber(o1);
+        Number n2 = ImplicitTypeConversion.deriveNumber(o2);
 
         return compute(n1, n2);
     }
 
-    private Number deriveNumber(Object o) {
-
-        if (o instanceof Number) {
-            Number number = (Number) o;
-            return number;
-        }
-
-        if (o instanceof String) {
-            String string = (String) o;
-
-            return  string.length();
-        }
-
-        if (o instanceof Boolean) {
-            Boolean b = (Boolean) o;
-            if (b) return 1;
-        }
-
-        return 0;
-    }
 
     public abstract Number compute(Number n1, Number n2);
 }

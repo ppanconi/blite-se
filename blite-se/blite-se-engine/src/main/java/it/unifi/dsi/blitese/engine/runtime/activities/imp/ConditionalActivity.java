@@ -9,6 +9,7 @@ import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.imp.ExpressionInterpreter;
 import it.unifi.dsi.blitese.parser.BLTDEFConditionalActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFExpression;
+import it.unifi.dsi.blitese.parser.ImplicitTypeConversion;
 
 /**
  *
@@ -45,11 +46,9 @@ public class ConditionalActivity extends ActivityComponentBase {
 
             currentChildIndex = 2; //false test case
 
-            if (exprValue instanceof Boolean) {
-                testValue = (Boolean) exprValue;
-                if (testValue) {
-                    currentChildIndex = 1; //true test case
-                }
+            testValue = ImplicitTypeConversion.deriveBoolean(exprValue);
+            if (testValue) {
+                currentChildIndex = 1; //true test case
             }
             // move on the actual activity state
             tested = true;

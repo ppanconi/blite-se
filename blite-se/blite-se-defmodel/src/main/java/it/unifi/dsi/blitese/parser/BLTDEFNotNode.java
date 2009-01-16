@@ -21,10 +21,7 @@ public class BLTDEFNotNode extends SimpleNode implements Expression {
         Expression childExp = (Expression) jjtGetChild(0);
         Object v = childExp.evaluate(valueProvider);
 
-        Boolean b = Boolean.FALSE;
-        if (v instanceof Boolean) {
-            b = (Boolean) v;
-        }
+        Boolean b = ImplicitTypeConversion.deriveBoolean(v);
 
         return Boolean.valueOf(! b.booleanValue());
     }
