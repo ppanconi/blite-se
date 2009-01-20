@@ -1,13 +1,13 @@
 #TeXlipse project settings
-#Tue Jan 20 17:20:13 CET 2009
+#Tue Jan 20 17:53:56 CET 2009
 builderNum=0
-outputDir=build
+outputDir=build/
 makeIndSty=
 bibrefDir=
 outputFormat=dvi
 tempDir=tmp
 mainTexFile=main.tex
 outputFile=main.dvi
-langSpell=en
+langSpell=it
 markDer=true
-srcDir=src
+srcDir=src/
