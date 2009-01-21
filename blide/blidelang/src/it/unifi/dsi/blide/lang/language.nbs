@@ -1,7 +1,7 @@
 
 # definition of tokens
 TOKEN:whitespace:( [" " "\t" "\n" "\r"]+ )
-TOKEN:keyword:( "inv" | "rcv" | "empty" | "throw" | "exit" | "::" | "if" | "while" )
+TOKEN:keyword:( "inv" | "rcv" | "empty" | "throw" | "exit" | "::" | "true" | "false")
 
 TOKEN:braces:(
 "{"
@@ -16,6 +16,8 @@ TOKEN:braces:(
 | "wlf"
 | "fh:"
 | "ch:"
+| "if"
+| "while"
 )
 TOKEN:separator:(
  "|"
@@ -24,12 +26,26 @@ TOKEN:separator:(
 | ";"
 | "("
 | ")"
+| "or"
+| "and"
+| "+"
+| "-"
+| "*"
+| "/"
+| "!"
+| "=="
+| "!="
 )
 
 TOKEN:assign:(":=")
 
 TOKEN:identifier:( ["a"-"z"] ["a"-"z" "0"-"9"]* )
-TOKEN:number: (["0"-"9"] ["0"-"9" "."]*)
+TOKEN:number: ((["0"-"9"])+ ( "." )? (["0"-"9"])* (("e"|"E") (("+"|"-"))? (["0"-"9"])+)? (("f"|"F"|"d"|"D"))?
+      | "." (["0"-"9"])+ (("e"|"E") (("+"|"-"))? (["0"-"9"])+)? (("f"|"F"|"d"|"D"))?
+      | (["0"-"9"])+ ("e"|"E") (("+"|"-"))? (["0"-"9"])+ (("f"|"F"|"d"|"D"))?
+      | (["0"-"9"])+ (("e"|"E") (("+"|"-"))? (["0"-"9"])+)? ("f"|"F"|"d"|"D")
+)
+
 
 
 TOKEN:string:(
