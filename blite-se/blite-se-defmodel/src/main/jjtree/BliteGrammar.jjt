@@ -108,6 +108,8 @@ TOKEN :
 TOKEN :
 {
   < ASSIGN: ":=" >
+| < OR: "or" >
+| < AND: "and">
 }
 
 /* LITERALS */
@@ -1207,12 +1209,54 @@ void Expression() :
 }
 {
     //childExp =
-    AdditiveExpression()
+    ConditionalOrExpression()
 //    {
 //        if (childExp != null) jjtThis.setChildExp(childExp);
 //        //return jjtThis;
 //    }
 }
+
+void ConditionalOrExpression() #void :
+{}
+{
+  ConditionalAndExpression()
+  ( <OR> ConditionalAndExpression() #OrNode(2) )*
+}
+
+void ConditionalAndExpression() #void :
+{}
+{
+  EqualityExpression()
+  ( <AND> EqualityExpression() #AndNode(2) )*
+}
+
+
+void EqualityExpression() #void :
+{}
+{
+  RelationalExpression()
+  (
+     "==" RelationalExpression() #EQNode(2)
+   |
+     "!=" RelationalExpression() #NENode(2)
+  )*
+}
+
+void RelationalExpression() #void :
+{}
+{
+  AdditiveExpression()
+  (
+    "<" AdditiveExpression() #LTNode(2)
+   |
+    ">" AdditiveExpression() #GTNode(2)
+   |
+    "<=" AdditiveExpression() #LENode(2)
+   |
+    ">=" AdditiveExpression() #GENode(2)
+  )*
+}
+
 
 void AdditiveExpression() #void :
 {}
