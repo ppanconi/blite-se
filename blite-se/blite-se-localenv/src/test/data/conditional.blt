@@ -8,8 +8,8 @@
 ||
 {
     :: seq
-        b := 0 + 1;
-        if (b)
+        b := 1 / true;
+        if (b )
             seq
                 inv <"cond"> start(b);
                 empty
