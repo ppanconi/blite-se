@@ -16,6 +16,7 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext.ContextState;
+import it.unifi.dsi.blitese.parser.AScope;
 
 /**
  * This class represents an activity execution context.
@@ -49,5 +50,6 @@ public interface ExecutionContext extends VariableScope {
     public void setSate(ContextState state);
     
     public boolean isInAFaultedBranch();
-    
+
+    public void addCompletedScope(AScope scope);
 }

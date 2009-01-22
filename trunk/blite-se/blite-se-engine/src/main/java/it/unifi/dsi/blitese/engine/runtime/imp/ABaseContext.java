@@ -23,6 +23,8 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ActivityComponentBase;
+import it.unifi.dsi.blitese.parser.AScope;
+import it.unifi.dsi.blitese.parser.Node;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -100,7 +102,7 @@ public abstract class ABaseContext extends ActivityComponentBase implements Exec
             Engine engine = manager.getEngine();
             
             //!!IMPORTANT!! To terminate the the next wating
-            // activities valuate to close this operation in a Process Level Mutual Exclusion
+            // activities we need to close this operation in a Process Level Mutual Exclusion
             //block.
             synchronized (manager.getDefinitionProcessLevelLock()) {
                 engine.resumeWaitingFlow(flow);
@@ -161,8 +163,29 @@ public abstract class ABaseContext extends ActivityComponentBase implements Exec
 
     }
     
-    
-    
-    
-    
+    //--------------------------------------------------------------------------
+
+    private List<AScope> completedSubScopes = new ArrayList<AScope>();
+
+
+    protected List<Node> provideConpesationDef() {
+        
+        List<Node> l = new ArrayList<Node>();
+        
+        for (AScope scope : completedSubScopes) {
+            Node n = (Node) scope.getCompensationHandler();
+            if (n != null) l.add(n);
+        }
+        
+        return l;
+    }
+
+
+    synchronized public void addCompletedScope(AScope scope) {
+        completedSubScopes.add(scope);
+    }
+
+    synchronized public void addCompletedScopes(List<AScope> scopes) {
+        completedSubScopes.addAll(scopes);
+    }
 }

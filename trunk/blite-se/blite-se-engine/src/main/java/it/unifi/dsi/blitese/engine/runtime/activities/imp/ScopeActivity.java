@@ -20,8 +20,11 @@ import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext;
 import it.unifi.dsi.blitese.engine.runtime.imp.ProtecedScope;
 import it.unifi.dsi.blitese.parser.AScope;
-import it.unifi.dsi.blitese.parser.BLTDEFActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFSequenceActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import it.unifi.dsi.blitese.parser.Node;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -44,14 +47,18 @@ public class ScopeActivity extends ABaseContext {
             
             if (getState() == ContextState.FAULTED) {
                 
-                //TODO WE HAVE TO START Compesation/Faluts Handlers
-                //TEMP we put the fault Hadler only
+                //DONE WE HAVE TO START Compesation/Faluts Handlers
                 BltDefBaseNode falutHadlerDef = scopeDef.getFaultHandler();
                 
-                LOGGER.info("Scope " + this + " FAULTED starting FaultHandler");
+                LOGGER.info("Scope " + this + " FAULTED starting Compensation FaultHandler");
+
                 
+                List<Node> compesation = provideConpesationDef();
+                compesation.add((Node)falutHadlerDef);
+                BLTDEFSequenceActivity seq = new BLTDEFSequenceActivity(compesation.toArray(new Node[compesation.size()]));
+
                 ProtecedScope ps = 
-                        new ProtecedScope(falutHadlerDef, getParentContext(), getParentComponent(), getExecutor());
+                        new ProtecedScope(seq, getParentContext(), getParentComponent(), getExecutor());
                 
                 getExecutor().setCurrentActivity(ps);
                 return true;
@@ -84,7 +91,9 @@ public class ScopeActivity extends ABaseContext {
             } else if (getState() ==  ContextState.RUNNING) {
                 setSate(ContextState.COMPLETED);
                 
-                //TODO put this scope as COMPLETED in the context 
+                //DONE put this scope as COMPLETED in the context
+                getParentContext().addCompletedScope(scopeDef);
+
                 LOGGER.info("Scope " + this + " COMPLETED");
                 
                 flowParent();
