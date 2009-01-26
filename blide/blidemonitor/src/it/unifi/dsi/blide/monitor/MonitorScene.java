@@ -14,6 +14,7 @@ import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.localenv.LocalInstanceMonitor;
+import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -112,6 +113,10 @@ public class MonitorScene extends Scene //        GraphPinScene
         synchronized (acts) {
             for (ActivityComponent activityComponent : acts) {
 
+                //check if it's invisible activity
+                BltDefBaseNode def = activityComponent.getBltDefNode();
+                if (def != null && !def.isVisible()) continue;
+
                 ActivityWidget widget = mActToWidget.get(activityComponent);
                 if (widget != null) {
     //                System.out.println("Activity yet present on Scene " + activityComponent);
@@ -120,6 +125,7 @@ public class MonitorScene extends Scene //        GraphPinScene
 //                        widget.repaint();
 //                    }
 
+                    //IT YET PRESENT
                     continue;
                 }
 
