@@ -15,6 +15,8 @@
 
 package it.unifi.dsi.blitese.engine.runtime;
 
+import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+
 /**
  * The base unit of runtime execution of a Runtime Process Instance.
  * 
@@ -32,4 +34,6 @@ public interface ActivityComponent {
     public ProcessInstance getInstance();
 
     public ActivityComponent getParentComponent();
+
+    public BltDefBaseNode getBltDefNode();
 }

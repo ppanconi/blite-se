@@ -34,7 +34,10 @@ public class ProtecedScope extends ScopeActivity
     public ProtecedScope(BltDefBaseNode mainAct, ExecutionContext parentContext,
                          ActivityComponent parentComponent, FlowExecutor executor) {
         
-        BltDefBaseNode scopeDef = new BLTDEFScope(mainAct, new BLTDEFEmptyActivity(), null);
+        BLTDEFEmptyActivity invisibleFaultHandler = new BLTDEFEmptyActivity();
+//        invisibleFaultHandler.setVisible(false);
+
+        BltDefBaseNode scopeDef = new BLTDEFScope(mainAct, invisibleFaultHandler, null);
         
         setContext(parentContext);
         setBltDefNode(scopeDef);
