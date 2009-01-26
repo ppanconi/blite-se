@@ -36,5 +36,17 @@ public class BltDefBaseNode {
     public void setBoundSymbs(Map<String, Object> boundSymbs) {
         this.boundSymbs = boundSymbs;
     }
-    
+
+    //26-01-09 added to inprove the visual representation of instaces
+    private boolean visible = true;
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+
 }
