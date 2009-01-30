@@ -58,7 +58,7 @@ public class ScopeActivity extends ABaseContext {
                 BLTDEFSequenceActivity seq = new BLTDEFSequenceActivity(compesation.toArray(new Node[compesation.size()]));
 
                 ProtecedScope ps = 
-                        new ProtecedScope(seq, getParentContext(), getParentComponent(), getExecutor());
+                        new ProtecedScope(seq, getParentContext(), getParentComponent(), getExecutor(), this);
                 
                 getExecutor().setCurrentActivity(ps);
                 return true;
