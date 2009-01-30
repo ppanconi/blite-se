@@ -22,6 +22,7 @@ import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFEmptyActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFScope;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import it.unifi.dsi.blitese.parser.SimpleNode;
 
 /**
  *
@@ -31,20 +32,50 @@ public class ProtecedScope extends ScopeActivity
         //ABaseContext 
 {
 
+    private ABaseContext launcherContext;
+
+    /**
+     *
+     *
+     * @param mainAct
+     * @param parentContext
+     * @param parentComponent
+     * @param executor
+     * @param luncherContex The Scope
+     */
     public ProtecedScope(BltDefBaseNode mainAct, ExecutionContext parentContext,
-                         ActivityComponent parentComponent, FlowExecutor executor) {
+                         ActivityComponent parentComponent, FlowExecutor executor,
+                         ABaseContext launcherContext) {
         
         BLTDEFEmptyActivity invisibleFaultHandler = new BLTDEFEmptyActivity();
-//        invisibleFaultHandler.setVisible(false);
+        invisibleFaultHandler.setVisible(false);
 
-        BltDefBaseNode scopeDef = new BLTDEFScope(mainAct, invisibleFaultHandler, null);
-        
+        SimpleNode scopeDef = new BLTDEFScope(mainAct, invisibleFaultHandler, null);
+
+        //Shit Stuff to avoid empty ProtecedScope in instance Visualization
+        SimpleNode mainActNode = (SimpleNode) mainAct;
+        if (mainActNode == null || mainActNode.jjtGetNumChildren() == 0) {
+            scopeDef.setVisible(false);
+        }
+        if (mainActNode.jjtGetNumChildren() == 1 &&
+                !((SimpleNode)mainActNode.jjtGetChild(0)).isVisible() ) {
+            scopeDef.setVisible(false);
+        }
+        // Shit end ------------------------------------------------------------
+
         setContext(parentContext);
         setBltDefNode(scopeDef);
         setParentComponent(parentComponent);
         setExecutor(executor);
+
+        this.launcherContext = launcherContext;
+
         init();
         
+    }
+
+    public ABaseContext getLauncherContext() {
+        return launcherContext;
     }
 
     /**
