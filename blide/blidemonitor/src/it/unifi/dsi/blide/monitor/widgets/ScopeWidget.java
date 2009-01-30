@@ -22,7 +22,7 @@ public class ScopeWidget extends ActivityWidget {
 
     public ScopeWidget(Scene scene, ActivityComponent activity) {
         super(scene, activity);
-        setBorder(BorderFactory.createDashedBorder(Color.GRAY, 5, 5, true));
+        setBorder(BorderFactory.createDashedBorder(provideBorderColor(), 5, 5, true));
         setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 5));
 
         mainActConteiner = new Widget(scene);
@@ -36,8 +36,17 @@ public class ScopeWidget extends ActivityWidget {
         mainActConteiner.addChild(widget);
     }
 
-    public void addProteced(Widget widget) {
-        addChild(widget);
+    public void addProteced(ProtectedScopeWidget widget) {
+
+        Widget protecedContainer = new Widget(getScene());
+        protecedContainer.setBorder(BorderFactory.createEmptyBorder(5));
+
+        addChild(protecedContainer);
+
+        protecedContainer.addChild(widget);
     }
-    
+
+    protected Color provideBorderColor() {
+        return Color.GRAY;
+    }
 }

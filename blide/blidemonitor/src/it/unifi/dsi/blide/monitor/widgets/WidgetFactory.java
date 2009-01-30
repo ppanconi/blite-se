@@ -16,6 +16,7 @@ import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.SequenceActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ThrowActivity;
+import it.unifi.dsi.blitese.engine.runtime.imp.ProtecedScope;
 import org.netbeans.api.visual.widget.Scene;
 
 /**
@@ -52,6 +53,11 @@ public class WidgetFactory {
             ReceiveActivity receiveActivity = (ReceiveActivity) activityComponent;
 
             widget = new ReceiveWidget(scene, activityComponent);
+
+        } else if (activityComponent instanceof ProtecedScope) {
+            ProtecedScope scopeActivity = (ProtecedScope) activityComponent;
+
+            widget = new ProtectedScopeWidget(scene, activityComponent);
 
         } else if (activityComponent instanceof ScopeActivity) {
             ScopeActivity scopeActivity = (ScopeActivity) activityComponent;

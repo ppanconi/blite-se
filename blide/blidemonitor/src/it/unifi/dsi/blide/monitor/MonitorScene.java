@@ -8,11 +8,15 @@ import it.unifi.dsi.blide.monitor.widgets.ActivityWidget;
 import it.unifi.dsi.blide.monitor.widgets.ExchangeFlowWidget;
 import it.unifi.dsi.blide.monitor.widgets.ExchangeWidget;
 import it.unifi.dsi.blide.monitor.widgets.InstanceWidget;
+import it.unifi.dsi.blide.monitor.widgets.ProtectedScopeWidget;
+import it.unifi.dsi.blide.monitor.widgets.ScopeWidget;
 import it.unifi.dsi.blide.monitor.widgets.WidgetFactory;
 import it.unifi.dsi.blide.run.imp.InstanceNode;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
+import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext;
+import it.unifi.dsi.blitese.engine.runtime.imp.ProtecedScope;
 import it.unifi.dsi.blitese.localenv.LocalInstanceMonitor;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 import java.awt.Dimension;
@@ -133,19 +137,30 @@ public class MonitorScene extends Scene //        GraphPinScene
 
                 if (widget != null) {
 
-                    ActivityComponent parentActivity = activityComponent.getParentComponent();
-                    ActivityWidget parentWidget = mActToWidget.get(parentActivity);
-
-                    if (parentWidget != null) {
-
-                        parentWidget.add(widget);
-    //                    System.out.println("===============================>> Activity " + activityComponent + " with parent " + parentActivity +  " ADDED!!");
+                    if (activityComponent instanceof ProtecedScope) {
+                        //if we hava a ProtecedScope we add it to the launcherContext
+                        //and not to the natural partent Context
+                        ProtecedScope protecedScope = (ProtecedScope) activityComponent;
+                        ABaseContext laucherContext = protecedScope.getLauncherContext();
+                        
+                        ScopeWidget parentWidget = (ScopeWidget) mActToWidget.get(laucherContext);
+                        if (parentWidget != null) {
+                            parentWidget.addProteced((ProtectedScopeWidget) widget);
+                        }
 
                     } else {
-    //                    System.out.println("===============================>> Activity " + activityComponent + " with parent " + parentActivity +  " without parent Widget");
+
+                        ActivityComponent parentActivity = activityComponent.getParentComponent();
+                        ActivityWidget parentWidget = mActToWidget.get(parentActivity);
+
+                        if (parentWidget != null) {
+                            parentWidget.add(widget);
+        //                    System.out.println("===============================>> Activity " + activityComponent + " with parent " + parentActivity +  " ADDED!!");
+                        }
                     }
 
                     mActToWidget.put(activityComponent, widget);
+
                 } else {
     //                System.out.println("===============================>> NO WIDGET For Activity " + activityComponent);
                 }
