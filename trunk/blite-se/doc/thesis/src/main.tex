@@ -1,19 +1,70 @@
-%%This is a very basic article template.
-%%There is just one section and two subsections.
-\documentclass{article}
+\documentclass[a4paper,12pt,twoside]{book}
+% \usepackage[a4paper]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[italian]{babel}
+
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% i comandi seguenti impediscono la scrittura in maiuscolo
+% dei nomi dei capitoli e dei paragrafi nelle intestazioni
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+
+\fancyhf{} % rimuove l’attuale contenuto dell’intestazione
+            % e del pi\‘e di pagina
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+%\fancyhead[RE]{\bfseries\leftmark}
+\fancyhead[RE]{\bfseries\rightmark}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\addtolength{\headheight}{0.5pt} % riserva spazio per la linea
+\fancypagestyle{plain}{%
+   \fancyhead{} % ignora, nello stile plain, le intestazioni
+   \renewcommand{\headrulewidth}{0pt} % e la linea
+}
+
+\newcommand{\mnote}[1]{%
+  \marginpar[{\raggedleft \footnotesize \sffamily  \textcolor{red}{#1}\\}]{
+    {\raggedright \footnotesize \sffamily  \textcolor{red}{#1} \\}}}
+
+%\newtheorem{deff}{Definizione}
+%\newtheorem{es}{Esempio}
+%\newtheorem{pro}{Proposizione}
+%\newtheorem{thm}{Teorema}
+%\newtheorem{lem}{Lemma}
 
 \begin{document}
+\hyphenation{}
+\sloppy
 
+\title{\textsf{ \textbf{Realizzazione di un motore d'esecuzione per un
+linguaggio di orchestrazione di servizi} \\ 
+\em \large Blite ovvero BPEL in versione lite}\\ } 
+\author{Paolo Panconi}
 
-\section{Title}
+\maketitle
 
-\subsection{Subtitle}
+%\abstractract{Tesi di Laura di Paolo Panconi \ldots}
 
-Plain text.
+\newpage
 
-\subsection{Another subtitle}
+\tableofcontents
 
-More plain text.
+\listoffigures
 
+% Introduzione
+%\include
+%\input
+%{intro/intro}
+
+% Architettura Interna del Engine
+\include
+%\input
+{architettura_interna/architettura_interna}
 
 \end{document}
