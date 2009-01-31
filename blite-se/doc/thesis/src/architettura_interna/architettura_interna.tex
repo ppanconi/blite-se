@@ -1,0 +1,53 @@
+\chapter{Architettura interna}
+
+In questo capitolo illustriamo l'architettura interna dell'Engine, cioè del
+componente software predisposto alla messa in esecuzione dei programmi Blite.
+
+Ricordiamo che nello scenario delineato avremo un Engine per locazione, o se si
+vuole per nodo di rete, e su ognuno di questi componenti sarà possibile
+installare o rimuovere definizioni di processi Blite. In pratica un engine
+gestir\`a un insieme di definizioni, creando da queste istanze di
+processi e utilizzerà l'Environment per interagire con gli altri Engine. 
+Dall'environment stesso l'engine verr\`a notificato riguardo l'accedere di
+eventi quali l'arrivo di messaggi indirizzati alle porte delle sue definizioni.
+
+Dal punto di vista logico relazionale abbiamo gi\`a individuato le seguenti
+macro entit\`a e realazioni
+
+[\ldots immagine]
+
+Prima di entrare nel dettaglio delle scelte architetturali ricapitoliamo quale
+sono le caratteristiche peculiari di un sistema che deve gestire programmi per
+l'orchestrazione di servizi in modo che sia pi\`u facile da una parte
+comprendere e dall'altra giustificare le scelte fatte.
+
+A nostro vantaggio:
+\begin{itemize}
+  \item Un Engine contine in genarale un numero contenuto di definizioni, per
+  cui non ci interessa la scalibilit\`a rispetto alla quantita di definizioni
+  istallate su singolo engine. Tale scalabilit\`a al contrario pu\`o essere
+  ottenuta aggiungendo altri engine e installando definizioni su engine diversi.
+  
+  \item  Una definizione (o programma) Blite avendo pricipalmete funzinalit\`a
+  di integrazione avr\`a una lunghezza generalmente limitata. 
+  
+  \item Poich\`e le operazione fondamentali di un programma di questo genere
+  sono invocazioni remote, le durate delle esucizioni hanno ordine di grandezza
+  dettati dai tempi caratteristici della rete. Per questo motivo non risulta
+  determinante l'efficenza di esecuzione delle operazioni interne di un
+  processo. Il nostro engine non necessiter\`a una particolare ottimizzazione 
+  rispetto all'efficenza di esecuzione interna.
+\end{itemize}
+
+al contrario risultano perticolarmente critici i seguenti aspettti:
+\begin{itemize}
+  \item Per ciascuna definizione potr\`a essere richiesto la creazionee di
+  innumerevoli richieste. La scalabilit\`a rispetto al numero di instanze di
+  processo e quindi al numero delle richieste remote risulta essere un
+  prerequisito fondamentale.
+  
+  \item Se da un lato abbimo detto 
+\end{itemize}
+
+ 
+
