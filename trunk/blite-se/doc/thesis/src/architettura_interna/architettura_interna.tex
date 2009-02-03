@@ -8,46 +8,141 @@ vuole per nodo di rete, e su ognuno di questi componenti sarà possibile
 installare o rimuovere definizioni di processi Blite. In pratica un engine
 gestir\`a un insieme di definizioni, creando da queste istanze di
 processi e utilizzerà l'Environment per interagire con gli altri Engine. 
-Dall'environment stesso l'engine verr\`a notificato riguardo l'accedere di
-eventi quali l'arrivo di messaggi indirizzati alle porte delle sue definizioni.
+Dall'environment stesso l'engine verrà notificato riguardo l'accadere di
+eventi, quali l'arrivo di messaggi indirizzati alle porte delle sue definizioni.
 
-Dal punto di vista logico relazionale abbiamo gi\`a individuato le seguenti
-macro entit\`a e realazioni
+Dal punto di vista logico relazionale abbiamo già individuato le seguenti
+macro entità e relazioni
 
 [\ldots immagine]
 
-Prima di entrare nel dettaglio delle scelte architetturali ricapitoliamo quale
+Prima di entrare nel dettaglio delle scelte architetturali ricapitoliamo quali
 sono le caratteristiche peculiari di un sistema che deve gestire programmi per
-l'orchestrazione di servizi in modo che sia pi\`u facile da una parte
+l'orchestrazione di servizi, in modo che sia pi\`u facile da una parte
 comprendere e dall'altra giustificare le scelte fatte.
 
 A nostro vantaggio:
 \begin{itemize}
-  \item Un Engine contine in genarale un numero contenuto di definizioni, per
-  cui non ci interessa la scalibilit\`a rispetto alla quantita di definizioni
-  istallate su singolo engine. Tale scalabilit\`a al contrario pu\`o essere
+  \item Un Engine contiene in generale un numero contenuto di definizioni, per
+  cui non ci interessa la scalabilità rispetto alla quantità di definizioni
+  istallate su singolo engine. Tale scalabilità al contrario può essere
   ottenuta aggiungendo altri engine e installando definizioni su engine diversi.
   
-  \item  Una definizione (o programma) Blite avendo pricipalmete funzinalit\`a
-  di integrazione avr\`a una lunghezza generalmente limitata. 
+  \item  Una definizione (o programma) Blite avendo principalmente funzionalità
+  di integrazione avrà una lunghezza generalmente limitata. 
   
-  \item Poich\`e le operazione fondamentali di un programma di questo genere
-  sono invocazioni remote, le durate delle esucizioni hanno ordine di grandezza
-  dettati dai tempi caratteristici della rete. Per questo motivo non risulta
-  determinante l'efficenza di esecuzione delle operazioni interne di un
-  processo. Il nostro engine non necessiter\`a una particolare ottimizzazione 
-  rispetto all'efficenza di esecuzione interna.
+  \item Poiché le operazione fondamentali di un programma di questo genere
+  sono invocazioni remote, le durate delle esecuzioni hanno ordini di grandezza
+  minimi dettati dai tempi caratteristici della rete. Per questo motivo non
+  risulta determinante l'efficienza di esecuzione delle operazioni interne di un
+  processo. Il nostro engine non necessiterà di una particolare ottimizzazione 
+  rispetto all'efficienza di esecuzione interna.
 \end{itemize}
 
-al contrario risultano perticolarmente critici i seguenti aspettti:
+al contrario risultano particolarmente critici i seguenti aspetti:
 \begin{itemize}
-  \item Per ciascuna definizione potr\`a essere richiesto la creazionee di
-  innumerevoli richieste. La scalabilit\`a rispetto al numero di instanze di
-  processo e quindi al numero delle richieste remote risulta essere un
+  \item Per ciascuna definizione potrà essere richiesta la creazione di
+  innumerevoli istanze. La scalabilità rispetto al numero delle
+  richieste remote e quindi di istanze di processo risulta essere un
   prerequisito fondamentale.
   
-  \item Se da un lato abbimo detto 
+  \item Se da un lato abbiamo detto che l'efficienza di esecuzione non \`e 
+  una aspetto particolarmente critico, dall'altro per\`o ogni attività interna
+  necessita di un elevato grado di controllo e tranciabilità. Ogni attività deve
+  potere essere eventualmente terminata o abortita. Poiché in generale
+  \footnotetext{} ogni istanza potrebbe avere un immagine persistente o
+  perlomeno essere soggetta ad una attività di monitoring, l'engine necessiterà
+  di un grado di controllo a livello di singola attività Blite.
 \end{itemize}
 
+Tenendo conto di queste iniziali considerazioni sono state fatte alcune scelte
+basilari di organizzazione del progetto e l'architettura software \`e stata
+basata sulle seguenti specifiche fondamentali:
+
+\begin{enumerate}
+  \item La compilazione di una definizione Blite (che eventualmente in un
+  ambiente distribuito può essere fatta in fase di deploy) produce un modello
+  statico della definizione stessa. Tale modello può essere implementato con una
+  struttura ad oggetti che si può pensare di mantenere in memoria presso
+  l'engine, tale struttura sarà navigata a runtime per ricavare il
+  flusso e la logica di esecuzione. Sempre in fase di deploy l'engine può
+  ricavare tutte le informazioni per popolare le strutture dati in cui sono 
+  memorizzati i binding fra i nomi delle porte e le definizioni; anche tali
+  strutture dati possono essere mantenute in memoria.
+  
+  \item Le richieste che giungono all'Engine non devono produrre un aumento
+  delle risorse complessive mantenute dall'Engine. Ogni istanza di processo nel
+  suo svolgersi deve, man mano che procede, rilasciare le risorse di memoria
+  acquisite. Anche il numero dei thread complessivo deve essere limitato
+  superiormente (generalmente dell'ordine dell'unita). La realizzazione del
+  parallelismo di attività deve essere attuata tramite il pattern ``Resources
+  Pool''. Ogni Engine deve disporre di un pool di thread con cui eseguire in
+  parallelo le attività secondo le definizioni Blite.
+  
+  \item Il modello di esecuzione deve essere Activity Centric. L'engine deve
+  trattare ogni attività secondo una astrazione generica che possa permettere di
+  fattorizzare i comportamenti comuni e mantenere semplice e pulita
+  l'implementazione della semantica di esecuzione del linguaggio.
+\end{enumerate}
  
+A questo punto dopo aver esposto a grandi linee quelle che devono essere le
+caratteristiche fondamentali di un engine entriamo nel dettaglio del disegno
+della architettura. Nella realizzazione di questa abbiamo scelto di utilizzare
+il formalismo degli oggetti e delle classi secondo il consueto paradigma
+``Object Oriented''. Inoltre abbiamo preso come fonte di
+ispirazione il ``Composite Pattern'' cercandone una trasposizione nella
+problematica dell'esecuzione di un programma Blite. In particolare
+l'astrazione di componente \`e stata applicata all'entità attività. Come i
+componenti contribuiscono alla realizzazione di un documento o di una
+interfaccia utente le singole attività contribuiscono allo svolgersi
+dell'esecuzione del processo Blite.
+ 
+Inoltre la tipica struttura gerarchica presente staticamente negli elementi
+sintattici di una definizione può essere naturalmente riprodotta a runtime tra
+i singoli step di esecuzione, andato a completare l'analogia con le strutture
+gerarchiche ad albero tipiche dei tradizionali domini di applicazione del
+Composite Pattern. 
+\\
+
+L'entità fondamentale del nostro dominio applicativo \`e stata quindi
+individuata nella \icode{ActivityComponent} trasposizione a runtime
+dell'elemento sintattico Activity definito dalla grammatica di Blite e 
+rappresentabile tramite la seguente interfaccia
+
+\lstinputlisting
+[caption={L'interfaccia base del modello di escuzione del Blite Engine},
+label=lst:ActivityComponent]
+{architettura_interna/java/ActivityComponent.java}
+
+\begin{tabular}{| p{140pt} | p{240pt}|}
+\hline
+\icode{ActivityComponent} &  \\
+\hline
+
+\small{boolean \textbf{doActivity()}} & \small{\textsf{Costituisce il metodo
+centrale per lo svolgersi dell'esecuzione del programma. L'invocazione di tale metodo su
+un oggetto attività fa si che essa possa eseguirsi. Il valore booleano
+ritornato sarà il discriminate del fatto che il flusso di esecuzione
+corrente dovrà o meno interrompersi. Ogni attività oltre che eseguire se
+stesa sarà quindi anche responsabile nel guidare il flusso nel passo
+successivo. Utilizzando la gerarchia a lei nota imposterà la nuova attività
+corrente da eseguire (l'attività padre o un figlio) e ritornerà il valore true. 
+Al contraio potrà interrompere il flusso corrente ritornando false.
+}}\\
+ 
+& \\
+\small{ActivityComponent \linebreak \textbf{getParentComponent()}} &
+\small{\textsf{ Tale metodo restituisce se presente l'elemento padre 
+dell'attività corrente. In questo modo si realizza la struttura gerarchica fra
+i veri componenti dell'esecuzione. }}\\
+
+& \\
+\small{BltDefBaseNode \linebreak {\textbf{ getBltDefNode()}}} &
+\small{\textsf{ Ogni attività componente dell'esecuzione \`e strettamente associata ad un 
+elemento sintattico del programma. Con questo metodo ogni oggetto attività 
+restituisce il nodo che la definisce nell'albero sintattico ricavato dal
+prasing del codice Blite. }}\\
+
+\hline
+\end{tabular}
 
