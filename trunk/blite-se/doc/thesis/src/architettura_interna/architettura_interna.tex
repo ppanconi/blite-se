@@ -114,7 +114,7 @@ rappresentabile tramite la seguente interfaccia
 label=lst:ActivityComponent]
 {architettura_interna/java/ActivityComponent.java}
 
-\begin{tabular}{| p{140pt} | p{240pt}|}
+\begin{tabular}{| p{140pt} | p{235pt}|}
 \hline
 \icode{ActivityComponent} &  \\
 \hline
@@ -141,8 +141,22 @@ i veri componenti dell'esecuzione. }}\\
 \small{\textsf{ Ogni attività componente dell'esecuzione \`e strettamente associata ad un 
 elemento sintattico del programma. Con questo metodo ogni oggetto attività 
 restituisce il nodo che la definisce nell'albero sintattico ricavato dal
-prasing del codice Blite. }}\\
+parsing del codice Blite. }}\\
 
 \hline
 \end{tabular}
+\\
+\\
+
+Lo scenario che si va a delineare \`e quindi quello di due strutture gerarchiche
+associate: una costituita dall'AST (Abstract Syntax Tree) ricavato dal
+parsing del codice Blite, e che come si detto \`e mantenuta nella sua interezza,
+l'altra costituita dall'albero dinamico delle ActivityComponent che
+realizzano l'esecuzione a runtime. Quest'ultima struttura non \`e pero
+costruita in un unico momento in fase di creazione del processo, ma
+al contrario \`e istanziata man mano che l'esecuzione procede. Come già
+accennato le attività stesse saranno responsabili di creare i loro successori
+e di metterli in esecuzione. Inoltre gli oggetti attività già eseguiti dovranno
+essere rilasciati il prima possibile in modo da poter essere collezionati dal
+Garbage Collector e rilasciare le risorse di memoria.
 
