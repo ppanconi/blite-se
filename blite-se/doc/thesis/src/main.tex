@@ -8,7 +8,21 @@
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{fancyhdr}
+
+\usepackage{listings}
+\lstloadlanguages{JAVA}
+\lstset{
+language=java,
+basicstyle=\tiny,
+aboveskip=1em,
+belowskip=1em,
+frame=TB,
+tabsize=4,
+}
+
+
 \pagestyle{fancy}
+
 % i comandi seguenti impediscono la scrittura in maiuscolo
 % dei nomi dei capitoli e dei paragrafi nelle intestazioni
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
@@ -31,6 +45,8 @@
 \newcommand{\mnote}[1]{%
   \marginpar[{\raggedleft \footnotesize \sffamily  \textcolor{red}{#1}\\}]{
     {\raggedright \footnotesize \sffamily  \textcolor{red}{#1} \\}}}
+
+\newcommand{\icode}[1]{\textsf{#1}}
 
 %\newtheorem{deff}{Definizione}
 %\newtheorem{es}{Esempio}
