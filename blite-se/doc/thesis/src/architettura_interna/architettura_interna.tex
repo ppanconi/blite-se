@@ -14,7 +14,15 @@ eventi, quali l'arrivo di messaggi indirizzati alle porte delle sue definizioni.
 Dal punto di vista logico relazionale abbiamo già individuato le seguenti
 macro entità e relazioni
 
-[\ldots immagine]
+\begin{figure}[!htp]
+\begin{center}
+  \includegraphics{architettura_interna/dia/engine}
+%   \caption[]{
+%   	\textsf{{\small Passaggio da reazioni a processi}}
+%   }
+  \label{fig:1}
+\end{center}
+\end{figure}
 
 Prima di entrare nel dettaglio delle scelte architetturali ricapitoliamo quali
 sono le caratteristiche peculiari di un sistema che deve gestire programmi per
@@ -106,15 +114,16 @@ Composite Pattern.
 
 L'entità fondamentale del nostro dominio applicativo \`e stata quindi
 individuata nella \icode{ActivityComponent} trasposizione a runtime
-dell'elemento sintattico Activity definito dalla grammatica di Blite e 
-rappresentabile tramite la seguente interfaccia
+dell'elemento sintattico Activity definito dalla grammatica di Blite.
+Ogni \icode{ActivityComponent} \`e rappresentabile tramite la seguente
+interfaccia
 
 \lstinputlisting
 [caption={L'interfaccia base del modello di escuzione del Blite Engine},
 label=lst:ActivityComponent]
 {architettura_interna/java/ActivityComponent.java}
 
-\begin{tabular}{| p{140pt} | p{235pt}|}
+\begin{tabular}{| p{0.3\textwidth } | p{0.6\textwidth}|}
 \hline
 \icode{ActivityComponent} &  \\
 \hline
