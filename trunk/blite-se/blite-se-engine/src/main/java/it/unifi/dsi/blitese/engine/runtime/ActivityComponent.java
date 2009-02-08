@@ -25,7 +25,7 @@ import it.unifi.dsi.blitese.parser.BltDefBaseNode;
  * @author panks
  */
 public interface ActivityComponent {
-    
+
     static interface ActivityParmas {}
     
 //    boolean doActivity(ActivityParmas parmas); 
