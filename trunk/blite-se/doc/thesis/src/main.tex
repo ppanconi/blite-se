@@ -3,7 +3,7 @@
 \usepackage[utf8x]{inputenc}
 \usepackage[italian]{babel}
 
-\usepackage{graphicx}
+\usepackage[dvips]{graphicx}
 \usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{color}
@@ -32,13 +32,11 @@ tabsize=4,
 % dei nomi dei capitoli e dei paragrafi nelle intestazioni
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
-
 \fancyhf{} % rimuove l’attuale contenuto dell’intestazione
             % e del pi\‘e di pagina
 \fancyhead[LE,RO]{\bfseries\thepage}
 \fancyhead[LO]{\bfseries\rightmark}
-%\fancyhead[RE]{\bfseries\leftmark}
-\fancyhead[RE]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0pt}
 \addtolength{\headheight}{0.5pt} % riserva spazio per la linea
@@ -46,6 +44,7 @@ tabsize=4,
    \fancyhead{} % ignora, nello stile plain, le intestazioni
    \renewcommand{\headrulewidth}{0pt} % e la linea
 }
+
 
 \newcommand{\mnote}[1]{%
   \marginpar[{\raggedleft \footnotesize \sffamily  \textcolor{red}{#1}\\}]{
