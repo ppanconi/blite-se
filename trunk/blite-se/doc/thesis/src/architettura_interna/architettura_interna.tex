@@ -24,6 +24,10 @@ macro entità e relazioni
 \end{center}
 \end{figure}
 
+Per ogni definizione istallata sull'engine sarà presente un oggetto istanza
+della classe \icode{ProcessManager}, che avrà il compito di gestire, nel loro
+ciclo di vita, le istanze di processo derivate dalla definizione.
+
 Prima di entrare nel dettaglio delle scelte architetturali ricapitoliamo quali
 sono le caratteristiche peculiari di un sistema che deve gestire programmi per
 l'orchestrazione di servizi, in modo che sia pi\`u facile da una parte
@@ -92,13 +96,14 @@ basata sulle seguenti specifiche fondamentali:
   fattorizzare i comportamenti comuni e mantenere semplice e pulita
   l'implementazione della semantica di esecuzione del linguaggio.
 \end{enumerate}
- 
+
+\section{Modello per l'Attività}
 A questo punto dopo aver esposto a grandi linee quelle che devono essere le
 caratteristiche fondamentali di un engine entriamo nel dettaglio del disegno
 della architettura. Nella realizzazione di questa abbiamo scelto di utilizzare
 il formalismo degli oggetti e delle classi secondo il consueto paradigma
 ``Object Oriented''. Inoltre abbiamo preso come fonte di
-ispirazione il ``Composite Pattern'' cercandone una trasposizione nella
+ispirazione il ``Composite Pattern'' [GANGo4] cercandone una trasposizione nella
 problematica dell'esecuzione di un programma Blite. In particolare
 l'astrazione di componente \`e stata applicata all'entità attività. Come i
 componenti contribuiscono alla realizzazione di un documento o di una
@@ -161,11 +166,48 @@ Lo scenario che si va a delineare \`e quindi quello di due strutture gerarchiche
 associate: una costituita dall'AST (Abstract Syntax Tree) ricavato dal
 parsing del codice Blite, e che come si detto \`e mantenuta nella sua interezza,
 l'altra costituita dall'albero dinamico delle ActivityComponent che
-realizzano l'esecuzione a runtime. Quest'ultima struttura non \`e pero
-costruita in un unico momento in fase di creazione del processo, ma
-al contrario \`e istanziata man mano che l'esecuzione procede. Come già
-accennato le attività stesse saranno responsabili di creare i loro successori
-e di metterli in esecuzione. Inoltre gli oggetti attività già eseguiti dovranno
-essere rilasciati il prima possibile in modo da poter essere collezionati dal
-Garbage Collector e rilasciare le risorse di memoria.
+realizzano l'esecuzione a runtime. Quest'ultima struttura, una per ogni
+istanza, non \`e pero costruita in un unico momento in fase di inizializzazione
+del  processo, ma al contrario \`e istanziata man mano che l'esecuzione
+procede.  Come già accennato le attività stesse saranno responsabili di creare
+i loro successori e di metterli in esecuzione. Inoltre gli oggetti attività
+già eseguiti dovranno essere rilasciati il prima possibile in modo da poter 
+essere collezionati dal Garbage Collector e rilasciare le risorse di memoria.
 
+\begin{figure}[!htp]
+\begin{center}
+  \includegraphics{architettura_interna/dia/tries}
+%   \caption[]{
+%   	\textsf{{\small Passaggio da reazioni a processi}}
+%   }riscrivera
+  \label{fig:1}
+\end{center}
+\end{figure}
+
+Per ogni tipologia di attività prevista dalla grammatica di Blite esisterà
+una sotto classe specifica implementante l'interfaccia \icode{ActivityComponent}
+e che realizzerà in maniera opportuna in rispetto della semantica il metodo
+\icode{boolean \textbf{doActivity()}}. Per ottimizzare il disegno e fattorizzare
+il codice comune \`e stata ovviamente introdotta una classe astratta
+\icode{ActivityComponentBase} da cui ogni altra implementazione di
+\icode{ActivityComponent} erediterà le funzionalità comuni di base.
+
+Anche la classe \icode{ProcessInstance}, che modellerà con i suoi oggetti le
+varie istanze di processo nell'engine, implemetra l'interfaccia
+\icode{ActivityComponent} uniformando la struttura gerarchica di esecuzione.
+
+Le varie instanze di \icode{ActivityComponent} del tipo specializzato verranno
+create tramite una classe di Factory \icode{ActivityComponentFactory} che
+espone il FactotyMathod \icode{ActivityComponent
+\textbf{makeRuntimeActivity}(BltDefBaseNode bltDefNode,\ldots )} 
+
+\lstinputlisting
+[caption={ActivityComponentFactory la factory per le ActivityComponent}
+label=lst:ActivityComponentFactory]
+{architettura_interna/java/ActivityComponentFactory.java}
+
+
+
+\section{Esecuzione e parallelismo}
+
+\section{Eventi e comunicazione}
