@@ -159,8 +159,7 @@ parsing del codice Blite. }}\\
 
 \hline
 \end{tabular}
-\\
-\\
+
 
 Lo scenario che si va a delineare \`e quindi quello di due strutture gerarchiche
 associate: una costituita dall'AST (Abstract Syntax Tree) ricavato dal
@@ -206,7 +205,42 @@ espone il FactotyMathod \icode{ActivityComponent
 label=lst:ActivityComponentFactory]
 {architettura_interna/java/ActivityComponentFactory.java}
 
+\begin{center}
+\begin{tabular}{| p{0.5\textwidth } | p{0.4\textwidth}|}
+\hline
+\icode{ActivityComponentFactory} & \\
+\hline
 
+\small{
+ActivityComponent \linebreak \textbf{makeRuntimeActivity}( 
+\linebreak \hspace*{\stretch{3}} BltDefBaseNode bltDefNode, 
+\linebreak \hspace*{\stretch{3}} ExecutionContext context, 
+\linebreak \hspace*{\stretch{3}} ActivityComponent parentComponent, 
+\linebreak \hspace*{\stretch{3}} FlowExecutor executor)} 
+& \small{\textsf{ Permette di ottenere istanze opportune di oggetti
+\icode{ActivityComponent}. Il parametro bltDefNode individua l'elemento
+sintattico che definisce l'attività specifica, in pratica il nodo nel AST.
+Il parametro parentComponent l'attività padre nella gerarchia di esecuzione,
+mentre gli altri due parametri individuano rispettivamente il contesto di
+esecuzione e l'esecutore del flusso in cui l'attività verrà creata. Tali
+entita verrano descritte nelle sezioni successive}}\\
+\hline
+\end{tabular}
+\end{center}
+
+In Figura \ref{fig:actclass} viene riportato un diagramma di classe per le
+entita  \icode{ActivityComponent}.
+
+\begin{figure}[p]
+\begin{center}
+\includegraphics[angle=90,scale=0.80]
+{architettura_interna/dia/actclass}
+\caption[Gerarchia delle ActivityComponent]{
+   	\textsf{{\small Diagramma di classe per la gerarchia delle
+   	ActivityComponent}} }
+  \label{fig:actclass}
+\end{center}
+\end{figure}
 
 \section{Esecuzione e parallelismo}
 
