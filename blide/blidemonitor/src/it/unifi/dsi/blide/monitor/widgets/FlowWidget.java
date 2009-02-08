@@ -24,7 +24,7 @@ public class FlowWidget extends ActivityWidget {
     public FlowWidget(Scene scene, ActivityComponent activity) {
         super(scene, activity);
 
-        setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 0));
+        setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 2));
 
         setBorder(TOP_BORDER);
     }
