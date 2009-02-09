@@ -97,6 +97,9 @@ basata sulle seguenti specifiche fondamentali:
   l'implementazione della semantica di esecuzione del linguaggio.
 \end{enumerate}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%						Modello per l'Attività
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Modello per l'Attività}
 A questo punto dopo aver esposto a grandi linee quelle che devono essere le
 caratteristiche fondamentali di un engine entriamo nel dettaglio del disegno
@@ -152,10 +155,10 @@ i veri componenti dell'esecuzione. }}\\
 
 & \\
 \small{BltDefBaseNode \linebreak {\textbf{ getBltDefNode()}}} &
-\small{\textsf{ Ogni attività componente dell'esecuzione \`e strettamente associata ad un 
-elemento sintattico del programma. Con questo metodo ogni oggetto attività 
-restituisce il nodo che la definisce nell'albero sintattico ricavato dal
-parsing del codice Blite. }}\\
+\small{\textsf{ Ogni attività componente dell'esecuzione \`e strettamente 
+associata ad un elemento sintattico del programma. Con questo metodo ogni 
+oggetto attività restituisce il nodo che la definisce nell'albero sintattico
+ricavato dal parsing del codice Blite. }}\\
 
 \hline
 \end{tabular}
@@ -185,7 +188,7 @@ essere collezionati dal Garbage Collector e rilasciare le risorse di memoria.
 
 Per ogni tipologia di attività prevista dalla grammatica di Blite esisterà
 una sotto classe specifica implementante l'interfaccia \icode{ActivityComponent}
-e che realizzerà in maniera opportuna in rispetto della semantica il metodo
+e che realizzerà in maniera opportuna, in rispetto della semantica, il metodo
 \icode{boolean \textbf{doActivity()}}. Per ottimizzare il disegno e fattorizzare
 il codice comune \`e stata ovviamente introdotta una classe astratta
 \icode{ActivityComponentBase} da cui ogni altra implementazione di
@@ -201,7 +204,7 @@ espone il FactotyMathod \icode{ActivityComponent
 \textbf{makeRuntimeActivity}(BltDefBaseNode bltDefNode,\ldots )} 
 
 \lstinputlisting
-[caption={ActivityComponentFactory la factory per le ActivityComponent}
+[caption={ActivityComponentFactory la factory per le ActivityComponent},
 label=lst:ActivityComponentFactory]
 {architettura_interna/java/ActivityComponentFactory.java}
 
@@ -228,8 +231,8 @@ entita verrano descritte nelle sezioni successive}}\\
 \end{tabular}
 \end{center}
 
-In Figura \ref{fig:actclass} viene riportato un diagramma di classe per le
-entita  \icode{ActivityComponent}.
+In Figura \ref{fig:actclass} viene riportato un diagramma di classe
+abbastanza dettagliato per le entita \icode{ActivityComponent}.
 
 \begin{figure}[p]
 \begin{center}
@@ -242,6 +245,44 @@ entita  \icode{ActivityComponent}.
 \end{center}
 \end{figure}
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Esecuzione e parallelismo
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Esecuzione e parallelismo}
+Abbiamo visto come i componenti base per l'esecuzione siano oggetti delle varie
+sottoclassi implementanti l'interfaccia \icode{ActivityComponent}, e come
+l'esecuzione abbia atto tramite l'invocazione del metodo
+\icode{\textbf{doActivity()}} su tali oggetti. A questo punto pero dobbiamo
+domandarci da chi e in che modo tale metodo sia invocato. Nel rispondere a questa
+domanda dobbiamo tenere conto che in un engine verranno eseguite
+contemporaneamente molteplici istanze di processo e che inoltre il formalismo
+stesso del linguaggio da la possibilità di richiedere l'esecuzione contemporanea
+di diverse attività (costrutto flaw). Quindi su ciascun Engine dovrenno essere
+disponibili piu' thread per poter realizzare il sufficente livello si
+parallelismo.
+
+Ovviamente si capisce bene che istanzire un nuovo oggetto Thread per ogni nuovo
+flusso logico presente sull'engine non sia un approccio assolutamente
+vantaggioso. Come gia' accennato infatti tale politica non sarebbe per nulla
+scalabile rispetto al numero delle richieste remote gestite dell'engine; inoltre,
+poiche ogni istanza di processo tendenzialmente trascorrera la gran parte del suo
+tempo in attesa di comunicazioni remote\footnote{Come gia asservato i tempi di
+comunicazione remota sono di ordini di grandezza molto maggiori rispetto alle
+operazioni interne.}, ci troveremmo con un gran numero di thread in stato di
+attesa, con un deltutto ingiustificabile spreco di risorse. Piu' banalmente
+gestire direttamente oggetti Thread \`e un pretica alquanto sconsigliabile
+\footnote{Questo \`e ancor pi\`u vero dalle versioni } in quanto puo portre ad
+errori di programmazione o ad Memory Leak nel caso in cui il ciclo di vita di
+tali oggetti non sia sempre ben condotto dal programmatore.
+
+Per queste motivazioni si \`e scelto di utilizzare la tecnica del Pooling per
+gestire un insieme di Thread a livello di Engine. Con tale tecnica si isola la
+gestione della tecnologia di multitasking e si possono applicare politiche anche
+molto raffinate capaci di adattare la quantita' di risorse utilizzate al carico
+di lavoro da svolgere.
+
+
+\section{Contesti, FaultHandler e Compensazione}
 
 \section{Eventi e comunicazione}
+
