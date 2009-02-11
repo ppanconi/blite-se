@@ -257,31 +257,72 @@ domandarci da chi e in che modo tale metodo sia invocato. Nel rispondere a quest
 domanda dobbiamo tenere conto che in un engine verranno eseguite
 contemporaneamente molteplici istanze di processo e che inoltre il formalismo
 stesso del linguaggio da la possibilità di richiedere l'esecuzione contemporanea
-di diverse attività (costrutto flaw). Quindi su ciascun Engine dovrenno essere
-disponibili piu' thread per poter realizzare il sufficente livello si
+di diverse attività (costrutto flaw). Quindi su ciascun Engine dovranno essere
+disponibili più thread per poter realizzare il sufficiente livello si
 parallelismo.
 
 Ovviamente si capisce bene che istanzire un nuovo oggetto Thread per ogni nuovo
 flusso logico presente sull'engine non sia un approccio assolutamente
-vantaggioso. Come gia' accennato infatti tale politica non sarebbe per nulla
+vantaggioso. Come già accennato infatti tale politica non sarebbe per nulla
 scalabile rispetto al numero delle richieste remote gestite dell'engine; inoltre,
-poiche ogni istanza di processo tendenzialmente trascorrera la gran parte del suo
-tempo in attesa di comunicazioni remote\footnote{Come gia asservato i tempi di
+poiché ogni istanza di processo tendenzialmente trascorrerà la gran parte del suo
+tempo in attesa di comunicazioni remote\footnote{Come già osservato i tempi di
 comunicazione remota sono di ordini di grandezza molto maggiori rispetto alle
-operazioni interne.}, ci troveremmo con un gran numero di thread in stato di
-attesa, con un deltutto ingiustificabile spreco di risorse. Piu' banalmente
-gestire direttamente oggetti Thread \`e un pretica alquanto sconsigliabile
-\footnote{Questo \`e ancor pi\`u vero dalle versioni } in quanto puo portre ad
-errori di programmazione o ad Memory Leak nel caso in cui il ciclo di vita di
-tali oggetti non sia sempre ben condotto dal programmatore.
+operazioni interne per cui ogni istanza nel suo ciclo di vita si troverà ad
+occupare realmente la CPU per tempi quasi infinitesimi rispetto ai tempi di
+attesa di eventi remoti}, ci troveremmo con un gran numero di thread in stato di
+attesa, con un del tutto ingiustificabile spreco di risorse. Più banalmente
+gestire direttamente oggetti Thread \`e un pratica alquanto sconsigliabile
+\footnote{Questo \`e ancor pi\`u vero dalla versione 5 in poi di Java, in cui
+sono stato introdotti i pacchetti \texttt{java.util.concurrent.*} che mettono a
+disposizione un framework ad alto livello che ottimizza e astrae l'uso delle API
+a più basso livello per la concorrenza}, in quanto può portare ad errori di
+programmazione o ad Memory Leaks nel caso in cui il ciclo di vita di tali oggetti
+non sia sempre ben condotto dal programmatore. Per queste motivazioni si \`e
+scelto di utilizzare la tecnica del Pooling per gestire un insieme di Thread a
+livello di Engine. Con tale tecnica si isola la gestione della tecnologia di
+multitasking e si possono applicare politiche anche molto raffinate capaci di
+adattare la quantità di risorse utilizzate al carico di lavoro da svolgere. Nella
+implementazione attuale dell'Engine si \`e fatto uso dei thread pool forniti
+dalla classe \texttt{java.util.concurrent.Executors} presente nella piattaforma
+standard Java 5
+ 
+La scelta che quindi \`e stata fatta per ralizzare il sufficente grado di
+parallelismo \`e la seguente: ogni flusso logico attivo presente nelle varie istanze di
+processo sara' associato all'entita' \icode{FlowExecutor} (tale entita' \`e gia
+comparsa in alcuni diagrammi precedentemente illustrati in questo capitolo, per
+cui il lettore avra' gia intuito la funzionalita'). Tali oggetti presenteranno
+un'interfaccia che permettera' da un lato di impostare l'attivita' corrente che
+dovra' essere eseguita da uno dei thread del pool, dall'altro di eseguire
+effettivamente tale attivita'.
 
-Per queste motivazioni si \`e scelto di utilizzare la tecnica del Pooling per
-gestire un insieme di Thread a livello di Engine. Con tale tecnica si isola la
-gestione della tecnologia di multitasking e si possono applicare politiche anche
-molto raffinate capaci di adattare la quantita' di risorse utilizzate al carico
-di lavoro da svolgere.
+\lstinputlisting
+[caption={I FlowExecutors saranno gli oggetti che ralizzeranno i flussi di
+esecuzione parallela allinterno dell'Engine }, label=lst:FlowExecutor]
+{architettura_interna/java/FlowExecutor.java}
 
+A questo punto quando ci sara' bisogno di crare un nuovo flusso di esecuzione per
+un ActivityComponent act si dovra' creare un nuovo FlowExecutor settarci act come
+attivita' corrente e renderlo disponibile ad un thread per l'esecuzione. Questo
+ultimo passaggio verra' reallizato tramite l'interfaccia dell'Engine che
+disporra' di un metodo per notificare gli executor pronti per essere eseguiti.
 
+\lstinputlisting
+{architettura_interna/java/queueFlowExecutor.java}
+
+Inoltre ogni flusso potra' giungere a coclusione (un istanza di processo termina
+o un esecuzione parallela definita in una flow Activity si conclude ) e tale
+evento dovra' essere registrato e produrre eventualmente altri effetti. Per far
+si che si realizzi questa necessita' abbiamo introdurreno l'entita'
+\icode{FlowOwner}
+
+Oltre a creare, eseguire e terminare flussi sara' anche necessarrio sospendere
+alcuni gia' in esecuzione, vedi per esempio il caso di attivita' di ricezione
+che deve fermare il flusso corrente in attesa di evento remoto
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contesti, FaultHandler e Compensazione}
 
 \section{Eventi e comunicazione}
