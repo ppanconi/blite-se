@@ -12,6 +12,8 @@ public interface FlowExecutor {
     void setCurrentActivity(ActivityComponent activityComponent);
     
     ActivityComponent getCurrentActivity();
+    
+    FlowOwner getOwner();
 
     void executeCurrentActivity();
 }

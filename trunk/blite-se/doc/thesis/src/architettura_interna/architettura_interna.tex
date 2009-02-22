@@ -198,7 +198,7 @@ Anche la classe \icode{ProcessInstance}, che modellerà con i suoi oggetti le
 varie istanze di processo nell'engine, implemetra l'interfaccia
 \icode{ActivityComponent} uniformando la struttura gerarchica di esecuzione.
 
-Le varie instanze di \icode{ActivityComponent} del tipo specializzato verranno
+Le varie istanze di \icode{ActivityComponent} del tipo specializzato verranno
 create tramite una classe di Factory \icode{ActivityComponentFactory} che
 espone il FactotyMathod \icode{ActivityComponent
 \textbf{makeRuntimeActivity}(BltDefBaseNode bltDefNode,\ldots )} 
@@ -226,13 +226,13 @@ sintattico che definisce l'attività specifica, in pratica il nodo nel AST.
 Il parametro parentComponent l'attività padre nella gerarchia di esecuzione,
 mentre gli altri due parametri individuano rispettivamente il contesto di
 esecuzione e l'esecutore del flusso in cui l'attività verrà creata. Tali
-entita verrano descritte nelle sezioni successive}}\\
+entità verranno descritte nelle sezioni successive}}\\
 \hline
 \end{tabular}
 \end{center}
 
 In Figura \ref{fig:actclass} viene riportato un diagramma di classe
-abbastanza dettagliato per le entita \icode{ActivityComponent}.
+abbastanza dettagliato per le entità \icode{ActivityComponent}.
 
 \begin{figure}[p]
 \begin{center}
@@ -287,34 +287,76 @@ implementazione attuale dell'Engine si \`e fatto uso dei thread pool forniti
 dalla classe \texttt{java.util.concurrent.Executors} presente nella piattaforma
 standard Java 5
  
-La scelta che quindi \`e stata fatta per ralizzare il sufficente grado di
+La scelta che quindi \`e stata fatta per realizzare il sufficiente grado di
 parallelismo \`e la seguente: ogni flusso logico attivo presente nelle varie istanze di
-processo sara' associato all'entita' \icode{FlowExecutor} (tale entita' \`e gia
+processo sarà associato all'entità \icode{FlowExecutor} (tale entità \`e già
 comparsa in alcuni diagrammi precedentemente illustrati in questo capitolo, per
-cui il lettore avra' gia intuito la funzionalita'). Tali oggetti presenteranno
-un'interfaccia che permettera' da un lato di impostare l'attivita' corrente che
-dovra' essere eseguita da uno dei thread del pool, dall'altro di eseguire
-effettivamente tale attivita'.
+cui il lettore avrà già intuito la sua funzionalità). Tali oggetti
+presenteranno un'interfaccia che permetterà da un lato di impostare l'attività corrente che
+dovrà essere eseguita da uno dei thread del pool, dall'altro di eseguire
+effettivamente tale attività.
 
 \lstinputlisting
-[caption={I FlowExecutors saranno gli oggetti che ralizzeranno i flussi di
-esecuzione parallela allinterno dell'Engine }, label=lst:FlowExecutor]
+[caption={I FlowExecutors saranno gli oggetti che realizzeranno i flussi di
+esecuzione parallela all'interno dell'Engine }, label=lst:FlowExecutor]
 {architettura_interna/java/FlowExecutor.java}
 
-A questo punto quando ci sara' bisogno di crare un nuovo flusso di esecuzione per
-un ActivityComponent act si dovra' creare un nuovo FlowExecutor settarci act come
-attivita' corrente e renderlo disponibile ad un thread per l'esecuzione. Questo
-ultimo passaggio verra' reallizato tramite l'interfaccia dell'Engine che
-disporra' di un metodo per notificare gli executor pronti per essere eseguiti.
+A questo punto quando ci sarà bisogno di creare un nuovo flusso di esecuzione per
+l'ActivityComponent \texttt{act} si dovrà creare un nuovo FlowExecutor settarci
+\texttt{act} come attività corrente e renderlo disponibile ad un thread per
+l'esecuzione. Questo ultimo passaggio verrà realizzato tramite l'interfaccia
+dell'Engine che disporrà di un metodo per notificare gli executor pronti per
+essere eseguiti.
+
+\lstinputlisting {architettura_interna/java/queueFlowExecutor.java}
+
+Inoltre ogni flusso giungerà a conclusione (un istanza di processo termina o un
+esecuzione parallela definita in una flow Activity si conclude) e tale evento
+dovrà essere registrato e produrre eventualmente altri effetti. Per far si che si
+realizzi questa necessità si \`e introdotto il concetto di \icode{FlowOwner}.
+Ogni attività che nel suo eseguirsi si troverà a creare nuovi flussi di
+esecuzione e quindi oggetti \icode{FlowExecutor}  dovrà implementare
+l'interfaccia \icode{FlowOwner} e settare se stessa nel FlowExecutor da lei
+creato. In questo modo quando il flusso logico terminerà il FlowOwner potrà
+essere notificato di tale accadimento tramite l'invocazione del metodo
+\icode{flowCompleted()}.
 
 \lstinputlisting
-{architettura_interna/java/queueFlowExecutor.java}
+{architettura_interna/java/FlowOwner.java}
 
-Inoltre ogni flusso potra' giungere a coclusione (un istanza di processo termina
-o un esecuzione parallela definita in una flow Activity si conclude ) e tale
-evento dovra' essere registrato e produrre eventualmente altri effetti. Per far
-si che si realizzi questa necessita' abbiamo introdurreno l'entita'
-\icode{FlowOwner}
+A questo punto \`e lecito domandarsi quando si dovrà considerare terminato un
+flusso di esecuzione. In generale si applica il seguente ragionamento. Le varie
+\icode{ActivityComponent}, che sono legate in una struttura gerarchica che
+riflette la definizione statica del programma, termineranno la loro esecuzione
+mettendo come attività corrente nel loro FlowExecutor la propria attività padre
+(parentComponent). In accordo con questa osservazione risulta quindi corretto
+affermare che flusso di esecuzione può essere considerato terminato dal
+FlowExecutor quando questo si troverà ad eseguire come attività corrente proprio
+il suo FlowOwner. In questo caso su di esso il FlowExecutor non dovrà invocare il
+metodo doActivity() ma il metodo flowCompleted() e fatto questo, dovrà terminare
+di eseguire il flusso. Il codice seguente spiega meglio di mille parole la logica
+alla base di tutto il modello di esecuzione del Blite Engine; in poche righe \`e
+sintetizzata il cuore dell'architettura.
+
+\lstinputlisting
+{architettura_interna/java/FlowExecutorImp.java}
+
+In generale possiamo quindi dedurre le seguenti affermazioni che ci possono
+aiutare a sintetizzare delle proprietà invarianti
+
+\begin{itemize}
+  \item Un FlowExecutor non invocherà mai il metodo doActivity() del suo
+  FlowOwner. 
+  
+  \item Su un oggetto ActivityComponent che implementa anche il l'interfaccia
+  FlowOwner, il metodo doActivity() verrà invocato dal FlowExecutor del
+  attività padre.
+  
+  \item Su oggetto ProcessInstance, che \`e il FlowOwner del flusso principale
+  dell'istanza e che \`e l'unica attività senza padre, il metodo doActivity()
+  non verrà mai invocato da nessun FlowExecutor.
+  
+\end{itemize}
 
 Oltre a creare, eseguire e terminare flussi sara' anche necessarrio sospendere
 alcuni gia' in esecuzione, vedi per esempio il caso di attivita' di ricezione
