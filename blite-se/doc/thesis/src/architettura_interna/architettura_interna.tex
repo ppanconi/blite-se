@@ -336,36 +336,60 @@ il suo FlowOwner. In questo caso su di esso il FlowExecutor non dovrà invocare 
 metodo doActivity() ma il metodo flowCompleted() e fatto questo, dovrà terminare
 di eseguire il flusso. Il codice seguente spiega meglio di mille parole la logica
 alla base di tutto il modello di esecuzione del Blite Engine; in poche righe \`e
-sintetizzata il cuore dell'architettura.
+sintetizzata il cuore dell'architettura.q
 
-\lstinputlisting
-{architettura_interna/java/FlowExecutorImp.java}
+\lstinputlisting{architettura_interna/java/FlowExecutorImp.java}
 
 In generale possiamo quindi dedurre le seguenti affermazioni che ci possono
 aiutare a sintetizzare delle proprietà invarianti
 
 \begin{itemize}
   \item Un FlowExecutor non invocherà mai il metodo doActivity() del suo
-  FlowOwner. 
+  FlowOwner. Viceversa di questo invochera prima o poin il metodo
+  flowCompleted().
   
   \item Su un oggetto ActivityComponent che implementa anche il l'interfaccia
   FlowOwner, il metodo doActivity() verrà invocato dal FlowExecutor del
   attività padre.
   
-  \item Su oggetto ProcessInstance, che \`e il FlowOwner del flusso principale
-  dell'istanza e che \`e l'unica attività senza padre, il metodo doActivity()
-  non verrà mai invocato da nessun FlowExecutor.
+  \item Su di un oggetto ProcessInstance, che \`e il FlowOwner del flusso
+  principale dell'istanza e che \`e l'unica attività senza padre, 
+  il metodo doActivity() non verrà mai invocato da nessun FlowExecutor.
   
 \end{itemize}
 
-Oltre a creare, eseguire e terminare flussi sara' anche necessarrio sospendere
-alcuni gia' in esecuzione, vedi per esempio il caso di attivita' di ricezione
-che deve fermare il flusso corrente in attesa di evento remoto
+Oltre a creare, eseguire e terminare flussi sarà anche necessario sospenderne
+alcuni già in esecuzione, vedi per esempio il caso di attività di ricezione
+che deve fermare il flusso corrente in attesa di evento remoto. In questo caso
+l'attività potrà utilizzare l'interfaccia dell'Engine e in particolare il
+seguente metodo
+
+\lstinputlisting{architettura_interna/java/addFlowWaitingEvent.java}
+
+in questo modo potrà mettere in attesa il suo FlowExecutor di un evento
+identificato dalla chiave di tipo \icode{InComingEventKey} che avrà provveduto
+precedentemente a creare. Fatto questo l'attività ritornerà dal proprio
+metodo doActivity() con il valore false, in questo modo il FlowExecutor
+terminerà l'esecuzione del del Flow corrente.
+
+\begin{figure}[p]
+\begin{center}
+\includegraphics[angle=90,scale=0.70]
+{architettura_interna/dia/flowClassDiagram}
+\caption[\ldots]{
+   	\textsf{{\small ..}} }
+  \label{fig:actclass}
+\end{center}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
+%  						EVENTI E COMUNICAZIONE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Eventi e comunicazione}
+
+
 \section{Contesti, FaultHandler e Compensazione}
 
-\section{Eventi e comunicazione}
+
 
