@@ -195,7 +195,7 @@ il codice comune \`e stata ovviamente introdotta una classe astratta
 \icode{ActivityComponent} erediterà le funzionalità comuni di base.
 
 Anche la classe \icode{ProcessInstance}, che modellerà con i suoi oggetti le
-varie istanze di processo nell'engine, implemetra l'interfaccia
+varie istanze di processo nell'engine, implementerà l'interfaccia
 \icode{ActivityComponent} uniformando la struttura gerarchica di esecuzione.
 
 Le varie istanze di \icode{ActivityComponent} del tipo specializzato verranno
@@ -345,11 +345,11 @@ aiutare a sintetizzare delle proprietà invarianti
 
 \begin{itemize}
   \item Un FlowExecutor non invocherà mai il metodo doActivity() del suo
-  FlowOwner. Viceversa di questo invochera prima o poin il metodo
+  FlowOwner. Viceversa di questo invocherà prima o poi il metodo
   flowCompleted().
   
   \item Su un oggetto ActivityComponent che implementa anche il l'interfaccia
-  FlowOwner, il metodo doActivity() verrà invocato dal FlowExecutor del
+  FlowOwner, il metodo doActivity() verrà invocato dal FlowExecutor dell'
   attività padre.
   
   \item Su di un oggetto ProcessInstance, che \`e il FlowOwner del flusso
@@ -359,35 +359,91 @@ aiutare a sintetizzare delle proprietà invarianti
 \end{itemize}
 
 Oltre a creare, eseguire e terminare flussi sarà anche necessario sospenderne
-alcuni già in esecuzione, vedi per esempio il caso di attività di ricezione
-che deve fermare il flusso corrente in attesa di evento remoto. In questo caso
-l'attività potrà utilizzare l'interfaccia dell'Engine e in particolare il
+alcuni già in esecuzione, vedi per esempio il caso dell'attività di ricezione
+che deve fermare il flusso corrente in attesa di un evento remoto. In questo
+caso l'attività utilizzando l'interfaccia dell'Engine e in particolare il
 seguente metodo
 
 \lstinputlisting{architettura_interna/java/addFlowWaitingEvent.java}
 
-in questo modo potrà mettere in attesa il suo FlowExecutor di un evento
-identificato dalla chiave di tipo \icode{InComingEventKey} che avrà provveduto
-precedentemente a creare. Fatto questo l'attività ritornerà dal proprio
-metodo doActivity() con il valore false, in questo modo il FlowExecutor
-terminerà l'esecuzione del del Flow corrente.
+potrà mettere in attesa il suo FlowExecutor di un evento identificato dalla
+chiave \texttt{eventKey} di tipo \icode{InComingEventKey} che aveva
+precedentemente creato. Fatto questo l'attività ritornerà dal proprio metodo
+doActivity() con il valore false, in questo modo il FlowExecutor terminerà
+l'esecuzione del Flow corrente. Nel momento in cui il messaggio sarà recapitato,
+l'Engine potrà individuare il FlowExecutor tramite la chiave \texttt{eventKey} e
+rimetterlo in esecuzione, poiché l'attività corrente di quest'ultimo sarà rimasta
+l'attività di ricezione essa potrà riprendere il il suo lavoro, consumando il
+messaggio e permettendo al suo flusso di esecuzione di continuare. Nella sezione
+successiva verrà illustrato nel dettaglio come si realizza la comunicazione e la
+notifica degli eventi.
+
+In Figura \ref{fig:flowclass} \`e rappresentato un diagramma di classe che
+raffigura fra le altre l'entità il FlowExecutor e FlowOwner e le principali
+relazioni che le coinvolgono.
 
 \begin{figure}[p]
 \begin{center}
-\includegraphics[angle=90,scale=0.70]
+\includegraphics[angle=90,scale=0.75]
 {architettura_interna/dia/flowClassDiagram}
-\caption[\ldots]{
-   	\textsf{{\small ..}} }
-  \label{fig:actclass}
+\caption[Diagramma di classe FlowExecutor \ldots] {
+   	\textsf{{\small Diagramma di classe FlowExecutor, FlowOwner e ThreadPool}} }
+  \label{fig:flowclass}
 \end{center}
 \end{figure}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  						EVENTI E COMUNICAZIONE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EVENTI E COMUNICAZIONE
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Eventi e comunicazione}
+Da quanto abbiamo già esposto risulta chiaro che l'esecuzione di un processo \`e
+caratterizzata da lo svolgersi di attività interne e l'accadere di eventi
+esterni di cui l'attività possono essere in attesa. In generale si può
+considerare che gli eventi si generino a livello di Enviroment, e che possano
+essere prodotti dall'arrivo di nuovi messaggi verso alle porte locali o
+dalla notifica degli acknologment delle invocazioni locali
+verso porte remote. Attualmente le funzionalita' espresse da Blite non
+individuano eventi diversi da queste due tipologie. Nelle engine pero' si \`e
+preferito realizzare un meccanismo generico di notifica di eventi che
+soddisfacesse i requisiti attuali del linguaggio ma che non escludesse eventuali
+possibilità di estensione verso altre caratteristiche tipiche di BPEL
+(comunicazione Request-Response, EventActivity, ecc).
 
+Per l'implementazione attuale di Blite saranno richieste le seguenti
+funzionalita'
+
+\begin{enumerate}
+  \item A livello di attvita' o di ProcessManager stesso
+  sara' necessario ricavare una chiave univoca per uno specifico 
+  evento\footnote{Si usa qui il termine ricavare e non generare in maniera
+  voluta. Le chiavi di evento non sono identificati da oggetti in memoria ma hanno una loro entita' indipendete
+  dagli oggetti che posso essere creati per rappresentarle.}.
+  I tipi di evento e le regole per generare di volta in volta 
+  le chiavi verrano esposti di seguito. Per il momento puo' bastare aver 
+  chiaro che una chiave individua in maniera univoca una particolare 
+  tipologia di evento e all'interno di questa un evento specifico o un insieme
+  di eventi gemelli. 
+  
+  \item In un qualsiasi momento al ProcessMenager potranno essere notificati
+  eventi. In tal caso esso dovra' provvedere a ricavarsi la chiave e a
+  memorizzare associativamente l'evento alla chiave per poterlo poi rendere
+  disponibile all'attivita' interessate. Il ProcessManager dovra' anche
+  proveddere a ``svegliare'' tutti i flussi di esecuzione che
+  eventualmenti si sono messi in attesa di quel evento specifico.
+   
+  \item In un qualsiasi momento e anche piu' volte nel suo ciclo di vita una
+  Attivita' potra' interrogare l'Engine (o meglio il ProcessManager associato
+  alla sua istanza) chiedendogli se un evento associato ad una particolare
+  chiave sia evvenuto. In caso affemativo l'attivita' potra' consumare l'evento.
+
+  \item Una attivita' potra' avere la necessita' di mettersi in attesa di un
+  particolare evento non ancora avvenuto, il tal caso dovra' sospendere il
+  suo flusso di esecuzione e notificare questo al ProcessManager
+  associativamente alla chiave dell'evento d'interesse. 
+\end{enumerate}
+
+In particolare si puo' vedere come questo schema di ragionamento si realizzi
+nel caso dell'attvivita \icode{ReceiveActivity}
 
 \section{Contesti, FaultHandler e Compensazione}
 
