@@ -306,7 +306,7 @@ l'ActivityComponent \texttt{act} si dovrà creare un nuovo FlowExecutor settarci
 \texttt{act} come attività corrente e renderlo disponibile ad un thread per
 l'esecuzione. Questo ultimo passaggio verrà realizzato tramite l'interfaccia
 dell'Engine che disporrà di un metodo per notificare gli executor pronti per
-essere eseguiti.
+essere eseguiti e metterli a disposizione del pool di threads
 
 \lstinputlisting {architettura_interna/java/queueFlowExecutor.java}
 
@@ -336,7 +336,7 @@ il suo FlowOwner. In questo caso su di esso il FlowExecutor non dovrà invocare 
 metodo doActivity() ma il metodo flowCompleted() e fatto questo, dovrà terminare
 di eseguire il flusso. Il codice seguente spiega meglio di mille parole la logica
 alla base di tutto il modello di esecuzione del Blite Engine; in poche righe \`e
-sintetizzata il cuore dell'architettura.q
+sintetizzata il cuore dell'architettura
 
 \lstinputlisting{architettura_interna/java/FlowExecutorImp.java}
 
@@ -348,13 +348,16 @@ aiutare a sintetizzare delle proprietà invarianti
   FlowOwner. Viceversa di questo invocherà prima o poi il metodo
   flowCompleted().
   
-  \item Su un oggetto ActivityComponent che implementa anche il l'interfaccia
-  FlowOwner, il metodo doActivity() verrà invocato dal FlowExecutor dell'
-  attività padre.
+  \item Su un oggetto ActivityComponent che implementa anche l'interfaccia
+  FlowOwner, il metodo doActivity() verrà invocato dal FlowExecutor dell'attività 
+  padre.
   
   \item Su di un oggetto ProcessInstance, che \`e il FlowOwner del flusso
   principale dell'istanza e che \`e l'unica attività senza padre, 
   il metodo doActivity() non verrà mai invocato da nessun FlowExecutor.
+  
+  \item il metodo doActivity() di una ProcessInstance verra' invocato
+  dell'Engine stesso in fase di creazione dell'istanza.
   
 \end{itemize}
 
@@ -366,14 +369,14 @@ seguente metodo
 
 \lstinputlisting{architettura_interna/java/addFlowWaitingEvent.java}
 
-potrà mettere in attesa il suo FlowExecutor di un evento identificato dalla
-chiave \texttt{eventKey} di tipo \icode{InComingEventKey} che aveva
-precedentemente creato. Fatto questo l'attività ritornerà dal proprio metodo
+potrà mettere in attesa il suo FlowExecutor su di un evento identificato dalla
+chiave \texttt{eventKey} e che lei stessa aveva provveduto
+precedentemente a creare. Fatto questo l'attività ritornerà dal proprio metodo
 doActivity() con il valore false, in questo modo il FlowExecutor terminerà
 l'esecuzione del Flow corrente. Nel momento in cui il messaggio sarà recapitato,
 l'Engine potrà individuare il FlowExecutor tramite la chiave \texttt{eventKey} e
 rimetterlo in esecuzione, poiché l'attività corrente di quest'ultimo sarà rimasta
-l'attività di ricezione essa potrà riprendere il il suo lavoro, consumando il
+l'attività di ricezione essa potrà riprendere il suo lavoro, consumando il
 messaggio e permettendo al suo flusso di esecuzione di continuare. Nella sezione
 successiva verrà illustrato nel dettaglio come si realizza la comunicazione e la
 notifica degli eventi.
@@ -395,7 +398,7 @@ relazioni che le coinvolgono.
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EVENTI E COMUNICAZIONE
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Eventi e comunicazione}
+\section{Comunicazione ed eventi}
 Da quanto abbiamo già esposto risulta chiaro che l'esecuzione di un processo \`e
 caratterizzata da lo svolgersi di attività interne e l'accadere di eventi
 esterni di cui l'attività possono essere in attesa. In generale si può
@@ -409,11 +412,11 @@ soddisfacesse i requisiti attuali del linguaggio ma che non escludesse eventuali
 possibilità di estensione verso altre caratteristiche tipiche di BPEL
 (comunicazione Request-Response, EventActivity, ecc).
 
-Per l'implementazione attuale di Blite saranno richieste le seguenti
-funzionalita'
+Per l'implementazione dello schema di comunicazione prescelto saranno richieste
+le seguenti funzionalita'
 
 \begin{enumerate}
-  \item A livello di attvita' o di ProcessManager stesso
+  \item A livello di attvita' o di ProcessManager stesso,
   sara' necessario ricavare una chiave univoca per uno specifico 
   evento\footnote{Si usa qui il termine ricavare e non generare in maniera
   voluta. Le chiavi di evento non sono identificati da oggetti in memoria ma hanno una loro entita' indipendete
@@ -424,27 +427,99 @@ funzionalita'
   tipologia di evento e all'interno di questa un evento specifico o un insieme
   di eventi gemelli. 
   
-  \item In un qualsiasi momento al ProcessMenager potranno essere notificati
-  eventi. In tal caso esso dovra' provvedere a ricavarsi la chiave e a
+  \item In un qualsiasi momento al ProcessManager potranno essere notificati
+  eventi. In tal caso esso dovrà provvedere a ricavarsi la chiave e a
   memorizzare associativamente l'evento alla chiave per poterlo poi rendere
-  disponibile all'attivita' interessate. Il ProcessManager dovra' anche
-  proveddere a ``svegliare'' tutti i flussi di esecuzione che
-  eventualmenti si sono messi in attesa di quel evento specifico.
+  disponibile all'attivita' interessate. Il ProcessManager dovrà anche
+  provvedere a ``risvegliare'' tutti i flussi di esecuzione che
+  eventualmente si sono messi in attesa di quel evento specifico.
    
-  \item In un qualsiasi momento e anche piu' volte nel suo ciclo di vita una
-  Attivita' potra' interrogare l'Engine (o meglio il ProcessManager associato
-  alla sua istanza) chiedendogli se un evento associato ad una particolare
-  chiave sia evvenuto. In caso affemativo l'attivita' potra' consumare l'evento.
+  \item In un qualsiasi momento e anche più volte nel suo ciclo di vita una
+  Attività potrà interrogare l'Engine (o meglio il ProcessManager responsabile
+  della sua istanza) chiedendogli se un evento associato ad una particolare
+  chiave sia avvenuto. In caso affermativo l'attività potrà consumare l'evento.
 
-  \item Una attivita' potra' avere la necessita' di mettersi in attesa di un
-  particolare evento non ancora avvenuto, il tal caso dovra' sospendere il
+  \item Una attività potrà avere la necessità di mettersi in attesa di un
+  particolare evento non ancora avvenuto, il tal caso dovrà sospendere il
   suo flusso di esecuzione e notificare questo al ProcessManager
   associativamente alla chiave dell'evento d'interesse. 
 \end{enumerate}
 
-In particolare si puo' vedere come questo schema di ragionamento si realizzi
-nel caso dell'attvivita \icode{ReceiveActivity}
+Tali funzionalità serrano rese disponibili nelle diverse interfacce 
 
+
+\ldots
+\\
+
+In particolare si può vedere come queste funzionalità di base possano essere
+utilizzate nel caso dell'attività \icode{ReceiveActivity}, e come
+l'attività stessa collabori con il ProcessManager perché si realizzi la
+ricezione di messaggi. La \icode{ReceiveActivity} nel suo metoto doActivity
+compiera' i seguenti passi logici:
+
+\begin{enumerate}
+  \item Si ricava la chaive d'evento \texttt{eventKey}. In questo caso
+  particolare la chiave sara' di tipo \icode{RequestInComingEventKey} e la sua
+  unicita' sara costituita dal \texttt{portId} ( ovvero la coppia 
+  serviceName/operationName) delle porta su cui si sta eseguendo l'operazione di 
+  ricezione. Ovviamente la ReceiveActivity potra' ricavare il \texttt{portId}
+  dal nodo della definizione sitattica a lei associata.
+  
+  \item Si richiede al ProcessManager il set degli eventi associati alla
+  \texttt{eventKey}. Se non c'e' alcun evento associato si mette in attesa il
+  FlowExecutor sull'evento \texttt{eventKey}, si termina ritornando
+  \texttt{false}.
+  
+  \item Si analizza il set degli eventi (che in questo caso possono essere
+  identificati con tutti messaggi indirizzati alla porta in questione non
+  ancora consumati) per vedere se ce ne possa essere uno indirizzabile alla
+  instanza della ReceiveActivity in questione. Questo controllo \`e fatto in
+  base alle regole di correlazione. Se un tale messaggio non viene identificato
+  si mette in attesa il FlowExecutor sull'evento \texttt{eventKey} e si termina
+  ritornando \texttt{false}. 
+  
+  \item Si \`e individuato un messaggio inviato alla porta e alla istanza in
+  questione. Si consuma tale messaggio aggiornando lo stato delle variabili
+  conivolte nella ricezione, si imposta la parentComponet come attivita'
+  corrente del FlowExecutor si termina ritornando \texttt{true}.
+\end{enumerate}
+
+Daltro canto un oggetto ProcessManager nel metodo \icode{manageRequest( 
+ServiceIdentifier service, String operation, MessageContainer
+messageContainer)}\footnote{Bisogna notare che
+l'invocazione di tale metodo sara' scatenata lato Environment, e che la sua
+esecuzione avverra' a carico di un Thread allocato a livello stesso di
+Environment logicamente del tutto indipendente dai thread del pool
+dell'Engine} eseguira le seguenti operazioni:
+
+\begin{enumerate}
+  \item Si verifica che la terna serviceName/operationName/numero parti del
+  messaggio identifichi effettivamente una porta valida per la definizione 
+  di processo in questione. Se non \`e cosi si notifica una
+  situazione di errore all'Enviroment e questo provvedera' ad inviare un NOK al
+  processo invocante.
+ 
+ \item Si ricava il RequestInComingEventKey \texttt{eventKey} associata alla
+ porta e con questa si provvede a memorizzare il messaggio in arrivo in una mappa associativa.
+ 
+ \item Se la porta in questione individua una start activity si crea una nuova
+ istanza di processo e la si mette in esecuzione, alternativamente 
+ 
+ \item Se la porta non \`e associata ad una start activity si risvegliano tutti
+ i FlowExecutor in attesa di eventi individuati dalla \texttt{eventKey}.
+\end{enumerate}
+
+Gia' pensando che le due procedure precedenti saranno eseguite concorrentemente
+si capisce che un punto particolarmente critico del meccanismo di
+notifica/consumo di eventi sta nel fatto che l'elevato grado di parrallelismo
+presente possa portare ad una perdita eventi (ovvero non consegna di messaggi).
+Quest'ultima \`e di fatto un ipotesi assolutamente inammisibile e che deve essere
+assolutamente evitata. Di fatto essa si manifesterebbe allorche il parallelismo
+delle fosse sequenzializzato per esempio nel seguente modo
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONTESTI E COMPESAZIONE
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contesti, FaultHandler e Compensazione}
 
 

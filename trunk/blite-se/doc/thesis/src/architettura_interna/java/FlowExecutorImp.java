@@ -6,6 +6,8 @@ package it.unifi.dsi.blitese.engine.runtime.imp;
  */
 public class FlowExecutorImp implements FlowExecutor {
     
+	private ActivityComponent currentActivity;
+    private FlowOwner flowOwner;
 	...
 	
     /**
