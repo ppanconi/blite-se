@@ -416,15 +416,17 @@ Per l'implementazione dello schema di comunicazione prescelto saranno richieste
 le seguenti funzionalita'
 
 \begin{enumerate}
-  \item A livello di attvita' o di ProcessManager stesso,
-  sara' necessario ricavare una chiave univoca per uno specifico 
+  \item A livello di attività o di ProcessManager stesso,
+  sarà necessario ricavare una chiave univoca per uno specifico 
   evento\footnote{Si usa qui il termine ricavare e non generare in maniera
-  voluta. Le chiavi di evento non sono identificati da oggetti in memoria ma hanno una loro entita' indipendete
-  dagli oggetti che posso essere creati per rappresentarle.}.
-  I tipi di evento e le regole per generare di volta in volta 
-  le chiavi verrano esposti di seguito. Per il momento puo' bastare aver 
-  chiaro che una chiave individua in maniera univoca una particolare 
-  tipologia di evento e all'interno di questa un evento specifico o un insieme
+  voluta. Le chiavi di evento non sono identificati da oggetti in memoria ma hanno una loro 
+  entità indipendente
+  dagli oggetti che posso essere creati per rappresentarle. Per un esempio le
+  chiavi utilizzate per la ricezione saranno costituite dalla coppia
+  nomeservizio/nomeoperazione, tele coppia verrà indicata come
+  \texttt{portId} }. I tipi di evento e le regole per generare di volta in volta 
+  le chiavi verranno esposti di seguito. Per il momento può bastare aver
+  chiaro che una chiave individua in maniera univoca una particolare tipologia di evento e all'interno di questa un evento specifico o un insieme
   di eventi gemelli. 
   
   \item In un qualsiasi momento al ProcessManager potranno essere notificati
@@ -489,7 +491,7 @@ ServiceIdentifier service, String operation, MessageContainer
 messageContainer)}\footnote{Bisogna notare che
 l'invocazione di tale metodo sara' scatenata lato Environment, e che la sua
 esecuzione avverra' a carico di un Thread allocato a livello stesso di
-Environment logicamente del tutto indipendente dai thread del pool
+Environment e logicamente del tutto indipendente dai thread del pool
 dell'Engine} eseguira le seguenti operazioni:
 
 \begin{enumerate}
@@ -516,6 +518,17 @@ presente possa portare ad una perdita eventi (ovvero non consegna di messaggi).
 Quest'ultima \`e di fatto un ipotesi assolutamente inammisibile e che deve essere
 assolutamente evitata. Di fatto essa si manifesterebbe allorche il parallelismo
 delle fosse sequenzializzato per esempio nel seguente modo
+
+\begin{itemize}
+  \item L'\icode{ReceiveActivity} arriva ad eseguire meta' del passo 2. Cioe'
+  ricerca eventi non trovandoli ma non arriva a registrare il FlowExecutor come
+  in attesa dell'evento.
+  \item Il controllo passa al ProcessManager a cui viene effettivamente
+  notificato l'evento di interesse della attivita'. Esso pero' non trovando
+  nessun FlowExecutor in attesa registra l'eveto e termina.
+  \item Il controllo ripassa all'attivita che registra il suo FlowExecutor come
+  in attesa. Essendo pero' l'evento gia' accaduto nessuno 
+\end{itemize}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONTESTI E COMPESAZIONE
