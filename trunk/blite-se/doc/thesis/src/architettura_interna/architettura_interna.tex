@@ -252,16 +252,16 @@ abbastanza dettagliato per le entità \icode{ActivityComponent}.
 Abbiamo visto come i componenti base per l'esecuzione siano oggetti delle varie
 sottoclassi implementanti l'interfaccia \icode{ActivityComponent}, e come
 l'esecuzione abbia atto tramite l'invocazione del metodo
-\icode{\textbf{doActivity()}} su tali oggetti. A questo punto pero dobbiamo
+\icode{\textbf{doActivity()}} su tali oggetti. A questo punto però dobbiamo
 domandarci da chi e in che modo tale metodo sia invocato. Nel rispondere a questa
 domanda dobbiamo tenere conto che in un engine verranno eseguite
 contemporaneamente molteplici istanze di processo e che inoltre il formalismo
 stesso del linguaggio da la possibilità di richiedere l'esecuzione contemporanea
 di diverse attività (costrutto flaw). Quindi su ciascun Engine dovranno essere
-disponibili più thread per poter realizzare il sufficiente livello si
+disponibili più thread per poter realizzare il sufficiente livello di
 parallelismo.
 
-Ovviamente si capisce bene che istanzire un nuovo oggetto Thread per ogni nuovo
+Ovviamente si capisce bene che istanziare un nuovo oggetto Thread per ogni nuovo
 flusso logico presente sull'engine non sia un approccio assolutamente
 vantaggioso. Come già accennato infatti tale politica non sarebbe per nulla
 scalabile rispetto al numero delle richieste remote gestite dell'engine; inoltre,
@@ -345,7 +345,7 @@ aiutare a sintetizzare delle proprietà invarianti
 
 \begin{itemize}
   \item Un FlowExecutor non invocherà mai il metodo doActivity() del suo
-  FlowOwner. Viceversa di questo invocherà prima o poi il metodo
+  FlowOwner. Viceversa di questo potrà invocare il metodo
   flowCompleted().
   
   \item Su un oggetto ActivityComponent che implementa anche l'interfaccia
@@ -400,11 +400,11 @@ relazioni che le coinvolgono.
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Comunicazione ed eventi}
 Da quanto abbiamo già esposto risulta chiaro che l'esecuzione di un processo \`e
-caratterizzata da lo svolgersi di attività interne e l'accadere di eventi
+caratterizzata dallo svolgersi di attività interne e l'accadere di eventi
 esterni di cui l'attività possono essere in attesa. In generale si può
 considerare che gli eventi si generino a livello di Enviroment, e che possano
 essere prodotti dall'arrivo di nuovi messaggi verso alle porte locali o
-dalla notifica degli acknologment delle invocazioni locali
+dalla notifica degli ack/nok delle invocazioni locali
 verso porte remote. Attualmente le funzionalita' espresse da Blite non
 individuano eventi diversi da queste due tipologie. Nelle engine pero' si \`e
 preferito realizzare un meccanismo generico di notifica di eventi che
@@ -419,15 +419,15 @@ le seguenti funzionalita'
   \item A livello di attività o di ProcessManager stesso,
   sarà necessario ricavare una chiave univoca per uno specifico 
   evento\footnote{Si usa qui il termine ricavare e non generare in maniera
-  voluta. Le chiavi di evento non sono identificati da oggetti in memoria ma hanno una loro 
-  entità indipendente
+  voluta. Le chiavi di evento non sono identificate da oggetti in memoria ma
+  hanno una loro entità indipendente
   dagli oggetti che posso essere creati per rappresentarle. Per un esempio le
   chiavi utilizzate per la ricezione saranno costituite dalla coppia
   nomeservizio/nomeoperazione, tele coppia verrà indicata come
   \texttt{portId} }. I tipi di evento e le regole per generare di volta in volta 
   le chiavi verranno esposti di seguito. Per il momento può bastare aver
   chiaro che una chiave individua in maniera univoca una particolare tipologia di evento e all'interno di questa un evento specifico o un insieme
-  di eventi gemelli. 
+  di eventi gemelli.
   
   \item In un qualsiasi momento al ProcessManager potranno essere notificati
   eventi. In tal caso esso dovrà provvedere a ricavarsi la chiave e a
@@ -501,8 +501,8 @@ dell'Engine} eseguira le seguenti operazioni:
   situazione di errore all'Enviroment e questo provvedera' ad inviare un NOK al
   processo invocante.
  
- \item Si ricava il RequestInComingEventKey \texttt{eventKey} associata alla
- porta e con questa si provvede a memorizzare il messaggio in arrivo in una mappa associativa.
+ \item Si ricava la \texttt{eventKey} di tipo RequestInComingEventKey associata
+ alla porta e con questa si provvede a memorizzare il messaggio in arrivo in una mappa associativa.
  
  \item Se la porta in questione individua una start activity si crea una nuova
  istanza di processo e la si mette in esecuzione, alternativamente 
@@ -511,24 +511,170 @@ dell'Engine} eseguira le seguenti operazioni:
  i FlowExecutor in attesa di eventi individuati dalla \texttt{eventKey}.
 \end{enumerate}
 
-Gia' pensando che le due procedure precedenti saranno eseguite concorrentemente
+Già pensando che le due procedure precedenti saranno eseguite concorrentemente
 si capisce che un punto particolarmente critico del meccanismo di
-notifica/consumo di eventi sta nel fatto che l'elevato grado di parrallelismo
+notifica/consumo di eventi sta nel fatto che l'elevato grado di parallelismo
 presente possa portare ad una perdita eventi (ovvero non consegna di messaggi).
-Quest'ultima \`e di fatto un ipotesi assolutamente inammisibile e che deve essere
-assolutamente evitata. Di fatto essa si manifesterebbe allorche il parallelismo
-delle fosse sequenzializzato per esempio nel seguente modo
+Quest'ultima \`e di fatto un'ipotesi assolutamente inammissibile e che deve
+essere assolutamente evitata. Di fatto essa si manifesterebbe allorché le precedenti
+attivita' parallele fossero sequenzializzate per esempio nel seguente modo
 
 \begin{itemize}
-  \item L'\icode{ReceiveActivity} arriva ad eseguire meta' del passo 2. Cioe'
+  \item L'\icode{ReceiveActivity} arriva ad eseguire meta' del passo 2. Cioè
   ricerca eventi non trovandoli ma non arriva a registrare il FlowExecutor come
   in attesa dell'evento.
   \item Il controllo passa al ProcessManager a cui viene effettivamente
-  notificato l'evento di interesse della attivita'. Esso pero' non trovando
-  nessun FlowExecutor in attesa registra l'eveto e termina.
-  \item Il controllo ripassa all'attivita che registra il suo FlowExecutor come
-  in attesa. Essendo pero' l'evento gia' accaduto nessuno 
+  notificato l'evento di interesse della attività. Esso pero' non trovando
+  nessun FlowExecutor in attesa registra l'evento e termina.
+  \item Il controllo ripassa all'attività che registra il suo FlowExecutor come
+  in attesa. Essendo pero' l'evento già accaduto nessuno a questo punto sara'
+  in grado di notificarlo alla nostra ReceiveActivity, di fatto si ha una
+  perdita del messaggio.
 \end{itemize}
+
+Per evitare questi scenari alquanto deprecabili sono attuabili due strategie.
+Una potrebbe essere quella di dotare l'Engine di una procedura temporizzata che
+ogni tot di tempo analizzi la mappa degli eventi accaduti e che risvegli
+gli eventuali FlowExecutor registrati in attesa di essi. In questo modo il
+ProcessManager verrebbe sollevato da quest'ultimo compito e la possibilita' di
+avere la sequenzializzazione sopra descritta non sarebbe piu' un problema.
+L'altra strategia potrebbe essere quella di eseguire alcuni passi delle
+procedure in mutua esclusione, di fatto realizzare due sezioni critiche su un
+medesimo semaforo; la prima per la ReceiveActivity dovrebbe comprendere i passi
+2 e 3 mentre quella per il ProcessManager raggruppare i passi 2 e 4, o nel caso
+della creazione di una nuova istanza i passi 2 e 3.
+
+Per semplicita' di realizzazione, e poiche' ad una attenta analisi si capisce
+che di un certo grado di sincronizzazione non si possa fare a meno\footnote{Se
+non altro l'accesso alle strutture dati deve essere sincronizzato fra i vari
+thread}, si \`e scelto di implemetare la seconda strategia. Di fatto si \`e
+scelto la possibilita' di realizzare una sincronizzazione a livello di
+definizione di processo. Il ProcessManager esporra' il seguente metodo
+
+\begin{lstlisting}
+/**
+* Provides a lock at Process definition Level
+* 
+* @return Object. This object is used to get a lock at process definition level.
+*/
+public Object getDefinitionProcessLevelLock();
+\end{lstlisting}
+
+che restituisce un oggetto che potra' essere utilizzato per sincronizzare un
+instanza di processo con il ProcessManager, ma anche le diverse istanze fra di
+loro. Tele necessita' \`e evidente in quanto ci saranno strutture dati (ad
+esmpio la mappa che mantiene gli eventi/messagi per le porte) che saranno
+condivise fra le diverse istanze di una definizione di processo. In un certo
+modo si puo' pensare che le diverse istanze siano in ``race'' su tali eventi
+ne limite di quelle che sono le regole di correlazione stabilite dal linguaggio.
+\\
+
+Lo schema di comunicazione di Blite risulta semplificato ripetto al modello
+proposto da BPEL. In Blite sono possibili solamente invocazioni asincrone, in
+cui una istanza invoca una operazione remota con degli input senza attendere
+nessuna risposta, il risultato dell'elaborazione sara' reso disponibile
+all'invocante tramite una successiva ricezione sfruttando il meccanismo della
+correlazione. 
+
+E' stato scelto di realizzare tale schema di comunicazione applicativa tramite lo
+schema piu' semplice di comunicazione a livello infrastrutturale, ovvero lo
+schema \emph{One-Way} (o se si preferisce \emph{In-Only} secondo la terminologia
+del WSDL 2.0 http://www.w3.org/TR/2004/WD-wsdl20-extensions-20040803/ ). Tale
+schema puo' essere rappresentato nell'ambito della nostra architettura come in
+Figura \ref{fig:oneway}. In pratica un'istanza consumer invochera' tramite una
+\texttt{request} una porta presso un Engine remoto, provider del servizio
+richiesto. Questo dopo aver verificato la disponibilita' della porta richiesta e
+la conformita' formale del messaggio in arrivo rispetto alla stessa, inviera' un
+\texttt{status-done} (acknowledgment) al richidente, il quale potra' continuare
+la sua esecuzione. Al contrario se si sara' verificato un qualche problema un
+\texttt{status-error} verra' recapitato al cusumer; questo potra' esser fatto
+dall'engine remoto ma anche dall'enviroment locale stesso qualora si arrivasse
+allo scadere di certo timeout senza aver ricevuto alcuno status di risposta (caso
+quest'ultimo in cui il provider risulta non raggiungibile). Da notare come tale
+schema di comunicazione realizzi un modello di cooperazione dei servizi asincrono
+secondo quanto specificato dalla semantica Blite. Il consumo e l'elaborazione del
+messaggio da perte di una istanza provider sara' eseguito in maniera del tutto
+indipendente, in termini di dipendenze temporali, e quindi anche eventuali errori
+nella elaborazioni della richiesta non verrano comunicate al consumer all'interno
+di questa comunicazione.
+
+\begin{figure}[th]
+\begin{center}
+\includegraphics
+{architettura_interna/dia/oneway}
+\caption[Comunicazione One-Way] {
+   	\textsf{{\small Il modello di comunicazione One-Way realizzato dai Blite
+   	Engine}} }
+  \label{fig:oneway}
+\end{center}
+\end{figure}
+
+
+Tele modello ci \`e sembrato il piu' adatto per poter realizzare i seguenti
+comportamenti
+
+\begin{itemize}
+  \item Una istanza di processo piu' invocare operazioni di altri servizi in
+  maniera asincrona potendo continuare a svolgere altre attivita' mentre
+  l'elaborazione remota \`e in atto.
+  
+  \item Se un'instanza invoca un servizio che non esiste, o \`e momentaneamente
+  indisponibile o con modalita' non conformi, l'isatnza deve essere notificata
+  di tale accadimento.
+\end{itemize}
+
+Di fatto questo c'\`e sembrato il giusto compromesso fra una comunicazione
+sincrona (che del resto puo' sempre essere riprodotta) e una comunicazione puramente
+``fire-and-forget'' in cui le istanze procedono i maniera totalmente svincolata
+senza poter fare nessuna ipotesi sull'esito della comunicazione. Inoltre questo
+modello di comunicazione \`e quello che meglio si adatta al binding sul
+protocollo HTTP, in cui ad una richiesta c'e sempre una risposta del server che
+chiude la connessione. In HTTP una invocazione remota secondo lo scema
+One-Way puo' essere semplicemente implemetata
+
+\begin{itemize}
+  \item Il client esegue una \emph{HTTP GET} o \emph{HTTP POST}
+  \item Il server risponde con \emph{202 Accepted} nel caso il messaggio possa
+  essere accettato.
+  \item Il server risponde con un error code della serie 400 o 500 (es. 400 Bad
+  Request), nel momento in cui ci sia una qualche problema con la richiesta
+  ricevuta.
+\end{itemize}
+
+
+Per concludere questa sezione faccimo vedere come lo schema di comunicazione
+One-Way possa essere facilmente realizzato con il modello ad eventi previsto
+dalla nostra architettura. Per far questo riportiamo i passi logici eseguiti
+dal componente \icode{InvokeActivity}
+
+\begin{enumerate}
+  \item Si costruisce il messaggio (\icode{MessageContent}) e si crea un
+  identificativo del Service Provider tramite il meto
+  \item Tramite il metodo fornito dalla iterfaccia del ProcessManager
+  \begin{lstlisting}
+  	InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
+							MessageContainer messageContainer);
+  \end{lstlisting}
+  si avvia la comunicazione. Si osservi che il metodo ritorna un oggetto
+  \texttt{eventKey} rappresentante una chiave di tipo InComingEventKey.
+  
+  \item In sezione critica sul monitor \icode{DefinitionProcessLevelLock}, si
+  prova a consumare l'evento associato all'\texttt{eventKey}, se questo \`e
+  effitivamente gia' disponibile si valuta lo status di ritorno. Se si \`e
+  avuto un \texttt{status-done} si termina l'attivita' mettendo come
+  attivita' corrente del FlowExecutor il parentComponet e si ritorna
+  \texttt{true}, se inceve si \`e avuto \texttt{status-error} si avvia la
+  procedura di errore. Se l'evento associato all'\texttt{eventKey} non fosse
+  ancora disponibile si registra il FlowExecutor come in attesa dello stesso e
+  si termina il metodo \icode{doAtivity()} ritornando \texttt{false}.
+  
+  \item Quando l'evento atteso sara' disponibile il FlowExecutor verra'
+  risvegliato e l'invokeActivity potra' essere di nuovo messa in esecuzione.
+  Questa disponendo gia' di \texttt{eventKey} potra' rendersi conto di aver
+  gia' eseguito l'invocazione e portra' semplicemente consumare l'evento
+  attesso e procedere nell'analisi dello status come descritto sopra. Si deve
+  osservare che in questo caso non sara' necessario operare in sezione critica.
+\end{enumerate}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONTESTI E COMPESAZIONE
