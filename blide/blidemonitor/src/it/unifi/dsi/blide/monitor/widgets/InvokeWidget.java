@@ -42,7 +42,9 @@ public class InvokeWidget extends IconActivityWidget {
             ConnectionWidget edge = new ConnectionWidget (scene);
             edge.setSourceAnchor (AnchorFactory.createDirectionalAnchor (this, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
             edge.setTargetAnchor (AnchorFactory.createDirectionalAnchor (ew, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
-            edge.setRouter (RouterFactory.createOrthogonalSearchRouter(monitorScene.getMainLayer(), connectionLayer));
+            edge.setRouter (RouterFactory.createOrthogonalSearchRouter(
+//                    monitorScene.getMainLayer(),
+                    connectionLayer));
 
             edge.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 //        edge.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
