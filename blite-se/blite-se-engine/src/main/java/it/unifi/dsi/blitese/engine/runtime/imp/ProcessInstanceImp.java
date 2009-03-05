@@ -150,6 +150,7 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         return this;
     }
 
+    @Override
     public boolean matchCorrelation(String variable, Object incomingValue) {
         
         Object currentValue = null;

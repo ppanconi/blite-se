@@ -85,7 +85,7 @@ public interface ProcessManager {
     /**
      * Provide a lock at Process definition Level
      * 
-     * @return Object the object used to get a lock at process definition level.
+     * @return Object. This object is used to get a lock at process definition level.
      */
     public Object getDefinitionProcessLevelLock();
     
