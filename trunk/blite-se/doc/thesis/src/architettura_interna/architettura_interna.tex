@@ -100,7 +100,7 @@ basata sulle seguenti specifiche fondamentali:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %						Modello per l'Attività
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Modello per l'Attività}
+\section{Un modello per l'Attività}
 A questo punto dopo aver esposto a grandi linee quelle che devono essere le
 caratteristiche fondamentali di un engine entriamo nel dettaglio del disegno
 della architettura. Nella realizzazione di questa abbiamo scelto di utilizzare
@@ -118,7 +118,6 @@ sintattici di una definizione può essere naturalmente riprodotta a runtime tra
 i singoli step di esecuzione, andato a completare l'analogia con le strutture
 gerarchiche ad albero tipiche dei tradizionali domini di applicazione del
 Composite Pattern. 
-\\
 
 L'entità fondamentale del nostro dominio applicativo \`e stata quindi
 individuata nella \icode{ActivityComponent} trasposizione a runtime
@@ -135,7 +134,6 @@ label=lst:ActivityComponent]
 \hline
 \icode{ActivityComponent} &  \\
 \hline
-
 \small{boolean \textbf{doActivity()}} & \small{\textsf{Costituisce il metodo
 centrale per lo svolgersi dell'esecuzione del programma. L'invocazione di tale metodo su
 un oggetto attività fa si che essa possa eseguirsi. Il valore booleano
@@ -152,7 +150,8 @@ Al contraio potrà interrompere il flusso corrente ritornando false.
 \small{\textsf{ Tale metodo restituisce se presente l'elemento padre 
 dell'attività corrente. In questo modo si realizza la struttura gerarchica fra
 i veri componenti dell'esecuzione. }}\\
-
+\end{tabular}
+\begin{tabular}{| p{0.3\textwidth } | p{0.6\textwidth}|}
 & \\
 \small{BltDefBaseNode \linebreak {\textbf{ getBltDefNode()}}} &
 \small{\textsf{ Ogni attività componente dell'esecuzione \`e strettamente 
@@ -162,7 +161,7 @@ ricavato dal parsing del codice Blite. }}\\
 
 \hline
 \end{tabular}
-
+\\
 
 Lo scenario che si va a delineare \`e quindi quello di due strutture gerarchiche
 associate: una costituita dall'AST (Abstract Syntax Tree) ricavato dal
@@ -460,14 +459,14 @@ compierà i seguenti passi logici:
   \item Si ricava la chiave d'evento \texttt{eventKey}. In questo caso
   particolare la chiave sarà di tipo \icode{RequestInComingEventKey} e la sua
   unicità sarà costituita dal \texttt{portId} ( ovvero la coppia 
-  serviceName/operationName) delle porta su cui si sta eseguendo l'operazione di 
+  serviceName/operationName) della porta su cui si sta eseguendo l'operazione di 
   ricezione. Ovviamente la ReceiveActivity potrà ricavare il \texttt{portId}
   dal nodo della definizione sintattica a lei associata.
   
   \item Si richiede al ProcessManager il set degli eventi associati alla
   \texttt{eventKey}. Se non c'è alcun evento associato si mette in attesa il
   FlowExecutor sull'evento \texttt{eventKey}, si termina ritornando
-  \texttt{false}.
+  \texttt{false}, al contrario si procede con il passo successivo.
   
   \item Si analizza il set degli eventi (che in questo caso possono essere
   identificati con tutti messaggi indirizzati alla porta in questione non
@@ -475,7 +474,7 @@ compierà i seguenti passi logici:
   istanza della ReceiveActivity in questione. Questo controllo \`e fatto in
   base alle regole di correlazione (si veda capitolo x). Se un tale messaggio
   non viene identificato si mette in attesa il FlowExecutor sull'evento \texttt{eventKey} e si termina
-  ritornando \texttt{false}. 
+  ritornando \texttt{false}, al contrario si procede con il passo successivo.
   
   \item Si \`e individuato un messaggio inviato alla porta e alla istanza in
   questione. Si consuma tale messaggio aggiornando lo stato delle variabili
@@ -517,7 +516,7 @@ essere assolutamente evitata. Di fatto essa si manifesterebbe allorché le prece
 attività parallele fossero sequenzializzate per esempio nel seguente modo
 
 \begin{itemize}
-  \item L'\icode{ReceiveActivity} arriva ad eseguire meta' del passo 2. Cioè
+  \item L'\icode{ReceiveActivity} arriva ad eseguire metà del passo 2. Cioè
   ricerca eventi non trovandoli ma non arriva a registrare il FlowExecutor come
   in attesa dell'evento.
   \item Il controllo passa al ProcessManager a cui viene effettivamente
@@ -541,7 +540,7 @@ medesimo semaforo; la prima per la ReceiveActivity dovrebbe comprendere i passi
 2 e 3 mentre quella per il ProcessManager raggruppare i passi 2 e 4, o nel caso
 della creazione di una nuova istanza i passi 2 e 3.
 
-Per semplicità di realizzazione, e poiché ad una analisi poco più attente si
+Per semplicità di realizzazione, e poiché ad una analisi poco più attenta si
 capisce che di un certo grado di sincronizzazione non si possa fare a meno\footnote{Se
 non altro l'accesso alle strutture dati deve essere sincronizzato fra i vari
 thread}, si \`e scelto di implementare la seconda strategia. Di fatto si \`e
@@ -708,4 +707,125 @@ Uno dei costrutti piu' caratteristici di BPEL \`e senzaltro quello del
 contesto, e tale costrutto \`e stato riprodotto con le opportune
 semplificazione anche in Blite e nella versione qui implementata.
 
-\ldots work in progress \ldots
+Semplificando e rimanendo nell'ambito del linguaggio da noi implementato, un
+contesto \`e un raggruppamento logico di attivit\`a (di fatto realizzato da
+quella che indicheremo con \emph{ContestActivity}), a cui possono essere
+associtiati un \emph{FaultHandler} e un \emph{CompensationHandler}. I due
+handler non sono altro che due attivit\`a, la \emph{FaultHandlerActivity} e
+la \emph{CompensationHandlerActivity} che hanno funzionalit\`a in un certo
+senso complemetari.
+
+\begin{itemize}
+  \item La FaultHandlerActivity, \`e un'attivit\`a che deve essere eseguita nel
+  caso in cui sia sollevato un Fault non gestito 
+  durante l'esecuzione della ContestActivity. Di fatto si puo' pensare che la
+  ContestActivity non sia stata completata a causa del verificarsi di una 
+  situazione di errore e che a livello del contesto di definizione della 
+  ContestActivity stessa si possa gestire l'errore tramite l'esecuzione della 
+  FaultHandlerActivity. Di fatto la FaultHandlerActivity entra in gioco nel
+  momento in cui la ContestActivity non completa.
+  
+  \item Al contrario CompensationHandlerActivity entra in gioco solo nel caso
+  in cui ContestActivity completi la propria esecuzione con successo, cioe'
+  senza che si siano verificati errori non gestiti. Di fatto la
+  CompensationHandlerActivity puo' essere vista come la serie di operazioni
+  capaci di annullare cio' che \`e stato fatto dalla ContestActivity nel suo
+  complesso. 
+  Supponiamo di avere un contesto \texttt{c2}, a sua volta
+  contenuto in un contesto \texttt{c1} (cio\`e \texttt{c2} \`e una sotto
+  attivita' di \texttt{a1}, ContestActivity di \texttt{c1}), e che
+  \texttt{c2} definisca la ContestActivity \texttt{a2} e la CompensationHandlerActivity
+  \texttt{ch1}. Nel caso caso in cui \texttt{a2} completi con successo la sua
+  sua esecuzione, \texttt{ch2} verra' resa nota a \texttt{c1} che la potra'
+  utilizzare per annullare gli effetti di \texttt{a2} qualora si verifichi
+  qualche successivo errore che impedisca a \texttt{a1} di completare con
+  successo.
+   
+\end{itemize}
+
+Da quanto detto si capisce che l'esecuzione degli handler di un contesto
+\texttt{c} \`e strettamente legata al verificarsi di situazioni di errori:
+la FaultHandlerActivity \`e lanciata qualora si verifichi un eccezione
+nell'esecuzione della ContestActivity di \texttt{c} stesso, la
+CompensationHandlerActivity \`e lanciata qualora completato \texttt{c} si
+verifichi un errore nell'esecuzione di una qualche attivita' ``sorella'' di
+c\footnote{Nell'ambito della sintassi e semantica di Blite l'espressione
+``attivita' sorrella'' ha il segunte significato: ``attivita' che \`e eseguita
+nel medesimo contesto del contesto \texttt{c}''}.
+
+Il sollevarsi di un eccezione oltre a mettere in esecuzione le eventuali
+CompensationHandlerActivity e FaultHandlerActivity associate, ha un'altro
+effetto: la terminazzione di tutti i flussi fratelli o discendenti dei fratelli
+del flusso in cui si genera il fault. Per capire gli effetti prodotti dal
+sollevarsi di un eccezzione si faccia riferimento alla Figura \ref{fig:fault}
+dove \`e rappresentato il seguente scenario di runtime
+
+\begin{itemize}
+  \item Il contesto base \texttt{C0} definisce il FaultHandler \texttt{fh0}.
+  \item L'esecuzione della ContestActivity di \texttt{C0} prodice tre flussi di
+  esecuzione parallela \texttt{f1}, \texttt{f2} e \texttt{f3}.
+  \item Nel flusso \texttt{f1} viene esguito in contesto \texttt{C1} che
+  termina, installando in \texttt{C0} il CompesationHandler \texttt{ch1}.
+  \item Nel flusso \texttt{f2} vine creato un nuovo contesto \texttt{C2}.
+  All'interno del quale un FlowAtivity avvia altri due flussi paralelli
+  \texttt{f4} e \texttt{f5}.
+  \item Nell'esecuzione del flusso \texttt{f3} viene generato un fault che
+  dovra' essere gestito a livello del cotesto \texttt{C0}.
+  \item Il fault produce la terminazione de flussi \texttt{f1} e \texttt{f2} e a
+  cascata dei flussi \texttt{f4} e \texttt{f5}.
+  \item Il fault produce la creazione di un contesto protetto in cui sara'
+  eseguito in sequenza la CompensationHandlerActivity \texttt{ch1} e la
+  FaultHandlerActivity \texttt{fh0}.
+\end{itemize}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics
+{architettura_interna/dia/fault}
+\caption[Propagazione di una eccezione] {
+   	\textsf{{\small Un eccezione sollevata in un flusso di esecuzione produce la
+   	terminazione di tutti i flussi paralleli e la conseguente messa in
+   	esecuzione di Capensation Handler istallati e FalutHandler definiti nel
+   	Contesto padre di flussi.}} }
+  \label{fig:fault}
+\end{center}
+\end{figure}
+
+Come si puo' vedere dalla Figura \ref{fig:fault} la notifica e gli effetti di
+fault si propagano nelle due direzzioni opposte nella gerachia runtime delle
+attivita'. Dalla attivita' che a scatenato il fault, risaledo i padri, raggiunge
+primo contesto e da questo riscende verso le attivita' figlie per interrompere i
+vari flussi paralleli. Questo andamento di salita e discesa dell'informazione
+legata al sollevarsi di una eccezione \`e la caratteristica peculiare della
+sematica di BPEL e di Blite ed sulla base di questa caratteristica sono stati
+disegnati le componenti e le interfaccie software dell'engine predisposte alle
+gestione dei contesti e delle eccezioni.
+\\
+
+L'entia' principale prescelta per realizzazione di meccanismi esposti \`e stata
+individuata nel \icode{ExecutionContext}, la cui interfaccia a gia' piu' volte
+comparsa nelle sezioni precedenti. In particolare si \`e visto che un oggetto
+conforme a tale tipo era presente nella segnatura del metodo
+\icode{makeRuntimeActivity()} della classe
+\icode{ActivityComponentFactory}. Di fatti ogni oggetto ActivityComponent
+nascera' all'interno di un contesto di esecuzione ExecutionContext.
+Le classi implemetati l'interfaccia ExecutionContext saranno tre, come si vede
+dalla Figura \ref{fig:cntxclass}: \icode{ProcessInstanceImp},
+\icode{ScopeActivity} e \icode{ProtecedScope}. Dinfatti ogni istanza di processo
+costituira' il contesto base per ogni esecuzione e all'interno di esso le varie
+attivita' ScopeActivity andranno a realizzare dei sottocontesti. Un discorso a
+parte invece merita il terzo tipo ProtecedScope, che permettera' di realizzare
+contesti speciali protetti in cui come visto dovranno essere eseguiti i Fault e
+Compensation Handler.
+
+\begin{figure}[tp]
+\begin{center}
+\includegraphics[scale=0.85]
+{architettura_interna/dia/cntxclass}
+\caption[ExecutionContext Class Diagram]{
+   	\textsf{{\small ExecutionContext subclasses}} }
+  \label{fig:cntxclass}
+\end{center}
+\end{figure}
+
+%\ldots work in progress \ldots 
