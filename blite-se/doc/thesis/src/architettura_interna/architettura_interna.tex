@@ -62,7 +62,7 @@ al contrario risultano particolarmente critici i seguenti aspetti:
   una aspetto particolarmente critico, dall'altro per\`o ogni attività interna
   necessita di un elevato grado di controllo e tranciabilità. Ogni attività deve
   potere essere eventualmente terminata o abortita. Poiché in generale
-  \footnotetext{} ogni istanza potrebbe avere un immagine persistente o
+  ogni istanza potrebbe avere un immagine persistente o
   perlomeno essere soggetta ad una attività di monitoring, l'engine necessiterà
   di un grado di controllo a livello di singola attività Blite.
 \end{itemize}
@@ -86,7 +86,7 @@ basata sulle seguenti specifiche fondamentali:
   delle risorse complessive mantenute dall'Engine. Ogni istanza di processo nel
   suo svolgersi deve, man mano che procede, rilasciare le risorse di memoria
   acquisite. Anche il numero dei thread complessivo deve essere limitato
-  superiormente (generalmente dell'ordine dell'unita). La realizzazione del
+  superiormente (generalmente dell'ordine dell'unità). La realizzazione del
   parallelismo di attività deve essere attuata tramite il pattern ``Resources
   Pool''. Ogni Engine deve disporre di un pool di thread con cui eseguire in
   parallelo le attività secondo le definizioni Blite.
@@ -269,13 +269,13 @@ tempo in attesa di comunicazioni remote\footnote{Come già osservato i tempi di
 comunicazione remota sono di ordini di grandezza molto maggiori rispetto alle
 operazioni interne per cui ogni istanza nel suo ciclo di vita si troverà ad
 occupare realmente la CPU per tempi quasi infinitesimi rispetto ai tempi di
-attesa di eventi remoti}, ci troveremmo con un gran numero di thread in stato di
-attesa, con un del tutto ingiustificabile spreco di risorse. Più banalmente
+attesa di eventi remoti.}, ci troveremmo con un gran numero di thread in stato
+di attesa, con un del tutto ingiustificabile spreco di risorse. Più banalmente
 gestire direttamente oggetti Thread \`e un pratica alquanto sconsigliabile
 \footnote{Questo \`e ancor pi\`u vero dalla versione 5 in poi di Java, in cui
 sono stato introdotti i pacchetti \texttt{java.util.concurrent.*} che mettono a
 disposizione un framework ad alto livello che ottimizza e astrae l'uso delle API
-a più basso livello per la concorrenza}, in quanto può portare ad errori di
+a più basso livello per la concorrenza.}, in quanto può portare ad errori di
 programmazione o ad Memory Leaks nel caso in cui il ciclo di vita di tali oggetti
 non sia sempre ben condotto dal programmatore. Per queste motivazioni si \`e
 scelto di utilizzare la tecnica del Pooling per gestire un insieme di Thread a
@@ -423,8 +423,8 @@ le seguenti funzionalità
   dagli oggetti che posso essere creati per rappresentarle. Per un esempio le
   chiavi utilizzate per la ricezione saranno costituite dalla coppia
   nomeservizio/nomeoperazione, tele coppia verrà indicata come
-  \texttt{portId} }. I tipi di evento e le regole per generare di volta in volta 
-  le chiavi verranno esposti di seguito. Per il momento può bastare aver
+  \texttt{portId}.}. I tipi di evento e le regole per generare di volta in
+  volta le chiavi verranno esposti di seguito. Per il momento può bastare aver
   chiaro che una chiave individua in maniera univoca una particolare tipologia di evento e all'interno di questa un evento specifico o un insieme
   di eventi gemelli.
   
@@ -488,7 +488,7 @@ messageContainer)}\footnote{Bisogna notare che
 l'invocazione di tale metodo sarà scatenata lato Environment, e che la sua
 esecuzione avverrà a carico di un Thread allocato a livello stesso di
 Environment e logicamente del tutto indipendente dai thread del pool
-dell'Engine} eseguirà le seguenti operazioni:
+dell'Engine.} eseguirà le seguenti operazioni:
 
 \begin{enumerate}
   \item Si verifica che la terna serviceName/operationName/numero parti del
@@ -543,7 +543,7 @@ della creazione di una nuova istanza i passi 2 e 3.
 Per semplicità di realizzazione, e poiché ad una analisi poco più attenta si
 capisce che di un certo grado di sincronizzazione non si possa fare a meno\footnote{Se
 non altro l'accesso alle strutture dati deve essere sincronizzato fra i vari
-thread}, si \`e scelto di implementare la seconda strategia. Di fatto si \`e
+thread.}, si \`e scelto di implementare la seconda strategia. Di fatto si \`e
 scelto la possibilità di realizzare una sincronizzazione a livello di
 definizione di processo. Il ProcessManager esporrà il seguente metodo
 
@@ -703,22 +703,24 @@ dal componente \icode{InvokeActivity}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contesti, FaultHandler e Compensazione}
 
-Uno dei costrutti piu' caratteristici di BPEL \`e senzaltro quello del
+Uno dei costrutti più caratteristici di BPEL \`e senz'altro quello del
 contesto, e tale costrutto \`e stato riprodotto con le opportune
-semplificazione anche in Blite e nella versione qui implementata.
+semplificazioni anche in Blite e nella versione qui implementata.
 
 Semplificando e rimanendo nell'ambito del linguaggio da noi implementato, un
-contesto \`e un raggruppamento logico di attivit\`a (di fatto realizzato da
+contesto \`e un raggruppamento logico di attività (di fatto realizzato da
 quella che indicheremo con \emph{ContestActivity}), a cui possono essere
-associtiati un \emph{FaultHandler} e un \emph{CompensationHandler}. I due
-handler non sono altro che due attivit\`a, la \emph{FaultHandlerActivity} e
-la \emph{CompensationHandlerActivity} che hanno funzionalit\`a in un certo
-senso complemetari.
+associati un \emph{FaultHandler} e un \emph{CompensationHandler}\footnote{Nel
+caso in cui il programmatore non codifichi direttamente gli Handler, due
+versioni di default sono previste. Il DefaultFaultHandler che prevede
+semplicemente la ThrowActivity, in questo modo si realizza la non gestione
+dell'eccezione, e il DefaultCompensationHandler con la semplice
+EmptyActivity.}. I due handler non sono altro che due attività, la \emph{FaultHandlerActivity} e la \emph{CompensationHandlerActivity} che hanno funzionalità in un certo senso complementari.
 
 \begin{itemize}
-  \item La FaultHandlerActivity, \`e un'attivit\`a che deve essere eseguita nel
+  \item La FaultHandlerActivity, \`e un'attività che deve essere eseguita nel
   caso in cui sia sollevato un Fault non gestito 
-  durante l'esecuzione della ContestActivity. Di fatto si puo' pensare che la
+  durante l'esecuzione della ContestActivity. Di fatto si può pensare che la
   ContestActivity non sia stata completata a causa del verificarsi di una 
   situazione di errore e che a livello del contesto di definizione della 
   ContestActivity stessa si possa gestire l'errore tramite l'esecuzione della 
@@ -726,17 +728,17 @@ senso complemetari.
   momento in cui la ContestActivity non completa.
   
   \item Al contrario CompensationHandlerActivity entra in gioco solo nel caso
-  in cui ContestActivity completi la propria esecuzione con successo, cioe'
+  in cui ContestActivity completi la propria esecuzione con successo, cioè
   senza che si siano verificati errori non gestiti. Di fatto la
-  CompensationHandlerActivity puo' essere vista come la serie di operazioni
-  capaci di annullare cio' che \`e stato fatto dalla ContestActivity nel suo
+  CompensationHandlerActivity può essere vista come la serie di operazioni
+  capaci di annullare ciò che \`e stato fatto dalla ContestActivity nel suo
   complesso. 
   Supponiamo di avere un contesto \texttt{c2}, a sua volta
-  contenuto in un contesto \texttt{c1} (cio\`e \texttt{c2} \`e una sotto
-  attivita' di \texttt{a1}, ContestActivity di \texttt{c1}), e che
+  contenuto in un contesto \texttt{c1} (cioè \texttt{c2} \`e una sotto
+  attività di \texttt{a1}, ContestActivity di \texttt{c1}), e che
   \texttt{c2} definisca la ContestActivity \texttt{a2} e la CompensationHandlerActivity
   \texttt{ch1}. Nel caso in cui \texttt{a2} completi con successo la sua
-  sua esecuzione, \texttt{ch2} verra' resa nota a \texttt{c1} che la potra'
+  sua esecuzione, \texttt{ch2} verrà resa nota a \texttt{c1} che la potrà
   utilizzare per annullare gli effetti di \texttt{a2} qualora si verifichi
   qualche successivo errore che impedisca a \texttt{a1} di completare con
   successo.
@@ -748,32 +750,32 @@ Da quanto detto si capisce che l'esecuzione degli handler di un contesto
 la FaultHandlerActivity \`e lanciata qualora si verifichi un eccezione
 nell'esecuzione della ContestActivity di \texttt{c} stesso, la
 CompensationHandlerActivity \`e lanciata qualora completato \texttt{c} si
-verifichi un errore nell'esecuzione di una qualche attivita' ``sorella'' di
+verifichi un errore nell'esecuzione di una qualche attività ``sorella'' di
 c\footnote{Nell'ambito della sintassi e semantica di Blite l'espressione
-``attivita' sorrella'' ha il segunte significato: ``attivita' che \`e eseguita
-nel medesimo contesto del contesto \texttt{c}''}.
+``attività sorella' ha il seguente significato: ``attività che \`e eseguita
+nel medesimo contesto del contesto \texttt{c}''.}.
 
 Il sollevarsi di un eccezione oltre a mettere in esecuzione le eventuali
 CompensationHandlerActivity e FaultHandlerActivity associate, ha un'altro
-effetto: la terminazzione di tutti i flussi fratelli o discendenti dei fratelli
+effetto: la terminazione di tutti i flussi fratelli o discendenti dei fratelli
 del flusso in cui si genera il fault. Per capire gli effetti prodotti dal
-sollevarsi di un eccezzione si faccia riferimento alla Figura \ref{fig:fault}
+sollevarsi di un eccezione si faccia riferimento alla Figura \ref{fig:fault}
 dove \`e rappresentato il seguente scenario di runtime
 
 \begin{itemize}
   \item Il contesto base \texttt{C0} definisce il FaultHandler \texttt{fh0}.
-  \item L'esecuzione della ContestActivity di \texttt{C0} prodice tre flussi di
+  \item L'esecuzione della ContestActivity di \texttt{C0} produce tre flussi di
   esecuzione parallela \texttt{f1}, \texttt{f2} e \texttt{f3}.
-  \item Nel flusso \texttt{f1} viene esguito in contesto \texttt{C1} che
-  termina, installando in \texttt{C0} il CompesationHandler \texttt{ch1}.
+  \item Nel flusso \texttt{f1} viene eseguito in contesto \texttt{C1} che
+  termina, installando in \texttt{C0} il CompensationHandler \texttt{ch1}.
   \item Nel flusso \texttt{f2} vine creato un nuovo contesto \texttt{C2}.
-  All'interno del quale un FlowAtivity avvia altri due flussi paralelli
+  All'interno del quale un FlowActivity avvia altri due flussi paralleli
   \texttt{f4} e \texttt{f5}.
   \item Nell'esecuzione del flusso \texttt{f3} viene generato un fault che
-  dovra' essere gestito a livello del cotesto \texttt{C0}.
+  dovrà essere gestito a livello del cotesto \texttt{C0}.
   \item Il fault produce la terminazione de flussi \texttt{f1} e \texttt{f2} e a
   cascata dei flussi \texttt{f4} e \texttt{f5}.
-  \item Il fault produce la creazione di un contesto protetto in cui sara'
+  \item Il fault produce la creazione di un contesto protetto in cui sarà
   eseguito in sequenza la CompensationHandlerActivity \texttt{ch1} e la
   FaultHandlerActivity \texttt{fh0}.
 \end{itemize}
@@ -785,40 +787,40 @@ dove \`e rappresentato il seguente scenario di runtime
 \caption[Propagazione di una eccezione] {
    	\textsf{{\small Un eccezione sollevata in un flusso di esecuzione produce la
    	terminazione di tutti i flussi paralleli e la conseguente messa in
-   	esecuzione di Capensation Handler istallati e FalutHandler definiti nel
+   	esecuzione di Compensation Handler istallati e FaultHandler definiti nel
    	Contesto padre di flussi.}} }
   \label{fig:fault}
 \end{center}
 \end{figure}
 
-Come si puo' vedere dalla Figura \ref{fig:fault} la notifica e gli effetti di
-fault si propagano nelle due direzzioni opposte nella gerachia runtime delle
-attivita'. Dalla attivita' che a scatenato il fault, risaledo i padri, raggiunge
-il primo contesto e da questo riscende verso le attivita' figlie per
+Come si può vedere dalla Figura \ref{fig:fault} la notifica e gli effetti di
+fault si propagano nelle due direzioni opposte nella gerarchia runtime delle
+attività. Dalla attività che a scatenato il fault, risalendo i padri, raggiunge
+il primo contesto e da questo riscende verso le attività figlie per
 interrompere i vari flussi paralleli. Questo andamento di salita e discesa dell'informazione,
 legata al sollevarsi di una eccezione, \`e la caratteristica peculiare della
-sematica di BPEL e quindi di Blite, e sulla base di questa caratteristica sono
-stati disegnati le componenti e le interfaccie software dell'engine predisposte alle
+semantica di BPEL e quindi di Blite, e sulla base di questa caratteristica sono
+stati disegnati le componenti e le interfacce software dell'engine predisposte alle
 gestione dei contesti e delle eccezioni.
 \\
 
-L'entia' principale prescelta per la realizzazione di meccanismi esposti \`e
-stata individuata nel \icode{ExecutionContext}, la cui interfaccia \`e gia' piu'
+L'entità principale prescelta per la realizzazione di meccanismi esposti \`e
+stata individuata nel \icode{ExecutionContext}, la cui interfaccia \`e già più
 volte comparsa nelle sezioni precedenti. In particolare si \`e visto che un oggetto
 conforme a tale tipo era presente nella segnatura del metodo
 \icode{makeRuntimeActivity()} della classe
 \icode{ActivityComponentFactory}. Difatti ogni oggetto ActivityComponent
-nascera' all'interno di un contesto di esecuzione ExecutionContext.
-Le classi concrete implemetati l'interfaccia ExecutionContext saranno tre, come
+nascerà all'interno di un contesto di esecuzione ExecutionContext.
+Le classi concrete implementati l'interfaccia ExecutionContext saranno tre, come
 si vede dalla Figura \ref{fig:cntxclass}: la \icode{ProcessInstanceImp},
 la \icode{ScopeActivity} e la \icode{ProtecedScope}. Ogni istanza di
-processo infatti costituira' il contesto base per ogni esecuzione e all'interno
-di esso le varie attivita' ScopeActivity andranno a realizzare dei sottocontesti. Un discorso a
-parte invece merita il terzo tipo ProtecedScope, che permettera' di realizzare
+processo infatti costituirà il contesto base per ogni esecuzione e all'interno
+di esso le varie attività ScopeActivity andranno a realizzare dei sottocontesti. Un discorso a
+parte invece merita il terzo tipo ProtecedScope, che permetterà di realizzare
 contesti speciali, protetti, in cui come visto dovranno essere eseguiti i Fault
 e Compensation Handler. Ancora una volta per fattorizzare i comportamenti
-comuni si \`e definito una classe astratta \icode{ABaseContext} in cui sara'
-codificata gran parte della specifia dell'interfaccia ExecutionContext.
+comuni si \`e definito una classe astratta \icode{ABaseContext} in cui sarà
+codificata gran parte della specifica dell'interfaccia ExecutionContext.
 
 \begin{figure}[tp]
 \begin{center}
@@ -830,13 +832,13 @@ codificata gran parte della specifia dell'interfaccia ExecutionContext.
 \end{center}
 \end{figure}
 
-In pratica le varie attivita' che implemeteranno l'intrefaccia ExecutionContext
-realizzeranno una sotto gerachia all'interno della gerarchia pricipale delle
-ActivityComponent. Infatti, a parte la ProcessInstance che costituira' la
-ridice dell'albero, oggi ExecutionContext avra' un \texttt{parentContext} ed
-eventualmente un insime di contesti figli.
+In pratica le varie attività che implementeranno l'Interfaccia ExecutionContext
+realizzeranno una sotto gerarchia all'interno della gerarchia principale delle
+ActivityComponent. Infatti, a parte la ProcessInstance che costituirà la
+ridice dell'albero, oggi ExecutionContext avrà un \texttt{parentContext} ed
+eventualmente un insieme di contesti figli.
 
-Analizziamo un po' piu' nel dettaglio l'interfaccia \icode{ExecutionContext} nei
+Analizziamo un po' più nel dettaglio l'interfaccia \icode{ExecutionContext} nei
 suoi metodi principali e poi vedremo come questi potranno essere utilizzati per
 realizzare la semantica specificata.
 
@@ -859,34 +861,34 @@ contesto figlio al contesto corrente}}\\
 \hline
 \small{void 
 \textbf{notifyFault}(Fault fault)} & \small{\textsf{Con questo metodo \`e
-possibile sollevare eccezioni (faults). Le attivita' che necessiteranno di
+possibile sollevare eccezioni (faults). Le attività che necessiteranno di
 lanciare eccezioni (per esempio la \icode{ThrowActivty}) potranno invocare
 tale metodo su il loro ExecutionContext e terminare il loro doActivity
 mathod rimettendo in esecuzione il loro parentComponent. L'ExecutionContext
-potra' aggiornare il proprio stato per riflettere la situazione di errore.
+potrà aggiornare il proprio stato per riflettere la situazione di errore.
 Con questo metodo ha inizio la propagazione del fault.}}\\
 
-\end{tabular}
-\begin{tabular}{| p{0.45\textwidth } | p{0.55\textwidth}|}
+% \end{tabular}
+% \begin{tabular}{| p{0.45\textwidth } | p{0.55\textwidth}|}
 
 
 \hline \small{boolean \textbf{isInAFaultedBranch}()} & \small{\textsf{Questo
-metodo sara' utilizzato dalla attivita' per vedere se nella loro gerarchia di
-contesti ne sia presente uno su cui sia stata notifacata un eccezione. La
-gerarchia in questo caso sara' ispezzionata dal contesto padre verso i
-predecessori. In tal caso, le attivita' dovranno collaborare per attuare la
-terminazione del proprio flusso, cioe' dovranno terminare mettendo in
+metodo sarà utilizzato dalla attività per vedere se nella loro gerarchia di
+contesti ne sia presente uno su cui sia stata notificata un eccezione. La
+gerarchia in questo caso sarà ispezionata dal contesto padre verso i
+predecessori. In tal caso, le attività dovranno collaborare per attuare la
+terminazione del proprio flusso, cioè dovranno terminare mettendo in
 esecuzione  il proprio parentComponent}}\\
 
 
 \hline \small{void \textbf{registerFlow}( \hspace*{\stretch{3}} \linebreak
-\hspace*{\stretch{3}} FlowExecutor flow)} & \small{\textsf{ Poiche' il processo
+\hspace*{\stretch{3}} FlowExecutor flow)} & \small{\textsf{ Poiché il processo
 di terminazione deve coinvolgere tutti i flussi , anche quelli che eventualmente
-sono in attesa di eventi, il contesto, una volta notificato del fault, dovra'
+sono in attesa di eventi, il contesto, una volta notificato del fault, dovrà
 risvegliare tutti i flussi creati sotto lui per far si che questi possano
-terminare. Ovviamente per poter far questo il contesto dovra' conoscere i flussi
+terminare. Ovviamente per poter far questo il contesto dovrà conoscere i flussi
 che sono stati creati sotto di lui. Con questo metodo di fatto si realizza
-proprio questo, si mettera' a conoscienza il contesto sotto cui si sta operando
+proprio questo, si metterà a conoscenza il contesto sotto cui si sta operando
 di ogni nuovo flusso creato. }}\\
 
 % \hline
@@ -902,51 +904,51 @@ padre il loro CompensationHandler per un eventuale esecuzione futura.}}\\
 \end{tabular}
 \\
 
-Come abbiamo gia' osservato si \`e scelto un modello di esecuzione 
-Activity Centric, nel senso che le varie attivita' saranno totalmente
+Come abbiamo già osservato si \`e scelto un modello di esecuzione 
+Activity Centric, nel senso che le varie attività saranno totalmente
 responsabili nel realizzare la loro esecuzione, ma anche nel collaborare per far
-si' che i flussi globali dei processi evolvano secondo quanto specificato dalla
+sì che i flussi globali dei processi evolvano secondo quanto specificato dalla
 semantica. Nell'ambito della terminazione questo concetto si esemplifica nel
-fatto che ogni attivita' (con la sola esclusione \emph{short-live activities})
-ogni qualvolta si trovi ad eseguirsi, dovra' per prima cosa verificare di
-se si stia trovando nella discendenza di un contesto fallito (questo potra'
+fatto che ogni attività (con la sola esclusione \emph{short-live activities})
+ogni qualvolta si trovi ad eseguirsi, dovrà per prima cosa verificare di
+se si stia trovando nella discendenza di un contesto fallito (questo potrà
 essere verificato invocando il metodo \icode{isInAFaultedBranch()} del proprio
-ExecutionContext). In caso di risposta positiva l'attivita' dovra' collaborare
-alla terminazione del proprio flusso di esecuzione, cioe' dovra' settare il
-proprio parentComponent come attivita' corrente del FlowExecutor e ritornare
+ExecutionContext). In caso di risposta positiva l'attività dovrà collaborare
+alla terminazione del proprio flusso di esecuzione, cioè dovrà settare il
+proprio parentComponent come attività corrente del FlowExecutor e ritornare
 immediatamente dal metodo doActivity con il valore true. In questo modo con un
-processo a catena il flusso corrente raggiungera' il flowOwner e potra' cosi'
+processo a catena il flusso corrente raggiungerà il FlowOwner e potrà così
 terminare.
 \\
 
-Di fatto la ricerca di un fault a ritroso nella gerarchia di contesti puo'
+Di fatto la ricerca di un fault a ritroso nella gerarchia di contesti può
 semplicemente essere fatta implementando il metodo isInAFaultedBranch() secondo
 il seguente algoritmo ricorsivo\footnote{Quella qui presenta \`e
-l'implementazione fornita dalla classe ABaseContext eriditata anche per i
-contesti ProcessInstaceImp e ScopeActivity. Come si vedra' invece il contesto
-ProtecedScope fornira' una riscrittura di questa implemetazione, per garantire
-la protezione delle esecuzione}.
+l'implementazione fornita dalla classe ABaseContext ereditata anche per i
+contesti ProcessInstaceImp e ScopeActivity. Come si vedrà invece il contesto
+ProtecedScope fornirà una riscrittura di questa implementazione, per garantire
+la protezione delle esecuzione.}.
 
 \begin{itemize}
-  \item Se lo stato corrente del contesto \`e uguale a \texttt{FAULTED} (cioe'
+  \item Se lo stato corrente del contesto \`e uguale a \texttt{FAULTED} (cioè
   sul contesto \`e stato notificato direttamente un fault) si ritorna
   \texttt{true}. Altrimenti si procede al passo successivo.
   \item Se il contesto non ha un contesto padre si ritorna \texttt{false}.
-  Altrimenti si procede al passo succesivo
+  Altrimenti si procede al passo successivo
   \item Ricorsivamente si ritorna il valore ritornato dal metodo 
   isInAFaultedBranch() invocato sul contesto padre.
 \end{itemize}
 
-Puo' essere anche interessante osservare quale possa essere la procedura alla
-base dell'implemetazione del metodo notifyFault(Fault fault)\footnote{Anche
+Può essere anche interessante osservare quale possa essere la procedura alla
+base dell'implementazione del metodo notifyFault(Fault fault)\footnote{Anche
 questa implementazione \`e fornita dalla classe ABaseContext ed \`e conforme
-alla sematica dei contesti ProcessInstaceImp e ScopeActivity. Per il contesto
-ProtecedScope come si vedra' sara' necessario una piccola modifica}.
+alla semantica dei contesti ProcessInstanceImp e ScopeActivity. Per il contesto
+ProtecedScope come si vedrà sarà necessario una piccola modifica.}.
 
 \begin{itemize}
   \item Si setta lo stato interno a \texttt{FAULTED}.
   \item Si invoca sul contesto corrente il metodo \icode{resumeWaithingFlows()}.
-  Tale metdo ha un coportamento ricorsivo
+  Tale metodo ha un comportamento ricorsivo
   \begin{itemize}
   	\item  Su ogni contesto figlio del contesto corrente si invoca ricorsivamente
   	il metodo resumeWaithingFlows() stesso.
@@ -962,37 +964,37 @@ ProtecedScope come si vedra' sara' necessario una piccola modifica}.
   \end{itemize}
 \end{itemize}
 
-Le due implemetazioni saranno valide sia per i contesti di tipo ProcessInsatnce
-che per i contesti definiti dalle ScopeActivity. In piu' il metodo doActivity()
-di quest'ultima classe realizzera' un algoritmo del tipo seguente
+Le due implementazioni saranno valide sia per i contesti di tipo
+ProcessInsatnceImp che per i contesti definiti dalle ScopeActivity. In più il
+metodo doActivity() di quest'ultima classe realizzerà un algoritmo del tipo seguente
 
 \begin{itemize}
   \item Se isInAFaultedBranch() \`e \texttt{true}
   	\begin{itemize}
-    	\item Se lo stato corrente \`e \texttt{FAULTED}, cioe' il contesto \`e
+    	\item Se lo stato corrente \`e \texttt{FAULTED}, cioè il contesto \`e
     	stato notificato direttamente di un eccezione, si deve avviare gli Handler
     		 \begin{itemize}
              	\item Si crea una SequenceActivity con la sequenza dei
-             	CompesationHandler istallati e con il FaultHander definito
+             	CompensationHandler istallati e con il FaultHandler definito
              	\item Si crea un ProtecedScope in cui si imposta come
              	ContestActivity la SequenceActivity appena creata
-             	\item Si setta come attivita' corrente del FlowExecutor il
+             	\item Si setta come attività corrente del FlowExecutor il
              	ProtecedScope e si ritorna \texttt{true}.
              \end{itemize}    
-    	\item Se lo stato corrente NON \`e \texttt{FAULTED}, cioe' un eccezione
+    	\item Se lo stato corrente NON \`e \texttt{FAULTED}, cioè un eccezione
     	\`e stata notificata in un qualche contesto padre
     		 \begin{itemize}
              	\item Si setta lo stato a \texttt{TERMINATED}
-             	\item Si imposta come attivita' corrente sul FlowExecutor la
+             	\item Si imposta come attività corrente sul FlowExecutor la
                 parentComponent e si ritorna dal metodo con
                 \texttt{true}\footnote{Bisogna osservare che questo
                 comportamento \`e conforme alla semantica attuale di Blite in
                 cui la terminazione di un contesto coincide con la terminazione
-                della sua ContestActivity. In realta' se si volesse essere piu'
-                fedeli alla filosofia BPEL e forse piu' in linea con le
+                della sua ContestActivity. In realtà se si volesse essere più
+                fedeli alla filosofia BPEL e forse più in linea con le
                 aspettative di un ipotetico utente del linguaggio, la
                 terminazione di un contesto dovrebbe prevedere la messa in
-                esecuzione dei compesation Handler attualmenti istallati nel
+                esecuzione dei CompensationHandler attualmente istallati nel
                 contesto stesso. Questo del resto \`e anche il comportamento
                 dei default TerminationHandlers di BPEL.}.
              \end{itemize}
@@ -1000,19 +1002,19 @@ di quest'ultima classe realizzera' un algoritmo del tipo seguente
   
   \item Altrimenti se isInAFaultedBranch() e' \texttt{false}
   	\begin{itemize}
-  		\item Se lo stato corrente \`e \texttt{STARTED}, cioe' uguale allo stato
-  		iniziale dell'attivita', il contesto deve iniziare ad eseguirsi
+  		\item Se lo stato corrente \`e \texttt{STARTED}, cioè uguale allo stato
+  		iniziale all'attivita', il contesto deve iniziare ad eseguirsi
   			\begin{itemize} 
                 \item Si setta lo stato a \texttt{RUNNING}
-                \item Si mette come attivita' corrente del FlowExecutor la
+                \item Si mette come attività corrente del FlowExecutor la
                 ContestActivity e si ritorna con true.
         	\end{itemize}   
   		\item Se lo stato corrente \`e \texttt{RUNNING} allora la ContestActivity
   		ha completato correttamente la sua esecuzione
   			\begin{itemize} 
                 \item Si setta lo stato a \texttt{COMPLETED} 
-                \item Si registra il CompensaationHandler nel contesto padre
-                \item Si imposta come attivita' corrente sul FlowExecutor la
+                \item Si registra il CompensationHandler nel contesto padre
+                \item Si imposta come attività corrente sul FlowExecutor la
                 parentComponent e si ritorna dal metodo con \texttt{true}.
         	\end{itemize}  		 
 	\end{itemize}
@@ -1020,11 +1022,11 @@ di quest'ultima classe realizzera' un algoritmo del tipo seguente
 
 
 Concludiamo questa sezione analizzando il contesto \icode{ProtecedScope}. Come
-gia' detto tale contesto verra' utilizzato per la messa in esecuzione dei
-ConpesationHandlers e dei FaultHandlers di un contesto oggetto di un fault.
-La sematica di Blite caratterizza tali contesti, differenziandoli da quelli
+già detto tale contesto verrà utilizzato per la messa in esecuzione dei
+CompesationHandlers e dei FaultHandler di un contesto oggetto di un fault.
+La semantica di Blite caratterizza tali contesti, differenziandoli da quelli
 definiti dalle ScopeActivity, solo per il fatto che questi siano immuni alla
-terminazione o si si vuole parlare in termini della sematica Blite, siano immuni
+terminazione o si si vuole parlare in termini della semantica Blite, siano immuni
 all'applicazione della funzione  {\sf{end($\cdot$)}}
 
 %\ldots work in progress \ldots
@@ -1033,13 +1035,13 @@ all'applicazione della funzione  {\sf{end($\cdot$)}}
 \rrparenthesis }
 \]
  
-Questa caratterizzazione puo' essere implementata nel nostro modello andando a
+Questa caratterizzazione può essere implementata nel nostro modello andando a
 riscrivere il metodo isInAFaultedBranch() nella classe ProtecedScope in modo
 tale da evitare la chiamata ricorsiva su i contesti padre. Di fatto
-l'implemetazione in questo caso seguira' il seguente semplice schema
+l'implementazione in questo caso seguirà il seguente semplice schema
 
 \begin{itemize}
-  \item Se lo stato corrente del contesto \`e uguale a \texttt{FAULTED} (cioe'
+  \item Se lo stato corrente del contesto \`e uguale a \texttt{FAULTED} (cioè
   sul contesto \`e stato notificato direttamente un fault) si ritorna
   \texttt{true}. Altrimenti 
   \item Si ritorna \texttt{false}.
@@ -1050,7 +1052,31 @@ ProtectedScope \`e protetta dai fallimenti che possono avvenire in altri flussi
 paralleli. 
 \\
 
-L'altra caratteristica della sematica Blite \`e che un ProtecedScope da un lato
-protegge l'attivita' interna dai fallimenti esterni, dall'altro pero' non fa il
-viceversa, cioe' i fallimenti che avvengano all'interno del ProtecedScope vanno a
-impattare il contesto padre in ProtecedScope \`e eseguito.
+L'altra caratteristica della semantica Blite \`e che il ProtecedScope
+protegge l'attività interna dai fallimenti esterni, ma non fa il
+viceversa, cioè i fallimenti che avvengano all'interno del ProtecedScope vanno
+ad impattare il contesto il cui ProtecedScope \`e eseguito. Nel momento in cui il
+il ProtecedScope viene creato, in fase di gestione dell'eccezione, il contesto
+fallito imposta il proprio contesto padre come contesto padre del
+ProtecedScope stesso; a questo punto la ``semi trasparenza''
+definita dalla semantica di Blite per il ProtecedScope, si realizza nel momento
+in cui il metodo notifyFault(Fault fault) viene riscritto secondo la seguente
+logica:
+
+\begin{itemize}
+  \item Si setta lo stato a \texttt{FAULTED}
+  \item Si invoca lo stesso metodo notifyFault(fault) su parentContext
+	\lstset{frame=NONE}
+	\begin{lstlisting}
+		@Override
+   		public void notifyFault(Fault fault) {
+        	setSate(ContextState.FAULTED);
+        	getParentContext().notifyFault(fault);
+    	}
+  	\end{lstlisting}   
+\end{itemize}
+
+Si può facilmente capire che con questa implementazione il ProtecedScope è del
+tutto trasparente per le eccezioni che avvengono al suo interno e che si vanno
+ad abbattere direttamente sul contesto padre dove eventualmente possono essere
+anche gestite.
