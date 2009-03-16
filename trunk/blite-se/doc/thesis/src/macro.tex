@@ -1,0 +1,214 @@
+\newtheorem{definition}{Definition}[section]
+%\newtheorem{example}[definition]{Example}
+%\newtheorem{lemma}[definition]{Lemma}
+%\newtheorem{theorem}[definition]{Theorem}
+%\newtheorem{corollary}[definition]{Corollary}
+
+\newenvironment{example}[1]%
+{\refstepcounter{definition}%
+{\medskip\noindent \emph{Example \thedefinition : #1}}.}%
+{\medskip}
+
+% MACROS
+%%%%%%%% NOMI DEI CALCOLI E DEI LINGUAGGI %%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\wsc}{\textsc{ws-calculus}}
+\newcommand{\wscalc}{\textsc{ws-calculus}} % alias
+\newcommand{\tsbpel}{\textsc{tsBPEL}}
+\newcommand{\mutsbpel}{\wsc} %re alias
+\newcommand{\cows}{\textsc{\large cows}}
+%\newcommand{\cows}{\textsc{c}\u{o}\textsc{ws}}
+%\newcommand{\cows}{\textsc{COWS}}
+\newcommand{\wsbpel}{\textsc{WS-BPEL}}
+%\newcommand{\lwsbpel}{\wsbpel$_{\ell ight}$}
+
+\newcommand{\blite}{\textsf{B}$\mathit{lite}$}
+%\newcommand{\lwsbpel}{\textsf{B}lite}
+%\newcommand{\lwsbpelll}{\textsf{Blite}}
+%\newcommand{\lwsbpel}{\textsc{\large b}$_{\ell ite}$}
+%\newcommand{\lwsbpel}{\textsc{S}$_{\ell ight}$}
+%\newcommand{\lwsbpel}{\textsc{S}$_{\ell ite}$}
+%\newcommand{\lwsbpel}{\textsc{B}$_{\ell ight}$}
+\newcommand{\bpel}{\textsc{BPEL}}
+\newcommand{\wsdl}{\textsc{WSDL}}
+\newcommand{\xmlschema}{\textsc{XML} Schema}
+\newcommand{\biz}{\textsc{Biztalk}}
+\newcommand{\wscdl}{\textsc{WS-CDL}}
+\newcommand{\pic}{$\pi$-calculus}
+\newcommand{\Lpiclong}{localised $\pi$-calculus}
+\newcommand{\Lpic}{L$\pi$}
+\newcommand{\Klaim}{\textsc{Klaim}}
+\newcommand{\orc}{Orc}
+
+
+%%%%%%%%%%%%%%% SPAZI E SEPARATORI %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\quot}[2]{\begin{small} \begin{flushright}\begin{itshape} #1 \end{itshape}\\ #2 \end{flushright} \end{small}}
+\newcommand{\spar}{\mid} % service parallel composition
+\newcommand{\sepgr}{\!\quad | \quad\!} % separatore per le grammatiche
+\newcommand{\arr}[1]{\langle #1 \rangle} %array: vanno esplicitamente messe le virgole
+\newcommand{\set}[1]{\{#1\}} % parentesi per un insieme
+
+%%%%%%%%%%%%%%%%% FUNZIONI %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\length}[1]{\mid\! #1 \!\mid} % lunghezza sostituzioni
+\newcommand{\assoc}[2]{#1 \mapsto #2} % associazione variabile-valore
+
+%%%%%%%%%%%%% PROOF %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%% PROOFTREE %%%%%%%%%%%%%%%%%%%%%%
+\input{prooftree}
+
+\newtheorem{Notation}{Notation}[section]
+
+%\newcommand{\qed}%{\hfill\mbox{\ \vrule height4pt width3pt depth2pt}}
+%  {\ \hbox{}\penalty10000\hfill$\Box$\medskip}
+%
+%\newenvironment{proof}%
+%{\begin{trivlist}%
+%\item[]{\it Proof.}
+%}%
+%{\qed
+%\end{trivlist}
+%}
+
+%\newenvironment{proof}%
+%{\vspace{-.5cm}%
+%\begin{trivlist}%
+%\item[]{\it Proof.}
+%}%
+%{\vspace{-.4cm}
+%\qed
+%\end{trivlist}
+%}
+
+\newenvironment{proofSketch}%
+{\begin{trivlist}%
+\item[]{\it Proof (sketch).}
+}%
+{\qed
+\end{trivlist}
+}
+
+\newenvironment{observation}%
+{\refstepcounter{definition}%
+{\medskip\noindent \emph{Observation \thedefinition}}.}%
+{\medskip}
+
+\newcommand{\cvd}{\begin{flushright} $\Box$ \end{flushright}} % fine dimostrazione
+%\newcommand{\cvd}{\begin{flushright} $\Box$ \end{flushright}} % fine dimostrazione
+
+%%%%%%%%%%%%%%%%%% COSTANTI %%%%%%%%%%%%%%%%%%%%%
+\newcommand{\define}{\triangleq} % notazione per assegnare un nome a vari termini del calcolo
+\newcommand{\undef}{\mathbf{undef}} % denota undefined
+\newcommand{\false}{\mathbf{false}}
+\newcommand{\true}{\mathbf{true}}
+\newcommand{\und}{\_} % simbolo underscore
+
+
+%%%%%%%% TABELLE %%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\etich}[2]{#1 \quad #2}
+\newcommand{\etich}[2]{
+\begin{array}{l}
+#2 \\ #1
+\end{array}}
+
+\newcommand{\rulelabel}[1]{\textrm{\footnotesize{(#1)}}}
+%\newcommand{\rulelabel}[1]{\textrm{\small{(#1)}}}
+
+
+
+\def \overstackrel#1#2{\mathrel{\mathop{#1}\limits^{#2}}}
+
+\newcommand{\delimite}[1]{\mbox{$\overstackrel{\belowfill}{\mbox{$\overstackrel{\quad #1 \quad}{\abovefill}$}}$}}
+%\newcommand{\delimite}[1]{\mbox{$\overstackrel{\belowfill}{\mbox{$\overstackrel{ \ #1 \ }{\abovefill}$}}$}}
+
+\makeatletter
+\def \abovefill{
+  {\vrule width0.3mm height 1.8mm depth-0.3mm}
+  \leaders\hrule height1.8mm depth-1.5mm\hfill
+  {\vrule width0.3mm height 1.8mm depth-0.3mm}}
+\makeatother
+
+\makeatletter
+\def \belowfill{
+  {\vrule width0.3mm height1.5mm}
+  \leaders\hrule height0.3mm\hfill
+  {\vrule width0.3mm height1.5mm}}
+\makeatother
+
+
+
+
+%%%%%%%%% FRECCE %%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\def \rightarrowfill{\m@th\mathord{\smash-}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash-}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\rightarrow}
+\makeatother
+
+\makeatletter
+\def \Rightarrowfill{\m@th\mathord{\smash=}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash=}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\Rightarrow}
+\makeatother
+
+\makeatletter
+\def \OrcRightarrowfill{\m@th\mathord{\smash\vDash\!\!\!=}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash=}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\Rightarrow}
+\makeatother
+
+
+\makeatletter
+\def \nrightarrowfill{\m@th\mathord{\smash-}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash-}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\nrightarrow}
+\makeatother
+
+\newcommand{\tsarrow}[1]{\overstackrel{\rightarrowfill}{\ \ #1\ \ }}
+\newcommand{\Tsarrow}[1]{\overstackrel{\Rightarrowfill}{\ \ #1\ \ }}
+\newcommand{\ntsarrow}[1]{\overstackrel{\nrightarrowfill}{\ \ #1\ \ }}
+
+\newcommand{\tsarrowtau}{\tsarrow{\scoml{\single{n}}{\emptyset}{\arr{\tau}}{\arr{\tau}}}}
+\newcommand{\OrcTsarrow}[1]{\overstackrel{\OrcRightarrowfill}{\ \ #1\ \ }}
+
+
+%%%%%%%%% FRECCE WSC %%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def \rightarrowfillN{\m@th\mathord{\smash-}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash-}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord \not \rightarrow}
+\makeatother
+\newcommand{\tsarrowN}[1]{\overstackrel{\rightarrowfillN}{\ \ #1\ \ }}
+
+\newcommand{\redarrow}[1]{\mbox{$\succ\!\overstackrel{\rightarrowfill}{\ \ #1\ \ }$}}
+\newcommand{\redarrowN}[1]{\succ\!\overstackrel{\rightarrowfillN}{#1}}
+\newcommand{\notRedarrowErr}{\succ\!\not\rightarrow^{err}}
+
+%%%%%%%%% FRECCE WSBPEL %%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def \bpelrightarrowfill{\m@th\mathord{\smash-}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash-}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\rightarrowtriangle}
+\makeatother
+
+\newcommand{\bpeltsarrow}[1]{\overstackrel{\bpelrightarrowfill}{\ \ #1\ \ }}
+
+\newcommand{\bpelredarrow}[1]{\succ\!\overstackrel{\bpelrightarrowfill}{\ \ #1\ \ }}
+
+\makeatletter
+\def \nRightarrowfill{\m@th\mathord{\smash=}\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord{\smash=}\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\nRightarrow}
+\makeatother
+
+\newcommand{\nTsarrow}[1]{\overstackrel{\nRightarrowfill}{\ \ #1\ \ }}
+
+\definecolor{back}{gray}{1}
+\definecolor{rcv}{gray}{0.9}
+\definecolor{inv}{gray}{0.9}
+\definecolor{cnd}{gray}{0.5}
+\definecolor{ass}{gray}{0.8}
+\definecolor{cor}{gray}{0.5}
+
+\definecolor{Mygray}{gray}{0.75}
