@@ -121,7 +121,7 @@ sono possibili sia invocazioni one-way che request-response. Le prime sono
 invocazioni asincrone, in cui il clinet dopo aver invocato può continuare la sua
 elaborazione senza dover attendere alcuna risposta, le seconde invece realizzano
 invocazioni sincrone, in cui l'operazione di richiesta blocca il client fino al
-sopraggiungere del risultato. In Blite è stato di fatto scelto di predisporre
+sopraggiungere del risultato. In Blite è stato di fatto scelto di supportare
 solamente la comunicazione asincrona, in qualto il comportamento sincrono può
 essere sempre riprodotto tramite l'opprtuna sequenzializzazione di operazioni
 asincrone.
@@ -224,9 +224,9 @@ Le attività strutturate sono costituite invece dalla scelta condizionale
 $\xif{\cdot}{\cdot}{\cdot}$, dalla iterazione $\xwhile{\xe}{\xs}$, dalla
 composizione sequelziale di sottoattività $\xs_1\xsucc\xs_2$, dalla scelta
 esterna su un set non vuoto di possibili porte $\sum_{j \in
-J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j$, dalla composizione parallela
-di attività $\xs_1\xpar\, \xs_2$ e per finire dal costrutto di scope o contesto
-$\xscopefc{\xs}{\xh_f}{\xh_c}$, dove ad una attività pricipale
+J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j$\footnote{La scelta può
+essere anche espressa tramite l'operatore binario $ \cdot + \cdot$.}, dalla
+composizione parallela di attività $\xs_1\xpar\, \xs_2$ e per finire dal costrutto di scope o contesto $\xscopefc{\xs}{\xh_f}{\xh_c}$, dove ad una attività pricipale
 detta \emph{Contest Activity} $\xs$ viene associato un \emph{Fault Handler}
 $\xh_f$ e un \emph{Compensation Handler} $\xh_c$.
 
@@ -286,7 +286,7 @@ runtime.
 
 La composizione distribuita di diversi processi viene definata dalla categoria
 sintattica \emph{Deployments}. Il termine $\xd_1 \xspar \xd_2$ rappresenta la
-contemporanea escuzione di tutte le istanze ottenute e ottenibili dalle
+contemporanea escuzione di tutte le istanze ottenute dalle
 definizioni presenti in $\xd_1$ con quelle di $\xd_2$. Il \emph{Deployment}
 $\xeng{\xI}{\xcorr}$ è la definizione di processo $\xI$ con tutte le sue attuali
 istanze a cui è stato associato il \emph{Correlation Set} $\xcorr$. Tale insime
@@ -298,12 +298,27 @@ sematica sia stata implemetata nel nostro engine di esecuzione.
  
 In generale si impone la restrizione che un insieme di deployments sia
 \emph{ben formato}, nel senso che i nomi nei partner link utilizzati per le
-ricezioni non siano condivisi fra i diversi deployment. In questo modo ogni
+ricezioni non siano condivisi fra diversi deployment. In questo modo ogni
 definizione di processo avrà i propri nomi di servizo univoci e dato un nome
 sarà sempre possibile individuare un deployment preciso.
 \\
 
 Per concludere si deve osservare come la sintassi esposta debba essere ancora
 considerata ``astratta'' in quanto non definisce tutti gli aspetti necessari
-all'imlemetazione. In particolar modo non definisce i tipi rappresentabili
-dalle variabili
+all'imlemetazione. In particolar modo non definisce i tipi dei valori
+attribuibili alle variabili, ne la sintassi delle espressioni supportata, e
+nemmeno esplicita la precedenza degli operatori di sequenzializzazione,
+parallelismo e scelta esterna\footnote{In merito alla precedenza degli
+operatori, il documento originale in cui è descritto Blite, afferma che
+l'operatore di sequenza $\cdot ; \cdot$ ha precedenza
+sull'operatore di parallelismo $\cdot | \cdot$, e questo ha precedeza
+sull'operatore di scelta $\cdot + \cdot$}. Di fatto l'implemetazione da noi
+realizzata fa riferimento ad una sintassi concreta che definisce in maniera
+formale anche questi aspetti. In particolare vedremo come  i semplici
+operatori binari siano trasformati in costrutti con 
+delimitatori di blocco. In questo modo risulta più semplice
+l'implementazione del parser, in quanto evita la necessità di eseguire
+\emph{lookahead}, e anche la precedenta di un attività rispetto l'altra risulta
+esplicitata nalla codifica stessa dei blocchi. In questo modo il codice risulta
+più leggibile e più simile nella struttura ai tradizionali linguaggi di
+programmazione.
