@@ -1,0 +1,243 @@
+%\definecolor{mygray}{gray}{0.45}
+%\newcommand{\xmod}[1]{\textcolor{blue}{#1}} % BPEL SAT
+
+\newcommand{\modif}[1]{\textcolor{red}{#1}} % BPEL SAT
+
+\newcommand{\mylemma}[2]{
+\vspace{4mm}\noindent{\bf Lemma~#1.}
+{\it #2 }
+\vspace{4mm}
+}
+
+\newcommand{\oracle}{Oracle BPEL}
+\newcommand{\xnew}{\marginpar{new!}}
+
+\newcommand{\plrec}{\ell^{\,r}}
+\newcommand{\plinv}{\ell^{\,i}}
+
+%%%%%%%%% BPEL FONTS %%%%%%%%%%%%
+%\newcommand{\xbpel}[1]{\texttt{<#1>}} % BPEL XML FONT
+%\newcommand{\xlbpel}[1]{\texttt{<#1}} % BPEL XML left FONT
+%\newcommand{\xrbpel}[1]{\texttt{#1>}} % BPEL XML right FONT
+%\newcommand{\xzbpel}[1]{\texttt{#1}} % BPEL XML no <> FONT
+\newcommand{\x}[1]{{\sf #1}} % BPEL GENERAL FONT
+\newcommand{\xcmd}[1]{{\sf #1}} % BPEL GENERAL COMMAND FONT
+\newcommand{\xx}{\x{x}} % BPEL VARIABLE
+\newcommand{\xy}{\x{y}} % BPEL VARIABLE
+\newcommand{\xz}{\x{z}} % BPEL VARIABLE
+\newcommand{\xo}{\x{o}} % BPEL OPERATION
+\newcommand{\xp}{\x{p}} % BPEL PARTNER
+\newcommand{\xq}{\x{q}} % BPEL PARTNER
+\newcommand{\xe}{\x{e}} % BPEL EXP
+\newcommand{\xv}{\x{v}} % BPEL VALUE
+\newcommand{\xw}{\x{w}} % BPEL VARIABLE/VALUE
+\newcommand{\xu}{\x{u}} % BPEL VARIABLE/PARTNER
+\newcommand{\xid}{\x{s}} % SCOPE ID
+\newcommand{\xb}{\x{b}} % business process
+\newcommand{\xs}{\x{a}} % SERVICE ACTIVITIES
+\newcommand{\xsc}{\x{a}_{s}}
+\newcommand{\xsa}{\x{r}} % START ACTIVITIES
+%\newcommand{\xh}{\x{h}} % HANDLERS
+\newcommand{\xh}{\xs} % HANDLERS
+\newcommand{\xsla}{\x{sh}}
+\newcommand{\xa}{\x{b}} % BASIC ACTIVITY
+\newcommand{\xd}{\x{d}} % DEPLOYMENT
+\newcommand{\xI}{\x{s}} % INSTANCE
+\newcommand{\xcorr}{\x{c}} % CORRELATION VARIABLES
+\newcommand{\xl}[1]{\dot{#1}} % LINK VARIABLE
+\newcommand{\xfs}[1]{\mathcal{S}_{#1}} % TOP LEVEL SCOPE IDENTIFIERS
+\newcommand{\xcs}[2]{\mathcal{C}^{\,#1}_{#2}} % SCOPE IDENTIFIERS ARGS of CMP
+\newcommand{\xC}[1]{\mathcal{H}(#1)} %
+\newcommand{\xDC}[3]{\mathcal{D}\mathcal{C}(#1, #2, #3)} %
+\newcommand{\xell}{\single{\ell}} % LOCK
+%%% extra label
+\newcommand{\talpha}{t}
+\newcommand{\oalpha}{!\,\talpha}
+\newcommand{\ialpha}{?\,\talpha}
+%%%%%%%%%%% SEPARATORI %%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\xmid}{\,,\,} % separatore componenti: istanze e specifiche
+%\newcommand{\xspar}{\spar} % separatore deployments
+\newcommand{\xspar}{\|\,} % separatore deployments
+\newcommand{\xdisj}{,} % union of states with disjoint domains
+\newcommand{\xupd}{\circ} % state updating
+\newcommand{\xxdef}{\stackrel{_{def}}{=}} % definition
+
+%%%%%%%%%%% STRUCT EQUIV %%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\xequiv}{\stackrel{\textrm{\tiny bpel}}{\equiv}}
+\newcommand{\xequiv}{\equiv}
+%%%%%%%%%%% TRUE FALSE %%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\xfalse}{\x{ff}}
+\newcommand{\xtrue}{\x{tt}}
+\newcommand{\xunset}{\x{null}}
+\newcommand{\unspec}{\bot} % UNSPECIFIED
+\newcommand{\xnok}{\x{ff}}
+\newcommand{\xok}{\x{tt}}
+\newcommand{\mybackslash}{-} %
+
+%%%%%%%%% BPEL ACTIVITIES %%%%%%%%%%%%
+% BASIC
+\newcommand{\xcomm}[1]{\textit{\% #1}}
+%\newcommand{\xrec}[3]{\xcmd{rcv}(#1,#2,#3)}
+\newcommand{\xrec}[3]{\xcmd{rcv}\,#1\, #2\, #3}
+\newcommand{\xinv}[3]{\xcmd{inv}\,#1\,#2\,#3}
+%\newcommand{\xinv}[3]{\xcmd{inv}(#1,#2,#3)}
+%\newcommand{\xmsg}[3]{\xcmd{!}\,\xapp{#1}{\xapp{#2}{#3}}}
+\newcommand{\xmsg}[3]{\ll\!\xapp{#1}{\xapp{#2}{#3}}\!\gg}
+%\newcommand{\xreca}[3]{\xcmd{rcv}\arr{#1,#2,#3}}
+%\newcommand{\xinva}[3]{\xcmd{inv}\arr{#1,#2,#3}}
+%\newcommand{\xinvs}[4]{\xcmd{inv}(#1,#2,#3,#4)}
+\newcommand{\xass}[2]{#1 := #2}
+\newcommand{\xassv}[2]{#1 \leftarrow #2}
+%%
+\newcommand{\xthr}{\xcmd{throw}}
+\newcommand{\xexit}{\xcmd{exit}}
+\newcommand{\xskip}{\xcmd{empty}}
+\newcommand{\xstop}{\xcmd{stop}}
+%%
+%% SMALL
+\newcommand{\xsthr}{\mbox{\small{\textsf{throw}}}}
+\newcommand{\xsexit}{\mbox{\small{\textsf{exit}}}}
+\newcommand{\xsskip}{\mbox{\small{\textsf{empty}}}}
+\newcommand{\xsstop}{\mbox{\small{\textsf{stop}}}}
+\newcommand{\xshalt}[1]{\mbox{\small{\textsf{end}}}(#1)}
+%%
+\newcommand{\recsep}{\xsucc} % BPEL MOD
+%\newcommand{\xsexit}{\textsf{\small exit}}
+%\newcommand{\xsthr}{\textsf{\small thr}}
+\newcommand{\xcmpscope}[1]{\xcmd{cmpsc}(#1)}
+%\newcommand{\xcmp}[1]{\xcmd{cmp}(#1)}
+\newcommand{\xcmpa}[2]{\xcmd{cmp}(#1,#2)}
+\newcommand{\xattr}{\Diamond}%{\diamond}
+\newcommand{\xattrscope}{\Diamonddot}%{!}
+\newcommand{\xattrall}{\Diamondblack}%{\ast}
+\newcommand{\xattrt}{\blacktriangledown}
+%\newcommand{\xemp}{\x{skip}}
+%\newcommand{\xskip}{\xcmd{empty}}
+%\newcommand{\xstop}{\mbox{\textsf{\small stop}}}
+% STRUCTURED
+\newcommand{\xsucc}{\, ; }
+\newcommand{\xpar}{\,|\,}
+\newcommand{\xplus}{\,+\,}
+%\newcommand{\xif}[3]{\x{if}(#1)\, \x{then}\, \{ #2 \}\, \x{else}\, \{#3\}}
+%\newcommand{\xifs}[2]{\x{if}(#1)\, \x{then}\, \{ #2 \}}
+\newcommand{\xif}[3]{\xcmd{if}(#1)\{ #2 \}\{#3\}}
+\newcommand{\xifs}[2]{\xcmd{if}(#1)\{ #2 \}}
+\newcommand{\xwhile}[2]{\xcmd{while}(#1)\, \{ #2\}}
+\newcommand{\xpick}{{\displaystyle \sum_{i\in I}\xrec{\tilde{\xu}_i}{\xo_i}{\bar{\xx}_i}\recsep\xs_i}}
+\newcommand{\xpicknodisplay}{\sum_{i \in I}\xrec{\tilde{\xu}_i}{\xo_i}{\bar{\xx}_i}\recsep\xs_i}
+\newcommand{\xpicknoemph}{\sum_{i \in I,I\neq\emptyset}\xrec{\tilde{\xu}_i}{\xo_i}{\bar{\xx}_i}\recsep\xs_i}
+\newcommand{\xtarget}[3]{\{#2\}\stackrel{#1}{\Rightarrow} #3}
+\newcommand{\xsource}[2]{#1 \Rightarrow\{#2\}}
+%\newcommand{\xscopeh}[2]{[\![\,#2 \,]\!]_{#1}}
+%\newcommand{\xscopeh}[2]{\lbag\,#2 \,\rbag_{#1}}
+%\newcommand{\xscope}[4]{[#2 \bullet #3 \star #4]_{#1}}
+%\newcommand{\xscopec}[3]{[#2 \star #3]_{#1}}
+%\newcommand{\xscopef}[3]{[#2 \bullet  #3]_{#1}}
+%\newcommand{\xscopez}[2]{[#2]_{#1}}
+%\newcommand{\xscopeh}[2]{\lbag\,#2 \,\rbag_{#1}}
+%\newcommand{\xscope}[4]{[#2 \bullet #3 \star #4]}
+\newcommand{\xscope}[4]{[#1 \bullet #2 \star #3\, \triangle\, #4]}
+\newcommand{\xscopecd}[3]{[#1 \star #2 \, \triangle\, #3]}
+\newcommand{\xscopefd}[3]{[#1 \bullet #2 \, \triangle\, #3]}
+\newcommand{\xscopef}[2]{[#1 \bullet #2]}
+\newcommand{\xscopec}[2]{[#1 \star #2]}
+\newcommand{\xscoped}[2]{[#1 \, \triangle\, #2]}
+\newcommand{\xscopefc}[3]{[#1 \bullet #2 \star #3]}
+\newcommand{\xscopez}[1]{[#1]}
+\newcommand{\xdl}{\x{done}}
+\newcommand{\xsuml}{\x{pick}}
+%\newcommand{\xdl}{\x{done}}
+\newcommand{\xproc}[2]{\xscopef{#1}{#2}}
+%\newcommand{\xprot}[2]{\textcolor{green}{\llparenthesis #1\rrparenthesis_{#2}}} % handler
+\newcommand{\xprot}[1]{\llparenthesis #1\rrparenthesis} % handler
+%%%%%%%%%%%%%%%% DEPLOY %%%%%%%%%%%%%%%%%%
+\newcommand{\xnet}[1]{\{\, #1 \,\}}
+\newcommand{\xeng}[2]{\{ #1 \}_{#2}}
+\newcommand{\xinst}[2]{#1 \vdash #2 }
+\newcommand{\xinstnostate}[2]{#2}
+\newcommand{\xnoCONF}[4]{#2\!\Downarrow^{#1,#4}_{#3}}
+\newcommand{\noexit}[1]{#1\!\Downarrow_{\xexit}}
+\newcommand{\nothr}[1]{#1\!\Downarrow_{\xthr}}
+\newcommand{\noexitthr}[1]{#1\!\Downarrow_{\xexit/\xthr}}
+\newcommand{\xnullinst}{\xinst{\xsigma}{\xskip/\xstop}}
+\newcommand{\xemptycorr}{\emptyset} % empty correlation set
+\newcommand{\xcorrset}[1]{\{#1\}}
+%%%%%%%%%%%%%%%% LABELS %%%%%%%%%%%%%%%%%%
+\newcommand{\xalpha}{\alpha}
+\newcommand{\xnum}{n}
+\newcommand{\xtau}{\tau}
+%\newcommand{\xrecl}[3]{?(#1, #2, #3)}
+\newcommand{\xrecl}[3]{?\,\xapp{#1}{\xapp{#2}{#3}}}
+\newcommand{\xassl}[2]{#1 \leftarrow #2}
+\newcommand{\xcoml}[1]{\tau( #1 )}
+%\newcommand{\xinvl}[3]{!(#1, #2 , #3)}
+\newcommand{\xinvl}[3]{!\,\xapp{#1}{\xapp{#2}{#3}}}
+\newcommand{\xmsgl}[3]{!\,\xapp{#1}{\xapp{#2}{#3}}}
+%\newcommand{\xcmpl}[1]{\stackrel{\curvearrowleft}{_#1}}
+%\newcommand{\xdonel}[1]{\checkmark_{\!#1}}
+\newcommand{\xdonel}[1]{(#1)}
+%\newcommand{\xthrl}[1]{\Rsh_{\!#1}}
+\newcommand{\xthrl}{\Rsh}
+\newcommand{\xexitl}{\boxast}
+%%%%%%%%%%%%%%%%%%%%% MATCH %%%%%%%%%%%%%%%%%%%%%
+\newcommand{\xxnewmatch}[4]{\x{match}(#1,\, #2,\, #3,\, #4)}
+\newcommand{\xapp}[2]{#1\! : \! #2}
+%\newcommand{\xhalt}[1]{\x{terminate}(#1)}
+\newcommand{\xhalt}[1]{\x{end}(#1)}
+\newcommand{\xencod}[1]{\langle\!\langle#1\rangle\!\rangle}
+\newcommand{\xencodi}[2]{\langle\!\langle#1\rangle\!\rangle_{#2}}
+\newcommand{\xencodii}[3]{\langle\!\langle#1\rangle\!\rangle_{#2, #3}}
+\newcommand{\xencodiii}[4]{\langle\!\langle#1\rangle\!\rangle_{#2, #3, #4}}
+%\newcommand{\xencodiv}[7]{\langle\!\langle#1\rangle\!\rangle_{#2, #5,#6}^{#3, #4,#7}}
+%\newcommand{\xencodiv}[7]{\langle\!\langle#1\rangle\!\rangle_{#2, #5}^{#3, #4,#7}}
+\newcommand{\xencodiv}[7]{\langle\!\langle#1\rangle\!\rangle_{#2, #5}^{#3, #4}}
+\newcommand{\xdom}[1]{dom(#1)}
+\newcommand{\xvars}[1]{V(#1)}
+\newcommand{\xsigma}{\x{\mu}}
+\newcommand{\xddot}[2]{{#2}_{#1}^{\xattrall}}
+\newcommand{\xdddot}[2]{{#2}_{#1}^{\xattrscope}}
+\newcommand{\xenv}[1]{\{#1\}}
+%\newcommand{\xddotsigma}{\ddot{\sigma}}
+\newcommand{\updat}[2]{\xenv{\assoc{#1}{#2}}}
+\newcommand{\xupdat}[3]{\xenv{\xassoc{#1}{#2}{#3}}}
+\newcommand{\xassoc}[3]{#2 \stackrel{_{#1}}{\mapsto} #3}
+\newcommand{\xall}[3]{\mathcal{D}(#1, #2, #3)}
+\newcommand{\xS}{\mathcal{S}}
+%\newcommand{\xT}{\mathcal{T}}
+\newcommand{\xdone}{\hat{d}}
+%%% TERMINATION SIGNALS
+%\newcommand{\xtexit}{\hat{t}_{exit}}
+%\newcommand{\xtthr}{\hat{t}_{thr}}
+\newcommand{\xterm}[3]{\mathcal{T}_{\!\!#1,#2}^{#3}} % termination handler
+\newcommand{\comple}{\hat{c}}
+\newcommand{\xhand}{\hat{h}}
+\newcommand{\xkill}{\hat{k}}
+\newcommand{\xdot}{\x{\cdot}}
+%%%%%%%%%%%%%%%%%% QUEUE %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\xqq}{\mathtt{q}}
+\newcommand{\queue}{\mathit{Q}}
+\newcommand{\xins}{\op_{ins}}
+\newcommand{\xdel}{\op_{rem}}
+%%%%%%%%%%%%%%%% EQUIVALENCE %%%%%%%%%%%%%%%%%%%%
+\newcommand{\opeq}[2]{#1 \opeqs #2}
+\newcommand{\opeqs}{\stackrel{\textrm{\tiny bpel}}{\approx}}
+%\newcommand{\opeqs}{\stackrel{\text{\tiny bpel}}{\approx}}
+%\newcommand{\opsims}{\stackrel{\text{\tiny bpel}}{\leq}}
+\newcommand{\opsims}{\stackrel{\textrm{\tiny bpel}}{\leq}}
+%\newcommand{\opeqs}{\sim_{\x{bpel}}}
+%\newcommand{\opsims}{\leq_{\x{bpel}}}
+\newcommand{\opsim}[2]{#1 \opsims #2}
+
+
+
+
+%%% SHIPPING EXAMPLE %%%%%%%
+
+\newcommand{\xitcc}{items}
+\newcommand{\xitc}{shipped}
+\newcommand{\complete}{c}
+\newcommand{\id}{id}
+\newcommand{\itemsTot}{items}
+\newcommand{\itemsCount}{count}
+\newcommand{\shipPriceCalc}{priceCalc}
+\newcommand{\shipPriceComp}{comp}
