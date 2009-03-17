@@ -171,7 +171,7 @@ d'istanza $\xexit$.
 $$
 \delimite{
 \begin{array}{
-@{\hspace{-1ex}}l@{\hspace{2ex}}r@{\hspace{.75ex}}l@{\!}l@{\hspace{3ex}}l@{\hspace{-1ex}}}
+@{\hspace{-1ex}}l@{\hspace{2ex}}r@{\hspace{.75ex}}l@{\!}l@{\hspace{1.5ex}}l@{\hspace{-1ex}}}
 \textit{Basic activities} & \xa & ::= &
 \xinv{\plinv}{\xo}{\bar{\xx}} \!\sepgr\!
 \xrec{\plrec}{\xo}{\bar{\xx}} \!\sepgr\!
@@ -186,7 +186,7 @@ $$
 %\xif{\xx}{\xs_1}{\xs_2} \!\sepgr\!
 \xif{\xe}{\xs_1}{\xs_2} \!\sepgr\!
 %\xwhile{\xx}{\xs} & \textrm{basic, conditional, iteration}\\
-\xwhile{\xe}{\xs} & \textrm{basic, conditional, iteration}\\[-.05cm]
+\xwhile{\xe}{\xs} & \textrm{basic, conditional, iteration}\\[-.02cm]
 & & \sepgr & \xs_1\xsucc\xs_2 \sepgr
 \sum_{j \in J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j &
 \textrm{sequence, pick (with $\length{J} \,> 1$)}\\[-.05cm] & & \sepgr & \xs_1
@@ -222,7 +222,7 @@ $$
 
 Le attività strutturate sono costituite invece dalla scelta condizionale
 $\xif{\cdot}{\cdot}{\cdot}$, dalla iterazione $\xwhile{\xe}{\xs}$, dalla
-composizione sequelziale di sottoattività $\xs_1\xsucc\xs_2$, dalla scelta
+composizione sequenziale di sottoattività $\xs_1\xsucc\xs_2$, dalla scelta
 esterna su un set non vuoto di possibili porte $\sum_{j \in
 J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j$\footnote{La scelta può
 essere anche espressa tramite l'operatore binario $ \cdot + \cdot$.}, dalla
@@ -292,7 +292,7 @@ $\xeng{\xI}{\xcorr}$ è la definizione di processo $\xI$ con tutte le sue attual
 istanze a cui è stato associato il \emph{Correlation Set} $\xcorr$. Tale insime
 individua fra tutte le variabili presenti nella definizione del processo quelle
 che dovranno essere considerate per valutare la correlazione di un messaggio
-rispetto alla diverse istanze. Vedremo come la sematica di Blite definisca tale
+rispetto alla diverse istanze. Vedremo come la semantica di Blite definisca tale
 processo di attribuzione di un messaggio a una particolare istanza e come tale
 sematica sia stata implemetata nel nostro engine di esecuzione.
  
@@ -303,8 +303,8 @@ definizione di processo avrà i propri nomi di servizo univoci e dato un nome
 sarà sempre possibile individuare un deployment preciso.
 \\
 
-Per concludere si deve osservare come la sintassi esposta debba essere ancora
-considerata ``astratta'' in quanto non definisce tutti gli aspetti necessari
+Per concludere si deve osservare come la sintassi esposta debba ancora essere 
+considerata ``astratta'', in quanto non definisce tutti gli aspetti necessari
 all'imlemetazione. In particolar modo non definisce i tipi dei valori
 attribuibili alle variabili, ne la sintassi delle espressioni supportata, e
 nemmeno esplicita la precedenza degli operatori di sequenzializzazione,
@@ -318,7 +318,161 @@ formale anche questi aspetti. In particolare vedremo come  i semplici
 operatori binari siano trasformati in costrutti con 
 delimitatori di blocco. In questo modo risulta più semplice
 l'implementazione del parser, in quanto evita la necessità di eseguire
-\emph{lookahead}, e anche la precedenta di un attività rispetto l'altra risulta
+\emph{lookahead}, e anche la precedenza di un attività rispetto l'altra risulta
 esplicitata nalla codifica stessa dei blocchi. In questo modo il codice risulta
 più leggibile e più simile nella struttura ai tradizionali linguaggi di
 programmazione.
+\\
+
+Presentiamo ora la semanticha formale in termini operazionali. Le relazione
+semantiche sono definite su termini che includono ulteriori
+simboli e costrutti, rispetto a quelli definiti dalla sintassi di Tabella
+\ref{tab:syntaxwsbpel}, allo scopo di rappresentare alcuni aspetti dinamici
+dell'esecuzione. In particolare vengono introdotti:
+
+\begin{itemize}
+  \item \emph{Protected activities}, $\xprot{\xs}$, utilizzato per sostituire
+  contesti falliti con i rispettivi compesation handler eseguiti in maniera
+  protetta. La sematica chiarirà il significato di esecuzione protetta.
+  
+  \item \emph{Unsuccessful termination}, $\xstop$, utilizzato per uniformare il
+  comportamento delle attività $\xexit$ e $\xthr$.
+  
+  \item \emph{Messages} $\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}$, utilizzato per
+  rappresentare i messaggi prodotti delle attività invoke.
+    
+  \item \emph{Scope} in forma $\xscope{\xs'}{\xs_f}{\xs_c}{\xs_d}$,
+  utilizzato per rappresentare l'evoluzione del contesto
+  $\xscopefc{\xs}{\xs_f}{\xs_c}$, in cui il completamento di sottocontesti
+  definiti in $\xs$ hanno prodotto l'istallazione di compensation handler
+  reppresentati con $\xs_d$.
+\end{itemize}
+
+Inotre si introduce il concetto di attività \emph{short-lived} con l'intento
+di individuare un sott'insieme fra tutti i tipi di attività presenti nel
+linguaggio. Vedremo che la semantica attribuirà a tali attività la proprietà di
+essere immuni alla terminazione (in un certo senso queste queste attività
+dovrenno essere considerate atomiche rispetto al processo di terminazione).
+Tale insieme è costituito dalla seguenti attività
+
+$$
+\textrm{Attività \emph{short-lived}} : \{ \xskip, \xexit,
+\xthr, \xstop, \xmsg{\tilde{\xp}}{\xo}{\bar{\xv}} \}
+$$
+
+e di seguito una generica attività short-lived sarà indicata con
+il simbolo $\xsla$.
+\\
+
+La semantica dei termini Blite è definita tramite una congruenza strutturale e
+tramite due relazioni di riduzione, una che descrive l'evoluzione delle istanze
+in termini di operazioni interne, e una che descrive l'evoluzione del sistema
+di deployment attraverso le comunicazioni. 
+
+La \emph{Congruenza Strutturale}, identifica come equivalenti termini
+sitatticamente diversi ma che intuitivamente rappresentano il medesimo
+comportamento. Essa è definita come la \ldots indotta dalle uguaglianze
+reppresentate in Tabella \ref{tab:congwsbpel}, dove per altro non sono
+riportate le banali relazioni che escplicitano le ovvie proprietà di
+commutazione e associatività per gli operatori binari.
+
+%%%%% STRUCTURAL CONG Blite %%%%%
+\begin{table}[t]
+\begin{small}
+$$
+\delimite{
+\begin{array}{c}
+\xs \xpar \xskip \xequiv \xs
+\qquad
+\xskip\xsucc\xs \xequiv \xs\xsucc\xskip \xequiv \xs
+\qquad
+\xstop \xpar \xstop \xequiv \xstop
+\qquad
+\xstop \xsucc \xs \xequiv \xstop
+\\[0.2cm]
+\xprot{\xprot{\xs}} \xequiv \xprot{\xs}
+\qquad
+\xprot{\xsla} \xequiv \xsla
+\qquad
+\xprot{\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}\, \spar \xs} \xequiv \,
+\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}} \, \spar \xprot{\xs}
+\\[0.2cm]
+\xscopefc{\xs}{\xs_f}{\xs_c} \xequiv
+\xscope{\xs}{\xs_f}{\xs_c}{\xskip}
+\qquad
+(\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}\, \spar \xs_1)\xsucc\xs_2
+\xequiv \, \xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}\, \spar
+(\xs_1\xsucc\xs_2)
+\\[0.2cm]
+\xscope{\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}} \, \spar
+\xs}{\xs_f}{\xs_c}{\xs_d} \xequiv\,
+\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}\, \spar
+\xscope{\xs}{\xs_f}{\xs_c}{\xs_d} \quad \textrm{if}\ \neg
+\nothr{\xs}
+\\[0.2cm]
+\prooftree \xs \xequiv \xs' \quad \xs_f \xequiv \xs_f' \quad \xs_c
+\xequiv \xs_c' \quad \xs_d \xequiv \xs_d' \justifies \
+\xscope{\xs}{\xs_f}{\xs_c}{\xs_d} \xequiv\,
+\xscope{\xs'}{\xs_f'}{\xs_c'}{\xs_d'}
+\endprooftree
+\\[0.45cm]
+\hline\\[-0.2cm]
+\prooftree \xsa \xequiv \xsa' \qquad \xh_f \xequiv \xh_f' \justifies
+\ \xeng{\xproc{\xsa}{\xh_f}\xmid\xI}{\xcorr} \xequiv
+\xeng{\xI\xmid\xproc{\xsa'}{\xh_f'}}{\xcorr}
+\endprooftree
+\qquad
+\prooftree \xs \xequiv \xs' \justifies \
+\xeng{\xinst{\xsigma}{\xs}\xmid\xI}{\xcorr} \xequiv
+\xeng{\xI\xmid\xinst{\xsigma}{\xs'}}{\xcorr}
+\endprooftree
+\\[0.6cm]
+\xd_1 \xspar \xd_2 \xequiv \xd_2 \xspar \xd_1
+\qquad
+(\xd_1 \xspar \xd_2)\, \xspar \xd_3 \xequiv \xd_1 \xspar (\xd_2
+\xspar \xd_3)
+\qquad
+\xeng{\xinst{\xsigma}{\xskip}\xmid\xI}{\xcorr} \xequiv
+\xeng{\xI}{\xcorr}
+\\[0.2cm]
+\xeng{\xinst{\xsigma}{\xstop}\xmid\xI}{\xcorr} \xequiv
+\xeng{\xI}{\xcorr}
+\qquad
+\xeng{\xinst{\xsigma}{\xskip}}{\xcorr} \xspar \xd \xequiv \xd
+\qquad
+\xeng{\xinst{\xsigma}{\xstop}}{\xcorr} \xspar \xd \xequiv \xd
+\end{array}
+}
+$$
+\end{small}
+  \vspace*{-1.10cm}
+  \caption{Congruenza Strutturale per le attività e i deployment}
+  \vspace*{0.5cm}
+  \label{tab:congwsbpel}
+\end{table}
+%%%%%%%%%%%%%%%%% STRUCTURAL CONG %%%%%%%%%%%%%%%
+
+Dalla congruenza strutturale deduciamo che: l'attvità $\xskip$ agisce come
+l'elemento identità sia per l'operatore di sequenza che per l'operatore di
+parallelismo. La composizione parallela di più attività $\xstop$ è equivalente ad
+un'unica $\xstop$, mentre la stessa $\xstop$ premessa nella sequenzializzazione
+disabilita le attività successive. L'operatore di protezione $\xprot{\cdot}$
+risulta idempotente e le attività short-lived sono da considerarsi implicitamente
+protette, in questo modo è espressa la loro immunità alla terminazione. I
+messaggi possono essere estratti dall'operatore di protezione.
+All'inizio dell'esecuzione di uno scope il compensation handler istallato è da
+considerarsi uguale all'attività $\xskip$. Importante è notare come la
+produzione di messaggi non blocchi le attività successive, ne il completamento
+di contesti a meno che nel contesto stesso non sia attivato un $\xthr$
+(quest'ultimo possibilità è verificata tramite il predicato $\nothr{\xdot}$ che
+verrà formalizzato più avanti). Quest'ultime equivalenze concorrono alla
+definizione di un modello di comunicazione puramente ascincrono per i processi
+Blite. Le equazioni rimanenti risultano particolarmente ovvie, in quanto
+estendono la congruenza strutturale all'applicazione dei costrutti di scope,
+deployment e composizione di deployment. Per concludere si osserva che istanze
+del tipo $\xinst{\xsigma}{\xskip}$ e $\xinst{\xsigma}{\xstop}$ risultano
+terminate e possono essere eliminate, equivalentemente istallazioni contenenti
+solamente istanze terminate sono da considerasi terminate e possono a loro
+volta essere eliminate.
+
+
