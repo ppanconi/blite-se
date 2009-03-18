@@ -112,9 +112,9 @@ le versioni leggermente modificate di cui è stata realizzata l'implementazione.
 
 Come già detto Blite è un linguaggio che può essere visto come una
 semplificazione di BPEL, nel senso che ne ripropone solo alcuni aspetti
-essenziali come: partner links, process e activity termination, message
-correlation, fault handler e compesation handler, mentre ne tralascia altri,
-sepur interessanti, come timeout, eventi, termination handler e flow graph. 
+essenziali come, partner links, process e activity termination, message
+correlation, fault handler e compesation handler, e ne tralascia altri come
+timeout, eventi, termination handler e flow graph.
 
 Anche il modello di invocazione dei servizi è stato semplificato. In BPEL difatti
 sono possibili sia invocazioni one-way che request-response. Le prime sono
@@ -136,7 +136,11 @@ l'indirizzamento in base al valore di meta infomazioni
 contenute negli header, e la \emph{Correlazione (Message
 Correlation)} che invece discrimina rispetto ai valori applicativi contenuti in
 determinate parti del corpo stesso dei messaggi. I Blite è stato scelto di
-rappresentare solamente quest'ultima metodologia.
+rappresentare solamente quest'ultima metodologia. 
+
+In definitiva è stato selezionato un core di BPEL, per cui fosse abbastanza
+agevole definire una sematica formale e con cui, tramite ``encoding'', fosse
+possibile riproporre tutte le funzionalità del linguaggio.
 
 La sintassi di Blite è data in Tabella \ref{tab:syntaxwsbpel}. La categoria
 sintattica \emph{Servizio (Service)} rappresenta  sia la definizione di
@@ -292,9 +296,9 @@ $\xeng{\xI}{\xcorr}$ è la definizione di processo $\xI$ con tutte le sue attual
 istanze a cui è stato associato il \emph{Correlation Set} $\xcorr$. Tale insime
 individua fra tutte le variabili presenti nella definizione del processo quelle
 che dovranno essere considerate per valutare la correlazione di un messaggio
-rispetto alla diverse istanze. Vedremo come la semantica di Blite definisca tale
-processo di attribuzione di un messaggio a una particolare istanza e come tale
-sematica sia stata implemetata nel nostro engine di esecuzione.
+ad una praticolare istanza. Vedremo come la semantica di Blite definisca tale
+processo di attribuzione di un messaggio a una istanza e come tale
+sematica sia stata adeguata all'implemetazione del nostro engine di esecuzione.
  
 In generale si impone la restrizione che un insieme di deployments sia
 \emph{ben formato}, nel senso che i nomi nei partner link utilizzati per le
@@ -311,7 +315,7 @@ nemmeno esplicita la precedenza degli operatori di sequenzializzazione,
 parallelismo e scelta esterna\footnote{In merito alla precedenza degli
 operatori, il documento originale in cui è descritto Blite, afferma che
 l'operatore di sequenza $\cdot ; \cdot$ ha precedenza
-sull'operatore di parallelismo $\cdot | \cdot$, e questo ha precedeza
+sull'operatore di parallelismo $\cdot | \cdot$, e che quest'ultimo ha precedeza
 sull'operatore di scelta $\cdot + \cdot$}. Di fatto l'implemetazione da noi
 realizzata fa riferimento ad una sintassi concreta che definisce in maniera
 formale anche questi aspetti. In particolare vedremo come  i semplici
@@ -320,7 +324,7 @@ delimitatori di blocco. In questo modo risulta più semplice
 l'implementazione del parser, in quanto evita la necessità di eseguire
 \emph{lookahead}, e anche la precedenza di un attività rispetto l'altra risulta
 esplicitata nalla codifica stessa dei blocchi. In questo modo il codice risulta
-più leggibile e più simile nella struttura ai tradizionali linguaggi di
+più leggibile e più simile nella struttura dei tradizionali linguaggi di
 programmazione.
 \\
 
@@ -332,7 +336,7 @@ dell'esecuzione. In particolare vengono introdotti:
 
 \begin{itemize}
   \item \emph{Protected activities}, $\xprot{\xs}$, utilizzato per sostituire
-  contesti falliti con i rispettivi compesation handler eseguiti in maniera
+  contesti falliti con i rispettivi compesation handler da eseguire in maniera
   protetta. La sematica chiarirà il significato di esecuzione protetta.
   
   \item \emph{Unsuccessful termination}, $\xstop$, utilizzato per uniformare il
@@ -349,7 +353,7 @@ dell'esecuzione. In particolare vengono introdotti:
 \end{itemize}
 
 Inotre si introduce il concetto di attività \emph{short-lived} con l'intento
-di individuare un sott'insieme fra tutti i tipi di attività presenti nel
+d'individuare un sott'insieme fra tutti i tipi di attività presenti nel
 linguaggio. Vedremo che la semantica attribuirà a tali attività la proprietà di
 essere immuni alla terminazione (in un certo senso queste queste attività
 dovrenno essere considerate atomiche rispetto al processo di terminazione).
@@ -364,9 +368,9 @@ e di seguito una generica attività short-lived sarà indicata con
 il simbolo $\xsla$.
 \\
 
-La semantica dei termini Blite è definita tramite una congruenza strutturale e
-tramite due relazioni di riduzione, una che descrive l'evoluzione delle istanze
-in termini di operazioni interne, e una che descrive l'evoluzione del sistema
+La semantica dei termini Blite è definita tramite una congruenza strutturale, e
+tramite due relazioni di transizione, una che descrive l'evoluzione delle
+istanze in termini di operazioni interne, e una che descrive l'evoluzione del sistema
 di deployment attraverso le comunicazioni. 
 
 La \emph{Congruenza Strutturale}, identifica come equivalenti termini
@@ -445,9 +449,9 @@ $$
 }
 $$
 \end{small}
-  \vspace*{-1.10cm}
+  \vspace*{-1.20cm}
   \caption{Congruenza Strutturale per le attività e i deployment}
-  \vspace*{0.5cm}
+  \vspace*{-0.3cm}
   \label{tab:congwsbpel}
 \end{table}
 %%%%%%%%%%%%%%%%% STRUCTURAL CONG %%%%%%%%%%%%%%%
@@ -474,5 +478,434 @@ del tipo $\xinst{\xsigma}{\xskip}$ e $\xinst{\xsigma}{\xstop}$ risultano
 terminate e possono essere eliminate, equivalentemente istallazioni contenenti
 solamente istanze terminate sono da considerasi terminate e possono a loro
 volta essere eliminate.
+\\
 
+\begin{table}[t!]
+\begin{small}
+$$
+\delimite{
+\begin{array}{@{\hspace{-.1cm}}l@{\hspace{.3cm}}r@{\hspace{-.1cm}}}
+\xinst{\xsigma}{\xinv{\plinv}{\xo}{\bar{\xx}}} \bpeltsarrow{\xtau}
+\xinstnostate{\xsigma}{\,\xmsg{\xsigma(\plinv)}{\xo}{\xsigma(\bar{\xx})}}
+\ \; \rulelabel{$\x{inv}$}
+&
+\xinstnostate{\xsigma}{\xrec{\plrec}{\xo}{\bar{\xx}}}
+\bpeltsarrow{\xrecl{\plrec\,}{\,\xo\,}{\,\bar{\xx}}}
+\xinstnostate{\xsigma}{\xskip} \; \; \rulelabel{$\x{rec}$}
+\\
+[0.2cm] \xinst{\xsigma}{\xass{\xx}{\xe}}
+\bpeltsarrow{\xassl{\xx}{\xsigma(\xe)}}
+\xinstnostate{\xsigma}{\xskip} \ \; \rulelabel{$\x{asg}$}
+&
+\xinstnostate{\xsigma}{\xthr}
+\bpeltsarrow{\xthrl}
+\xinstnostate{\xsigma}{\xstop}
+\ \; \rulelabel{$\x{thr}$}
+\\
+[0.2cm] \multicolumn{2}{c}{
+\xinstnostate{\xsigma}{\xexit}
+\bpeltsarrow{\xexitl} \xinstnostate{\xsigma}{\xstop} \ \;
+\rulelabel{$\x{term}$}
+\qquad\
+\xinstnostate{\xsigma}{\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}}\,
+\bpeltsarrow{\xmsgl{\tilde{\xp}\,}{\,\xo\,}{\,\bar{\xv}}}
+\xinstnostate{\xsigma}{\xskip} \ \; \rulelabel{$\x{msg}$}
+\qquad\
+\prooftree \xinst{\xsigma}{\xs} \bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs'} \justifies \
+\xinst{\xsigma}{\xprot{\xs}} \bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xprot{\xs'}} \using \;
+\rulelabel{$\x{prot}$}
+\endprooftree
+}
+\\[0.2cm]
+\multicolumn{2}{c}{
+\prooftree \xinst{\xsigma}{\xs_1}
+\bpeltsarrow{\xalpha} \xinstnostate{\xsigma'}{\xs_1'} \justifies \
+\xinst{\xsigma}{\xs_1\xsucc\xs_2} \bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs_1'\xsucc\xs_2} \using \;
+\rulelabel{$\x{seq}$}
+\endprooftree
+\qquad\qquad\quad\
+\xinstnostate{\xsigma}{$ $ \sum_{j\in
+J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j $ $}
+\bpeltsarrow{\xrecl{\plrec_h\,}{\,\xo_h\,}{\,\bar{\xx}_h}}
+\xinstnostate{\xsigma}{\xs_h} \ \ \ (h \in J) \ \
+\rulelabel{$\xsuml$} }
+\\[0.6cm]
+%\prooftree
+%\xs = \left\{\begin{array}{l@{\hspace{2ex}}l}
+%\xs_1 & \textrm{if}\ \xsigma(\xx) = \xtrue\\
+%\xs_2 & \textrm{if}\ \xsigma(\xx) = \xfalse\\
+%\end{array}\right.
+%\justifies \
+%\xinst{\xsigma}{\xif{\xx}{\xs_1}{\xs_2}}
+%\bpeltsarrow{\xtau}
+%\xinstnostate{\xsigma}{\xs}
+%\using \; \rulelabel{$\x{if}$}
+%\endprooftree
+\prooftree \xs = \left\{\begin{array}{l@{\hspace{2ex}}l}
+\\[-.60cm]
+\xs_1 & \textrm{if}\ \xsigma(\xe) = \xtrue\\[-.15cm]
+\xs_2 & \textrm{if}\ \xsigma(\xe) = \xfalse\\
+\end{array}\right.
+\justifies \
+\xinst{\xsigma}{\xif{\xe}{\xs_1}{\xs_2}}
+\bpeltsarrow{\xtau}
+\xinstnostate{\xsigma}{\xs}
+\using \; \rulelabel{$\x{if}$}
+\endprooftree
+&
+%\prooftree \xs' = \left\{\begin{array}{l@{\hspace{2ex}}l}
+%\xs\xsucc\xwhile{\xx}{\xs} &
+%\textrm{if}\ \xsigma(\xx) = \xtrue\\
+%\xskip & \textrm{if}\ \xsigma(\xx) = \xfalse\\
+%\end{array}\right.
+%\justifies \
+%\xinst{\xsigma}{\xwhile{\xx}{\xs}}
+%\bpeltsarrow{\xtau}
+%\xinstnostate{\xsigma}{\xs'}
+%\using \; \rulelabel{$\x{while}$}
+%\endprooftree
+\prooftree \xs' = \left\{\begin{array}{l@{\hspace{2ex}}l}
+\\[-.60cm]
+\xs\xsucc\xwhile{\xe}{\xs} &
+\textrm{if}\ \xsigma(\xe) = \xtrue\\[-.15cm]
+\xskip & \textrm{if}\ \xsigma(\xe) = \xfalse\\
+\end{array}\right.
+\justifies \
+\xinst{\xsigma}{\xwhile{\xe}{\xs}}
+\bpeltsarrow{\xtau}
+\xinstnostate{\xsigma}{\xs'}
+\using \; \rulelabel{$\x{while}$}
+\endprooftree
+\\[0.80cm]
+\multicolumn{2}{c}{
+\prooftree
+\xinst{\xsigma}{\xs_1}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs_1'}
+\quad
+\xalpha \notin \{\xexitl, \xthrl\}
+\quad
+\neg (\nothr{\xs_2}\! \vee\, \noexit{\xs_2})
+\justifies \
+\xinst{\xsigma}{\xs_1 \xpar \xs_2}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs_1' \xpar \xs_2}
+\using \; \rulelabel{$\x{par}_1$}
+\endprooftree
+\quad\
+\prooftree
+\xinstnostate{\xsigma}{\xs_1}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma}{\xs_1'}
+\quad
+\xalpha \in \{\xexitl, \xthrl\}
+\justifies \
+\xinstnostate{\xsigma}{\xs_1 \xpar \xs_2}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma}{\xs_1' \xpar \xhalt{\xs_2}}
+\using \; \rulelabel{$\x{par}_2$}
+\endprooftree
+}
+\\[0.7cm]
+\xinstnostate{\xsigma}{\xscope{\xskip}{\xs_f}{\xs_c}{\xs_d}}
+\bpeltsarrow{\xdonel{\xs_c}}
+\xinstnostate{\xsigma}{\xskip} \; \; \rulelabel{$\xdl_1$}
+&
+\xinstnostate{\xsigma}{\xscope{\xstop}{\xs_f}{\xs_c}{\xs_d}}
+\bpeltsarrow{\xtau} \xinstnostate{\xsigma}{\xprot{\xs_d\xsucc\xs_f}}
+\; \;  \rulelabel{$\xdl_2$}
+\\[0.2cm]
+\multicolumn{2}{c}{
+\prooftree \xinst{\xsigma}{\xs} \bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs'} \quad \xalpha \notin \{\xthrl,\xdonel{\xs''}\}
+\justifies
+\ \xinst{\xsigma}{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{ \xscope{\xs'}{\xs_f}{\xs_c}{\xs_d}}
+\using \; \rulelabel{$\x{exec}$}
+\endprooftree
+}
+\\[0.5cm]
+\multicolumn{2}{c}{
+\prooftree
+\xinstnostate{\xsigma}{\xs}
+\bpeltsarrow{\xdonel{\xs''}}
+\xinstnostate{\xsigma}{\xs'}
+\justifies \
+\xinstnostate{\xsigma}{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}}
+\bpeltsarrow{\xtau}
+\xinstnostate{\xsigma}{\xscope{\xs'}{\xs_f}{\xs_c}{\xs''\xsucc\xs_d}}
+\using \; \rulelabel{$\xdl_3$}
+\endprooftree
+}
+\\[0.5cm]
+\multicolumn{2}{c}{
+\prooftree
+\xinstnostate{\xsigma}{\xs} \bpeltsarrow{\xthrl}
+\xinstnostate{\xsigma}{\xs'} \justifies \
+\xinstnostate{\xsigma}{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}}
+\bpeltsarrow{\xtau}
+\xinstnostate{\xsigma}{\xscope{\xs'}{\xs_f}{\xs_c}{\xs_d}} \using \;
+\rulelabel{$\x{fault}$}
+\endprooftree
+}
+\end{array}
+}
+$$
+\end{small}
+  \vspace*{-1.20cm}
+  \caption{Semantica operazionale per le attività.}
+  \label{tab:allSOS}
+  \vspace*{-0.3cm}
+\end{table}
 
+L'evoluzione delle attività di una istanza di processo è descritta dalla
+relazione di transizione etichettata $\bpeltsarrow{\xalpha}$ presentata in
+Tabella \ref{tab:allSOS} e dove le etichette o azioni $\xalpha$ sono generate dalla
+seguente grammatica:
+
+$$
+\begin{array}
+{r@{\hspace*{.3cm}}c@{\hspace*{.3cm}}l}
+\xalpha & ::= &
+\xtau \sepgr
+\xassl{\xx}{\xv} \sepgr
+\xinvl{\tilde{\xp}}{\xo}{\bar{\xv}} \sepgr
+\xrecl{\plrec}{\xo}{\bar{\xx}} \sepgr
+\xexitl \sepgr \xthrl \sepgr \xdonel{\xs}
+\end{array}
+$$
+
+in cui i nuovi simboli introdotti devono essere interpretati come le seguenti
+azioni:
+
+\begin{itemize}
+  \item $\xtau$ indica la produzione di un messaggio o operazioni interne come
+  la valutazione di test nella scelta condizionata e nella iterazione
+  o istallazione/attivazione di compesation handler.
+  \item $\xassl{\xx}{\xv}$ indica l'assegnamento del valore $\xv$ alla
+  variabile $\xx$.
+  \item $\xinvl{\tilde{\xp}}{\xo}{\bar{\xv}}$ e
+  $\xrecl{\plrec}{\xo}{\bar{\xx}}$  indicano rispettivamente l'esecuzione di
+  una invocazione sull'operazione $\xo$, con il partner link valorizzato a
+  $\tilde{\xp}$ e parametri attuali $\xv$, e la ricezione sull'operazione
+  $\xo$, partner link $\plrec$ e parametri attuali $\bar{\xx}$.
+  \item $\xexitl$ indica la richiesta di una terminazione forzata di una
+  istanza di processo.
+  \item $\xthrl$ indica la generazione di una eccezione.
+  \item $\xdonel{\xs}$ indica la completazione con successo di un scopo
+  che potrà essere eventualmente compesato tramite l'attività $\xs$.
+\end{itemize}
+
+La relazione $\bpeltsarrow{\xalpha}$ è definita con l'ausilio della funzione di
+stato $\xsigma$ che associa un possibile valore ad ogni variabile dell'istanza,
+in particolare $\xsigma(\xx)$ restituisce il valore della variabile $\xx$ sullo
+stato $\xsigma$ e $\xsigma(\xe)$ restituisce il risultato della
+valutazione dell'espressione $\xe$. Bisogna osservare che in alcune produzioni di
+Tabella \ref{tab:allSOS} tale funzione non è esplicitata, per esempio per
+semplicità si è scritto $\xinstnostate{\xsigma}{\xs}
+\bpeltsarrow{\xalpha} \xinstnostate{\xsigma}{\xs'}$ invece di $\xinst{\xsigma}{\xs} \bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma}{\xs'}$.
+
+Alcune funzione e predicati ausiliari, come già precedentemente osservato, sono
+stati introdotti a supporto della definizione sematica. In particolare i
+predicati $\noexit{\xs}$ and $\nothr{\xs}$ valutano la capacità di 
+$\xs$ di eseguire $\xexit$ o $\xthr$, rispettivamente. Essi sono definiti per
+induzione sulla struttura sintattica delle attività e di fatto agiscono come un
+??omomorfismo?? (?? qual'è la struttura algebrica d'arrivo??), tranne che per la
+scelta condizionata e l'iterazione per cui non valgono e per i casi seguenti in cui si ha:
+
+$$
+\begin{array}{c}
+\noexit{\xexit}
+\quad\ \
+\nothr{\xthr}
+\quad\ \
+\prooftree
+\noexit{\xs_1}
+\justifies \
+\noexit{\xs_1 \xsucc \xs_2}
+\endprooftree
+\qquad
+\prooftree
+\nothr{\xs_1}
+\justifies \
+\nothr{\xs_1 \xsucc \xs_2}
+\endprooftree
+\qquad
+\prooftree
+\noexit{\xs}
+\justifies \
+\noexit{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}}
+\endprooftree
+\end{array}
+$$
+
+Per rappresentare la semantica della terminazione viene introdotta la
+funzione $\xhalt{\xdot}$, che applicata ad un'attività, la restituisce
+in modo da lasciare solamente le attività short-lived e quelle protette. Anche
+tale funzione è definita sulla struttura sintattica delle attvità e si ha che 
+$\forall \xs \; \xhalt{\xs} = \xstop$ tranne i seguenti casi
+ 
+$$
+\begin{array}{c}
+\xhalt{\xsla}=\xsla
+\qquad \quad \
+\xhalt{\xprot{\xs}}=\xprot{\xs}
+\qquad \quad \
+\xhalt{\xs_1\xsucc\xs_2}  = \xhalt{\xs_1}
+\\[0.2cm]
+\xhalt{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}} = \xscope{\xhalt{\xs}}{\xs_f}{\xs_c}{\xs_d}
+\quad
+\xhalt{ \xs' \xpar \xs'' } =  \xhalt{\xs'} \xpar \xhalt{\xs''}  
+\end{array}
+$$
+in cui $\xs_1$ non può essere congruente a $\xskip$ o a
+$\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}$, o alla composizione parallela
+di essi.
+\\
+
+Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
+\begin{itemize}
+  \item[\rulelabel{$\x{inv}$}, \rulelabel{$\x{asg}$}] 
+  affermano che le attività di invocazione e di assegnamento
+  possono procedere solamente se i loro argomenti sono espressioni
+  chiuse (cioè senza varibili non inizializzate e $\xsigma(\xdot)$ determina
+  un valore).
+  \item[\rulelabel{$\x{rec}$}] a receive activity offers an invocable operation
+along a given partner link.  
+  \item[\rulelabel{$\x{thr}$}, \rulelabel{$\x{term}$}] report production of fault and forced
+termination signals, respectively.
+  \item[\rulelabel{$\x{msg}$}] a message can always be delivered. 
+  \item[\rulelabel{$\x{prot}$}] protected activity $\xprot{\xs}$ behaves
+like $\xs$. 
+  \item[\rulelabel{$\x{seq}$}] takes care of activities executed sequentially.
+  \item[\rulelabel{$\x{pick}$}] permits to choose among alternative receive
+activities.
+  \item[\rulelabel{$\x{if}$}, \rulelabel{$\x{while}$}] are standard.
+  \item[\rulelabel{$\x{par}_1$}]
+  \item[\rulelabel{$\x{par}_2$}]
+  \item[\rulelabel{$\xdl_1$}]
+  \item[\rulelabel{$\xdl_2$}]
+  \item[\rulelabel{$\x{exec}$}]
+  \item[\rulelabel{$\xdl_3$}]
+  \item[\rulelabel{$\x{fault}$}]
+\end{itemize}
+
+Abbiamo definito la sematica per 
+
+\begin{table}[!t]
+\begin{small}
+$$
+\delimite{
+\begin{array}{c}
+\begin{array}{@{\hspace{-.2cm}}l@{\hspace{.5cm}}l@{\hspace{-.4cm}}}
+\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
+\emptyset
+&
+\xxnewmatch{\xcorr}{\xsigma}{\xx}{\xv} =
+\left\{
+\begin{array}{l@{\hspace{2ex}}l}
+\\[-.50cm]
+\updat{\xx}{\xv} & \textrm{if}\ \xx \notin \xcorr \vee ( \xx \in \xcorr\ \wedge
+\xx \notin \xdom{\xsigma})
+\\[-.05cm] \emptyset & \textrm{if}\ \xx \in \xcorr
+\wedge \updat{\xx}{\xv} \in \xsigma \\
+\end{array}
+\right.
+\\[.7cm]
+\xxnewmatch{\xcorr}{\xsigma}{\arr{}}{\arr{}} =
+\emptyset
+&
+\prooftree
+\xxnewmatch{\xcorr}{\xsigma}{\xw_1}{\xv_1} = \xsigma'
+\quad
+\xxnewmatch{\xcorr}{\xsigma}{\bar{\xw}_2}{\bar{\xv}_2} = \xsigma''
+\justifies \
+\xxnewmatch{\xcorr}{\xsigma}{(\xw_1,\bar{\xw}_2)}{(\xv_1,\bar{\xv}_2)} =
+\xsigma' \xupd \xsigma''
+\endprooftree
+\end{array}
+\vspace{.3cm}\\
+%
+%\begin{array}{c}
+%\xxnewmatch{\xcorr}{\xsigma}{\xx}{\xv} =
+%\left\{
+%\begin{array}{l@{\hspace{2ex}}l}
+%\updat{\xx}{\xv} & \textrm{if}\ \xx \notin \xcorr \vee ( \xx \in \xcorr\ \wedge \xx \notin \xdom{\xsigma})\\
+%\emptyset & \textrm{if}\ \xx \in \xcorr \wedge \updat{\xx}{\xv} \in \xsigma \\
+%\end{array}
+%\right.
+%\\[.5cm]
+%\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
+%\emptyset
+%\qquad\ \
+%\prooftree
+%\xxnewmatch{\xcorr}{\xsigma}{\xw_1}{\xv_1} = \xsigma'
+%\quad
+%\xxnewmatch{\xcorr}{\xsigma}{\bar{\xw}_2}{\bar{\xv}_2} = \xsigma''
+%\justifies \
+%\xxnewmatch{\xcorr}{\xsigma}{(\xw_1,\bar{\xw}_2)}{(\xv_1,\bar{\xv}_2)} =
+%\xsigma' \xupd \xsigma''
+%\endprooftree
+%\vspace{.3cm}\\
+%
+\hline\\
+\prooftree
+\length{\xxnewmatch{\xcorr}{\xsigma}{\xapp{\plrec}{\xapp{\xo}{\bar{\xx}}}}{\xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}}} < \xnum
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xrec{\plrec}{\xo}{\bar{\xx}}\recsep\xs}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\qquad\,\,
+\prooftree
+\exists\, h \in J \, . \,
+\length{\xxnewmatch{\xcorr}{\xsigma}{\xapp{\plrec_h}{\xapp{\xo_h}{\bar{\xx}_h}}}{\xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}}} < \xnum
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{$ $  \sum_{j \in J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j $ $}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\\[0.6cm]
+\prooftree
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs_1}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs_1\xsucc\xs_2}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\hspace{3cm}
+\prooftree
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs_1}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\ \vee\
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs_2}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs_1 \xpar \xs_2}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\\[0.6cm]
+\prooftree
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xprot{\xs}}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\qquad \quad\,\,
+\prooftree
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\qquad \quad\,\,
+\prooftree
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs}}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\ \vee\
+\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\justifies \
+\xnoCONF{\xcorr}{\xinst{\xsigma}{\xs} \xmid \xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}
+\endprooftree
+\end{array}
+}
+$$
+\end{small}
+  \vspace*{-1.20cm}
+  \caption{Matching rules \,/\, Is there an active receive along $\tilde{\xp}$ and $\xo$ matching $\bar{\xv}$?}
+  \label{tab:barbeRec}
+  \vspace*{-.3cm}
+\end{table}
