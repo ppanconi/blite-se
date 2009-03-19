@@ -1,5 +1,6 @@
 \chapter{Il linguaggio per l'orchestrazione}
 
+\section{BPEL, lo standard per l'orchestrazione di Servizi Web}
 Abbiamo visto come SOA e i Servizi Web siano una delle risposte più recenti
 alla necessità di integrare funzionalità applicative eterogenee, e di fornire
 un modello di sviluppo software che sia il pi\`u efficace possibile rispetto
@@ -305,6 +306,17 @@ In generale si impone la restrizione che un insieme di deployments sia
 ricezioni non siano condivisi fra diversi deployment. In questo modo ogni
 definizione di processo avrà i propri nomi di servizo univoci e dato un nome
 sarà sempre possibile individuare un deployment preciso.
+
+In seguito, nella definizione della semantica, si farà uso della notazione
+$\bar{\cdot}$, per sottintendere tuple di valori o variabili, $\bar{\xx}$ può
+essere considerata l'abbreviazione di $\arr{\xx_1,
+\ldots, \xx_h}$ (con $h \geq 0$). L'ulteriore notazione $\tilde{\cdot}$
+indicherà tuple speciali di uno o al massimo due elementi ($\tilde{\xp}$ starà
+per $\arr{\xp_1, \xp_2}$ o $\arr{\xp_1}$). Inoltre l'operatore
+$\xapp{\xdot}{\xdot}$ permetterà di ottenere la tupla $\arr{\xp,
+\xu,\xx_1,\ldots,\xx_h}$ come concatenazione di $\arr{\xp, \xu}$ e
+$\arr{\xx_1,\ldots,\xx_h}$ scrivendo $\xapp{\arr{\xp,
+\xu}}{\arr{\xx_1,\ldots,\xx_h}}$.
 \\
 
 Per concludere si deve osservare come la sintassi esposta debba ancora essere 
@@ -837,8 +849,10 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
   
   \item[\rulelabel{$\xdl_2$}] In uno scope in cui la contest activity giunge ad 
   $\xstop$ a causa di una eccezione o di una richiesta di terminazione,
-  attraverso un transizione interna si attiva l'esecuzione protetta di
-  compensation handler istallati e del fault handler.
+  attraverso un transizione interna si attiva l'esecuzione protetta dei
+  compensation handler istallati e del fault handler. Importante è osservare
+  come l'esecuzione dell'ambiente protetto avvenga nello stato attuale
+  dell'istanza.
   
   \item[\rulelabel{$\x{fault}$}] La sollevazione di un'eccezione in $\xs$ non
   viene propagata al di fuori dello scope, ma gestita tramite una transizione
@@ -849,9 +863,103 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
 
 Abbiamo definito il comportamento delle attività interne delle istanze di
 processo, vediamo ora come avviene la creazione di tali istanze e la
-comunicazione all'interno di sistemi di deployment.
+comunicazione in sistemi di deployment. Il comportamento di quest'utlimi è
+definito dalla realzione di riduzione $\bpelredarrow{}$ presetata in Tabella
+\ref{tab:deploySOS}.
 
-\begin{table}[!t]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RIDUZIONE PER I deployment
+\begin{table}[t]
+\begin{small}
+$$
+\delimite{
+\begin{array}{c}
+\prooftree
+\xinstnostate{\xsigma_1}{\xs_1} \bpeltsarrow{\ialpha_1}
+\xinstnostate{\xsigma_1}{\xs_1'} \quad
+\xinstnostate{\xsigma_2}{\xs_2} \bpeltsarrow{\oalpha_2}
+\xinstnostate{\xsigma_2}{\xs_2'}
+\quad \xxnewmatch{\xcorr_1}{\xsigma_1}{\talpha_1}{\talpha_2} =
+\xsigma_1' \quad \neg\,
+(\,\xnoCONF{\xcorr_1}{\xinst{\xsigma_1}{\xs_1} \xmid \xI_1}
+{\talpha_2}{\length{\,\xsigma_1'}}\!)
+\justifies \ \xeng{\xinst{\xsigma_1}{\xs_1}\xmid\xI_1}{\xcorr_1}
+\xspar \xeng{\xinst{\xsigma_2}{\xs_2}\xmid\xI_2}{\xcorr_2}
+\bpelredarrow{} \xeng{\xinst{\xsigma_1 \xupd
+\xsigma_1'}{\xs_1'}\xmid\xI_1}{\xcorr_1} \xspar
+\xeng{\xinst{\xsigma_2}{\xs'_2}\xmid\xI_2}{\xcorr_2} \using \;
+\rulelabel{$\x{com}$}
+\endprooftree
+\\
+\\
+\prooftree
+\xinstnostate{\emptyset}{\xscopefc{\xsa}{\xh_f}{\xskip}}
+\bpeltsarrow{\ialpha_1} \xinstnostate{\emptyset}{\xs_1} \quad
+\xinstnostate{\xsigma_2}{\xs_2} \bpeltsarrow{\oalpha_2}
+\xinstnostate{\xsigma_2}{\xs_2'} \quad
+\xxnewmatch{\xcorr_1}{\emptyset}{\talpha_1}{\talpha_2} = \xsigma_1
+\!\! \quad \neg\,
+(\xnoCONF{\xcorr_1}{\xI_1}{\talpha_2}{\length{\,\xsigma_1}}\!)
+\justifies \ \xeng{\xproc{\xsa}{\xh_f} \xmid \xI_1}{\xcorr_1} \xspar
+\xeng{\xinst{\xsigma_2}{\xs_2} \xmid  \xI_2}{\xcorr_2}
+\bpelredarrow{} \xeng{\xinst{\xsigma_1}{\xs_1} \xmid
+\xproc{\xsa}{\xh_f} \xmid \xI_1}{\xcorr_1} \xspar
+\xeng{\xinst{\xsigma_2}{\xs_2'} \xmid \xI_2}{\xcorr_2} \using \;
+\rulelabel{$\x{new}$}
+\endprooftree
+\\
+\\
+\prooftree \xinst{\xsigma}{\xs} \bpeltsarrow{\xassl{\xx}{\xv}}
+\xinstnostate{\xsigma}{\xs'} \quad
+\xxnewmatch{\xcorr}{\xsigma}{\xx}{\xv} = \xsigma' \justifies \
+\xeng{\xinst{\xsigma}{\xs} \xmid \xI}{\xcorr} \bpelredarrow{}
+\xeng{\xinst{\xsigma \xupd \xsigma'}{\xs'} \xmid \xI}{\xcorr} \using
+\; \rulelabel{$\x{var}$}
+\endprooftree
+\qquad\qquad
+\prooftree \xd_1 \bpelredarrow{} \xd_1' \justifies \ \xd_1 \xspar
+\xd_2 \bpelredarrow{} \xd_1' \xspar \xd_2 \using \;
+\rulelabel{$\x{part}$}
+\endprooftree
+\\
+\\
+\prooftree \xinst{\xsigma}{\xs} \bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs'} \quad \xalpha \notin\{
+\ialpha_1,\, \oalpha_2,\, \xassl{\xx}{\xv} \} \justifies \
+\xeng{\xinst{\xsigma}{\xs} \xmid \xI}{\xcorr} \bpelredarrow{}
+\xeng{\xinst{\xsigma}{\xs'} \xmid \xI}{\xcorr} \using \;
+\rulelabel{$\x{enab}$}
+\endprooftree
+\qquad\qquad
+\prooftree \xd \xequiv \xd_1 \quad \xd_1 \bpelredarrow{} \xd_2 \quad
+\xd_2 \xequiv \xd' \justifies \ \xd \bpelredarrow{} \xd' \using \;
+\rulelabel{$\x{cong}$}
+\endprooftree
+\end{array}
+}
+$$
+\end{small}
+  \vspace*{-1.20cm}
+  \caption{Regole di riduzione per i deployment 
+  (si consideri $\talpha_1 = \xapp{\plrec}{\xapp{\xo}{\bar{\xx}}}$ e 
+  \mbox{$\talpha_2 =
+  \xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}$}).}
+  \label{tab:deploySOS}
+  \vspace*{-0.3cm}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La problematica fondamentale è quella di individuare fra le varie istanze di un
+deployment quella predisposta alla ricezione di un messaggio, o capiere se il
+sopraggiungere di un messaggio debba causare la creazione di una nuova istanza.
+
+Nella difinizione originale Blite è stato scelto un approccio puramente
+semantico, nel senso che ne la sitassi ne la struttura dei messaggi prevedono la presenza di
+informazioni aggiuntive che possono essere utilizzate per guidare tali scelte.
+
+Di fatto si è scelto di definire un ordinamento 
+
+\begin{table}[t!]
 \begin{small}
 $$
 \delimite{
@@ -963,3 +1071,7 @@ $$
   \label{tab:barbeRec}
   \vspace*{-.3cm}
 \end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SINTASSI CONCRETA
+\section{Una grammatica per un compilatore}
