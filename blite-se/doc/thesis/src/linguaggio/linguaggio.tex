@@ -691,8 +691,8 @@ azioni:
   \item $\xinvl{\tilde{\xp}}{\xo}{\bar{\xv}}$ e
   $\xrecl{\plrec}{\xo}{\bar{\xx}}$  indicano rispettivamente l'esecuzione di
   una invocazione sull'operazione $\xo$, con il partner link valorizzato a
-  $\tilde{\xp}$ e parametri attuali $\xv$, e la ricezione sull'operazione
-  $\xo$, partner link $\plrec$ e parametri attuali $\bar{\xx}$.
+  $\tilde{\xp}$ e parametri attuali $\bar{\xv}$, e la ricezione sull'operazione
+  $\xo$, partner link $\plrec$ e parametri formali $\bar{\xx}$.
   \item $\xexitl$ indica la richiesta di una terminazione forzata di una
   istanza di processo.
   \item $\xthrl$ indica la generazione di una eccezione.
@@ -711,7 +711,7 @@ semplicità si è scritto $\xinstnostate{\xsigma}{\xs}
 \xinstnostate{\xsigma}{\xs'}$.
 
 Alcune funzione e predicati ausiliari, come già precedentemente osservato, sono
-stati introdotti a supporto della definizione sematica. In particolare i
+stati introdotti a supporto della definizione semantica. In particolare i
 predicati $\noexit{\xs}$ and $\nothr{\xs}$ valutano la capacità di 
 $\xs$ di eseguire $\xexit$ o $\xthr$, rispettivamente. Essi sono definiti per
 induzione sulla struttura sintattica delle attività e di fatto agiscono come un
@@ -769,33 +769,87 @@ di essi.
 \\
 
 Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
-\begin{itemize}
-  \item[\rulelabel{$\x{inv}$}, \rulelabel{$\x{asg}$}] 
-  affermano che le attività di invocazione e di assegnamento
+\begin{description}
+  \item[\rulelabel{$\x{inv}$} \rulelabel{$\x{asg}$}] 
+  Affermano che le attività di invocazione e di assegnamento
   possono procedere solamente se i loro argomenti sono espressioni
-  chiuse (cioè senza varibili non inizializzate e $\xsigma(\xdot)$ determina
-  un valore).
-  \item[\rulelabel{$\x{rec}$}] a receive activity offers an invocable operation
-along a given partner link.  
-  \item[\rulelabel{$\x{thr}$}, \rulelabel{$\x{term}$}] report production of fault and forced
-termination signals, respectively.
-  \item[\rulelabel{$\x{msg}$}] a message can always be delivered. 
-  \item[\rulelabel{$\x{prot}$}] protected activity $\xprot{\xs}$ behaves
-like $\xs$. 
-  \item[\rulelabel{$\x{seq}$}] takes care of activities executed sequentially.
-  \item[\rulelabel{$\x{pick}$}] permits to choose among alternative receive
-activities.
-  \item[\rulelabel{$\x{if}$}, \rulelabel{$\x{while}$}] are standard.
-  \item[\rulelabel{$\x{par}_1$}]
-  \item[\rulelabel{$\x{par}_2$}]
-  \item[\rulelabel{$\xdl_1$}]
-  \item[\rulelabel{$\xdl_2$}]
-  \item[\rulelabel{$\x{exec}$}]
-  \item[\rulelabel{$\xdl_3$}]
-  \item[\rulelabel{$\x{fault}$}]
-\end{itemize}
+  chiuse (cioè senza varibili non inizializzate). Inoltre \rulelabel{$\x{inv}$} insieme 
+  alla successiva \rulelabel{$\x{msg}$} e alla congruenza strutturale
+  definisce la sematica asincrona per la comunicazione.
+   
+  \item[\rulelabel{$\x{rec}$}] Una operazione di ricezione offre la
+  possibilità  di invocazione di un operazione locale su un fissato pertner
+  link. Da osservare che a differenza della invocazione la ricezione blocca le
+  attività sequenzialmente successive.
+  
+  \item[\rulelabel{$\x{thr}$} \rulelabel{$\x{term}$}] Rappresentono
+  rispettivamente la produzione di un'eccezione e di una richiesta di
+  terminazione per l'istanza corrente.
+  
+  \item[\rulelabel{$\x{msg}$}] Un messaggio può essere consumato
+  indipendentemente dalla sua generazione.
+  
+  \item[\rulelabel{$\x{prot}$}] Il costrutto $\xprot{\xs}$ permette la
+  normale esecuzione di $\xs$ al suo interno. Tramite la precedente relazione
+  $\xhalt{\xprot{\xs}}=\xprot{\xs}$ si ottiene la protezione di $\xs$
+  dalle richieste esterne di terminazione.
+ 
+  \item[\rulelabel{$\x{seq}$} \rulelabel{$\x{pick}$} \rulelabel{$\x{if}$}
+  \rulelabel{$\x{while}$}] Esprimono una sematica standard rispetto ai
+  tradizionali linguaggi di programmazione e alle più comuni algebre di
+  processo che prevedono l'operatore di scelta esterna.
+  
+  
+  \item[\rulelabel{$\x{par}_1$} \rulelabel{$\x{par}_2$}] Esprimono la semantica
+  caratteristica di BPEL riguardo alla terminazione nella composizione
+  parallela con attività fallite. Di fatto esse affermano che l'eseguzione di
+  attività parallele evolve come atteso se nessuna di esse ha sollevvato un
+  eccezione o richiesto una terminazione. Viceversa se questo accade tutti i
+  rami della composizione parallela vengono terminati. Si rocordi anche che
+  abbiamo imposto $\xhalt{ \xs' \xpar \xs'' } =  \xhalt{\xs'} \xpar
+  \xhalt{\xs''}$.
+  
+  \item[\rulelabel{$\xdl_1$} \rulelabel{$\xdl_3$}] Esprimono la carattersitica
+  di BPEL secondo cui contesti completati con successo istallano nei rispettivi
+  contesti padre i loro compensation handler per un eventuale successiva
+  compensazione. Il contesto padre colleziona in sequenza i compensation halder
+  di contesti figli completati (\rulelabel{$\xdl_3$}). Questa
+  semantica, differentemente dalla specifica informale di BPEL, prevede che i
+  compesation handler siano mantenuti attraverso un solo grado di parentela
+  nella gerarchia dei contesti. Di fatti un contesto completato istalla nel suo
+  padre solo il suo conpensation handler e non quelli istallati dai suoi figli.
+  Una semantica alternativa poteva essere:
+  $$
+  \xinstnostate{\xsigma}{\xscope{\xskip}{\xs_f}{\xs_c}{\xs_d}}
+\bpeltsarrow{\xdonel{\xs_d;\xs_c}}
+\xinstnostate{\xsigma}{\xskip} 
+  $$
+  in cui si mantengono i conpensation handler precedentemente istallati.
 
-Abbiamo definito la sematica per 
+  \item[\rulelabel{$\x{exec}$}] Se non si producono eccezioni l'esecuzione
+  interna ad uno scope procede come atteso. Da osservare che questa regola è da
+  applicare anche nel caso in cui $\xs$ richieda una terminazione 
+  (${\xs} \bpeltsarrow{\xexitl} \xs' \bpeltsarrow{} \ldots {\xstop}$); qui a
+  differenza di \rulelabel{$\x{fault}$} l'azione $\xexitl$ viene propagata anche al difuori
+  del contesto per produrre la terminazione di tutta l'istanza e successivamente
+  tramite l'applicazione di \rulelabel{$\xdl_2$} vengono eseguiti i
+  compesation handler istallati e il fault hadler del contesto attuale.
+  
+  \item[\rulelabel{$\xdl_2$}] In uno scope in cui la contest activity giunge ad 
+  $\xstop$ a causa di una eccezione o di una richiesta di terminazione,
+  attraverso un transizione interna si attiva l'esecuzione protetta di
+  compensation handler istallati e del fault handler.
+  
+  \item[\rulelabel{$\x{fault}$}] La sollevazione di un'eccezione in $\xs$ non
+  viene propagata al di fuori dello scope, ma gestita tramite una transizione
+  interna.  La successiva evoluzione di ${\xs} \bpeltsarrow{\xthrl} \xs'
+  \bpeltsarrow{} \ldots \, {\xstop}$ in cui vengono terminati gli eventuali
+  rami paralleli, porterà all'applicazione di \rulelabel{$\xdl_2$}. 
+\end{description}
+
+Abbiamo definito il comportamento delle attività interne delle istanze di
+processo, vediamo ora come avviene la creazione di tali istanze e la
+comunicazione all'interno di sistemi di deployment.
 
 \begin{table}[!t]
 \begin{small}
