@@ -1,0 +1,25 @@
+
+{
+    ::
+    [
+        flw
+            seq
+                rcv<"service"> operation(x);
+                rcv<"service"> operation(x);
+                throw;
+            qes
+          |
+            [
+                seq
+                    [
+                        inv<"service"> operation(1)
+                        ch:
+                            empty
+                    ];
+                    inv<"service"> operation(2);
+                    rcv<"s2"> operation(x)
+                qes
+            ]
+        wlf
+    ]
+}
