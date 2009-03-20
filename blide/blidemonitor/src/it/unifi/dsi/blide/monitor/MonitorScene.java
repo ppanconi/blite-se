@@ -8,7 +8,9 @@ import it.unifi.dsi.blide.monitor.widgets.ActivityWidget;
 import it.unifi.dsi.blide.monitor.widgets.ExchangeFlowWidget;
 import it.unifi.dsi.blide.monitor.widgets.ExchangeWidget;
 import it.unifi.dsi.blide.monitor.widgets.InstanceWidget;
+import it.unifi.dsi.blide.monitor.widgets.InvokeWidget;
 import it.unifi.dsi.blide.monitor.widgets.ProtectedScopeWidget;
+import it.unifi.dsi.blide.monitor.widgets.ReceiveWidget;
 import it.unifi.dsi.blide.monitor.widgets.ScopeWidget;
 import it.unifi.dsi.blide.monitor.widgets.WidgetFactory;
 import it.unifi.dsi.blide.run.imp.InstanceNode;
@@ -19,6 +21,7 @@ import it.unifi.dsi.blitese.engine.runtime.imp.ABaseContext;
 import it.unifi.dsi.blitese.engine.runtime.imp.ProtecedScope;
 import it.unifi.dsi.blitese.localenv.LocalInstanceMonitor;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -38,8 +41,14 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.ConnectorState;
+import org.netbeans.api.visual.action.TwoStateHoverProvider;
 import org.netbeans.api.visual.action.WidgetAction;
+import org.netbeans.api.visual.anchor.AnchorFactory;
+import org.netbeans.api.visual.anchor.AnchorShape;
+import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.layout.LayoutFactory;
+import org.netbeans.api.visual.router.RouterFactory;
+import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
@@ -63,10 +72,8 @@ public class MonitorScene extends Scene //        GraphPinScene
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
-
     private List<LocalInstanceMonitor> monitors = new ArrayList<LocalInstanceMonitor>();
     private Map<ActivityComponent, ActivityWidget> mActToWidget = new HashMap<ActivityComponent, ActivityWidget>();
-
     private ExchangeFlowWidget exchangeFlow;
     private Map<Object, ExchangeWidget> mExIdToWidget = new HashMap<Object, ExchangeWidget>();
 
@@ -74,9 +81,9 @@ public class MonitorScene extends Scene //        GraphPinScene
         monitors.add(monitor);
 
         mainLayer = new LayerWidget(this);
-        addChild (mainLayer);
+        addChild(mainLayer);
         connectionLayer = new LayerWidget(this);
-        addChild (connectionLayer);
+        addChild(connectionLayer);
 
 
         mainLayer.setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 15));
@@ -119,11 +126,13 @@ public class MonitorScene extends Scene //        GraphPinScene
 
                 //check if it's invisible activity
                 BltDefBaseNode def = activityComponent.getBltDefNode();
-                if (def != null && !def.isVisible()) continue;
+                if (def != null && !def.isVisible()) {
+                    continue;
+                }
 
                 ActivityWidget widget = mActToWidget.get(activityComponent);
                 if (widget != null) {
-    //                System.out.println("Activity yet present on Scene " + activityComponent);
+                    //                System.out.println("Activity yet present on Scene " + activityComponent);
 
 //                    if (widget.upadte()) {
 //                        widget.repaint();
@@ -142,7 +151,7 @@ public class MonitorScene extends Scene //        GraphPinScene
                         //and not to the natural partent Context
                         ProtecedScope protecedScope = (ProtecedScope) activityComponent;
                         ABaseContext laucherContext = protecedScope.getLauncherContext();
-                        
+
                         ScopeWidget parentWidget = (ScopeWidget) mActToWidget.get(laucherContext);
                         if (parentWidget != null) {
                             parentWidget.addProteced((ProtectedScopeWidget) widget);
@@ -155,14 +164,14 @@ public class MonitorScene extends Scene //        GraphPinScene
 
                         if (parentWidget != null) {
                             parentWidget.add(widget);
-        //                    System.out.println("===============================>> Activity " + activityComponent + " with parent " + parentActivity +  " ADDED!!");
+                        //                    System.out.println("===============================>> Activity " + activityComponent + " with parent " + parentActivity +  " ADDED!!");
                         }
                     }
 
                     mActToWidget.put(activityComponent, widget);
 
                 } else {
-    //                System.out.println("===============================>> NO WIDGET For Activity " + activityComponent);
+                    //                System.out.println("===============================>> NO WIDGET For Activity " + activityComponent);
                 }
 
             }
@@ -191,7 +200,7 @@ public class MonitorScene extends Scene //        GraphPinScene
                 for (LocalInstanceMonitor monitor : monitors) {
                     addInstance(monitor);
                 }
-                
+
                 validate();
 
             }
@@ -247,9 +256,9 @@ public class MonitorScene extends Scene //        GraphPinScene
                     Rectangle visRect = view.getVisibleRect();
                     view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
                     g2.drawImage(ImageUtilities.loadImage("it/unifi/dsi/blide/monitor/widgets/resources/instance-dnd.png"),
-                                AffineTransform.getTranslateInstance(point.getLocation().getX(),
-                                point.getLocation().getY()),
-                                null);
+                            AffineTransform.getTranslateInstance(point.getLocation().getX(),
+                            point.getLocation().getY()),
+                            null);
                 } catch (UnsupportedFlavorException ex) {
                     Exceptions.printStackTrace(ex);
                 } catch (IOException ex) {
@@ -279,10 +288,50 @@ public class MonitorScene extends Scene //        GraphPinScene
                 refresh();
             }
         }
-
     }
 
-    public Widget addExchange(MessageContainer messageContainer) {
+    public void addExchange(MessageContainer messageContainer, ReceiveWidget rw) {
+
+        ExchangeWidget ew = addExchange(messageContainer);
+
+        ConnectionWidget edge = new ConnectionWidget(this);
+        ew.addConnection(edge);
+
+        edge.setSourceAnchor(AnchorFactory.createDirectionalAnchor(ew, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
+        edge.setTargetAnchor(AnchorFactory.createDirectionalAnchor(rw, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
+        edge.setRouter(RouterFactory.createOrthogonalSearchRouter(
+                                    getMainLayer(),
+                connectionLayer));
+
+        edge.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
+//        edge.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
+        edge.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
+        edge.setLineColor(Color.LIGHT_GRAY);
+
+        connectionLayer.addChild(edge);
+    }
+
+    public void addExchange(MessageContainer messageContainer, InvokeWidget iw) {
+
+        ExchangeWidget ew = addExchange(messageContainer);
+        ConnectionWidget edge = new ConnectionWidget(this);
+        ew.addConnection(edge);
+
+        edge.setSourceAnchor(AnchorFactory.createDirectionalAnchor(iw, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
+        edge.setTargetAnchor(AnchorFactory.createDirectionalAnchor(ew, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
+        edge.setRouter(RouterFactory.createOrthogonalSearchRouter(
+                getMainLayer(),
+                connectionLayer));
+
+        edge.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
+//        edge.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
+        edge.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
+        edge.setLineColor(Color.LIGHT_GRAY);
+
+        connectionLayer.addChild(edge);
+    }
+
+    private ExchangeWidget addExchange(MessageContainer messageContainer) {
         if (exchangeFlow == null) {
             exchangeFlow = new ExchangeFlowWidget(this);
             addExchangeFlow(exchangeFlow);
@@ -294,6 +343,7 @@ public class MonitorScene extends Scene //        GraphPinScene
 
         if (ew == null) {
             ew = new ExchangeWidget(this, meId);
+            ew.getActions().addAction(exchangeLighter);
             exchangeFlow.addChild(ew);
             mExIdToWidget.put(meId, ew);
         }
@@ -304,4 +354,21 @@ public class MonitorScene extends Scene //        GraphPinScene
 //    private static ProcessInstance instanceFromTransferable(Transferable transferable) {
 //        transferable.getTransferData(DataFlavor.javaJVMLocalObjectMimeType);
 //    }
+
+    private WidgetAction exchangeLighter = ActionFactory.createHoverAction (new ExchangeLighterController());
+
+    private class ExchangeLighterController implements TwoStateHoverProvider {
+
+        public void unsetHovering (Widget widget) {
+            if (widget instanceof ExchangeWidget)
+                ((ExchangeWidget) widget).unlight();
+        }
+
+        public void setHovering (Widget widget) {
+            if (widget instanceof ExchangeWidget)
+                ((ExchangeWidget) widget).light();
+       }
+
+    }
+
 }

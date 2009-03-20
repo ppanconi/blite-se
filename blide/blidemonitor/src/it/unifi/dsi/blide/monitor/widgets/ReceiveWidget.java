@@ -39,19 +39,9 @@ public class ReceiveWidget extends IconActivityWidget {
 
             MonitorScene monitorScene = (MonitorScene) scene;
             LayerWidget connectionLayer = monitorScene.getConnectionLayer();
-            Widget ew = monitorScene.addExchange(mc);
+            monitorScene.addExchange(mc, this);
 
-            ConnectionWidget edge = new ConnectionWidget (scene);
-            edge.setSourceAnchor (AnchorFactory.createDirectionalAnchor(ew, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
-            edge.setTargetAnchor (AnchorFactory.createDirectionalAnchor(this, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
-            edge.setRouter (RouterFactory.createOrthogonalSearchRouter(monitorScene.getMainLayer(), connectionLayer));
-
-            edge.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
-//        edge.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
-            edge.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
-            edge.setLineColor(Color.LIGHT_GRAY);
-
-            connectionLayer.addChild(edge);
+            
         }
     }
 
