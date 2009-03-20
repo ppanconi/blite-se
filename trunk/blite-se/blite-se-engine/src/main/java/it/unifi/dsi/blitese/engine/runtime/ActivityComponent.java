@@ -36,4 +36,6 @@ public interface ActivityComponent {
     public ActivityComponent getParentComponent();
 
     public BltDefBaseNode getBltDefNode();
+
+    public ExecutionContext getContext();
 }
