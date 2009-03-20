@@ -168,7 +168,7 @@ public abstract class ABaseContext extends ActivityComponentBase implements Exec
     private List<AScope> completedSubScopes = new ArrayList<AScope>();
 
 
-    protected List<Node> provideConpesationDef() {
+    synchronized protected List<Node> provideConpesationDef() {
         
         List<Node> l = new ArrayList<Node>();
         

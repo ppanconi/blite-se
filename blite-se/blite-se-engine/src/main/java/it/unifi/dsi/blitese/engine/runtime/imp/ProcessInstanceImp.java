@@ -160,8 +160,11 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         
         if (correlationSet != null && correlationSet.contains(variable)) {
             
-            if (currentValue == null || !currentValue.equals(incomingValue))
-                return false;
+//            if (currentValue == null || !currentValue.equals(incomingValue))
+//                return false;
+           
+            if (currentValue != null && !currentValue.equals(incomingValue))
+                    return false;
             
         }
         

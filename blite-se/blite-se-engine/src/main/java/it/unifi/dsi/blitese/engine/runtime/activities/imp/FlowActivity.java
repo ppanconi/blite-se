@@ -71,7 +71,9 @@ public class FlowActivity extends ActivityComponentBase implements FlowOwner {
 
     public void flowCompleted() {
         joinedChildFlow++;
-        
+
+        LOGGER.info("Joined Child Flow " + joinedChildFlow);
+
         if (joinedChildFlow == childFlowNumber) {
             //all the childs flow have joined me so I can restart my 
             //original flow.
