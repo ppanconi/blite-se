@@ -71,10 +71,11 @@ risulta difficile e fortemente soggetto ad errori anche per la presenza di
 costrutti complessi come: il parallelismo, la concorrenza, la terminazione
 forzata di attività, la correlazione e la compensazione, quest'ultima utilizzata
 per la realizzazione di ``Long-Running Transaction'', e forse ancora non 
-compresi in tutti i lori aspetti e potenzialità dagli utilizzatori. In tal
+compresa in tutti i suoi aspetti e potenzialità dagli utilizzatori. In tal
 senso si è pensato che un processo di analisi e di formalizzazione di
 tali costrutti potesse essere utile sia per chi si trova ad utilizzarli sia per
-coloro che ne definiscono le specifiche in linguaggio naturale.
+coloro che ne definiscono le specifiche in linguaggio naturale, in modo tale da
+renderne più chiaro e eventualmente semplificarne gli aspetti più delicati.
 
 Un approccio, per cercare di affrontare queste problematiche, è stato quello di
 utilizzare la teoria dei metodi formali e delle algebre di processo per la
@@ -99,8 +100,8 @@ con le problematiche più concrete e tecnologiche presenti nell'ambito della
 orchestrazione di servizi. Di fatto quello che abbiamo fatto non è altro che un
 test critico di come i costrutti formali utilizzati per fornire la semtica del
 liguaggio, potessero essere realmente implementati in scenari di sowfware di
-produzione, che quindi continuassero a mantenere un legame a doppio filo con il
-mondo delle tacnologia da cui hanno tratto iniziale ispirazione.
+produzione, e che quindi continuassero a mantenere un legame a doppio filo con
+il mondo delle tacnologia da cui hanno tratto iniziale ispirazione.
 \\
 
 Di seguito andremo a decrivere la sintassi e  la sematica originali di Blite e
@@ -299,7 +300,7 @@ individua fra tutte le variabili presenti nella definizione del processo quelle
 che dovranno essere considerate per valutare la correlazione di un messaggio
 ad una praticolare istanza. Vedremo come la semantica di Blite definisca tale
 processo di attribuzione di un messaggio a una istanza e come tale
-sematica sia stata adeguata all'implemetazione del nostro engine di esecuzione.
+sematica sia stata implemetata del nostro engine di esecuzione.
  
 In generale si impone la restrizione che un insieme di deployments sia
 \emph{ben formato}, nel senso che i nomi nei partner link utilizzati per le
@@ -336,7 +337,7 @@ delimitatori di blocco. In questo modo risulta più semplice
 l'implementazione del parser, in quanto evita la necessità di eseguire
 \emph{lookahead}, e anche la precedenza di un attività rispetto l'altra risulta
 esplicitata nalla codifica stessa dei blocchi. In questo modo il codice risulta
-più leggibile e più simile nella struttura dei tradizionali linguaggi di
+più leggibile e più simile nella struttura ai tradizionali linguaggi di
 programmazione.
 \\
 
@@ -708,7 +709,7 @@ azioni:
   \item $\xexitl$ indica la richiesta di una terminazione forzata di una
   istanza di processo.
   \item $\xthrl$ indica la generazione di una eccezione.
-  \item $\xdonel{\xs}$ indica la completazione con successo di un scopo
+  \item $\xdonel{\xs}$ indica il completamento con successo di un scopo
   che potrà essere eventualmente compesato tramite l'attività $\xs$.
 \end{itemize}
 
@@ -847,7 +848,7 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
   tramite l'applicazione di \rulelabel{$\xdl_2$} vengono eseguiti i
   compesation handler istallati e il fault hadler del contesto attuale.
   
-  \item[\rulelabel{$\xdl_2$}] In uno scope in cui la contest activity giunge ad 
+  \item[\rulelabel{$\xdl_2$}] In uno scope in cui la contest activity giunge a 
   $\xstop$ a causa di una eccezione o di una richiesta di terminazione,
   attraverso un transizione interna si attiva l'esecuzione protetta dei
   compensation handler istallati e del fault handler. Importante è osservare
@@ -957,17 +958,36 @@ Nella difinizione originale Blite è stato scelto un approccio puramente
 semantico, nel senso che ne la sitassi ne la struttura dei messaggi prevedono la presenza di
 informazioni aggiuntive che possono essere utilizzate per guidare tali scelte.
 
-Di fatto si è scelto di definire un ordinamento 
+Di fatto si è scelto di definire un ordinamento fra tutte le istanze di
+processo che concorrono alla ricezione di un messaggio e di dare la possibilità
+di consumarlo solo alla prime istanze dell'ordinamento. Importante è
+capire come tale ordinamento possa individuare più di un'istanza destinataria
+del messaggio, in questo caso la semantica non specifica ulteriormente la scelta
+e lascia indetrminismo nel comportamento.
 
-\begin{table}[t!]
-\begin{small}
+In maniera informale l'ordinamento si basa sul seguente ragionamento: ``i
+messaggi, che giungono alla porte di una definizione di processo, possono,
+tramite i parametri formali, aggiungere più o meno informazione nello stato delle
+istanze. Un messaggio costituito dalla tupla $\arr{\xv_1, \ldots, \xv_n}$ letto
+con in paramtri formali $\arr{\xx_1, \ldots, \xx_n}$ può avere un \emph{grado di
+definizione} $k \; (k \le n)$, se definisce o redifinisce con nuovi valori
+esattamente $k$ variabili formali e ne lascia immutato lo stato delle restanti $n
+- k$. Quindi un messaggio verrà consumato solamente da una fra le instanze con
+grado di definizione minimo''. Insieme a questa regola si impone il vicolo
+generale che l'assegnamento ad un variabile inclusa nel correlation set possa
+essere fatto un'unica volta, cioè che non sia possibile assegnare un valore
+diverso ad una variabile del correlation già precedetemente velorizzata. Se
+ne conclude che non sia possibile leggere un messaggio che porterebbe un valore
+diverso su una varibile di correlazione già precedentemente inizializzata.
+
+Questi ragionamenti vengono formalizzati nella seguente funzione
+$\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$, che prende un correlation
+set $\xcorr$, una funzine di stato $\xsigma$, una tupla di variabili $\xx$ e un tupla di valori
+$\xv$ e restituisce una funzione di stato eventualmente anche vuota
+su un sottoinsieme delle variabili di $\xx$:
+
 $$
-\delimite{
 \begin{array}{c}
-\begin{array}{@{\hspace{-.2cm}}l@{\hspace{.5cm}}l@{\hspace{-.4cm}}}
-\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
-\emptyset
-&
 \xxnewmatch{\xcorr}{\xsigma}{\xx}{\xv} =
 \left\{
 \begin{array}{l@{\hspace{2ex}}l}
@@ -979,19 +999,63 @@ $$
 \end{array}
 \right.
 \\[.7cm]
+%\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
+%\emptyset \qquad
 \xxnewmatch{\xcorr}{\xsigma}{\arr{}}{\arr{}} =
 \emptyset
-&
+\\[.7cm]
 \prooftree
-\xxnewmatch{\xcorr}{\xsigma}{\xw_1}{\xv_1} = \xsigma'
+\xxnewmatch{\xcorr}{\xsigma}{\xx_1}{\xv_1} = \xsigma'
 \quad
-\xxnewmatch{\xcorr}{\xsigma}{\bar{\xw}_2}{\bar{\xv}_2} = \xsigma''
+\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}_2}{\bar{\xv}_2} = \xsigma''
 \justifies \
-\xxnewmatch{\xcorr}{\xsigma}{(\xw_1,\bar{\xw}_2)}{(\xv_1,\bar{\xv}_2)} =
+\xxnewmatch{\xcorr}{\xsigma}{(\xx_1,\bar{\xx}_2)}{(\xv_1,\bar{\xv}_2)} =
 \xsigma' \xupd \xsigma''
 \endprooftree
+\\[.7cm]
 \end{array}
-\vspace{.3cm}\\
+$$
+Si oasservi come $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ non sia
+definita nel caso in cui le tuple $\bar{\xx}$ e $\bar{\xv}$ abbiamo diversa
+lunghezza e quando si abbia per un qualche $i$ che $\xx_i \in \xcorr$ e
+$\updat{\xx_i}{\xv'} \in \xsigma$ con $\xv' \neq \xv_i$. 
+Quest'ultimo fatto impone quanto precedentemente detto che un istanza non possa
+ricevere messaggi i cui valori assegnati alle variabili attuali non siano
+compatibili con lo stato del correleation set.
+
+\begin{table}[t!]
+\begin{small}
+$$
+\delimite{
+\begin{array}{c}
+% \begin{array}{@{\hspace{-.2cm}}l@{\hspace{.5cm}}l@{\hspace{-.4cm}}}
+% \xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
+% \emptyset
+% &
+% \xxnewmatch{\xcorr}{\xsigma}{\xx}{\xv} =
+% \left\{
+% \begin{array}{l@{\hspace{2ex}}l}
+% \\[-.50cm]
+% \updat{\xx}{\xv} & \textrm{if}\ \xx \notin \xcorr \vee ( \xx \in \xcorr\ \wedge
+% \xx \notin \xdom{\xsigma})
+% \\[-.05cm] \emptyset & \textrm{if}\ \xx \in \xcorr
+% \wedge \updat{\xx}{\xv} \in \xsigma \\
+% \end{array}
+% \right.
+% \\[.7cm]
+% \xxnewmatch{\xcorr}{\xsigma}{\arr{}}{\arr{}} =
+% \emptyset
+% &
+% \prooftree
+% \xxnewmatch{\xcorr}{\xsigma}{\xw_1}{\xv_1} = \xsigma'
+% \quad
+% \xxnewmatch{\xcorr}{\xsigma}{\bar{\xw}_2}{\bar{\xv}_2} = \xsigma''
+% \justifies \
+% \xxnewmatch{\xcorr}{\xsigma}{(\xw_1,\bar{\xw}_2)}{(\xv_1,\bar{\xv}_2)} =
+% \xsigma' \xupd \xsigma''
+% \endprooftree
+% \end{array}
+% \vspace{.3cm}\\
 %
 %\begin{array}{c}
 %\xxnewmatch{\xcorr}{\xsigma}{\xx}{\xv} =
@@ -1015,7 +1079,7 @@ $$
 %\endprooftree
 %\vspace{.3cm}\\
 %
-\hline\\
+%\hline\\
 \prooftree
 \length{\xxnewmatch{\xcorr}{\xsigma}{\xapp{\plrec}{\xapp{\xo}{\bar{\xx}}}}{\xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}}} < \xnum
 \justifies \
@@ -1067,10 +1131,53 @@ $$
 $$
 \end{small}
   \vspace*{-1.20cm}
-  \caption{Matching rules \,/\, Is there an active receive along $\tilde{\xp}$ and $\xo$ matching $\bar{\xv}$?}
+  \caption{Definizione del predicato
+  $\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$. 
+  C'è un'attività di ricezione attiva sul partner link $\tilde{\xp}$ e
+  operazione $\xo$ che può essere i match con i valori del
+  messaggio $\bar{\xv}$?}
   \label{tab:barbeRec}
   \vspace*{-.3cm}
 \end{table}
+
+Con la funzione  $\xxnewmatch{\cdot}{\cdot}{\cdot}{\cdot}$ è
+possibile definire il predicato
+$\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$,
+che valuta se un'instanza di processo $\xI$ con correlation set $\xcorr$ abbia
+una attività di ricezione attiva che possa ricevere il messaggio
+$\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}$ con un grado di definizione
+minore di $n$. In Tabella \ref{tab:barbeRec} tale predicato viene definito
+induttivamente sulla struttura sintattica di $\xI$
+
+A questo punto il comportamento descritto dalle regole di Tabella
+\ref{tab:deploySOS}, risulta abbastanza intuitivo e può essere sintetizzato nel
+seguente modo:
+
+\begin{description}
+\item[\rulelabel{$\x{com}$}] Afferma che la comunicazione da \ldots verso \ldots 
+ può avvenire solo se si realizza il matching, in rispetto dello stato di
+ correlazione, dei valori del messaggio con le variabili di ricezione.
+ Ovviamente ci deve essere anche uguaglianza sintattica fra i partener link e
+ il nome dell'operazione. Tale regola afferma anche che fra tutte le istanze
+ con un'attività di ricezione attiva conforme con i partenr link e l'operazione
+ del messaggio in arrivo, si ne debba segliere una con grado di
+ definizione minimo.
+ \item[\rulelabel{$\x{new}$}] Descrive la creazione di una nuova istanza di
+ processo a partire dalla definizione \ldots a seguito dell'arrivo di un
+ messaggio \ldots che risulti in matching con una delle start activity della
+ definizione stessa. Ancora una volta la nuova istanza verrà creata solo se non
+ ci sia già una istanza capace di ricevere il messaggio con un grado di
+ definizione minore della start activity.
+ \item[\rulelabel{$\x{var}$}] Afferma quanto già precedentemente detto che
+ l'assegnamento di un valore $\xv$ ad una variabile $\xx$ del correlation set
+ su uno stato $\xsigma$ possa avvenire solo se $ \xx \notin dom(\xsigma)$ o se $
+ \updat{\xx}{\xv} \in \xsigma$.
+ \item[\rulelabel{$\x{part}$} \rulelabel{$\x{pass}$} \rulelabel{$\x{cong}$}]
+ Tali regole risultano particolarmente ovvie ed esprimono rispettivamente
+ l'evoluzione parallela di un sistema di deployment, l'eseguzione
+ indipendente delle operazioni interne in ciascuna istanza, l'uguaglianze delle
+ riduzioni di deployment strutturalmente congruenti.
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SINTASSI CONCRETA
