@@ -334,11 +334,12 @@ realizzata fa riferimento ad una sintassi concreta che definisce in maniera
 formale anche questi aspetti. In particolare vedremo come  i semplici
 operatori binari siano trasformati in costrutti con 
 delimitatori di blocco. In questo modo risulta più semplice
-l'implementazione del parser, in quanto evita la necessità di eseguire
-\emph{lookahead}, e anche la precedenza di un attività rispetto l'altra risulta
-esplicitata nalla codifica stessa dei blocchi. In questo modo il codice risulta
-più leggibile e più simile nella struttura ai tradizionali linguaggi di
-programmazione.
+l'implementazione del parser, 
+%in quanto evita la necessità di eseguire \emph{lookahead}, 
+e anche la
+precedenza di un attività rispetto l'altra risulta esplicitata nalla codifica stessa dei blocchi. In questo modo il codice risulta
+più leggibile e più simile nella struttura sia ai tradizionali linguaggi di
+programmazione che ad un linguaggio come BPEL basato su XML .
 \\
 
 Presentiamo ora la semanticha formale in termini operazionali. Le relazione
@@ -941,8 +942,8 @@ $$
 $$
 \end{small}
   \vspace*{-1.20cm}
-  \caption{Regole di riduzione per i deployment 
-  (si consideri $\talpha_1 = \xapp{\plrec}{\xapp{\xo}{\bar{\xx}}}$ e 
+  \caption[Regole di riduzione per deployment]{Regole di riduzione per i
+  deployment (si consideri $\talpha_1 = \xapp{\plrec}{\xapp{\xo}{\bar{\xx}}}$ e 
   \mbox{$\talpha_2 =
   \xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}$}).}
   \label{tab:deploySOS}
@@ -1131,9 +1132,8 @@ $$
 $$
 \end{small}
   \vspace*{-1.20cm}
-  \caption{Definizione del predicato
-  $\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$. 
-  C'è un'attività di ricezione attiva sul partner link $\tilde{\xp}$ e
+  \caption[Definizione predicato match di ricezione]{Definizione del predicato
+  $\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$. C'è un'attività di ricezione attiva sul partner link $\tilde{\xp}$ e
   operazione $\xo$ che può essere i match con i valori del
   messaggio $\bar{\xv}$?}
   \label{tab:barbeRec}
@@ -1154,17 +1154,18 @@ A questo punto il comportamento descritto dalle regole di Tabella
 seguente modo:
 
 \begin{description}
-\item[\rulelabel{$\x{com}$}] Afferma che la comunicazione da \ldots verso \ldots 
- può avvenire solo se si realizza il matching, in rispetto dello stato di
- correlazione, dei valori del messaggio con le variabili di ricezione.
+\item[\rulelabel{$\x{com}$}] Afferma che la comunicazione fra due istanza di
+ processo può avvenire solo se si realizza il matching, in rispetto dello stato
+ di correlazione, dei valori del messaggio con le variabili di ricezione.
  Ovviamente ci deve essere anche uguaglianza sintattica fra i partener link e
  il nome dell'operazione. Tale regola afferma anche che fra tutte le istanze
  con un'attività di ricezione attiva conforme con i partenr link e l'operazione
  del messaggio in arrivo, si ne debba segliere una con grado di
  definizione minimo.
  \item[\rulelabel{$\x{new}$}] Descrive la creazione di una nuova istanza di
- processo a partire dalla definizione \ldots a seguito dell'arrivo di un
- messaggio \ldots che risulti in matching con una delle start activity della
+ processo a partire dalla definizione $\xproc{\xsa}{\xh_f}$ a seguito
+ dell'arrivo di un messaggio $\talpha_2 =
+  \xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}$ che risulti in matching con una delle start activity della
  definizione stessa. Ancora una volta la nuova istanza verrà creata solo se non
  ci sia già una istanza capace di ricevere il messaggio con un grado di
  definizione minore della start activity.
@@ -1174,11 +1175,107 @@ seguente modo:
  \updat{\xx}{\xv} \in \xsigma$.
  \item[\rulelabel{$\x{part}$} \rulelabel{$\x{pass}$} \rulelabel{$\x{cong}$}]
  Tali regole risultano particolarmente ovvie ed esprimono rispettivamente
- l'evoluzione parallela di un sistema di deployment, l'eseguzione
+ l'evoluzione parallela di un sistema di deployment, l'esecuzione
  indipendente delle operazioni interne in ciascuna istanza, l'uguaglianze delle
  riduzioni di deployment strutturalmente congruenti.
 \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SINTASSI CONCRETA
-\section{Una grammatica per un compilatore}
+\section{Una grammatica per un compilatore 
+%(??o Parser??)
+}
+
+Il primo passo per lo sviluppo di un motore di esecuzione per Blite è la
+realizzazione di un parser per l'analisi di programmi ottenibili dalla sintassi
+presentata in Tabella \ref{tab:syntaxwsbpel}. Un parser è il software predisposto
+alla realizzazione dell'\emph{Analisi Sintattica}, cioè del procedimento che
+riconosce la struttura del programma sorgente e ne construisce l'\emph{Albero
+Sintattico} (\emph{Abstract Sintatic Tree - AST}) associato. Come già osservato
+la sintasi esposta, pur specificando in modo formale i termini del linguaggio,
+non si presta ad essere implementata direttamente, in quanto per esempio
+presenta produzioni del tipo 
+$$
+\begin{array}{rcl}
+\xs & ::= &
+\xs \xsucc\xs  \!\sepgr\! \xs \xpar \xs 
+\end{array}
+$$
+che la rendano ambigua, per cui ad una frase del linguaggio può corrispondere
+più di una albero sintattico. Riulta chiaro quindi che il primo obiettivo sarà
+quello di ottenere una grammatica direttamente implemetabile 
+dal cui linguaggio sia possibile ottenere i programmi Blite.
+\\
+
+Dalla teoria dei linguaggi sappiamo che le grammatiche per generare linguaggi
+analizzabili con parser deterministici, cioè che non fanno uso di tecniche di
+backtraking, sono raggrupabili in sotto classi specifiche fra tutte le possibili
+grammatiche context free. In particolar modo risultano fondamentali per
+realizzazione di analizzatori sintattici le seguenti classi di grammatiche:
+\begin{itemize}
+  \item \textbf{LL(k)}: Per cui risulta possibile realizzare parser top-down
+  deterministici che utilizzano al più $k$ simboli non ancora riconosciuti
+  della frase di input.
+  \item \textbf{LR(k)}: Per cui risulta possibile realizzare parser bottom-up
+  deterministici che utilizzano al più $k$ simboli non ancora riconosciuti
+  della frase di input.
+\end{itemize}
+
+I parser top-down construisco l'albero sintattico dalla radice (simbolo
+iniziale della grammatica) alle foglie (simboli terminali della frase di
+input) secondo la derivazione canonica sinistra, mentre quelli bottom-up
+realizzano l'albero sintattico dalle foglie alla radice seguendo la riduzione
+destra. 
+
+La derivazione è quel processo che a partire dal simbolo iniziale della
+grammatica $S$ arriva alla frase di input applicando ad ogni passo una
+sostituzione di un simbolo non terminale $X$ con una parte destra $Y$ presente in
+una regola $X ::= Y$ della grammatica. 
+
+Una derivazione può essere scritta come $$ S \Rightarrow \cdots \Rightarrow
+abcX\ldots \Rightarrow abcY\ldots \cdots \Rightarrow abcdeZ\ldots \Rightarrow
+\cdots \Rightarrow abcdef\ldots mn $$ in cui l'ultima stringa è formata solo da
+terminali. Con i simboli $ \Rightarrow^*$ si intendono zero o più passi
+successivi e con $\Rightarrow^+$ uno o più passi successivi. I singoli passi
+della derivazione legano forme di frasi (strighe $s \in V^*$ composte da
+terminali e non terminali ) ammesse dalla grammatica. In una analisi top-down si
+realizza la derivazione canonica sinistra, cioè si sceglie di sostituire il primo
+simbolo non terminale che compare più a sinistra nella forma di frase corrente.
+Quindi la forma di frase corrente avrà sempre una forma $aXw$ con $a \in VT^*$
+($VT$ insieme dei simboli terminali del linguaggio), $X$ simbolo non terminale
+corrente, $w \in V^*$ ($V$ insieme dei simboli terminali e non terminali della
+grammatica) e la stringa $a$ constituirà un prefisso della frase di input e
+indicherà la parte di essa già riconosciuta. Alternativamente alla derivazione
+canonica sinistra si definisce la derivazione canonica destra che sceglie di
+sostituire il primo simbolo non terminale che compare più a destra nella forma di
+frase corrente. L'analisi bottom-up reallizza la riduzione destra che è la
+sequenza inversa della derivazione canonica destra.
+
+In generale con le grammatiche LR si riesce a rappresentare un numero
+maggiore di linguaggi rispetto alle grammatiche LL, cioè l'insieme dei
+linguaggi generati con grammatiche LL è contenuto nell'insieme dei linguaggi
+generati con grammatic LR, con quest'ultime però risulta molto più complessa la
+realizzazione dei parser in quanto è necessario implemetare algortmi e
+strutture dati più raffinati.
+
+Inoltre le grammatiche LL hanno caratteristiche più facilmente individuabili,
+di fatto da una generica grammatica come può essere quella di Tabella
+\ref{tab:syntaxwsbpel} si può ottenere con molta probabilità\footnote{Per una
+tratazione più formale riguardo al riconoscimento di grammatiche LL(k) si
+rimanda ai testi , come [Bruno] e [DragonBook]} un grammatica LL applicanto i
+seguenti semplici passi:
+\begin{itemize}
+  \item Eliminazione della ricorsione sinistra. Una grammatica che presenta
+  regole 
+  \item Fattorizzazione sinistra
+\end{itemize}
+
+Nel momento in cui ci si trovi a dover realizzare un parser le strade da poter
+percorrere sono fondamentalmente due: munirsi di un buon background teorico
+implemetare . Di fatto si è scelto la seconda strada anche per l'ampia di
+disponibilità di tool (anche open source) e l'ottimo livello di affidabilità e funzionalità offerto.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SEMATICA CONCRETA
+\section{Alcune osservazioni sulla sematica della correlazione}
