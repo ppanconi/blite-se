@@ -1190,7 +1190,7 @@ Il primo passo per lo sviluppo di un motore di esecuzione per Blite è la
 realizzazione di un parser per l'analisi di programmi ottenibili dalla sintassi
 presentata in Tabella \ref{tab:syntaxwsbpel}. Un parser è il software predisposto
 alla realizzazione dell'\emph{Analisi Sintattica}, cioè del procedimento che
-riconosce la struttura del programma sorgente e ne construisce l'\emph{Albero
+riconosce la struttura del programma sorgente e construisce l'\emph{Albero
 Sintattico} (\emph{Abstract Sintatic Tree - AST}) associato. Come già osservato
 la sintasi esposta, pur specificando in modo formale i termini del linguaggio,
 non si presta ad essere implementata direttamente, in quanto per esempio
@@ -1207,7 +1207,7 @@ quello di ottenere una grammatica direttamente implemetabile
 dal cui linguaggio sia possibile ottenere i programmi Blite.
 \\
 
-Dalla teoria dei linguaggi sappiamo che le grammatiche per generare linguaggi
+Dalla teoria sappiamo che le grammatiche per generare linguaggi
 analizzabili con parser deterministici, cioè che non fanno uso di tecniche di
 backtraking, sono raggrupabili in sotto classi specifiche fra tutte le possibili
 grammatiche context free. In particolar modo risultano fondamentali per
@@ -1237,43 +1237,107 @@ abcX\ldots \Rightarrow abcY\ldots \cdots \Rightarrow abcdeZ\ldots \Rightarrow
 \cdots \Rightarrow abcdef\ldots mn $$ in cui l'ultima stringa è formata solo da
 terminali. Con i simboli $ \Rightarrow^*$ si intendono zero o più passi
 successivi e con $\Rightarrow^+$ uno o più passi successivi. I singoli passi
-della derivazione legano forme di frasi (strighe $s \in V^*$ composte da
-terminali e non terminali ) ammesse dalla grammatica. In una analisi top-down si
-realizza la derivazione canonica sinistra, cioè si sceglie di sostituire il primo
-simbolo non terminale che compare più a sinistra nella forma di frase corrente.
-Quindi la forma di frase corrente avrà sempre una forma $aXw$ con $a \in VT^*$
-($VT$ insieme dei simboli terminali del linguaggio), $X$ simbolo non terminale
-corrente, $w \in V^*$ ($V$ insieme dei simboli terminali e non terminali della
-grammatica) e la stringa $a$ constituirà un prefisso della frase di input e
-indicherà la parte di essa già riconosciuta. Alternativamente alla derivazione
-canonica sinistra si definisce la derivazione canonica destra che sceglie di
-sostituire il primo simbolo non terminale che compare più a destra nella forma di
-frase corrente. L'analisi bottom-up reallizza la riduzione destra che è la
-sequenza inversa della derivazione canonica destra.
+della derivazione legano forme di frasi ammesse dalla grammatica, una forma di
+frase non è altro che una strigha $s \in V^*$  con $V$ insieme dei terminali e
+non terminali della grammatica. In una analisi top-down si realizza la
+derivazione canonica sinistra, cioè si impone la sostituzione del primo simbolo
+non terminale che compare più a sinistra nella forma di frase corrente. Quindi
+quest'ultima avrà sempre una forma del tipo $aXw$ con $a \in VT^*$ ($VT$ insieme
+dei simboli terminali del linguaggio), $X$ simbolo non terminale corrente e $w
+\in V^*$. La stringa $a$ constituirà un prefisso della frase di input e
+indicherà la parte di essa già riconosciuta. 
+
+Alternativamente alla derivazione canonica sinistra si definisce la derivazione
+canonica destra che sceglie di sostituire il primo simbolo non terminale che
+compare più a destra nella forma di frase corrente. L'analisi bottom-up reallizza
+la riduzione destra che è la sequenza inversa della derivazione canonica destra.
 
 In generale con le grammatiche LR si riesce a rappresentare un numero
 maggiore di linguaggi rispetto alle grammatiche LL, cioè l'insieme dei
 linguaggi generati con grammatiche LL è contenuto nell'insieme dei linguaggi
-generati con grammatic LR, con quest'ultime però risulta molto più complessa la
-realizzazione dei parser in quanto è necessario implemetare algortmi e
+generati con grammatiche LR; con quest'ultime però risulta molto più complessa
+la realizzazione del parser, in quanto è necessario implemetare algortmi e
 strutture dati più raffinati.
 
-Inoltre le grammatiche LL hanno caratteristiche più facilmente individuabili,
-di fatto da una generica grammatica come può essere quella di Tabella
-\ref{tab:syntaxwsbpel} si può ottenere con molta probabilità\footnote{Per una
-tratazione più formale riguardo al riconoscimento di grammatiche LL(k) si
-rimanda ai testi , come [Bruno] e [DragonBook]} un grammatica LL applicanto i
-seguenti semplici passi:
+Inoltre le grammatiche LL hanno caratteristiche che le rendono più facilmente
+individuabili, di fatto da una generica grammatica, come può essere quella di
+Tabella \ref{tab:syntaxwsbpel}, si può ottenere con molta
+probabilità\footnote{Per una tratazione formale riguardo al riconoscimento di
+grammatiche LL(k) si rimanda a testi ai specifici della teoria del linguaggi
+formali come [Bruno] e [DragonBook].} un grammatica LL applicanto i seguenti
+semplici passi:
 \begin{itemize}
-  \item Eliminazione della ricorsione sinistra. Una grammatica che presenta
-  regole 
-  \item Fattorizzazione sinistra
+  \item Eliminazione della ricorsione sinistra.
+  \item Fattorizzazione sinistra.
 \end{itemize}
 
+Per questi motivi si è sceleto di realizzare una grammatica LL(k) per
+rappresentare i programmi Blite. Per la precisione una grammatica LL(1), cioè
+una grammatica il cui parser è in grado di riconoscere le frasi del linguaggio
+senza fare \emph{lookahead} ma utilizzando unicamente il primo simbolo ancora
+non riconosciuto nella frase di input.
+\\
+
 Nel momento in cui ci si trovi a dover realizzare un parser le strade da poter
-percorrere sono fondamentalmente due: munirsi di un buon background teorico
-implemetare . Di fatto si è scelto la seconda strada anche per l'ampia di
-disponibilità di tool (anche open source) e l'ottimo livello di affidabilità e funzionalità offerto.
+percorrere sono fondamentalmente due: la prima è quella di munirsi di un buon
+background teorico ed implemetare, partendo da zero, tutto il software
+necessario, la seconda prevede l'utilizzo di un tool per la creazione automatica
+di compilatori che, a partire da una definizione formale della grammatica, possa
+generare tutto o parte del codice necesasrio.
+
+Grazie all'ampia disponibilità di tool (anche open source)\footnote{Rimanendo
+solamente nell'abito della piattaforma Java, si contonano numerosi sofware per
+la generazione automatica di compilatori, fra i più diffusi certamente troviamo:
+ANTLR, SableCC, CUP (Java Yacc/Bision), JavaCC, Coco/R, JLex/JFlex. Per una
+lista più ampia si faccia riferimento alla pagina online
+http://java-source.net/open-source/parser-generators.}, all'ottimo livello di
+affidabilità e all'alto numero di funzionalità offerto da questi si è optato per
+la seconda strada. In particolare si è scelto di utlizzare JavaCC (Java Compiler
+Compiler) [JavaCCSite]. Questo è uno dei più diffusi generatori di
+parser in linguaggio Java, e permette di realizzare in maniera prouttiva e
+efficente compilatori per un gran numero di tipologie di linguaggi di
+programmazione.
+
+JavaCC di fatto realizza parser top-down a discesa ricorsiva a partire da
+grammatiche LL(k) definite in un formalismo specifico in cui una notazione simile
+a EBNF è arrichita con istruzioni semantiche espresse direttamente in linguaggio
+Java. In realtà JavaCC non si limita alle grammatiche LL(k) ma in pratica
+gestisce qualsiasi grammatica che non presenti ricorsione sinistra. Infatti
+dispone di un supporto estremamente potente per esegure lookahead sintattico e
+semantico. Questo fa sì che in pratica il parco dei linguaggi implementabili con
+JavaCC sia del tutto uguale a quello relizzabile con tool come Cup o SableCC che
+supportano grammatiche LALR.
+
+Un punto a sfavore rispetto ad altri tool può essere invece che JavaCC di per
+se non offre nessun supporto alla creazione degli alberi sintattici. Di fatto
+è generato un semplice parser top-down a discesa ricorsiva in cui l'utente può
+inserire qualsiasi tipo di azione tramite codice Java, e tramite questa
+possibilità si lascia all'utente la completa responsabilità di creare un
+evetuale albero sitattico. Si capisce bene che questa scelta, sebbene permatta
+di realizzare parser molto efficenti nel caso di linguaggi molto semplici,
+risulta penalizzante qualora si voglia realizzare alberi sintattici per
+linguaggi con un certo grado di complessita strutturale.
+
+Per superare questa limitazione, all'interno del medesimo progetto è stato
+sviluppato JJTree, che realizza un preprocessore per i file letti da JavaCC. In
+pratica JJTree supporta una estenzione del linguaggio di specifica di JavaCC, in
+cui è possibile inserire, direttamente nella grammatica e in formalismo
+dichiarativo, informazioni per guidare la creazione dell'albero sintattico.
+L'output prodotto da JJTree non sarà altro che la grammatica per JavaCC
+arricchita delle istruzioni java per la gestione automatica dell'albero
+sitattico. In Figura \ref{fig:lin:jjproc} è rappresentato questo l'uso
+congiunto di JJTree e JavaCC per la produzione del codice Java che realizza il
+parser con la gestione automatica dell'albero sintattico.
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[scale=0.95]{linguaggio/dia/jjporc}
+   \caption[Un parser con JJTree JavaCC]{\textsf{{\small Generazione di una
+   parser Java con JJTree e JavaCC.}} }
+  \label{fig:lin:jjproc}
+\end{center}
+\end{figure}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
