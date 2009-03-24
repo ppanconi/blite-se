@@ -1197,8 +1197,8 @@ non si presta ad essere implementata direttamente, in quanto per esempio
 presenta produzioni del tipo 
 $$
 \begin{array}{rcl}
-\xs & ::= &
-\xs \xsucc\xs  \!\sepgr\! \xs \xpar \xs 
+\xs & ::= & \ldots \quad
+\xs \xsucc\xs  \!\sepgr\! \xs \xpar \xs \quad \ldots 
 \end{array}
 $$
 che la rendano ambigua, per cui ad una frase del linguaggio può corrispondere
@@ -1274,16 +1274,16 @@ semplici passi:
 Per questi motivi si è sceleto di realizzare una grammatica LL(k) per
 rappresentare i programmi Blite. Per la precisione una grammatica LL(1), cioè
 una grammatica il cui parser è in grado di riconoscere le frasi del linguaggio
-senza fare \emph{lookahead} ma utilizzando unicamente il primo simbolo ancora
+senza fare \emph{lookahead} ma utilizzando unicamente il primo token ancora
 non riconosciuto nella frase di input.
 \\
 
 Nel momento in cui ci si trovi a dover realizzare un parser le strade da poter
 percorrere sono fondamentalmente due: la prima è quella di munirsi di un buon
 background teorico ed implemetare, partendo da zero, tutto il software
-necessario, la seconda prevede l'utilizzo di un tool per la creazione automatica
-di compilatori che, a partire da una definizione formale della grammatica, possa
-generare tutto o parte del codice necesasrio.
+necessario, la seconda invece prevede l'utilizzo di un tool per la creazione
+automatica di compilatori che, a partire da una definizione formale della
+grammatica, generi tutto o parte del codice necesasrio.
 
 Grazie all'ampia disponibilità di tool (anche open source)\footnote{Rimanendo
 solamente nell'abito della piattaforma Java, si contonano numerosi sofware per
@@ -1291,8 +1291,8 @@ la generazione automatica di compilatori, fra i più diffusi certamente troviamo
 ANTLR, SableCC, CUP (Java Yacc/Bision), JavaCC, Coco/R, JLex/JFlex. Per una
 lista più ampia si faccia riferimento alla pagina online
 http://java-source.net/open-source/parser-generators.}, all'ottimo livello di
-affidabilità e all'alto numero di funzionalità offerto da questi si è optato per
-la seconda strada. In particolare si è scelto di utlizzare JavaCC (Java Compiler
+affidabilità e all'alto numero di funzionalità offerto da questi, si è optato
+per la seconda strada. In particolare si è scelto di utlizzare JavaCC (Java Compiler
 Compiler) [JavaCCSite]. Questo è uno dei più diffusi generatori di
 parser in linguaggio Java, e permette di realizzare in maniera prouttiva e
 efficente compilatori per un gran numero di tipologie di linguaggi di
@@ -1303,42 +1303,180 @@ grammatiche LL(k) definite in un formalismo specifico in cui una notazione simil
 a EBNF è arrichita con istruzioni semantiche espresse direttamente in linguaggio
 Java. In realtà JavaCC non si limita alle grammatiche LL(k) ma in pratica
 gestisce qualsiasi grammatica che non presenti ricorsione sinistra. Infatti
-dispone di un supporto estremamente potente per esegure lookahead sintattico e
+dispone di un supporto estremamente potente per eseguire lookahead sintattico e
 semantico. Questo fa sì che in pratica il parco dei linguaggi implementabili con
-JavaCC sia del tutto uguale a quello relizzabile con tool come Cup o SableCC che
+JavaCC sia del tutto uguale a quello realizzabile con tool come Cup o SableCC che
 supportano grammatiche LALR.
 
-Un punto a sfavore rispetto ad altri tool può essere invece che JavaCC di per
+Un punto a sfavore, rispetto ad altri tool, può essere invece che JavaCC di per
 se non offre nessun supporto alla creazione degli alberi sintattici. Di fatto
 è generato un semplice parser top-down a discesa ricorsiva in cui l'utente può
 inserire qualsiasi tipo di azione tramite codice Java, e tramite questa
 possibilità si lascia all'utente la completa responsabilità di creare un
-evetuale albero sitattico. Si capisce bene che questa scelta, sebbene permatta
-di realizzare parser molto efficenti nel caso di linguaggi molto semplici,
+eventuale albero sintattico. Si capisce bene che questa scelta, sebbene permetta
+di realizzare parser molto efficienti nel caso di linguaggi molto semplici,
 risulta penalizzante qualora si voglia realizzare alberi sintattici per
-linguaggi con un certo grado di complessita strutturale.
+linguaggi con un certo grado di complessità strutturale.
 
-Per superare questa limitazione, all'interno del medesimo progetto è stato
+Per superare questa limitazione, all'interno del medesimo progetto, è stato
 sviluppato JJTree, che realizza un preprocessore per i file letti da JavaCC. In
-pratica JJTree supporta una estenzione del linguaggio di specifica di JavaCC, in
+pratica JJTree supporta un'estensione del linguaggio di specifica di JavaCC, in
 cui è possibile inserire, direttamente nella grammatica e in formalismo
 dichiarativo, informazioni per guidare la creazione dell'albero sintattico.
 L'output prodotto da JJTree non sarà altro che la grammatica per JavaCC
 arricchita delle istruzioni java per la gestione automatica dell'albero
-sitattico. In Figura \ref{fig:lin:jjproc} è rappresentato questo l'uso
+sintattico. In Figura \ref{fig:lin:jjproc} è rappresentato l'uso
 congiunto di JJTree e JavaCC per la produzione del codice Java che realizza il
 parser con la gestione automatica dell'albero sintattico.
 
 \begin{figure}[!ht]
 \begin{center}
   \includegraphics[scale=0.95]{linguaggio/dia/jjporc}
-   \caption[Un parser con JJTree JavaCC]{\textsf{{\small Generazione di una
-   parser Java con JJTree e JavaCC.}} }
+   \caption[Un parser con JJTree JavaCC]{Generazione di una
+   parser Java con JJTree e JavaCC.}
   \label{fig:lin:jjproc}
 \end{center}
 \end{figure}
 
+A questo punto non ci rimane che mostrare come dalla sintassi di Tabella
+\ref{tab:syntaxwsbpel} sia stata prodotta una grammatica EBNF che potesse
+essere direttamente codificata nel linguaggio di specifica supportato da
+JJTree.
 
+Abbiamo già detto come, nonostante l'elevato supporto al lookahead fornito
+da JavaCC, si sia scelto di matenere la grammatica nella classe LL(1), questo
+non tanto per motivi di efficenza, che per altro potrebbero essere sempre
+rilevanti, ma per mantenere il più semplice possibile la definizione stessa
+della grammatica che, per la ricchezza del linguaggio offerto da JJTree, tende a
+a complicarsi notevolmente. Inoltre ci è sembrato che i vincoli imposti dalla
+classe LL(1) non appesantissero la sintassi ma che anzi contribuissero a chiarirene
+alcuni aspetti, come per esempio la distinzione fra la definizione di processo
+e le istanze pronte per essere esguite (\emph{Ready to Run Instancess}).
+
+Come illustrato i passi da compiere sono quelli di eliminare la ricorsione
+sinistra e i prefissi comuni nelle diverse parti destre associate al medesimo
+terminale. Di fatto tali criticità sono presenti nelle regole EBNF di tipo:
+
+$$
+\begin{array}{rcl}
+\xs & ::= &
+%\xb \!\sepgr\! 
+\xs \xsucc\xs  
+\!\sepgr\! \xs \xpar \xs 
+\!\sepgr\! \xb \; ( \; + \; \xb  \; )^*  \\
+ 
+\xd & ::= &  \xeng{\xI}{\xcorr} \!\sepgr\! \xd \, \xspar \xd
+\end{array}
+$$ 
+
+In generate per risolvere il problema si piò utilizzare l'approccio usato per
+le espressione aritmetiche e introdurre i simboli terminali delle parentesi e
+nuovi simboli non terminali e tramite questi riscrivere le produzioni nel
+seguente modo:
+
+$$
+\begin{array}{rcccccl}
+\xs 	& ::= & \x{sq}	& 	&&&\\
+\x{sq} 	& ::= & \x{par} & (&  ; 	& \x{par} & )^+ \\
+\x{par} & ::= & \x{pk} 	& (& \xpar & \x{pk}  & )^+ \\
+\x{pk} 	& ::= & \x{ba}  & (& + 	& \x{ba}  & )^* \\
+\x{ba}  & ::= & \xb 	& \sepgr & &( \xs ) \\
+\\ 
+\xd 	& ::= & \x{dep} & (& \xspar & \x{dep}  & )^+ \\
+\x{dep} & ::= & \xeng{\xI}{\xcorr} 	& & & \\
+\end{array}
+$$ 
+
+Si può banalmente vedere che tale grammatica è di classe LL(1) e quindi non
+ambigua\footnote{Si può dimostrare che le grammatiche LL(1) non sono ambigue,
+cioè essere in LL(1) è condizione sufficiente a garantire la non ambiguità di
+una grammatica.}, infatti essa eplicità strutturalmente la precedenza
+dell'operatore $;$ su $\xpar$ e la precedenza di quest'ultimo sull'operatore di
+$+$. Il costo che si è dovuto pagare, oltre ad un aumento delle regole e dei
+simboli non terminali, è la perdita di chiarezza e simmetria nella
+grammatica che si traduce in una complicazione nella gestione
+dell'albero sintattico in quanto dovranno essere implemetate in maniera
+specifica le azioni associate a ciascuna regola.
+
+Tale approccio è stato utilizzato da noi solo per la categoria sintattica dei
+deployment $\xd$ ma non per quella delle attività strutturate $\xs$. Per
+quest'ultime si è preferito un approccio che aggiungendo dei nuovi simboli
+terminali (usati come delimitatori di blocco) permettesse di ottenere un
+grammatica LL(1) mantenendo una certa simmetria nella definizione e facilitando
+la gestione dell'albero sintattico.
+
+Quello che abbiamo fatto è stato di introduure per ogni operatore un coppia di
+simboli terminali che delimitasse la rispettiva attivatà
+strutturale, di fatto vengono introdotte regole del seguente tipo
+
+$$
+\begin{array}{rcl}
+SequenceActivity &	::= &	seq \; Activity \; ( \; ; \; ( \; Activity  \;)?  \;
+)* \; qes \\ 
+FlowActivity &	::=  &	flw \; Activity \; ( \; \xpar \; Activity \; )+ \; wlf \\
+PickActivity &	::=  &	pck \; ReceiveActivity \; ( \; + ReceiveActivity
+ \;)+ \; kcp \\
+\end{array}
+$$
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r|c|c|}
+\hline
+ & Sintassi Blite & Sintassi Implemetata \\
+\hline
+Sequenza & $\xs_1 \xsucc \xs_2 \ldots \xsucc \xs_n $ & $seq \; \xs_1 \xsucc
+\xs_2 \ldots \xsucc \xs_n \; qes$ \\
+\hline
+Parallelismo & $\xs_1 \xpar \xs_2 \ldots \xpar \xs_n $ & $flw \; \xs_1 \xpar
+\xs_2 \ldots \xpar \xs_n \; wlf$ \\
+\hline
+Scelta Esterna & $\xrec{}{}{}_1 + \xrec{}{}{}_2
+\ldots + \xrec{}{}{}_n $ & $pck \; \xrec{}{}{}_1 + 
+\xrec{}{}{}_2 \ldots + \xrec{}{}{}_n \; kcp$ \\
+\hline
+\end{tabular}
+\caption{Utilizzo dei delimitatori di blocco per le attività strutturete con
+operatori binari.}
+\label{tab:blokmarks}
+\end{center}
+\end{table}
+
+In ogni modo la motivazione che ci ha spinto maggiormente a propendere per
+l'utilizzo dei delimitori, è stata quella di avere una sitassi il più chiara
+possibile e che non lasciasse a regole implicite la determinzane delle precedenze
+fra gli operatori. In questo modo il codice stesso esplicità tutte le relazioni
+di sequenzilità fra le diverse attività strutturate, e l'utilizzatore non sarà
+obbligato a ricordare le regole di priorità fra i vari costrutti.
+
+\begin{figure}[!h]
+\begin{center}
+  \includegraphics[scale=0.80,clip]{linguaggio/dia/blt1}
+   \caption[Codice Blite, esempio delimitatori di blocco]{Esempio di programma
+   Blite con la sintassi dei delimitatori di blocco per le attività struturate.}
+  \label{fig:lin:blt1}
+\end{center}
+\end{figure}
+
+In Figura \ref{fig:lin:blt1} è reppresentato il codice nella sintassi
+da noi implemetata corrispondente al termine seguente
+
+$$
+\begin{array}{rl}
+\xeng{
+(
+	\xrec{\arr{"auction"} }{\x{seller}}{\arr{pid, seller}}
+	\xpar
+	\xrec{\arr{"auction"} }{\x{buyer}}{\arr{pid, buyer}} 
+)
+\\
+\xsucc 
+\xinv{\arr{seller} }{\x{ok}}{\arr{pid, buyer}}
+\xsucc
+\xinv{\arr{buyer} }{\x{ok}}{\arr{pid, seller}}
+}{(pid)}
+\end{array}
+$$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SEMATICA CONCRETA
