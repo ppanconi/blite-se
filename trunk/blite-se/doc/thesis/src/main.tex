@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt,twoside]{book}
+\documentclass[a4paper,12pt]{book}
 % \usepackage[a4paper]{geometry}
 \usepackage[utf8x]{inputenc}
 \usepackage[italian]{babel}
@@ -9,7 +9,7 @@
 \usepackage{color}
 \usepackage{fancyhdr}
 \usepackage{stmaryrd}
-
+\usepackage{verbatim}
 \usepackage{printlen}
 
 %\usepackage{pstricks} %for dia macro images
@@ -19,7 +19,7 @@
 \lstloadlanguages{JAVA}
 \lstset{
 language=java,
-basicstyle=\tiny,
+basicstyle=\scriptsize,
 aboveskip=1em,
 belowskip=1em,
 frame=TB,
@@ -27,7 +27,7 @@ tabsize=4,
 }
 
 \usepackage{pifont}     %for openstar in the title footnotes.
-\usepackage{geometry}   %for margin settings.
+\usepackage[a4paper]{geometry}   %for margin settings.
 \usepackage{fleqn}      %for left aligned equations.
 \usepackage{txfonts}   
  %optional font package, if document is to be formatted with Times and compatible math fonts.
@@ -75,6 +75,14 @@ tabsize=4,
 %\newtheorem{pro}{Proposizione}
 %\newtheorem{thm}{Teorema}
 %\newtheorem{lem}{Lemma}
+
+\linespread{1.2}
+\setlength{\topmargin}{30pt}
+\setlength{\textheight}{620pt}
+%\setlength{\hoffset}{50pt}
+\setlength{\evensidemargin}{10pt}
+\setlength{\oddsidemargin}{40pt}
+%\setlength{\rightsidemargin}{20pt}
 
 \begin{document}
 \hyphenation{}

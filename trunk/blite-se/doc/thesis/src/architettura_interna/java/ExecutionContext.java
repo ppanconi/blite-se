@@ -6,7 +6,7 @@ package it.unifi.dsi.blitese.engine.runtime;
  * This could be the Process Instance itself but also other
  * structured activities like scope activity.
  * 
- * At runtime Execution Contexts are in a tree 
+ * At runtime, Execution Contexts are in a tree 
  * 
  * @author panks
  */
@@ -26,7 +26,7 @@ public interface ExecutionContext extends VariableScope {
     
     void registerFlow(FlowExecutor flow);
     
-    void resumeWaithingFlows();
+    void resumeWaitingFlows();
     
     public ContextState getState();
     
