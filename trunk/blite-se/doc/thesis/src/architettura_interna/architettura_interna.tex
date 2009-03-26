@@ -1,22 +1,99 @@
 \chapter{Progetto di un motore per l'orchestrazione}
 
-In questo capitolo si offre una panoramica sul progetto del software
-\emph{Blite-se}. Vengono presentati ad alto livello i diversi moduli con le
-loro funzionalità e in particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
-Blite, si descrive l'architettura in maniera dettagliata. Di questa si
-cerca di mettere in luce il modello di esecuzione ideato, basato su
-il ``Composite Pattern'', secondo cui ogni attività è rappresentabile come un
-componente che apporta il proprio contributo all'esecuzione dell'istanza di
-processo.
+\textsf{
+In questo capitolo si offre una panoramica del progetto software
+%\emph{Blite-se}, 
+che realizza l'implemetazione del linguaggio precedentemente esposto. Vengono
+presentati ad alto livello i diversi moduli con le loro funzionalità e in
+particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
+Blite, si descrive l'architettura in maniera dettagliata. Di questa si cerca di
+mettere in luce il modello di esecuzione ideato, basato su il \emph{``Composite
+Pattern''}, secondo cui ogni attività è rappresentabile come un componente che
+apporta il proprio contributo all'esecuzione dell'istanza di processo.
+}
 
-\section{I moduli}
+\section{Blite-se}
 
 Come già precedentemente detto il software realizzato può essere distinto
-in due progetti assestanti \emph{Blite-se} e \emph{Blide}. In questo capitolo
+in due progetti a sè stanti \emph{Blite-se} e \emph{Blide}. In questo capitolo
 si descrive il primo, mentre il secondo verrà presentato nel prossimo.
 
+Blite-se (Blite Service Engine) è il progetto principale e implementa il
+linguaggio presentato nel capitolo precedente. Realizzare un linguaggio per
+l'orchestrazione di servizi è una attività complessa, che spazia in molteplici
+aree dello sviluppo software. Per questo motivo è fondamentale organizzare il
+progetto in moduli distinti che realizzino le diverse funzionalità in maniera
+indipendente e che interagiscano fra loro con interfaccie ben definite,
+cercando di ridurre il più possibile le dipendenze dalle varie implemetazioni.
 
+Abbiamo individuato tre moduli principali con cui realizzare le funzionalita
+necessarie:
 
+\begin{enumerate}
+  \item \emph{Blite-se Definition Model}: questo modulo realizza tutti quegli
+  aspetti legati alla definizione statica dei programmi Blite. In pratica
+  qui è definita la grammatica EBNF, secondo il formalismo di JJTree, da cui è 
+  stato ricavato l'analizzatore sintattico. In questo modulo è realizzato anche
+  il modello statico per i costrutti del linguaggio. Di fatto sono state
+  implemetate in maniera opportuna le classi i cui oggetti andranno a creare i
+  nodi dell'albero sintattico. Tali classi sono tutte discendenti della classe
+  \icode{BltDefBaseNode} che fornisce un interfaccia comune per accedere ai
+  rispettivi nodi padre e figli, inoltre è fornito il metodo
+  	\lstset{frame=NONE}
+	\begin{lstlisting}
+		/** Accept the visitor. **/
+		public Object jjtAccept(BliteParserVisitor visitor, Object data);
+  	\end{lstlisting}  
+  che permette la visita dell'albero secondo il \emph{Pattern Visitor}.
+  Oltre alle varie classi che implementano i nodi dell'albero sintattico  
+  ovviamente è reso disponibile il parser tramite la classe \icode{BliteParser}.
+  Questa dispone di due metodi statici\footnote{}:
+	\lstset{frame=NONE}
+	\begin{lstlisting}	
+		static public void init(java.io.InputStream stream)
+
+		static public BltDefBaseNode parse() throws ParseException 
+  	\end{lstlisting}
+	che hanno le funzionalità rispettivamente di inizializzare il parser su un
+	risorsa di input e di eseguire l'analisi sintatattica su di questa. Il valore
+	restituito dal metodo \icode{parse()} è evviamente un oggetto conforme al
+	tipo \icode{BltDefBaseNode} e nel caso specifico l'oggetto istanza della classe
+	\icode{BLTDEFCompilationUnit} che costituisce la radice dell'albero
+	rappresentante la struttura del programma Blite. Da osservare l'eccezione
+	\icode{ParseException} eventualmente sollevata dal metodo \icode{parse()}, con
+	essa è realizata la gestione degli errori lessicali e sintattici incontrati
+	durante una compilazione. Dai suoi metodi è possibile risalire a tutte le
+	informazioni utili eventualmente per correggere l'errore, come, il token
+	corrente, i token attesi, la riga e la colonna a cui si è arrestata la
+	compilazione.
+	
+  \item \emph{Blite-se Environment}: questo modulo ha lo scopo di realizzare
+  l'ambiente contenitore per l'Engine, facendo sì che nella realizzazione di
+  quest'ultimo si possa astrarre dagli aspetti più tecnologici come le
+  problematiche di comunicazione o di deployment. Di fatto si vuole
+  che il motore di esecuzione possa essere utilizzato in scenari
+  diversi e questo modulo realizza le astrazioni necessarie per rendere
+  indipendete l'engine dalle diverse tecnologie di comunicazione. Per esempio
+  una possibilità molto interessante potrebbe essere quella di integrare
+  l'engine Blite con un ESB (Enterprise Service Bus) basato sul protocollo JBI,
+  in questo caso basterebbe realizzare un sottomodulo con le funzionalità
+  specifiche per dialogare con il bus, oppure realizzare un environment capace
+  di supportare direttamente gli stadard tipici della tecnologia Web Services,
+  come WSDL, SOAP e HTTP, e poter quindi far dialogare i nostri programmi
+  Blite con ogni servizio di Internet.
+
+  \item \emph{Blite-se Engine}:
+  
+\end{enumerate}
+
+% \begin{figure}[ht]
+% \begin{center}
+% \includegraphics[angle=90,scale=0.70]
+% {../../BliteModule}
+% \caption[I moduli di Blite-se] {}
+%   \label{fig:fault}
+% \end{center}
+% \end{figure}
 
 
 \section{Architettura dell'Engine}
