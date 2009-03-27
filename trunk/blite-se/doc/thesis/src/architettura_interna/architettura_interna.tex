@@ -47,14 +47,19 @@ necessarie:
   che permette la visita dell'albero secondo il \emph{Pattern Visitor}.
   Oltre alle varie classi che implementano i nodi dell'albero sintattico  
   ovviamente è reso disponibile il parser tramite la classe \icode{BliteParser}.
-  Questa dispone di due metodi statici\footnote{}:
+  Questa dispone di due metodi statici\footnote{In JavaCC è stata usata
+  l'opzione \textrm{STATIC = ``true''}, in questo modo il parser top-down a
+  discesa ricorsiva è generato tutto tramite metodi statici.
+  L'efficenza risulta aumentata ma ovviamente, vi può essere un
+  unico compilatore per virtual machine e successice compilazioni devo prevdere
+  una di fase di reinizializzazione.}:
 	\lstset{frame=NONE}
 	\begin{lstlisting}	
 		static public void init(java.io.InputStream stream)
 
 		static public BltDefBaseNode parse() throws ParseException 
   	\end{lstlisting}
-	che hanno le funzionalità rispettivamente di inizializzare il parser su un
+	che hanno le funzionalità rispettivamente di inizializzare il parser su una
 	risorsa di input e di eseguire l'analisi sintattica su di questa. Il valore
 	restituito dal metodo \icode{parse()} è ovviamente un oggetto conforme al
 	tipo \icode{BltDefBaseNode} e nel caso specifico l'oggetto istanza della classe
