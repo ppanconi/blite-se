@@ -3,7 +3,7 @@
 \textsf{
 In questo capitolo si offre una panoramica del progetto software
 %\emph{Blite-se}, 
-che realizza l'implemetazione del linguaggio precedentemente esposto. Vengono
+che realizza l'implementazione del linguaggio precedentemente esposto. Vengono
 presentati ad alto livello i diversi moduli con le loro funzionalità e in
 particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
 Blite, si descrive l'architettura in maniera dettagliata. Di questa si cerca di
@@ -15,7 +15,7 @@ apporta il proprio contributo all'esecuzione dell'istanza di processo.
 \section{Blite-se}
 
 Come già precedentemente detto il software realizzato può essere distinto
-in due progetti a sè stanti \emph{Blite-se} e \emph{Blide}. In questo capitolo
+in due progetti a sè stanti: \emph{Blite-se} e \emph{Blide}. In questo capitolo
 si descrive il primo, mentre il secondo verrà presentato nel prossimo.
 
 Blite-se (Blite Service Engine) è il progetto principale e implementa il
@@ -23,10 +23,10 @@ linguaggio presentato nel capitolo precedente. Realizzare un linguaggio per
 l'orchestrazione di servizi è una attività complessa, che spazia in molteplici
 aree dello sviluppo software. Per questo motivo è fondamentale organizzare il
 progetto in moduli distinti che realizzino le diverse funzionalità in maniera
-indipendente e che interagiscano fra loro con interfaccie ben definite,
-cercando di ridurre il più possibile le dipendenze dalle varie implemetazioni.
+indipendente e che interagiscano fra loro con interfacce ben definite,
+cercando di ridurre il più possibile le dipendenze dalle varie implementazioni.
 
-Abbiamo individuato tre moduli principali con cui realizzare le funzionalita
+Abbiamo individuato tre moduli principali con cui realizzare le funzionalità
 necessarie:
 
 \begin{enumerate}
@@ -38,7 +38,7 @@ necessarie:
   implemetate in maniera opportuna le classi i cui oggetti andranno a creare i
   nodi dell'albero sintattico. Tali classi sono tutte discendenti della classe
   \icode{BltDefBaseNode} che fornisce un interfaccia comune per accedere ai
-  rispettivi nodi padre e figli, inoltre è fornito il metodo
+  rispettivi nodi padre e figli, inoltre fornisce il metodo
   	\lstset{frame=NONE}
 	\begin{lstlisting}
 		/** Accept the visitor. **/
@@ -55,17 +55,19 @@ necessarie:
 		static public BltDefBaseNode parse() throws ParseException 
   	\end{lstlisting}
 	che hanno le funzionalità rispettivamente di inizializzare il parser su un
-	risorsa di input e di eseguire l'analisi sintatattica su di questa. Il valore
-	restituito dal metodo \icode{parse()} è evviamente un oggetto conforme al
+	risorsa di input e di eseguire l'analisi sintattica su di questa. Il valore
+	restituito dal metodo \icode{parse()} è ovviamente un oggetto conforme al
 	tipo \icode{BltDefBaseNode} e nel caso specifico l'oggetto istanza della classe
 	\icode{BLTDEFCompilationUnit} che costituisce la radice dell'albero
 	rappresentante la struttura del programma Blite. Da osservare l'eccezione
 	\icode{ParseException} eventualmente sollevata dal metodo \icode{parse()}, con
 	essa è realizata la gestione degli errori lessicali e sintattici incontrati
 	durante una compilazione. Dai suoi metodi è possibile risalire a tutte le
-	informazioni utili eventualmente per correggere l'errore, come, il token
+	informazioni utili eventualmente per correggere l'errore, come: il token
 	corrente, i token attesi, la riga e la colonna a cui si è arrestata la
 	compilazione.
+	
+	Questo modulo non dipende dagli altri, ma da questi sarà utilizzato.
 	
   \item \emph{Blite-se Environment}: questo modulo ha lo scopo di realizzare
   l'ambiente contenitore per l'Engine, facendo sì che nella realizzazione di
@@ -73,33 +75,125 @@ necessarie:
   problematiche di comunicazione o di deployment. Di fatto si vuole
   che il motore di esecuzione possa essere utilizzato in scenari
   diversi e questo modulo realizza le astrazioni necessarie per rendere
-  indipendete l'engine dalle diverse tecnologie di comunicazione. Per esempio
+  indipendente l'engine dalle diverse tecnologie di comunicazione. Per esempio
   una possibilità molto interessante potrebbe essere quella di integrare
   l'engine Blite con un ESB (Enterprise Service Bus) basato sul protocollo JBI,
   in questo caso basterebbe realizzare un sottomodulo con le funzionalità
-  specifiche per dialogare con il bus, oppure realizzare un environment capace
-  di supportare direttamente gli stadard tipici della tecnologia Web Services,
-  come WSDL, SOAP e HTTP, e poter quindi far dialogare i nostri programmi
-  Blite con ogni servizio di Internet.
+  specifiche per dialogare con il bus. Un'altra ancora potrebbe essere
+  quella di realizzare un environment capace di supportare direttamente gli
+  standard tipici della tecnologia Web Services, come WSDL, SOAP e HTTP, e
+  poter quindi far dialogare i nostri programmi Blite con ogni servizio di Internet. 
+  Attualmente è stato implementato un environment (\emph{Local Environment})
+  capace di eseguire localmente più Engine e simulare
+  la rete e la comunicazione remota. Tale environment è stato creato per 
+  realizzare i test di verifica dell'implementazione dell'Engine\footnote{Nel
+  progetto Local Environment è stata realizzata una \emph{Test Suite} basata su \emph{JUnit}
+  in cui vengono verificate le attività e i costrutti del linguaggio con
+  test eseguiti nell'ambiente locale.}, e per allestire l'ambiente di escuzione
+  di \emph{Blide}, strumento nato per fare prototipi e simulazioni di processi.
+  
+  A livello di Engine è definita e utilizzata la seguente interfaccia
+  \icode{EngineChannel}:
+  \lstset{frame=NONE}
+	\begin{lstlisting}
+	/**
+	 * This is interface represents the communication channel between 
+ 	 * the Engine and the Communication Environment.  
+ 	 * 
+ 	 * @author panks
+ 	 */
+	public interface EngineChannel {
+		
+   		/**
+      	 * This method initializes a communication exchange from 
+     	 * the invoking process to the requested endpoint
+     	 * 
+         * @param serviceId
+     	 * @param operation
+     	 * @param messageContainer
+     	 * @param instance the Process Instance initiating the exchange.
+     	 * 
+     	 * @return Object messageExchangeId 
+     	 *         the identification key for communication protocol state .
+     	 *         
+     	*/
+     	public Object createExchange(ServiceIdentifier serviceId, 
+        	                         String operation,
+            	                     ProcessInstance instance);
+   
+    	/**
+     	 * Send a message container into the created exchange. 
+     	 * This a creation post step in the communication.
+     	 * 
+     	 * @param  inComingEventKey
+     	 */
+    	public  void sendIntoExchange(Object messageExchangeId,
+                                      MessageContainer messageContainer);
 
-  \item \emph{Blite-se Engine}:
+    	/**
+     	 * Closes the exchange.
+     	 * 
+     	 * @param messageExchangeId
+     	 */
+    	public void closeExchange(Object messageExchangeId);
+	}
+
+  	\end{lstlisting} 
+
+	Tramite questa, la parti del motore di esecuzione interessate alla
+	comunicazione, potranno inizializzare, sviluppare e concludere le comunicazioni
+	con l'Environment; quest'ultimo invece utilizzerà l'interfaccia dell'Engine
+	stesso per instradare le richieste, che dall'esterno, arriveranno verso
+	le porte dei programmi Blite.
+	
+	Da osservare come tale interfaccia definisca un modello di comunicazione
+	totalmente generico, che può essere utilizzato per realizzare molteplici
+	protocolli per lo scambio di messaggi, dal più semplice \emph{``fire and
+	forget''} ai più complessi, che necessitano un mantenimento dello stato.
+	Alla base di questo ci sono l'astrazione \icode{MessageContainer}, che
+	permette di raggruppare i messaggi applicativi con eventuali
+	metainformazioni, e il \icode{messageExchangeId}, che constitisce un
+	identificativo univoco per la sessione corrente di comunicazione.
+	
+	Le varie tipologie di Environment implementeranno in maniera opportuna tale
+	interfaccia in modo da supportare la tecnologia di comunicazione desiderata.
+	L'enviroment dopo aver creato le istanze della classe Engine imposterà in esse
+	l'oggetto che realizza l'opportuna implemetazione di
+	\icode{EngineChannel}. Il modulo dipende da \emph{Blite-se Definition Model}
+	per svolgere le funzionalità di compilazione e deploy, e ovviamente da
+	\emph{Blite-se Engine} per la realizzazione delle esecuzioni.
+	
+  \item \emph{Blite-se Engine}: questo modulo contiene l'implementazione vera
+  e propria del motore di esecuzione per i programmi Blite. Esso potrà essere
+  eseguito all'interno di un opportuno Environment e, nel caso in cui
+  quest'ultimo supporti la comunicazione remota, essere istallato su un nodo di
+  rete per rendere disponibili i processi Blite ai client. Nei
+  paragrafi successivi di questo capitolo verrà illustrata nel dettaglio
+  l'architettura di questa parte di software. Questo modulo utilizza il
+  \emph{Blite-se Definition Model} per accedere modello statico rappresentante
+  la definizione dei programmi Blite.
   
 \end{enumerate}
 
-% \begin{figure}[ht]
-% \begin{center}
-% \includegraphics[angle=90,scale=0.70]
-% {../../BliteModule}
-% \caption[I moduli di Blite-se] {}
-%   \label{fig:fault}
-% \end{center}
-% \end{figure}
+In Figura \ref{fig:modules} è illustrato un diagramma (senza un
+formalismo specifico) che rappresenta i vari moduli e le loro dipendenze.
 
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.50]
+{architettura_interna/dia/BliteModule}
+\caption[I moduli di Blite-se] {I moduli software del progetto \emph{Blite-se}
+e le loro dipendenze.}
+  \label{fig:modules}
+\end{center}
+\end{figure}
+
+\newpage
 
 \section{Architettura dell'Engine}
 
-Nello scenario delineato avremo un Engine per locazione o, 
-nodo di rete, e su ognuno di questi componenti sarà possibile
+In uno scenario reale, in cui i processi sono distribuiti, avremo un Engine per
+locazione o, nodo di rete, e su ognuno di questi componenti sarà possibile
 installare o rimuovere definizioni di processi Blite. In pratica un engine
 gestir\`a un insieme di definizioni, creando a partire da queste istanze di
 processi e utilizzerà l'Environment per interagire con gli altri Engine. 
