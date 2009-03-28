@@ -12,6 +12,9 @@ esempi di utilizzo.
 
 \section{Un IDE per Blite}
 
+Per verificare se uno strumento è stato ben progetto, la cosa migliore da fare
+è provarlo. In tal senso per verificare se il linguaggio . 
+
 Oltre al motore di esecuzione si è realizzato un vero e proprio IDE per
 sviluppare i programmi Blite. Questo strumento prevede la possibilità di
 gestire i file con le definizioni dei processi, editarli, compilarli e metterli
@@ -56,17 +59,17 @@ l'applicazione presenta quatro aree distinte
   sistema, come per esempio l'esito della compilazione dei programmi Blite.
 \end{enumerate}
 
-Di seguito andiamo ad analizzare più nel dettaglio queste aere funzionali
-dell'interfaccia di Blide.
+Di seguito andiamo ad analizzare più nel dettaglio queste aere e altre
+funzionalità dell'interfaccia di Blide.
 
-\subsubsection*{Favorites}
+\subsubsection*{Favorites - Gestione dei Sorgenti Blite}
 
 Abbiamo detto che questa area permette di accedere al filesystem, in realtà
 non offre un'unica visone dell'albero come i consueti file manager, ma
 permette in pratica di visualizzare direttamente più sotto alberi del
 filesystem. Di fatto l'utente può selezionare un direcotry e con la funzione \emph{``Add to
-Favoritess\ldots''} aggiungere tale direcory con tutto il suo sotto albero come
-una nuova radice che compare direttamente nel pannello. In questo modo l'utente
+Favoritess\ldots''} aggiungere tale direcory, con tutto il suo sotto albero,
+come una nuova radice che compare direttamente nel pannello. In questo modo l'utente
 si può creare una specie di \emph{Bookmarks} alle direttory a cui accede
 maggiormente e in cui probabilemnte ha salvato i file di lavoro. Da notare che
 tali configurazioni vengono salvate automaticamente dall'applicazione e al
@@ -86,12 +89,12 @@ la directory ``home'' dell'utente.
 All'interno degli alberi di Favorites i file con estensione
 \texttt{.blt} vengono riconosciuti come file sorgenti Blite e vengono
 visualizzati con icone speciali. Inoltre l'applicazione decora tali icone in
-base al fatto che i file necessito compilazione, siano stati compilati con successo o
-presentino degli errori che ne hanno compromesso la compilazione. In Figura
-\ref{fig:blideFavo} è rappresentato il pannello in cui è stato aggiunto la directory
-\texttt{data} che contine una serie di file sorgenti Blite con le opportune
-icone. In Tabella \ref{tab:bicons} sono rappresentate le varie icone associate ai
-file Blite con il riferimento alla loro semantica.  
+base al fatto che i file necessitino compilazione, siano stati compilati con
+successo o presentino degli errori che ne hanno compromesso la compilazione. In Figura
+\ref{fig:blideFavo} è rappresentato il pannello in cui è stato aggiunto nei
+favoriti la directory \texttt{data}, questa contine una serie di file sorgenti
+Blite che vengono visualizzati con le opportune icone. In Tabella
+\ref{tab:bicons} sono rappresentate le varie icone associate ai file Blite con il riferimento alla loro semantica.  
 \\
 
 \begin{table}
@@ -99,8 +102,8 @@ file Blite con il riferimento alla loro semantica.
 \begin{tabular}{rp{0.7\textwidth}}
 \includegraphics{blide/dia/biconto} & File Blite che deve essere compilato. Il
 file non è mai stato compilato o ha subito modifiche dopo l'ultima
-compilazione.\\ \includegraphics{blide/dia/biconko} & File Blite presenta errori di
-compilazione. L'ultima compilazione eseguita sul file ha riportato errori.\\
+compilazione.\\ \includegraphics{blide/dia/biconko} & File Blite che presenta
+errori di compilazione. L'ultima compilazione eseguita sul file ha riportato errori.\\
 \includegraphics{blide/dia/biconok} & File Blite compilato con successo.
 Delle definizioni presenti nel file sono disponibili i modelli statici.\\
 \end{tabular}
@@ -110,7 +113,232 @@ Delle definizioni presenti nel file sono disponibili i modelli statici.\\
 \end{table}
 
 Su ogni nodo rappresentante un file Blite possono essere eseguite diverse
-azioni. In particolare tali azioni come è consuetudine nella applicazioni con
-interfaccia grafica possono essere eseguite in modi diversi. 
+azioni. In particolare tali azioni, come è consuetudine nelle applicazioni con
+interfaccia grafica, possono essere eseguite in modi diversi: dai menù a
+discesa della \emph{``Menu Bar''}, che si trova nella parte alta della finestra,
+dai menù contestuali che si aprono premendo il tasto destro del mouse su
+un oggetto selezionato e dai bottoni che si trovano nello spazio subito sotto
+la menù bar detto \emph{``Tool Bar''}. In Figura \ref{fig:blideCMenu} è rappresentato il
+menù contestuale che viene visualizzato premendo il tasto destro su un file
+Blite, che nel caso specifico deve essere ancora compilato, per cui risultà abilitata
+l'azione \emph{``Compile''}, mentre le azioni \emph{``Re/Deploy''} e
+\emph{``Undeploy''} sono ovviamente disabilitate in quanto non è ancora
+disponibile un modello di definizione da poter istallare. In generale
+tutta l'interfaccia è stata realizzata secondo il paradigma
+\emph{Context-Sensitive Interface} [ContxSensWikiPedia], per cui le sue
+varie parti sono sensibili allo stato degli oggetti che si trovano a gestire.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.70]
+{blide/dia/BlideCMenu}
+\caption[Menu Contestuale su di un File Blite]{Facendo click con il tasto destro
+su un nodo rappresentate un file Blite, si apre un menu contestuale che
+visualizza le azioni che l'utente può compiere sul file stesso. Da osservare
+come siano abilitate solo le azioni applicabili, di fatto viene realizzato il
+paradigma \emph{Context-Sensitive Interface}, secondo cui ogni componente
+dell'interfaccia è sensibile allo stato degli oggetti contestuali.}
+  \label{fig:blideCMenu}
+\end{center}
+\end{figure}
+
+Oltre che nel menu contestuale che si apre su i file Blite, le operazioni che
+risultano più frequentemente eseguite dall'utente, \emph{``Save''},
+\emph{``Compile''}, \emph{``Deploy''} e \emph{``Undeploy''}, sono state rese
+disponibili tramiti pulsanti, facilmente raggiungibili, posizionati nella Tool
+Bar:
+
+\begin{center}
+\includegraphics[scale=0.70]
+{blide/dia/BlideFileToolBar}
+\end{center}
+
+Si osservi come anche questa parte dell'interfaccia risulti sensibile al
+contesto, cioè in questo caso al file attualmente selezionato o visualizzato
+nell'editor, e come siano attivati solamente i pulsanti le cui azioni siano
+attualmente applicabili. 
+
+In Tabella \ldots sono ricapitolate le azioni eseguibili su file Blite e la
+loro specifica.
+
+
+
+\newpage
+
+\subsubsection*{Editing e compilazione del codice Blite}
+Facendo doppio click, o usando l'azione contestuale \emph{``Open''}, su un nodo
+degli alberi di Favorites rappresentate un file Blite, si apre un pannello di
+editing nell'opportuna sezione dell'interfaccia grafica. 
+
+Per creare un nuovo file invece si devono eseguire i seguenti passi:
+
+\begin{enumerate}
+  \item Nel pannello Favorites, selezionare la direcoty in cui si desidera
+  creare il nuovo file.
+  \item Premere il tasto destro e visualizzare il menù contestuale.
+  \item Su di questo posizionarsi sulla voce \emph{``New''} in modo da
+  visualizzare il sottomenu associato:
+\begin{center}
+\includegraphics[scale=0.60]{blide/dia/BlideNewFile}
+\end{center}
+  \item A questo punto le possibilità sono due:
+\begin{enumerate}
+  \item Creare un file vuoto, selezionando la voce di menù \emph{``Empty
+  File''}. In questo caso si aprirà una finestra in cui l'utente potrà digitare
+  il nome del nuovo file comprensivo dell'estenzione \texttt{.blt}.
+  \item Utilizzare un file di esempio da cui iniziare a
+  sviluppare il proprio programma Blite scegliendo la voce \emph{``All
+  Templates \ldots''}. In questo caso tramite un ``Wizard'' l'utente potrà
+  scegliere fra una serie di file che possono costituire un punto di partenza
+  (Template) per scrivere il proprio codice.
+\end{enumerate} 
+\end{enumerate}
+
+Abbiamo mostrato come aprire un sorgente Blite all'interno di un editor. Blide
+fornisce un editor specializzato per scrivere programmi Blite, che mette a
+disposizione le funzionalità specifiche di:
+
+\begin{itemize}
+  \item \emph{Syntax Highlight}: Tramite la grammatica formale, presentata
+  nel Capitolo 2,  è stato possibile realizzare una tecnologia capace di 
+  riconoscere la sintassi blite e evidenziare in maniera opportuna le parole
+  riservate  e i costrutti specifici del linguaggio. Tale tecnologia si basa
+  sul progetto \emph{``Generic Languages Framework (GLF)''} [GLFSite], che mette
+  a disposizione un modulo per NetBeans Platform con cui è possibile sviluppare 
+  il supporto ad un linguaggio di programmazione all'interno delle proprie 
+  applicazioni.
+  
+  \item \emph{Autocompletamento}: L'editor dei file Blite assistono
+  l'utente nella scrittura del codice andando a completare automaticamente
+  alcune parti del codice. In particolare l'editor inserisce automaticamente i
+  delimitatori di chiusura dei blocchi. Per esempio all'utente basterà digitare
+  la stringa \texttt{seq} e il sistema inserirà automaticamente la chiusura
+  inserendo il corrispettivo \texttt{qes}. Inoltre anche le operazioni di
+  invocazione e ricezione sono completate automaticamente, digitando per
+  esempio semplicemente la stringa \texttt{rcv} l'utente si torverà a
+  disposizione l'intera struttura della operazione di ricezione come: 
+  \verb#rcv<"on_me"> operation(x)#, e in questa potrà modificare
+  le parti necessarie.
+  
+\end{itemize}
+
+Abbiamo visto come la sintassi originale di Blite sia stata arrichita con
+alcune parole riservate e come tutte le attività strutturate siano state
+dotate di delimitatori di blocco. Con il supporto dell'editor tale
+appesantimento sintattico non verrà avvertito dal programmatore.
+  
+In Figura \ref{fig:blideEditor} è rafigurato un editor con il sorgente Blite in
+cui sono evidenzite tramite colori e font specifici le parole riservate e i costrutti
+del linguaggio.
+	
+La compilazione del file visualizzato nell'editor attualmente attivo, come
+detto, può essere eseguita con l'opportuno pulsante nella Tool Bar. All'utente
+verrà notificato l'esito della compilazione nell'aria in basso
+dell'interfaccia grafica identificata con l'etichetta \emph{``Output''}. In caso di
+errore tale area riporterà il messaggio opportuno e l'utente potrà direttamente
+fare click su di esso per posizionare automaticamente il cursore dell'editor in
+corrispondenza della linea e della colonna in cui è presente l'errore. In
+Figura \ref{fig:blideCompError} è rappresentata questa situazione.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.60]
+{blide/dia/BlideEditor}
+\caption[Blide, l'editor per Blite]{L'edior di Blide per con il \emph{``Syntax
+Highlight''} per il codice Blite.}
+  \label{fig:blideEditor}
+\end{center}
+\end{figure}
+
+\begin{figure}[b!]
+\begin{center}
+\includegraphics[scale=0.60]
+{blide/dia/BlideCompError}
+\caption[Blide, feedback alla compilazione]{Feedback interattivo per gli errori
+di compilazione.}
+  \label{fig:blideCompError}
+\end{center}
+\end{figure}
+
+\newpage
+
+\subsubsection*{Engines - Deploy ed esecuzione dei processi}
+
+Blide è dotato di un ambiente \emph{Local Environment} per l'esecuzione dei
+processi Blite. Come già detto il Local Environment permette di eseguire
+localmente (in una Java Virtual Machine) più Engine e di gestire la
+comunicazione fra questi simulando la rete.
+
+Quando un file sorgente di Blite è compilato, è abilitata per questo l'azione
+di \emph{``Deploy''}; a questo punto se l'utente la esegue i \emph{Deployment}
+(si rocorda che nella sintassi i deployment sono individuati dai delimitatori
+$\verb#{# \ldots \verb#}#$) definiti nel file vengono istallati su
+opportuni Engine.
+
+Attualmente, per velocizzare il processo di sviluppo dell'utente, l'associazione
+Engine-Deployment è fatta in maniera automatica dal tool secondo il seguente
+schema:
+
+\begin{itemize}
+  \item Ogni Deployment ha il proprio Engine di esecuzione.
+  \item L'Engine di un Deployment viene identificato nel seguente modo: 
+  
+  (``nome file che definisce il deployment'' \texttt{:} ``numero d'ordine del
+  dep. nel file'')
+  
+  Per cui, se abbiamo che un deployment è il terzo definto nel file
+  \texttt{source.blt} esso verrà istallato in un engine idetificato con
+  l'etichetta: \texttt{source.blt:3}.
+\end{itemize}
+
+Nell'interfaccia, il pannello identificato con l'etichetta \emph{``Engines''}
+visualizza un albero, la cui radice è contrassegnata come \emph{``Local
+Engines''}. I nodi figli della radice rappresentano gli Engine attualmente
+presenti nel Local Environment identificati con la convenzione sopra esposta;
+espandendo i loro figli troviamo le definizioni di processo, e per ognuna di
+essa, a livello inferiore troviamo le istanze.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.65]
+{blide/dia/BlideEngines}
+\caption[Blide, feedback alla compilazione]{Rappresentazione del Local
+Environment con gli Engine, in questi le definizioni di processo istallate. Per
+ogni definizione sono visualizzate le istanze eseguite o in esecuzione.}
+  \label{fig:blidEngines}
+\end{center}
+\end{figure}
+
+In Figura \ref{fig:blidEngines} è presantato l'albero dei Local Engines.
+Come si può osservare fra le definizioni istallate negli Engine si può
+distinguere le così dette \emph{Ready to Run Instancess}, da queste l'utente
+può avviare direttamente delle istanze tramite l'operazione contestuale
+\emph{``Run''}, o tramite l'opportuno pulsante posizionato nella Tool Bar.
+
+\begin{center}
+\includegraphics[scale=0.65]{blide/dia/BlideRunInst}
+\end{center}
+
+In tabella sono riepilogati (con le rispettive Icone) i vari tipi di nodi che
+si trovano nei vari livelli dell'albero dei Local Engines.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{rp{0.7\textwidth}}
+\includegraphics[scale=0.70]{blide/dia/server} & Engine.\\ 
+\includegraphics[scale=0.70]{blide/dia/defnode} & Definizione di Processo.\\
+\includegraphics[scale=0.70]{blide/dia/defnodeRun} & Ready to Run Instance.\\
+\includegraphics[scale=0.70]{blide/dia/instdef} & Istanza in esecuzione.\\
+\includegraphics[scale=0.70]{blide/dia/instdefok} & Istanza completata.\\
+\includegraphics[scale=0.70]{blide/dia/instdefko} & Instanza terminata con
+errori .\\
+\end{tabular}
+\caption{Icone associate ai file Blite con estensione \texttt{.blt}}
+\label{tab:bicons}
+\end{center}
+\end{table}
+
+\subsubsection*{Monitor - }
+
 
 
