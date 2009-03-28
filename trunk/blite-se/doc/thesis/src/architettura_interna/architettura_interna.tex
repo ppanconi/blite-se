@@ -103,7 +103,7 @@ necessarie:
 	\begin{lstlisting}
 	/**
 	 * This is interface represents the communication channel between 
- 	 * the Engine and the Communication Environment.  
+ 	 * the Engine and the Environment.  
  	 * 
  	 * @author panks
  	 */
@@ -130,7 +130,10 @@ necessarie:
      	 * Send a message container into the created exchange. 
      	 * This a creation post step in the communication.
      	 * 
-     	 * @param  inComingEventKey
+     	 * @param messageContainer, the conteiner for application message e
+         *        possible metadata.
+         * @param messageExchangeId the identification key for communication 
+	     *        protocol exchange.
      	 */
     	public  void sendIntoExchange(Object messageExchangeId,
                                       MessageContainer messageContainer);
