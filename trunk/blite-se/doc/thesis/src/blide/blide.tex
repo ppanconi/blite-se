@@ -320,9 +320,9 @@ può avviare direttamente delle istanze tramite l'operazione contestuale
 \end{center}
 
 In tabella sono riepilogati (con le rispettive Icone) i vari tipi di nodi che
-si trovano nei vari livelli dell'albero dei Local Engines.
+si trovano nei livelli dell'albero dei Local Engines.
 
-\begin{table}
+\begin{table}[hb!]
 \begin{center}
 \begin{tabular}{rp{0.7\textwidth}}
 \includegraphics[scale=0.70]{blide/dia/server} & Engine.\\ 
@@ -333,12 +333,127 @@ si trovano nei vari livelli dell'albero dei Local Engines.
 \includegraphics[scale=0.70]{blide/dia/instdefko} & Instanza terminata con
 errori .\\
 \end{tabular}
-\caption{Icone associate ai file Blite con estensione \texttt{.blt}}
+\caption{I vari tipi di nodi nell'albero Local Engines.}
 \label{tab:bicons}
 \end{center}
 \end{table}
 
-\subsubsection*{Monitor - }
+\newpage
+
+\subsubsection*{Monitor - Visualizzazione dell'istanze}
+
+Abbiamo visto come l'utente possa scrivere i propri programmi Blite, istallarli
+e esgurili all'interno di un Local Environment. L'esecuzione viene avviata
+facendo partire una definizione di tipo \emph{Ready to Run Instance}, da
+questa verrà creata immediatamente un'istanza che probabilmente, invocando le
+porte di start activity di altre definizioni di processo, provocherà la
+creazione di altre istanze. Per esempio si consideri il caso
+
+\vspace{0.5cm}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale=0.75]{blide/dia/BlideMon1} 
+& $\Rightarrow$
+& \includegraphics[scale=0.75]{blide/dia/BlideMon2}    
+\end{tabular}
+\end{center}
+\vspace{0.5cm}
+
+in cui si hanno due Engine: \texttt{faulthandler.blt:1} con la definizione
+\texttt{Definition 1} e \texttt{faulthandler.blt:1} con la \emph{Ready to Run
+Instance} \texttt{Definition 1}. Quest'ultima può essere messa in esecuzione
+direttamente dall'utente facendo click con il tasto destro e selezionando dal
+menù contestuale l'azione \emph{``Run''}. A questo punto come si vede dalla
+figura a destra vengono generate due istanze; la Ready to Run Instance ha
+provocato la creazione di un istanza della definizione di processo istallata su
+\texttt{faulthandler.blt:1}.
+
+Già dalla rappresentazione delle istanze nell'albero Local Engines si ha una
+informazione sull'esito della loro esecuzione. Come precedentemente detto
+le icone riportano graficamente il fatto che un'istanza abbia concluso con
+esito positivo o meno la propria elaborazione. 
+
+All'utente viene data inoltre, la possibilità di visualizzare il flusso
+completo di esecuzione di un'istanza. Facendo doppio click sul nodo
+dell'istanza si apre, nella zona dedicata agli editor, un pannello
+che propone una rappresentazione grafica dell'esecuzione della stessa. Tale
+pannello viene di seguito identificato con il termine \emph{Monitor View}.
+
+\begin{figure}[p]
+\begin{center}
+\includegraphics[scale=0.65,angle=90]
+{blide/dia/BlideMonitor1}
+\caption[]{}
+  \label{fig:blideMonitor1}
+\end{center}
+\end{figure}
+
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[scale=0.79]
+{blide/dia/BlideMonitorCode}
+\caption[]{}
+  \label{fig:blideMonitorCode}
+\end{center}
+\end{figure}
+
+
+Disponendo già di un Monitor View aperto, l'utente vi può aggiungre altre
+istanze trascinandocele sopra, secondo il paradigma \emph{Drag-and-Drop}. In
+questo modo è possibilie visualizzare in una unica rappresentazione grafica
+l'interazione di più istanze di processo che nel loro ciclo di vita si sono
+scambiate messaggi. In Figure \ref{fig:blideMonitor1} è rappresentato il
+Monitor View con la rappresentazione dell'esecuzione di due istanze generate
+dal codice di Figura \ref{fig:blideMonitorCode}. Si noti come la Ready to Run
+Instance tramite la prima invocazione produca la creazione dell'istanza
+derivante dalla definizione di processo, quest'ultima con una successiva
+invocazione risponde con un messaggio di correlazione. Si osservi inoltre come
+l'istanza di destra concluda con successo la sua esecuzione, in quanto
+l'eccezione sollevata è gestita in un Fault Handler (è il Fault Handler stesso
+che esegue l'invocazione di risposta). Quella di sinistra invece fallisce poichè
+l'eccezione sollevata non è gestita da alcun Fault Handler e la stassa produce
+la terminazione del ramo parallelo che era fermo in attesa di ricevere un
+messaggio. 
+
+A prima vista potrebbe sorpredere la presenza della seconda Throw (racchiusa
+dal rettangolo tratteggiato di rosso) nell'istanza fallita, in quanto non
+sembrerebbe prevista dal codice. In realtà essa non è altro che la attività
+Throw pervista dal Default Fault Handler (). C'e' sembrato che la scelta
+migliore per rendere la rappresentazione grafica il più chiara possibile fosse
+quella rappresentare esplicitamente i Default Fault Handler, in quanto
+condizionano fortemente il flusso di esecuzione, e di nascondere al contrario i
+Default Compensation Handler (Empty Activity) in quando del tutto ininfluenti.
+\\
+
+Concludiamo questa sezione dando una panoramica dei costrutti grafici utilizzati
+per rappresentare i flussi di esecuzione.
+\vspace{0.3cm}
+
+\begin{tabular}{cp{0.5 \textwidth}}
+\includegraphics[scale=0.50]{blide/dia/BlideInst} & Le istanze di processo
+sono rappresentate tramite quadrati (ombreggiati)\\
+\end{tabular}
+
+\begin{tabular}{cp{0.5 \textwidth}}
+\includegraphics[scale=0.80]{blide/dia/BlideInv} &
+\end{tabular}
+
+\begin{tabular}{cp{0.5 \textwidth}}
+\includegraphics[scale=0.95]{blide/dia/BlideSec} &
+\end{tabular}
+
+\begin{tabular}{cp{0.5 \textwidth}}
+\includegraphics[scale=0.40]{blide/dia/BlideFlow} &
+\end{tabular}
+
+
+\begin{tabular}{cp{0.5 \textwidth}}
+\includegraphics[scale=0.30]{blide/dia/BlideContext} &
+\end{tabular}
 
 
 
+
+% \caption{tablecaption}
+% \label{tablelabel}
+% \end{table}
