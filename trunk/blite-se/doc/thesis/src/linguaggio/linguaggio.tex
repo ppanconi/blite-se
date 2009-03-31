@@ -1,7 +1,7 @@
 \chapter{Il linguaggio per l'orchestrazione}
 
 \section{BPEL, lo standard per l'orchestrazione di Servizi Web}
-Abbiamo visto come SOA e i Servizi Web siano una delle risposte più recenti
+Abbiamo detto come SOA e i Servizi Web siano una delle risposte più recenti
 alla necessità di integrare funzionalità applicative eterogenee, e di fornire
 un modello di sviluppo software che sia il pi\`u efficace possibile rispetto
 alla natura dinamica dei domini applicativi tipici delle grandi realtà
@@ -89,24 +89,7 @@ basate su BPEL. Con tale scopo è stato creato Blite, una variante semplificata 
 BPEL, che riproduce alcune delle sue funzionalità più caratteristiche cercando
 d'altra parte di semplificarne alcuni aspetti ritenuti marginali nella
 realizzazione del modello Process Orinted.
-   
-Il lavoro svolto in questa tesi è da considerarsi a supporto di questa attività,
-come un ulteriore verifica e confronto del processo di astrazione teorica e
-formale con gli aspetti più concreti e tecnologici legati all'implementazione di
-un linguaggio come BPEL per l'orchestrazione distribuita di servizi. Infatti
-l'obiettivo primario è stato quello di realizzare un'implemetazione di Blite che
-potesse essere il più vicino possibile, per caratteristiche e applicabilità, ai
-motori di esecuzione di BPEL attualmente disponibili. Se da un lato Blite vuole
-essere un'analisi di BPEL fatta tramite un processo di astrazione e
-formalizzazione, il lavoro qui esposto vuole essere a sua volta un'analisi di
-tale processo, nel senso che ne vuole verificare la compatibilità e l'attinenza
-con le problematiche più concrete e tecnologiche presenti nell'ambito della
-orchestrazione di servizi. Di fatto quello che abbiamo fatto non è altro che un
-test critico di come i costrutti formali utilizzati per fornire la semantica del
-liguaggio, potessero essere realmente implementati in scenari di sowfware di
-produzione, e che quindi continuassero a mantenere un legame a doppio filo con
-il mondo delle tecnologie da cui hanno tratto iniziale ispirazione.
-\\
+\\   
 
 Di seguito andremo a decrivere la sintassi e  la sematica originali di Blite e
 le versioni leggermente modificate di cui è stata realizzata l'implementazione.
@@ -1222,6 +1205,7 @@ seguente modo:
 \section{Una grammatica per un compilatore 
 %(??o Parser??)
 }
+\label{gram}
 
 Il primo passo per lo sviluppo di un motore di esecuzione per Blite è la
 realizzazione di un parser per l'analisi di programmi ottenibili dalla sintassi
@@ -1685,7 +1669,7 @@ I simboli tipografici $\bullet$ e $\star$ sono stati sostituiti rispettivamente
 dalle scritture \verb#fh:# e \verb#ch:# e si assume che un contesto che non
 definisca gli handler, implicitamente preveda l'attività $\xthr$ come fault
 handler e l'attività $\xskip$ come compensation handler. In pretica si assume
-che
+che \label{defHandelr}
 
 $$
 \x{[a]} = \xscopefc{\xs}{\xthr}{\xskip}

@@ -1,1 +1,316 @@
-\chapter{Un'introduzione a SOA e ai Servizi Web}
+\chapter{Introduzione}
+
+Nell'era di Internet e della globalizzazione dell'informazione i requisiti di
+coloro che necessitano di software per svolgere le loro attività primarie sono
+cambiati drasticamente. Per le grandi organizzazioni (siano queste aziende
+private, pubbliche amministrazioni o altro) risulta indispensabile avere un
+modello di attività dinamico e aperto che possa permettere loro di modificare
+rapidamente le politiche e le strategie, e di dialogare in maniera sicura e
+efficiente con il maggior numero di partner e clienti. E' quindi ovvio che la
+risposta del mondo del software e della tecnologia non potesse che muoversi in
+tal direzione. 
+
+Il primo passo è stato quello di creare tramite porcessi condivisi gli standard
+publici che permettessero di creare una ``lingua franca'' che fosse
+compresibile da tutti. La creazione dello standard XML [XML], ha permesso di
+descrivere i dati tramite una rappresentazione testuale che autoesplicitasse
+lo schema di encoding utilizzato per rappresentare i caratteri in sequenze di
+byte. In questo modo si è realizzata la completa indipendeza dei dati dalle
+specifiche architetture hardware/sofware e l'informazione è diventata finalmente
+portabile attraverso le diverse piattaforme. Insieme alla necessità di
+rappresentare i dati a basso livello vi è sempre quella di poterli strutturare
+in tipi e forme sempre più complessi. DTD prima, e XML Schema poi in maniera
+definitiva, hanno permesso di risolvere brillantemente tale problematica
+nell'ambito di XML stesso.
+
+A questo punto avendo modo di rappresentre l'informazione in maniera totalmente
+portabile e tipata ci si è rivolti ad individuare un modello di
+comunicazione che permettesse lo scambio di tale informazione. E' stato
+individuata l'astrazione del Servizio inteso semplicemente come un interfaccia
+formalmente specificata, ad una risorsa puramente stateless. Un risorsa è da
+intendersi in senso generale come un documento statico o un'unità
+elaborativa capace di restituire dinamicamente dei dati anche in base al valore
+di parametri ricevuti in input.
+
+La definizione della specifica formale dei Servizi non poteva che avvenire
+nell'ambito di XML e XML Schema e l'introduzione di WSDL [WSDL], liguaggio
+direttamente basato su questi standard, ha permesso la realizzazione di
+interfaccie in cui si definiscono operazioni in cui parametri di input ed output
+sono formalmente tipati e le segnature hanno una organizzazione rigorosa. Se WSDL
+reppresenta le interfaccie, SOAP [SOAP] e WSDL Binding definiscono il modo in cui
+l'informazione che transita per tali interfaccie, viene strutturata e
+``imbustata'' in messaggi. A questo punto non rimane altro che determinare il
+mezzo con con cui inviare tali messaggi. E la scelta più ovvia non poteva che essere
+quella di utilizzare i mezzi più diffusi e collaudati ovvero HTTP e i protocolli di
+Internet.
+
+
+La composizine di XML, XML Schema, WSDL, SOAP e HTTP, è in generale individuata
+dal termine Web Service, anche se spesso con tale termine si tende a definire
+una classe più ampia di Servizi non necessariamente basati su tutte le
+precedenti tecnologie.
+
+Avere delle specifiche con un così alto livello di descrizione formale fa si
+che sia possibile realizzare tool per la creazione
+automatica di ampie parti di codice nei vari linguaggi di programmazione. In
+pratica semplicemente dalla definizione del Servizio è possibile creare parte
+dell'implemetazione di esso o parte dei client. Questa è stata una della
+caratteristiche che hanno contribuito maggiormente al diffondersi dei Web
+Service ed a determinarne il successo.
+
+Disporre di un sistema di comunicazione così promettente ha fatto sì che si
+cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione (o di sviluppo di
+applicazioni) in cui al concetto di Servizio si debba inevitabilmente affiancare
+il concetto di stato (praticamente tutti sanno che per realizzare applicazioni
+poco più che banali è indispensabile mantenere un stato). SOC (Service Oriented Computing) è
+la sigla che in termini abbastanza sfumati, racchiude tutte quelle attività
+tese alla definizioni di un modello di sviluppo sofware basato sul assemblaggio
+%composizione
+di componenti che possono essere specificati tramite i formalismi
+dei servizi ma che possono eventualmente mantenre anche un stato. WS-Addressing
+per esempio è una tecnologia che contribuisce alle definizione del concetto di
+stato all'interno degli standard dei Web Service. 
+
+% In tal senso negli ultimi anni è andato sviluppandosi un nuovo paradigma di
+% calcolo detto Service Oriented Computing (SOC), in cui i “mattoni” utilizzati
+% per costruire le applicazioni sono chiamati servizi. 
+% Un servizio non è altro che un modulo che assolve specifici compiti ed è
+% corredato da una descrizione formale delle sue 
+% funzionalità, realizzata secondo lunguaggi e formalismi descritti da specifiche
+% pubbliche (standard). La composizione di tali servizi consente quindi uno
+% sviluppo veloce ed economico di nuove applicazioni e gioca un ruolo importante nell’integrazione dei sistemi, sia all’interno del singolo dominio aziendale che in ambito inter-aziendale.
+
+% La descrizione formale di un servizio permette di rendere pubblica la
+% sua interfaccia, cioè l’insieme di operazioni che il servizio può eseguire, ed                                                                    
+% il suo comportamento, cioè gli effetti di tali operazioni. Oltre a tali aspetti                          
+% strettamente funzionali, la descrizione di un servizio può esprimere anche
+% aspetti legati alla qualità del servizio, come ad esempio requisiti di
+% affidabilità, efficienza (tempi di risposta) e sicurezza (garanzia sulla
+% confidenzialità delle a informazioni). La possibilità di reperire e consultare
+% tali descrizioni sta alla base dei meccanismi che consentono di individuare, scegliere e comporre i
+% servizi allo scopo di costruire le proprie applicazioni. Si veda [PG03] per una
+% breve introduzione al SOC.
+
+% Avere a disposizione gli strumenti per reppresentare i dati in maniera
+% totalmente portabile e sicura, e accedere alle risorese secondo un modello di
+% elaborazione formale altamente produttivo e multipiattaforma, non esauirsce
+% tutte le necessità.
+
+In SOC confluiscono diverse metodologia per la ralizzazione delle funzionalità
+complesse che implemetano le reali necessità aziendali e quindi le applicazioni.
+
+Un esempio in tal senso è fornito dalla motodologia \emph{Business Process
+Oriented}, secondo cui ogni attività aziendale deve avere un
+preciso obietivo (mettere a disposizione un prodotto o un servizio eventulmente
+anche solo per altre attività) e un ciclo di vita formale, secondo cui ad un
+evento di inizio attività (istanziazione del processo) deve corrispondere un
+evoluzione e un esito sempre individuabile come positivo o fallito.
+
+Ogni attività è quindi un processo composto da una serie di passi, visti
+esternamente come unità atomiche ma che in realtà possono racchiudere a loro
+volta sottoprocessi (componibilità), che vengono svolti sencondo regole di
+evoluzione precise (workflow) che ne stabiliscono le dipendenze logiche e
+temporali. Le sottoattività utilizzate da un processo possono spaziare
+nell'intero dominio aziendale ed essere svolte sotto la responsabilità di diverse
+figure dell'organigramma societario. I tempi di evoluzioni delle attività possono
+essere in generale fortemente variabili e dipendenti da innumerevoli fattori. I
+tal senso i processi, pur trovandosi spesso a garantire strigenti requisiti
+temporali, devono fare i conti con sotto attivita perticolarmente riluttanti a
+rispettare particolari vincoli temporali.
+\\
+
+% A livello informatico
+Nell'ambito di SOC, tale metodologia ha trovato attuazione utilizzando i Web
+Services come tecnologia sia per la realizzazione delle interfaccie delle
+attività, sia per la rappresentazione e la comunicazione dei dati, e
+sviluppando un linguaggio come BPEL [BPEL11Spec] per la codifica dei workflow.
+Tale linguaggio permette di utilizzare i Web Service per accedere alle
+sottoattività e a sua volta espone il processo stesso come un Web Service
+permettendo di realizzare la componibilità e uniformando il modo in cui ogni
+risorsa è vista esternamente. Come può essere intuibile un linguaggio come BPEL
+risulta un strumento molto complesso, ricco di construtti sia per la gestione dei
+flussi interni che per la realizzazione della comunicazione.
+% In particolare risulta critico la realizzazione su tempi lunghi e fortemente
+% variabili di transazioni aziedali () \ldots
+
+Riguardo a BPEL risulta difficile, la realizzazione della sua specifica,
+l'implemetazione della stessa, nonché il suo utilizzo. Attualmento BPEL è
+specificato da documenti, scritti in linguaggio naturale, prodotto di un proceso
+di standardizzazione supervisinato da OASIS [OASISSite]. L'assenza di una
+semantica formale può far si che si creino dei fraintendimenti e che ci possono
+essare interpretazioni diverse del medesimo concetto, facendo sì che le
+implemetazioni infine risultino incompatibili. Per esempio può risultare di
+difficile interpretazione la realazione fra le \emph{Multiple Start Activity} e
+il meccanismo di gestione dei conflitti nell'attribuzione dei messaggi alle
+diverse istanze. 
+
+Il processo di realizzazione di applicazioni BPEL
+risulta difficile e fortemente soggetto ad errori anche per la presenza di
+costrutti complessi come: il parallelismo, la concorrenza, la terminazione
+forzata di attività, la correlazione e la compensazione, quest'ultima utilizzata
+per la realizzazione di ``Long-Running Transaction'', e forse ancora non 
+compresa in tutti i suoi aspetti e potenzialità dagli utilizzatori. 
+
+In tal senso si è pensato che un processo di analisi e di formalizzazione di tali
+costrutti potesse essere utile sia per chi si trova ad utilizzarli sia per coloro
+che ne definiscono le specifiche in linguaggio naturale, in modo tale da renderne
+più chiaro e eventualmente semplificarne gli aspetti più delicati.
+
+Un approccio, per cercare di affrontare queste problematiche, è stato quello di
+utilizzare la teoria dei metodi formali e delle algebre di processo per la
+definizione di una semantica formale e per la realizzazione successiva di una
+piattaforma per la verifica e la dimostrazione di proprietà di applicazioni
+basate su BPEL. Con tale scopo è stato creato Blite [LaPuTie1], una variante
+semplificata di BPEL, che riproduce alcune delle sue funzionalità più
+caratteristiche cercando d'altra parte di semplificarne alcuni aspetti ritenuti
+marginali nella realizzazione del modello Process Orinted. In definitiva in
+Blite è stato selezionato un core di BPEL, per cui fosse abbastanza agevole
+definire una semantica formale e con cui, tramite ``encoding'', fosse possibile riproporre
+tutte le funzionalità del linguaggio.
+
+Il lavoro svolto in questa tesi è da considerarsi a supporto di questa attività,
+come un'ulteriore verifica e confronto del processo di astrazione teorica e
+formale con gli aspetti più concreti e tecnologici, legati all'implementazione di
+un linguaggio per l'orchestrazione distribuita di servizi. Infatti l'obiettivo
+primario è stato quello di realizzare un'implemetazione di Blite che potesse
+essere il più vicino possibile, per caratteristiche ed applicabilità, ai motori
+di esecuzione di BPEL attualmente disponibili. Se da un lato Blite vuole essere
+un'analisi di BPEL fatta tramite un processo di astrazione e formalizzazione, il
+lavoro qui esposto vuole essere a sua volta un'analisi di tale processo, nel
+senso che ne vuole verificare la compatibilità e l'attinenza con le problematiche
+più concrete e tecnologiche presenti nell'ambito della orchestrazione di servizi.
+Di fatto il lavoro non è altro che un test critico di come i costrutti formali,
+utilizzati per fornire la semantica del liguaggio, potessero essere realmente
+implementati in scenari di sowfware di produzione, e che quindi continuassero a
+mantenere un legame a doppio filo con il mondo delle tecnologie da cui hanno
+tratto iniziale ispirazione. 
+
+Oltre che nella direzione sopra esposta, la nostra attività di verifica di
+Blite, si è mossa verso la creazione di strumenti che permettessero
+direttamente di scrivere e simulare in maniera rapida processi definiti con
+esso. Ci è sembrato che un modo molto utile per verificare la funzionalità del
+linguaggio creato, fosse quello di poter scrivere ed eseguire programmi e di avere una
+rappresentazione, il più espressiva possibile, dell'avvenuta esecuzione e di
+come si sia attuata la comunicazione correlata.
+
+In pratica sono stati realizzati due progetti software basati su tecnologia
+Java [Java]: \emph{Blite-se} e \emph{Blide}. 
+
+\textbf{Blite-se} (Blite Service Engine) realizza l'insieme delle funzionalita
+necessarie alla esecuzione di processi definiti tramite Blite, o meglio tramite una sintassi
+leggermente modificata. In particolare fornisce un compilatore (realizzato con la
+tecnologia JavaCC e JJTree []) e um modello statico per la reppresentazione dei
+programmi. Il complitore, come risultato dell'analisi sintattica, produce un modello ad
+oggetti rappresentante il programma stesso. Tale modello, di seguito riferito come
+\emph{Modello Statico}, è in pratica l'albero sitattico i cui nodi sono oggetti
+che espongono funzionalità specifiche in base alla catagoria sintattica rappresentata. 
+
+In Blite-se è reallizato anche il motore (\emph{Engine}) per l'escuzione dei
+processi secondo la semantica formale definita in [LaPuTie1]. Tale parte software
+è stata progettata in riferimento a specifiche che tenessero il più possibile in
+conto delle problematiche reali degli ambiti produttivi (efficenza, scalbilità,
+rquisiti di memoria, ecc). E' stato ideato inoltre, un modello di esecuzione
+basato su il \emph{``Composite Pattern''} [GANGo4], secondo cui ogni attività è
+rappresentabile come un componente che apporta il proprio contributo
+all'esecuzione dell'istanza di processo. Dal modello statico viene costruiro man
+mano a runtime un \emph{Modello Dinamico}, l'albero dei componenti/attività, e
+l'esecuzione procede tramite l'invocazione ricorsiva del metodo
+\icode{doActivity()} su tali camponenti. I sintesi il nostro modello di
+esecuzione può essere definito \emph{Activity Centric} nel senso che le varie
+attività saranno responsabili nel realizzare la loro esecuzione, ma anche nel
+collaborare per far sì che i flussi globali dei processi evolvano secondo quanto
+specificato dalla semantica.
+
+L'Engine è stato realizzato astraendo dagli aspetti più concreti e
+tecnologici quali la comunicazione o il deployment. L'Engine per comunicare con
+le porte dei servizi esterni utilizza un'interfaccia (\icode{EngineChannel}) che
+definisce un modello di comunicazione totalmente generico, che può essere
+utilizzato per realizzare molteplici protocolli per lo scambio di messaggi, dal
+più semplice \emph{``fire and forget''} ai più complessi, che necessitano un
+mantenimento dello stato. Le implemetazioni di tale interfaccia verranno fornite
+dal componente software \emph{Environment}, che realizza un contenitore per
+l'Engine nell'ambito di una precisa tecnologia di comunicazione. 
+
+Attualmente è stato creato un \emph{Local Environment} capace di eseguire
+localmente più Engine e simulare la rete e la comunicazione remota, ma molto
+interessante sarebbe realizzare Environment capaci di supportare direttamente gli
+standard tipici della tecnologia Web Services, come WSDL, SOAP e HTTP, e poter
+quindi far dialogare i nostri programmi Blite con ogni servizio di Internet.
+Altre possibilità potrebbero essere quelle di avere Environment capaci
+di supportare lo standard JBI [JBI], e poter integrare il nostro Engine con ESB
+(Enterprise service bus) che supportano tale tecnologia; o Environment
+integrabili con framework per la comunicazione remota come \emph{IMC} [IMC].
+\\
+
+\textbf{Blide} (Blite Integrated Development Environment) costituisce il
+secondo progetto sofware realizzato. Esso implementa un
+vero e proprio IDE che permette di scrivere rapidamente e testare, tramite
+l'esecuzione di simulazioni, i programmi Blite. Oltre alle consuete
+funzionalità di gestione e editing dei file, compilazione e esecuzione
+integrata dei programmi, Blide fornice un formalismo e una tecnologia per la
+reppresentazione grafica dell'esecuzione delle istanze e la comunicazione fra
+di esse. In pratica le varie istanze vengono monitorate nel loro eseguirsi e
+vengono memorizzate le informazioni necessarie a darne un rappresentazione
+grafica. Alcune parti dell'interfaccia grafica mostrano all'utente le varie
+istanze eseguite e in esecuzione, e quest'ultmo può scegliere fra queste
+andando a comporre rappresentazioni della loro interazione.
+
+Blide è stato realizzato tramite la piattaforma \emph{NetBeans Platform}
+[NBPlatSite], un framework studiato per facilitare lo sviluppo di applicazioni
+Java con interfaccia grafica. E' stato scelto tale progetto per la sua
+completezza e per il modello architetturale offerto. 
+
+NetBeans Platform permette allo sviluppatore di realizzare le proprie
+applicazioni componendo diversi moduli, ciascuno dei quali offre una
+funzionalità specifica. La modularizzazione molto fine e la gestione
+formale delle dipendenze permettono di costruire applicazioni riuscendo a
+selezionare in modo molto mirato solamente i moduli realmente necessari e
+quindi a mantenere limitate le dimensioni complessive dell'applicazione. 
+In questo modo è stato possibile reallizzare un modello di distribuzione
+dell'applicazione basato su Java WebStart [JavaWS], tramite cui gli utenti
+possono eseguire, istallare e aggiornare in maniera trasparente, l'applicazione
+da una pagina Web, semplicemente facendo click su link. Dalla pagina 
+\emph{http://code.google.com/p/blite-se/} è possibile mettere in escuzione e
+istallare sulla propria macchina, per poi effettuare eventualmente anche
+esecuzioni offline, Blide nella sua versione più recente.
+\\
+
+Tutto il progetto sofware realizzato per questa tesi è disponibile online alla
+pagina \emph{http://code.google.com/p/blite-se/}, da cui è possibile ottenere le
+distrubuzioni binarie, la ducumentazione e i sorgenti. Questi ultimi sono
+gestiti con la teccnologia \emph{SVN} [SVN] messa a disposizione da
+\emph{Google} tramite il progetto \emph{Google Code} [GCode] e sono rilasciati
+sotto la licenza \emph{GNU General Public License v3} [GPLv3].
+\\
+
+% Disponendo di un client SVN (esistono implemetazioni per le più diffuse
+% architetture e sistemi operativi) l'intero codice del progetto (Blite-se e Blide) può essre
+% ottenuto con il comando
+% 
+% svn checkout http://blite-se.googlecode.com/svn/trunk/ blite-se-read-only
+
+Dopo aver dato una panoramica delle motivazioni e del lavoro da noi svolto
+andiamo a presentare i contenuti di questa tesi. Nel Capitolo 2 viene introdotto
+il linguaggio per l'orchestrazione partendo da una presentazione ad alto livelo
+di BPEL e dei suoi costrutti caratteristici, di seguito viene presentato Blite,
+fornendo la sintassi e la semantica formale con cui è stato definito.
+L'implemetazione del compilatore necessita di una grammatica formale, e nella
+sezione \ref{gram} vengono presentati i procedimenti che ci hanno portato ad
+ottenerla a partire dalla sintassi astratta definita in [LaPuTie1]. Il capitolo
+è concluso da una sezione in cui vengono commentati alcuni aspetti della
+semantica rispetto alle problematiche d'implementazione.
+
+Nel Capitolo 3 viene presentato il progetto software Blite-se. Dopo aver
+fornito una panoramica del progetto e dei principali moduli che lo compongono si
+presenta nel dettaglio l'architettura del motore di esecuzione, mettendo in
+evidenza il modello per le attività, la gestione del parallelismo e della
+comunicazione, l'implemetazione dei contesti, con la rispettiva gestione delle
+eccezioni e della compensazione.
+
+Il Capitolo 4 costituisce una panoramica delle funzionalità offerte da Blide e
+dalla sua interfaccia utente, e si conclude con la presentazione di un semplice
+caso d'uso. 
+
+Il Capitolo 5 presenta un riepilogo in cui si traggono delle brevi
+conclusioni sul lavoro svolto e si delineano alcune possibilià di ulteriore
+sviluppo per Blite e per i progetti software da noi sviluppati.
