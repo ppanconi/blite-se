@@ -61,12 +61,160 @@ Language Version 2.0'') che ha visto il primo rilascio ufficiale in data
 11 Aprile 2007.
 \\
 
-\vspace{2cm}
-\ldots
-[Dare una panoramica di BPEL e dei costrutti principali. Da capire il taglio e
-il livello di approfondimento.]
-\newpage
+BPEL, come molti linguaggi legati alla tecnologia dei servizi web, ha una
+sintassi basata su XML. Tramite tale sintassi è possibile descrivere un business
+process definendo una logica di orchestrazione che determina le elaborazioni
+interne e le interazioni con i partner del processo, le quali sono, in entrambi
+i casi prodotte dall’esecuzione di attività definite sintatticamente in forma di
+tag XML.
 
+In BPEL possono essere date definizioni di processi \emph{eseguibili}, le quali
+comprendono  tutti i dettagli relativi ai meccanismi interni del processo e
+descrivono in maniera completa l’orchestrazione dei servizi web partner; 
+processi di questo tipo possono essere eseguiti da un motore di esecuzione BPEL. 
+BPEL permette anche di definire processi \emph{astratti}, che costituiscono una
+descrizione del flusso di informazioni tra i partner ed il processo e non
+specificano i dettagli delle elaborazioni interne al processo; un processo
+di questo tipo non può essere eseguito, poiché mancano i dettagli relativi     
+all'orchestrazione, e descrive piuttosto una coreografia di messaggi.
+Noi siamo interessati alla descrizione completa dell'orchestrazione di un
+insieme di servizi web pertanto
+prenderemo in considerazione solo i processi eseguibili.
+
+La definizione di un processo BPEL include la definizione delle relazioni tra
+il processo ed i suoi partner, rappresentate dai cosiddetti partner link. Tra le
+definizioni WSDL utilizzate dal processo devono essere presenti le definizioni
+di uno o più partner link type, espresse tramite uno o più elementi della
+forma:
+
+\begin{verbatim}
+<partnerLinkType name="ncname">
+   <role name="ncname">
+      <portType name="qname"/>
+   </role>
+   <role name="ncname">?
+      <portType name="qname"/>
+   </role>
+</partnerLinkType> 
+\end{verbatim}
+
+Ad ogni partner link type viene associato un nome e due \emph{ruoli}, ognuno dei
+quali rappresenta una delle due estremità del link ed indica la specifica 
+interfaccia (port type) WSDL che deve essere implementata dall'entità posta a
+a tale estremità (il processo o uno dei suoi partner). Nel caso in cui uno dei
+due ruoli usufruisce delle operazioni dell’altro senza che ad esso sia richiesto
+di fornire specifici servizi, viene indicato un solo elemento \texttt{<role>}
+(quello relativo all’estremità a cui sono richieste funzionalità specifiche).
+Sottolineiamo che  la definizione dei partner link type deve essere contenuta
+in un documento WSDL. Di fatto i partner link type a due ruoli introducono la
+novità rispetto a WSDL e servono ad estendere il concetto di
+\emph{contratto} un una comunicazione asincrona in cui il richidente del
+servizio può essere non noto in fase di sviluppo del provider.
+
+La definizione del processo BPEL invece contiene le definizioni dei partner
+link veri e propri, espresse da uno o più elementi \texttt{<partnerLink>}
+annidati nell’elemento \texttt{<partnerLinks>}:
+
+\begin{verbatim}
+<partnerLinks>
+   <partnerLink name="ncname" partnerLinkType="qname"
+                myRole="ncname"? partnerRole="ncname"?>+
+   </partnerLink>
+</partnerLinks>
+\end{verbatim}
+
+Ciascun partner link viene definito indicando il nome del partner link type e
+indicando quali sono il ruolo del processo (tramite l'attributo myRole) ed il
+ruolo del partner (tramite l’attributo partnerRole).
+
+
+Una caratteristica importante di BPEL è la possibilità di utilizzare delle
+strutture dati particolari, dette \emph{endpoint reference}, che rappresentano
+l'indirizzo fisico di un partner del processo. Gli endpoint reference possono
+essere copiati da una variabile ad un'altra oppure possono essere inviati
+all'interno dei messaggi trasmessi tra processo e partner; ciò permette di
+determinare gli indirizzi fisici degli stessi partner in modo dinamico, durante il corso
+dell'esecuzione del processo.
+
+In questo modo un processo BPEL non deve per forza conoscere
+fin dall'inizio i suoi partner effettivi, e come precedentemente fatto notare
+la cambinazione endpoint reference con i partner link type bidirezionali
+permette di realizzare l'indipendenza dell'implemetazione e della locazione di
+una parte della comunicazione asincrono pur lasciando la possibilità di un
+controllo statico dei tipi.
+
+La possibilità di modificare le connessioni tra il processo ed i propri partner
+in modo dinamico caratterizza in modo importante il linguaggio BPEL 
+e rimanda al passaggio dei nomi (name-passing)
+attuato nelle algebre di processo come il $\pi$-calculus.
+
+Un processo BPEL può essere eseguito su un dato motore di esecuzione, che
+ha naturalmente anche la funzione di server, cioè la funzione di accogliere le
+richieste che provengono dai client che invocano le operazioni dell'interfaccia
+WSDL del processo. Uno stesso processo può essere istanziato più volte, in
+modo che ogni istanza provveda a soddisfare una specifica richiesta pervenuta
+e che più richieste possano essere processate contemporaneamente; solo certe
+attività interne del processo possono determinare la creazione di una nuova
+istanza e tipicamente queste sono attività per la ricezione di un messaggio.
+
+Affinché l'esecuzione di ogni istanza avvenga in modo corretto può essere 
+necessario inserire nei messaggi scambiati tra processo e partner delle
+informazioni di correlazione, che permettono di associare ciascun messaggio 
+all'istanza corretta a cui è destinato o da cui proviene. Tali informazioni di
+e correlazione sono definite attraverso il concetto di proprietà e vengono
+associate ai dati contenuti nei messaggi mediante il meccanismo dell'aliasing
+delle proprietà. 
+
+\begin{verbatim}
+<property name="ncname" type="qname"/>
+<propertyAlias propertyName="qname" messageType="qname"
+               part="ncname" query="queryString"/>
+
+\end{verbatim}
+
+Una proprietà è definita tramite un elemento \texttt{<property>} associando un
+nome ad un tipo di dati. Ad esempio la proprietà CodiceFiscale definisce
+un un'informazione di tipo stringa (che corrispondere al codice fiscale di un
+certo utente):
+
+\begin{verbatim}
+<property name="CodiceFiscale" type="xsd:string"/>
+\end{verbatim}
+
+Tale proprietà deve essere individuata all'interno dei messaggi scambiati tra
+processo e partner. Ciò avviene in virtù della funzione di corrispondenza
+definita attraverso gli elementi \texttt{propertyAlias}. Con il codice di
+esempio che segue, si dichiara che la proprietà \texttt{CodiceFiscale} sarà
+contenuta nei messaggi con formato \texttt{richiestaConteggioFiscale} ed
+esattamente nella parte \texttt{cfUtente}:
+
+\begin{verbatim}
+<propertyAlias propertyName="CodiceFiscale"
+               messageType="richiestaConteggioFiscale"
+               part="cfUtente"/>
+</bpws:propertyAlias>
+\end{verbatim}
+
+Tipiche informazione di correlazione possono essere il numero di un ordine,
+il codice di un cliente, l'identificativo di una transazione, etc \ldots .
+Quando le informazioni contenute nei messaggi inviati o ricevuti dal processo 
+devono essere confrontate con le informazioni di correlazione possedute dal
+processo, le attività tramite cui tali messaggi sono inviati o ricevuti devono 
+indicare uno o più correlation set, che sono insiemi di proprietà tra di loro
+attinenti. I correlation set che verranno usati dal processo devono essere 
+dichiarati in un elemento \texttt{<correlationSets>} con la seguente sintassi:
+
+\begin{verbatim}
+<correlationSets>?
+   <correlationSet name="ncname" properties="qname-list"/>+
+</correlationSets>
+\end{verbatim}
+
+dove \texttt{qname-list} è una lista di nomi di proprietà separati da uno
+spazio.
+
+
+\vspace{1cm}
 Nonostante BPEL sia ampiamente documentato da specifiche e standard ufficiali e
 sia disponibile in diverse implemetazioni, le problematiche realitive al suo
 uso non mancano e alcune di esse possono essere attribuite alla
