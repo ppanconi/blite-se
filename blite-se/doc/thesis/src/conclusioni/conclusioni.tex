@@ -2,6 +2,7 @@
 
 \section{Osservazioni}
 
+
 Realizzare un'implemetazione del linguaggio ci ha permesso di analizzare
 approfonditamente la semantica formale definita per Blite e di capire quali
 aspetti di essa risultassero particolarmente critici in fase di implementazione,
@@ -9,110 +10,179 @@ e più in generale ci permesso di fare alcune riflessione su BPEL e
 sul significato di alcune sue funzionalità.
 \\
 
-Un aspetto particolarmente critico è capire a fondo la semantica del
-parallelismo, inteso sia a livello di più istanze eseguite in un medesimo Deployment che a
-livello interno di istanza definito delle \emph{FlowActivity}. 
+Il lavoro svolto in questa tesi non è da considerarsi esaustivo
+ma vorrebbe essere solamente l'inizio di un procedimento iterativo, il cui fine
+dovrebbe essere quello di ottenere uno strumento funzionale per
+l'orchestrazione di servizi, con una semantica rigorosa da cui sia possibile
+ricavare implemetazioni coerenti. 
 
-In particolare per il parallelismo interno è lecito domandarsi se debba essere
-realmente implementato tramite i meccanismi di \emph{multithreading} messi a
-disposizione dal sotto sistema hardware/software\footnote{Oggi giorno il
-parallelismo harware è presente praticamente su qualsiasi computer, ormai anche i
-più econominci portatili si basono su tecnologia Dual-Core che indefinitiva mette
-a disposizione due unità di calcolo.}, oppure debba essere gestito tramite uno
-scheduling interno direttamente realizzato dall'Engine di esecuzione.
+In particolare abbiamo capito che un linguaggio per l'orchestrazione di servizi,
+come BPEL, risulta essere uno strumento molto complesso, e per questo
+riuscirne a sintetizzare gli aspetti cruciali in una semantica formale è
+veramente un'attività delicata. Contemporaneamente sviluppare una
+implemetazione di tale semantica, in rispetto dei requisiti che ci possono
+essere in sistemi di produzione, non è da meno complicato. 
 
-Per il parallelismo interno alla singola istanza abbiamo le due regole:
-
-$$
-\begin{array}{c} 
-\prooftree
-\xinst{\xsigma}{\xs_1}
-\bpeltsarrow{\xalpha}
-\xinstnostate{\xsigma'}{\xs_1'}
-\quad
-\xalpha \notin \{\xexitl, \xthrl\}
-\quad
-\neg (\nothr{\xs_2}\! \vee\, \noexit{\xs_2})
-\justifies \
-\xinst{\xsigma}{\xs_1 \xpar \xs_2}
-\bpeltsarrow{\xalpha}
-\xinstnostate{\xsigma'}{\xs_1' \xpar \xs_2}
-\using \; \rulelabel{$\x{par}_1$}
-\endprooftree
+Per questo può essere utile che le varie attività trovino sostegno reciproco.
+Come l'implemetazione è guidata dalla semantica, così può essere utile che
+l'esperienza ricavata dal processo di sviluppo ritorni nella fase di specifica
+formale per apportare eventualmente revisioni e migliorie, e cosi
+iterativamente fino al raggiungimento di un accettabile grado di funzionalità.
 \\
-\prooftree
-\xinstnostate{\xsigma}{\xs_1}
-\bpeltsarrow{\xalpha}
-\xinstnostate{\xsigma}{\xs_1'}
-\quad
-\xalpha \in \{\xexitl, \xthrl\}
-\justifies \
-\xinstnostate{\xsigma}{\xs_1 \xpar \xs_2}
-\bpeltsarrow{\xalpha}
-\xinstnostate{\xsigma}{\xs_1' \xpar \xhalt{\xs_2}}
-\using \; \rulelabel{$\x{par}_2$}
-\endprooftree
-\end{array} 
-$$
 
-più la congrueza strutturale che ci dice che $\xs_1 \xpar \xs_2  \xequiv \xs_2
-\xpar \xs_1$. Queste di fatto definisco la non sequezialità delle azioni di
-$\xs_1$ rispetto quelle di $\xs_2$ e viceversa, con l'eccezione delle azioni
-$\xthr$ e $\xexit$ che risultano avere un priorità rispetto a tutte le altre.
+% Realizzando l'implementazione abbiamo capito che potrebbe essere interessante
+% a livello formale porre più enfasi sul sistema di correlazione, al fine di
+% ridurre al minimo i conflitti che si possano creare nell'attribuzione dei
+% messaggi alle diverse istanze di processo. 
+% 
+% In particolare potrebbe valere la pena di svincolare lo stato della correlazione
+% dallo stato interno della memoria dei processi e di associarlo solamente alla
+% comunicazione dell'informazione.
 
-Con tali regole abbiamo che il seguente comportamento risulta univocamente
-determinato:
+%Per esempio 
+Un punto molto critico in cui la specifica della semantica è
+risultata partiolarmente lontana dalle soluzioni implemetative è stato quello
+in cui essa definisce la correlazione dei messaggi con le diverse istanze di
+processo e risolve il problema delle \emph{multiple start activity}. In
+particolare la sematica di Blite specifica tale comportamento in maniera molto
+brillante e con un forlmalismo estremamente sintetico ed efficace, ma che mal
+si presta a guidare lo sviluppo del software. 
+
+In un'implemetazione che usa il \emph{multithreading} per realizzare il
+parallelismo, non ha senso parlare di più istanze di processo che eseguono
+contemporaneamente la ricezione sulla medesima porta, per cui diventa inutile
+valutare una priorità nell'attribuzione dei messaggi alle diverse istanze.
+
+Di fatto un'istanza di processo, nel momento in cui si trova nella condizione
+di poter consumare un messaggio , può stabilire se questo è a lei
+correlato semplicemente valutando la funzione booleana:
 
 $$
 \begin{array}{c}
-\xthr \xpar \xsla_1 \xsucc \xsla_2 \xpar \xrec{\arr{\xp}}{\xo}{\arr{\xx}}
-\xsucc \xs \bpeltsarrow{\xthrl}\\
-\xstop \xpar \xhalt{\xsla_1 \xsucc \xsla_2} \xpar
-   \xhalt{\xrec{\arr{\xp}}{\xo}{\arr{\xx}} \xsucc \xs } \xequiv \\
-   \xstop \xpar \xhalt{\xsla_1}
+\x{corr}(\xcorr, \xsigma, \xx, \xv	) =
+\left\{
+\begin{array}{l@{\hspace{2ex}}l}
+\\[-.50cm]
+false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} \xx \in
+\xcorr\ \, \wedge \, \xv \neq \xsigma(\xx)
+\\[-.05cm] true & \textrm{altrimenti} \\
+\end{array}
+\right.
+\\[.7cm]
+%\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
+%\emptyset \qquad
+\x{corr}(\xcorr, \xsigma, \arr{}, \arr{}) =
+\emptyset
+\\[.7cm]
+\prooftree
+\x{corr}(\xcorr, \xsigma, \xx_1, \xv_1) = b'
+\quad
+\x{corr}(\xcorr, \xsigma, \bar{\xx}_2, \bar{\xv}_2) = b''
+\justifies \
+\x{corr}(\xcorr, \xsigma, (\xx_1,\bar{\xx}_2), (\xv_1,\bar{\xv}_2)) =
+b' \wedge b''
+\endprooftree
+\\[.7cm]
 \end{array}
 $$
 
-con l'unica azione osservabile $\xthrl$ e in nessun modo si può ottenere un
-comportamento del tipo:
 
-$$
-\begin{array}{c}
-\xthr \xpar \xsla_1 \xsucc \xsla_2 \xpar \xrec{\arr{\xp}}{\xo}{\arr{\xx}}
-\xsucc \xs \bpeltsarrow{\xthrl} \\
-\xstop \xpar \xsla_1 \xsucc \xsla_2 \xpar 
-\xrec{\arr{\xp}}{\xo}{\arr{\xx}} \xsucc \xs
-\bpeltsarrow{\xrecl{\arr{\xp}\,}{\,\xo\,}{\,\arr{\bar{\xx}}}}\\
+Se dal punto di vista dell'attribuzione dei messaggi alle istanze il problema
+può considerarsi risolto, rimane il fatto di distinguere se un
+messaggio in arrivo ne debba produrre o meno una nuova. Il
+\icode{ProcessManager} deve di fatto prendere questa decisione al momento della
+ricezione in base a le informazioni di cui dispone in quel momento. 
 
-\xstop \xpar \xsla_1 \xsucc \xsla_2 \xpar 
-\xs \xequiv \\
+In generale si potrebbe pensare di risolvere semplicemente il problema a livello
+sintattico\footnote{La soluzione può sembrare ingenua ma per esempio è ciò che
+di fatto fa Oralce Process Manager.}, rendendo distinguibili le porte di
+ricezione su cui vengono create le istanze (\emph{create port}). E' ovvio che questa tecnica non permetta di realizzare le multiple start
+activity, in cui una porta è contemporaneamente di creazione e di possibile
+correlazione. Per realizzare le multiple start activity ci deve essere un
+flusso d'informazione che dalle istanze passa al \icode{ProcessManager} nel
+momento in cui viene assegnato un valore ad una variabile producendo
+l'istanziazione di uno \emph{stato di correlazione} associato ad una porta.
 
-\xstop \xpar \xhalt{\xsla_1 \xsucc \xsla_2} \xpar
-   \xhalt{ \xs } \xequiv \ldots \xequiv 
-\\
-\xstop \xpar \xhalt{\xsla_1}
+Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
+un'istanza in grado di correlare con un messaggio in arrivo ad una porta, e in
+particolare per le multiple start activity può utilizzare tale informazione per
+distinguere se trattare la porta come di creazione o di correlazione.
 
-\end{array}
-$$
-
-in cui si produce la sequenza di azioni $\xthrl ,
-\xrecl{\arr{\xp}}{\xo}{\arr{\bar{\xx}}}$.
-
-Ovviamente se il parallelismo interno è realizzato tramite la tecnologia di
-multithreading, ovvero con diversi thread che eseguono che esguono i flussi
-della Flow Activity, 
-
-In $\rulelabel{$\x{par}_1$}$ non è esplicitata nessuna regola di
-scheduling in fase di implemetazione il parallelismo definito dalla \emph{Flow
-Activity} può essere realizzato utilizzando il multithreading di sistema. In
-generate la combinazione dalla regola $\rulelabel{$\x{par}_1$}$  
-
-A questo punto
-però risulta impossibile avere un grado di controllo così elevato
-
-
-
+E' chiaro che la semantica attuale di Blite specifica alla perfezione il
+comportamento voluto, ma crea un notevole scarto tra la sfera teorica e quella
+tecnologica che rende difficile capire quanto l'implementazione realizzi del
+tutto tale comportamento. Inoltre diversi processi di svluppo possono attuare
+strategie di implemetazione tra loro completamente diversi aumentando di fatto
+la probabilità di difformità.
+  
 \section{Sviluppi}
+
+Nella direzione dello sviluppo software le attività da poter svolgere sono
+essenzialmente due:
+
+\begin{itemize}
+  \item Sviluppare diversi Enviroment per l'Engine di Blite per realizzare
+  diversi strategine di comunicazione.
+  \item Migliorare il formalismo e la tecnologia grafica usata per la
+  rappresentazione delle istanze in Blide.
+\end{itemize} 
+
+Per quanto riguarda il primo punto come già più volte detto le possibilità sono
+molteplici. 
+
+Un primo posso molto semplice potrebbe essere quello di creare un Environmet
+che supporti la comunicazione remota fra programmi Blite. In questo caso si
+potrebbe utilizzare una tecnologia nativa per implementare la comunicazione. Per
+esempio utilizzando le socket e la Java Object Serialization si potrebbe di
+fatto scambiare in rete gli oggetti attualmente utilizzati dal Local
+Environment e avere quindi la possibilità di
+distribuire i Deployment Blite su diversi nodi di rete. Ovviamente per poter
+fare questo bisogna che ai nomi dei servizi sia associato un indirizzo di rete.
+
+Questa associazione può essere fatta direttamente nel file di definizione di
+Blite, in pratica la sintassi stessa delle invoke potrebe esplicitare
+l'indirizzo dell'host a cui è diretto il messaggio
+
+
+Alternativamente per non appesantire troppo la struttura del codice potrebbe
+essere prevista una sezione a parte in cui si va a legare un nome simbolico utilizzato
+nelle invoke con un indirizzo fisico.
+
+Sicuramente molto più interessante sarebbe poter far dialogare i nostri
+programmi Blite con altri tipi di servzi definiti con linguaggi e tecnologia
+diversa, primi fra tutti i Web Service. Per far questo la cosa fondamentale è
+creare un meccanismo che relazioni il codice Blite alle definizioni WSDL.
+
+In pratica serve da una parte ricavare una definizione dell'interfaccia del
+processo Blite, e dall'altra associare le operazioni d'invocazione ad alcune
+definizioni di servizi presistenti.
+
+Il processo di creazione dell'interfaccia può essere fatto per esempio
+combinando un attività utente con un processo automatico.
+Tramite un analisi del codice Blite si potrebbe pensare di creare uno
+scheletro per la definizione WSDL che poi l'utente possa successivamente
+raffinare andando per esempio ad esplicitare i tipi XSD delle parti dei
+messaggi, alcuni riferimenti dei nemaspace o alcuni dettagli del bainding
+WSDL/SOAP. In questo modo non ci sarebbe ovviamente nessun controllo statico che
+i messaggi ricevuti siano usati all'interno del codice Blite in maniera conforme
+con il tipo esplicitato nel contratto, ma questo concorda con la gestione
+attuale in cui a runtime si attua una conversione implicita dei tipi o se in
+ultima analisi nessuna conversione è applicabile si genera un errore.
+
+L'associazione delle operazioni di output con le definizioni WSDL dei servizi
+partner può essere fatta inserendo alcune meta annotazioni nel codice Blite
+associando per esempio i nomi dei servizi alla coppia
+$\langle$service:name/port:name$\rangle$
+
+Una volta che si dispone di un meccanismo che permetta di legare i programmi Blite
+alla tecnologia WSDL, la realizzazione di un Environment che supporti JBI si
+riduce a operazioni di manipolazione di XML, in quanto è sufficente mettere a
+punto dei traduttori che dalla specifica delle interfaccia del programma Blite 
+
+
+Per quanto riguarda Blide le
+
+
 
 
 

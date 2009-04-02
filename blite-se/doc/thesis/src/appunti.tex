@@ -22,3 +22,122 @@
 % totalmente portabile e sicura, e accedere alle risorese secondo un modello di
 % elaborazione formale altamente produttivo e multipiattaforma, non esauirsce
 % tutte le necessità.
+
+
+Un aspetto particolarmente critico è capire a fondo la semantica del
+parallelismo, inteso sia a livello di più istanze eseguite in un medesimo Deployment che a
+livello interno di istanza definito delle \emph{FlowActivity}. 
+
+In particolare per il parallelismo interno è lecito domandarsi se debba essere
+realmente implementato tramite i meccanismi di \emph{multithreading} messi a
+disposizione dal sotto sistema hardware/software\footnote{Oggi giorno il
+parallelismo harware è presente praticamente su qualsiasi computer, ormai anche i
+più econominci portatili si basono su tecnologia Dual-Core che indefinitiva mette
+a disposizione due unità di calcolo.}, oppure debba essere gestito tramite uno
+scheduling interno direttamente realizzato dall'Engine di esecuzione.
+
+Per il parallelismo interno alla singola istanza abbiamo le due regole:
+
+$$
+\begin{array}{c} 
+\prooftree
+\xinst{\xsigma}{\xs_1}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs_1'}
+\quad
+\xalpha \notin \{\xexitl, \xthrl\}
+\quad
+\neg (\nothr{\xs_2}\! \vee\, \noexit{\xs_2})
+\justifies \
+\xinst{\xsigma}{\xs_1 \xpar \xs_2}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma'}{\xs_1' \xpar \xs_2}
+\using \; \rulelabel{$\x{par}_1$}
+\endprooftree
+\\
+\prooftree
+\xinstnostate{\xsigma}{\xs_1}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma}{\xs_1'}
+\quad
+\xalpha \in \{\xexitl, \xthrl\}
+\justifies \
+\xinstnostate{\xsigma}{\xs_1 \xpar \xs_2}
+\bpeltsarrow{\xalpha}
+\xinstnostate{\xsigma}{\xs_1' \xpar \xhalt{\xs_2}}
+\using \; \rulelabel{$\x{par}_2$}
+\endprooftree
+\end{array} 
+$$
+
+più la congrueza strutturale che ci dice che $\xs_1 \xpar \xs_2  \xequiv \xs_2
+\xpar \xs_1$. Queste di fatto definisco la non sequezialità delle azioni di
+$\xs_1$ rispetto quelle di $\xs_2$ e viceversa, con l'eccezione delle azioni
+$\xthr$ e $\xexit$ che risultano avere un priorità rispetto a tutte le altre.
+
+Con tali regole abbiamo che il seguente comportamento risulta univocamente
+determinato:
+
+$$
+\begin{array}{c}
+\xthr \xpar \xsla_1 \xsucc \xsla_2 \xpar \xrec{\arr{\xp}}{\xo}{\arr{\xx}}
+\xsucc \xs \bpeltsarrow{\xthrl}\\
+\xstop \xpar \xhalt{\xsla_1 \xsucc \xsla_2} \xpar
+   \xhalt{\xrec{\arr{\xp}}{\xo}{\arr{\xx}} \xsucc \xs } \xequiv \\
+   \xstop \xpar \xhalt{\xsla_1}  
+\end{array}
+$$
+
+con l'unica azione osservabile $\xthrl$, (comportamento
+\rulelabel{$\x{c}_1$}). In nessun modo si può ottenere un comportamento del
+tipo:
+
+$$
+\begin{array}{c}
+\xthr \xpar \xsla_1 \xsucc \xsla_2 \xpar \xrec{\arr{\xp}}{\xo}{\arr{\xx}}
+\xsucc \xs \bpeltsarrow{\xthrl} \\
+\xstop \xpar \xsla_1 \xsucc \xsla_2 \xpar 
+\xrec{\arr{\xp}}{\xo}{\arr{\xx}} \xsucc \xs
+\bpeltsarrow{\xrecl{\arr{\xp}\,}{\,\xo\,}{\,\arr{\bar{\xx}}}}\\
+
+\xstop \xpar \xsla_1 \xsucc \xsla_2 \xpar 
+\xs \xequiv \\
+
+\xstop \xpar \xhalt{\xsla_1 \xsucc \xsla_2} \xpar
+   \xhalt{ \xs } \xequiv \ldots \xequiv 
+\\
+\xstop \xpar \xhalt{\xsla_1}
+
+\end{array}
+$$
+
+in cui si produce la sequenza di azioni $\xthrl ,
+\xrecl{\arr{\xp}}{\xo}{\arr{\bar{\xx}}}$ (comportamento
+\rulelabel{$\x{c}_2$}).
+
+Ovviamente se il parallelismo interno è realizzato tramite la tecnologia di
+multithreading, ovvero con diversi thread che eseguono i flussi
+della Flow Activity, risulta molto delicato attribuire una priorità rigorosa
+all'attivita $\xthr$.
+
+La nostra implemetazione può in generale utilizzare diversi thread per eseguire i
+rami delle flow activity (si veda \ldots) e il modello Activity Centric
+reallizato, prevede che ogni attività controlli di non trovarsi in un contesto
+fallito prima di eseguire i passi della propria implemetazione (ovviamente in
+accordo con la semantica delle attività \emph{short-lived}). In questo modo si
+realizza la semantica specificata, a meno dell'indeterminismo introdotto dal
+sottosistema di multithreading. 
+% Di fatto se si realizzasse un osservatore
+% esterno, capace di registrare le azioni compiute dal sistema secondo una
+% cronologia del tutto temporale, niente escluderebbe l'osservazione di
+% comportamenti tipo \rulelabel{$\x{c}_2$}.
+
+Di fatto 
+
+% In $\rulelabel{$\x{par}_1$}$ non è esplicitata nessuna regola di
+% scheduling in fase di implemetazione il parallelismo definito dalla \emph{Flow
+% Activity} può essere realizzato utilizzando il multithreading di sistema. In
+% generate la combinazione dalla regola $\rulelabel{$\x{par}_1$}$  
+% 
+% A questo punto
+% però risulta impossibile avere un grado di controllo così elevato
