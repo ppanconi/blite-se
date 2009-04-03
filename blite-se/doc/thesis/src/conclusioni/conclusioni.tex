@@ -72,7 +72,7 @@ false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} \xx \in
 %\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
 %\emptyset \qquad
 \x{corr}(\xcorr, \xsigma, \arr{}, \arr{}) =
-\emptyset
+true
 \\[.7cm]
 \prooftree
 \x{corr}(\xcorr, \xsigma, \xx_1, \xv_1) = b'
@@ -94,7 +94,7 @@ messaggio in arrivo ne debba produrre o meno una nuova. Il
 ricezione in base a le informazioni di cui dispone in quel momento. 
 
 In generale si potrebbe pensare di risolvere semplicemente il problema a livello
-sintattico\footnote{La soluzione può sembrare ingenua ma per esempio è ciò che
+sintattico\footnote{La soluzione può sembrare ingenua, ma per esempio è ciò che
 di fatto fa Oralce Process Manager.}, rendendo distinguibili le porte di
 ricezione su cui vengono create le istanze (\emph{create port}). E' ovvio che questa tecnica non permetta di realizzare le multiple start
 activity, in cui una porta è contemporaneamente di creazione e di possibile
@@ -104,9 +104,11 @@ momento in cui viene assegnato un valore ad una variabile producendo
 l'istanziazione di uno \emph{stato di correlazione} associato ad una porta.
 
 Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
-un'istanza in grado di correlare con un messaggio in arrivo ad una porta, e in
-particolare per le multiple start activity può utilizzare tale informazione per
-distinguere se trattare la porta come di creazione o di correlazione.
+un'istanza in grado di correlare con un messaggio in arrivo ad una
+porta\footnote{Ovviamente la correlazione è solo potenziale inquanto non vi è
+la garanzia che essa avvenga certamente, l'istanza nella sua evoluzione può
+anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
+per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
 
 E' chiaro che la semantica attuale di Blite specifica alla perfezione il
 comportamento voluto, ma crea un notevole scarto tra la sfera teorica e quella
@@ -114,6 +116,12 @@ tecnologica che rende difficile capire quanto l'implementazione realizzi del
 tutto tale comportamento. Inoltre diversi processi di svluppo possono attuare
 strategie di implemetazione tra loro completamente diversi aumentando di fatto
 la probabilità di difformità.
+
+In tal senso speriamo che questa nostra esperienza e queste osservazioni
+aiutino ad affincare alla sematica attuale una versione in cui i formalismi e
+le strategie di specifica siano più in linea con le necessità di svluppo che
+abbiamo incontrato, e che le soluzioni da noi ideate possano in qualche modo
+essere d'ispirazione.
   
 \section{Sviluppi}
 
@@ -130,7 +138,7 @@ essenzialmente due:
 Per quanto riguarda il primo punto come già più volte detto le possibilità sono
 molteplici. 
 
-Un primo posso molto semplice potrebbe essere quello di creare un Environmet
+Un primo posso, molto semplice, potrebbe essere quello di creare un Environmet
 che supporti la comunicazione remota fra programmi Blite. In questo caso si
 potrebbe utilizzare una tecnologia nativa per implementare la comunicazione. Per
 esempio utilizzando le socket e la Java Object Serialization si potrebbe di
@@ -141,46 +149,83 @@ fare questo bisogna che ai nomi dei servizi sia associato un indirizzo di rete.
 
 Questa associazione può essere fatta direttamente nel file di definizione di
 Blite, in pratica la sintassi stessa delle invoke potrebe esplicitare
-l'indirizzo dell'host a cui è diretto il messaggio
+l'indirizzo dell'host a cui è diretto il messaggio.
 
+\begin{verbatim}
+    inv <"hostserver.dom/serviceName"> operation (params) 
+\end{verbatim}
 
-Alternativamente per non appesantire troppo la struttura del codice potrebbe
-essere prevista una sezione a parte in cui si va a legare un nome simbolico utilizzato
-nelle invoke con un indirizzo fisico.
+Alternativamente per non appesantire troppo la struttura del codice (specialmente
+nel caso di partner link bidirezionali) potrebbe essere prevista una sezione a
+parte in cui si va a legare un nome simbolico utilizzato nelle invoke con un
+indirizzo fisico.
 
-Sicuramente molto più interessante sarebbe poter far dialogare i nostri
-programmi Blite con altri tipi di servzi definiti con linguaggi e tecnologia
-diversa, primi fra tutti i Web Service. Per far questo la cosa fondamentale è
-creare un meccanismo che relazioni il codice Blite alle definizioni WSDL.
+Sicuramente molto più interessante sarebbe poter far dialogare i nostri programmi
+Blite con altri tipi di servzi definiti con linguaggi e tecnologie diverse,
+primi fra tutti i Web Service. Per far questo la prima cosa fondamentale è creare un
+meccanismo che relazioni il codice Blite alle definizioni WSDL.
 
 In pratica serve da una parte ricavare una definizione dell'interfaccia del
 processo Blite, e dall'altra associare le operazioni d'invocazione ad alcune
-definizioni di servizi presistenti.
+definizioni di servizi preesistenti.
+
+Si potrebbe pensare di reallizzare un tool \texttt{blite2WSDL} che preso in input
+un file \texttt{.blt} esegua le operazioni necesarie a impostare un legame fra il
+programma e le definizioni WSDL.
 
 Il processo di creazione dell'interfaccia può essere fatto per esempio
-combinando un attività utente con un processo automatico.
-Tramite un analisi del codice Blite si potrebbe pensare di creare uno
-scheletro per la definizione WSDL che poi l'utente possa successivamente
-raffinare andando per esempio ad esplicitare i tipi XSD delle parti dei
-messaggi, alcuni riferimenti dei nemaspace o alcuni dettagli del bainding
+combinando un'attività utente con un processo automatico. 
+Tramite un'analisi del codice Blite si potrebbe pensare di creare uno
+scheletro per la definizione WSDL, che l'utente possa successivamente
+raffinare, andando per esempio ad esplicitare i tipi XSD delle parti dei
+messaggi, alcuni riferimenti dei namespace o alcuni dettagli del bainding
 WSDL/SOAP. In questo modo non ci sarebbe ovviamente nessun controllo statico che
-i messaggi ricevuti siano usati all'interno del codice Blite in maniera conforme
-con il tipo esplicitato nel contratto, ma questo concorda con la gestione
-attuale in cui a runtime si attua una conversione implicita dei tipi o se in
-ultima analisi nessuna conversione è applicabile si genera un errore.
+i messaggi ricevuti siano usati all'interno del codice Blite, in maniera
+conforme con il tipo esplicitato nel contratto, ma questo concorda con la gestione
+attuale, in cui a runtime si attua una conversione implicita dei tipi o, se in
+ultima analisi nessuna conversione è applicabile, si genera un errore. 
 
 L'associazione delle operazioni di output con le definizioni WSDL dei servizi
-partner può essere fatta inserendo alcune meta annotazioni nel codice Blite
+partner può essere fatta inserendo alcune meta-annotazioni nel codice Blite
 associando per esempio i nomi dei servizi alla coppia
-$\langle$service:name/port:name$\rangle$
+$\langle$service:name/port:name$\rangle$ di una definizione WSDL che deve
+essere disponibile a runtime.
 
-Una volta che si dispone di un meccanismo che permetta di legare i programmi Blite
-alla tecnologia WSDL, la realizzazione di un Environment che supporti JBI si
-riduce a operazioni di manipolazione di XML, in quanto è sufficente mettere a
-punto dei traduttori che dalla specifica delle interfaccia del programma Blite 
+Il tool \texttt{blite2WSDL} nella sua esecuzione potrebbe anche fare alcuni
+controlli sulla conformità della struttura sintattica fra l'operazione Blite di
+invocazione e la definizione WSDL associata.
 
+Una volta che si dispone dei file WSDL e delle associazioni fra questi e le
+operazioni di comunicazione di Blite, si può pensare di generare un tool
+(\texttt{java2Blite}) in grado di produrre il codice Java delle classi che a
+runtime andranno ad eseguire l'effettiva integrazione fra il framework per Web
+Service utilizzato (ad esempio uno fra JAX-WS \cite{JAXWS}, Axis2 \cite{AXIS},
+CXF \cite{CXF}, ecc) e l'interfaccia \icode{EngineChannel}. Il nostro tool
+dovrà essere utilizzato in sinergia del tool del framework scelto che produce il codice Java a partire dalle definizioni
+WSDL e dovrà attuare un integrazione di tale codice.
 
-Per quanto riguarda Blide le
+Probablimente in fase di invocazione è anche possibile evitare la generazione
+statica del codice e utilizzare le API che framework come JAX-WS o WSIF mettono
+a disposizione per l'invocazione dinamica di Web Service.
+
+Un approccio totalmente dinamico in fase di ricezione risulta anche possibile
+limitandosi ad una versione specifica del protocollo SOAP.
+
+Probabilmente risulta più facile realizzare un Environment compace di dialogare
+con un Enterprise Service Bus basato su JBI in quanto tale standard è stato
+ideato appositamente per l'integrazione di \emph{Service Engine} e quindi
+esistono oltre ad una serie di API appositamente studiate una buona
+documentazione e diversi esempi su come realizzare tale l'integrazione
+\cite{OPENESB}.
+\\
+
+Per quanto riguarda Blide l'attività potrebbe concentrarsi sull'apportare
+migliorie al formalismo grafico utilizzato per rappresentare l'esecuzione delle
+istanze e a potenziarne l'implementazione, nel senso di fornire un maggiore
+grado di interattività. Si potrebbe dare all'utente la possibilità di spostare
+le varie istanze nel \emph{Monitor View} al fine di ottenere una
+rappresentazione ottimale o di posizionare il mouse su le diverse attività e
+ricavare da queste informazioni sullo stato dell'esecuzione.
 
 
 
