@@ -2,31 +2,30 @@
 
 \section{Osservazioni}
 
-
-Realizzare un'implemetazione del linguaggio ci ha permesso di analizzare
+Realizzare un'implementazione del linguaggio ci ha permesso di analizzare
 approfonditamente la semantica formale definita per Blite e di capire quali
 aspetti di essa risultassero particolarmente critici in fase di implementazione,
-e più in generale ci permesso di fare alcune riflessione su BPEL e
+e più in generale ci ha permesso di fare alcune riflessioni su BPEL e
 sul significato di alcune sue funzionalità.
 \\
 
-Il lavoro svolto in questa tesi non è da considerarsi esaustivo
+Il lavoro svolto in questa tesi non è da considerarsi esaustivo, 
 ma vorrebbe essere solamente l'inizio di un procedimento iterativo, il cui fine
 dovrebbe essere quello di ottenere uno strumento funzionale per
 l'orchestrazione di servizi, con una semantica rigorosa da cui sia possibile
-ricavare implemetazioni coerenti. 
+ricavare implementazioni coerenti. 
 
 In particolare abbiamo capito che un linguaggio per l'orchestrazione di servizi,
 come BPEL, risulta essere uno strumento molto complesso, e per questo
 riuscirne a sintetizzare gli aspetti cruciali in una semantica formale è
-veramente un'attività delicata. Contemporaneamente sviluppare una
-implemetazione di tale semantica, in rispetto dei requisiti che ci possono
+veramente un'attività delicata. Contemporaneamente sviluppare un'
+implementazione di tale semantica, in rispetto dei requisiti che ci possono
 essere in sistemi di produzione, non è da meno complicato. 
 
 Per questo può essere utile che le varie attività trovino sostegno reciproco.
-Come l'implemetazione è guidata dalla semantica, così può essere utile che
+Come l'implementazione è guidata dalla semantica, così può essere utile che
 l'esperienza ricavata dal processo di sviluppo ritorni nella fase di specifica
-formale per apportare eventualmente revisioni e migliorie, e cosi
+formale per apportare eventualmente revisioni e migliorie, e così
 iterativamente fino al raggiungimento di un accettabile grado di funzionalità.
 \\
 
@@ -41,14 +40,14 @@ iterativamente fino al raggiungimento di un accettabile grado di funzionalità.
 
 %Per esempio 
 Un punto molto critico in cui la specifica della semantica è
-risultata partiolarmente lontana dalle soluzioni implemetative è stato quello
+risultata particolarmente lontana dalle soluzioni implementative è stato quello
 in cui essa definisce la correlazione dei messaggi con le diverse istanze di
 processo e risolve il problema delle \emph{multiple start activity}. In
 particolare la sematica di Blite specifica tale comportamento in maniera molto
-brillante e con un forlmalismo estremamente sintetico ed efficace, ma che mal
+brillante e con un formalismo estremamente sintetico ed efficace, ma che mal
 si presta a guidare lo sviluppo del software. 
 
-In un'implemetazione che usa il \emph{multithreading} per realizzare il
+In un'implementazione che usa il \emph{multithreading} per realizzare il
 parallelismo, non ha senso parlare di più istanze di processo che eseguono
 contemporaneamente la ricezione sulla medesima porta, per cui diventa inutile
 valutare una priorità nell'attribuzione dei messaggi alle diverse istanze.
@@ -91,7 +90,7 @@ Se dal punto di vista dell'attribuzione dei messaggi alle istanze il problema
 può considerarsi risolto, rimane il fatto di distinguere se un
 messaggio in arrivo ne debba produrre o meno una nuova. Il
 \icode{ProcessManager} deve di fatto prendere questa decisione al momento della
-ricezione in base a le informazioni di cui dispone in quel momento. 
+ricezione in base alle informazioni di cui dispone in quel momento. 
 
 In generale si potrebbe pensare di risolvere semplicemente il problema a livello
 sintattico\footnote{La soluzione può sembrare ingenua, ma per esempio è ciò che
@@ -105,7 +104,7 @@ l'istanziazione di uno \emph{stato di correlazione} associato ad una porta.
 
 Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
 un'istanza in grado di correlare con un messaggio in arrivo ad una
-porta\footnote{Ovviamente la correlazione è solo potenziale inquanto non vi è
+porta\footnote{Ovviamente la correlazione è solo potenziale in quanto non vi è
 la garanzia che essa avvenga certamente, l'istanza nella sua evoluzione può
 anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
 per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
@@ -113,14 +112,14 @@ per le multiple start activity può utilizzare tale informazione per distinguere
 E' chiaro che la semantica attuale di Blite specifica alla perfezione il
 comportamento voluto, ma crea un notevole scarto tra la sfera teorica e quella
 tecnologica che rende difficile capire quanto l'implementazione realizzi del
-tutto tale comportamento. Inoltre diversi processi di svluppo possono attuare
-strategie di implemetazione tra loro completamente diversi aumentando di fatto
+tutto tale comportamento. Inoltre diversi processi di sviluppo possono attuare
+strategie di implementazione tra loro completamente diversi, aumentando di fatto
 la probabilità di difformità.
 
 In tal senso speriamo che questa nostra esperienza e queste osservazioni
-aiutino ad affincare alla sematica attuale una versione in cui i formalismi e
-le strategie di specifica siano più in linea con le necessità di svluppo che
-abbiamo incontrato, e che le soluzioni da noi ideate possano in qualche modo
+aiutino ad affiancare alla semantica attuale una versione, in cui i formalismi e
+le strategie di specifica siano più in linea con le necessità di sviluppo che
+abbiamo incontrato e che le soluzioni da noi ideate possano in qualche modo
 essere d'ispirazione.
   
 \section{Sviluppi}
@@ -129,16 +128,16 @@ Nella direzione dello sviluppo software le attività da poter svolgere sono
 essenzialmente due:
 
 \begin{itemize}
-  \item Sviluppare diversi Enviroment per l'Engine di Blite per realizzare
-  diversi strategine di comunicazione.
+  \item Sviluppare diversi Environment per l'Engine di Blite per realizzare
+  diverse strategie di comunicazione.
   \item Migliorare il formalismo e la tecnologia grafica usata per la
   rappresentazione delle istanze in Blide.
 \end{itemize} 
 
-Per quanto riguarda il primo punto come già più volte detto le possibilità sono
+Per quanto riguarda il primo punto, come già più volte detto le possibilità sono
 molteplici. 
 
-Un primo posso, molto semplice, potrebbe essere quello di creare un Environmet
+Un primo passo molto semplice potrebbe essere quello di creare un Environmet
 che supporti la comunicazione remota fra programmi Blite. In questo caso si
 potrebbe utilizzare una tecnologia nativa per implementare la comunicazione. Per
 esempio utilizzando le socket e la Java Object Serialization si potrebbe di
@@ -148,20 +147,20 @@ distribuire i Deployment Blite su diversi nodi di rete. Ovviamente per poter
 fare questo bisogna che ai nomi dei servizi sia associato un indirizzo di rete.
 
 Questa associazione può essere fatta direttamente nel file di definizione di
-Blite, in pratica la sintassi stessa delle invoke potrebe esplicitare
+Blite, in pratica la sintassi stessa delle invoke potrebbe esplicitare
 l'indirizzo dell'host a cui è diretto il messaggio.
 
 \begin{verbatim}
     inv <"hostserver.dom/serviceName"> operation (params) 
 \end{verbatim}
 
-Alternativamente per non appesantire troppo la struttura del codice (specialmente
-nel caso di partner link bidirezionali) potrebbe essere prevista una sezione a
-parte in cui si va a legare un nome simbolico utilizzato nelle invoke con un
+Alternativamente, per non appesantire troppo la struttura del codice
+(specialmente nel caso di partner link bidirezionali), potrebbe essere prevista
+una sezione a parte in cui si va a legare un nome simbolico utilizzato nelle invoke con un
 indirizzo fisico.
 
 Sicuramente molto più interessante sarebbe poter far dialogare i nostri programmi
-Blite con altri tipi di servzi definiti con linguaggi e tecnologie diverse,
+Blite con altri tipi di servizi definiti con linguaggi e tecnologie diverse,
 primi fra tutti i Web Service. Per far questo la prima cosa fondamentale è creare un
 meccanismo che relazioni il codice Blite alle definizioni WSDL.
 
@@ -169,25 +168,25 @@ In pratica serve da una parte ricavare una definizione dell'interfaccia del
 processo Blite, e dall'altra associare le operazioni d'invocazione ad alcune
 definizioni di servizi preesistenti.
 
-Si potrebbe pensare di reallizzare un tool \texttt{blite2WSDL} che preso in input
-un file \texttt{.blt} esegua le operazioni necesarie a impostare un legame fra il
-programma e le definizioni WSDL.
+Si potrebbe pensare di realizzare un tool \texttt{blite2WSDL}, che, preso in
+input un file \texttt{.blt}, esegua le operazioni necessarie ad impostare un
+legame fra il programma e le definizioni WSDL.
 
-Il processo di creazione dell'interfaccia può essere fatto per esempio
+Il processo di creazione dell'interfaccia può essere fatto, per esempio
 combinando un'attività utente con un processo automatico. 
 Tramite un'analisi del codice Blite si potrebbe pensare di creare uno
 scheletro per la definizione WSDL, che l'utente possa successivamente
-raffinare, andando per esempio ad esplicitare i tipi XSD delle parti dei
+raffinare, andando per esempio ad esplicitare: i tipi XSD delle parti dei
 messaggi, alcuni riferimenti dei namespace o alcuni dettagli del bainding
 WSDL/SOAP. In questo modo non ci sarebbe ovviamente nessun controllo statico che
-i messaggi ricevuti siano usati all'interno del codice Blite, in maniera
+i messaggi ricevuti siano usati, all'interno del codice Blite, in maniera
 conforme con il tipo esplicitato nel contratto, ma questo concorda con la gestione
 attuale, in cui a runtime si attua una conversione implicita dei tipi o, se in
 ultima analisi nessuna conversione è applicabile, si genera un errore. 
 
 L'associazione delle operazioni di output con le definizioni WSDL dei servizi
-partner può essere fatta inserendo alcune meta-annotazioni nel codice Blite
-associando per esempio i nomi dei servizi alla coppia
+partner può essere fatta inserendo alcune meta-annotazioni nel codice Blite,
+associando, per esempio i nomi dei servizi alla coppia
 $\langle$service:name/port:name$\rangle$ di una definizione WSDL che deve
 essere disponibile a runtime.
 
@@ -197,24 +196,25 @@ invocazione e la definizione WSDL associata.
 
 Una volta che si dispone dei file WSDL e delle associazioni fra questi e le
 operazioni di comunicazione di Blite, si può pensare di generare un tool
-(\texttt{java2Blite}) in grado di produrre il codice Java delle classi che a
-runtime andranno ad eseguire l'effettiva integrazione fra il framework per Web
+(\texttt{java2Blite}) in grado di produrre il codice Java, che a
+runtime andrà ad eseguire l'effettiva integrazione fra il framework per Web
 Service utilizzato (ad esempio uno fra JAX-WS \cite{JAXWS}, Axis2 \cite{AXIS},
 CXF \cite{CXF}, ecc) e l'interfaccia \icode{EngineChannel}. Il nostro tool
-dovrà essere utilizzato in sinergia del tool del framework scelto che produce il codice Java a partire dalle definizioni
-WSDL e dovrà attuare un integrazione di tale codice.
+dovrà essere utilizzato in sinergia con il tool del framework scelto che produce
+il codice Java a partire dalle definizioni WSDL e dovrà attuare un'integrazione
+di tale codice.
 
-Probablimente in fase di invocazione è anche possibile evitare la generazione
+Probabilmente in fase di invocazione è anche possibile evitare la generazione
 statica del codice e utilizzare le API che framework come JAX-WS o WSIF mettono
 a disposizione per l'invocazione dinamica di Web Service.
 
 Un approccio totalmente dinamico in fase di ricezione risulta anche possibile
 limitandosi ad una versione specifica del protocollo SOAP.
 
-Probabilmente risulta più facile realizzare un Environment compace di dialogare
-con un Enterprise Service Bus basato su JBI in quanto tale standard è stato
+Probabilmente risulta più facile realizzare un Environment capace di dialogare
+con un Enterprise Service Bus basato su JBI, in quanto tale standard è stato
 ideato appositamente per l'integrazione di \emph{Service Engine} e quindi
-esistono oltre ad una serie di API appositamente studiate una buona
+esistono, oltre ad una serie di API appositamente studiate una buona
 documentazione e diversi esempi su come realizzare tale l'integrazione
 \cite{OPENESB}.
 \\
@@ -224,7 +224,7 @@ migliorie al formalismo grafico utilizzato per rappresentare l'esecuzione delle
 istanze e a potenziarne l'implementazione, nel senso di fornire un maggiore
 grado di interattività. Si potrebbe dare all'utente la possibilità di spostare
 le varie istanze nel \emph{Monitor View} al fine di ottenere una
-rappresentazione ottimale o di posizionare il mouse su le diverse attività e
+rappresentazione ottimale o di posizionare il mouse sulle diverse attività e
 ricavare da queste informazioni sullo stato dell'esecuzione.
 
 
