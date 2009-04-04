@@ -86,9 +86,11 @@ public class EngineImp implements Engine {
     
     private ConcurrentHashMap<InComingEventKey, List<MessageContainer>>
                 mInComingEvent = new ConcurrentHashMap<InComingEventKey, List<MessageContainer>>();
-    
-    private ConcurrentHashMap<FlowExecutor, InComingEventKey>
-                mWaitingFlowToEvent = new ConcurrentHashMap<FlowExecutor, InComingEventKey>();
+    //PCK
+//    private ConcurrentHashMap<FlowExecutor, InComingEventKey>
+//                mWaitingFlowToEvent = new ConcurrentHashMap<FlowExecutor, InComingEventKey>();
+    private ConcurrentHashMap<FlowExecutor, Set<InComingEventKey>>
+                mWaitingFlowToEvent = new ConcurrentHashMap<FlowExecutor, Set<InComingEventKey>>();
     //                                    END                                  |
     //-------------------------------------------------------------------------|
 
@@ -218,12 +220,18 @@ public class EngineImp implements Engine {
      */
     //synchronized 
     public void addFlowWaitingEvent(FlowExecutor executor, InComingEventKey eventKey) {
-        
-        InComingEventKey _pre = mWaitingFlowToEvent.get(executor);
-        if (_pre != null) 
-            throw new IllegalStateException("Flow " + executor + " is still waiting on event " + _pre);
-        
-        mWaitingFlowToEvent.put(executor, eventKey);
+        //PCK
+//        InComingEventKey _pre = mWaitingFlowToEvent.get(executor);
+//        if (_pre != null)
+//            throw new IllegalStateException("Flow " + executor + " is still waiting on event " + _pre);
+//
+//        mWaitingFlowToEvent.put(executor, eventKey);
+        Set<InComingEventKey> exKeys = mWaitingFlowToEvent.get(eventKey);
+        if (exKeys == null) {
+            exKeys = new HashSet<InComingEventKey>();
+            mWaitingFlowToEvent.put(executor, exKeys);
+        }
+        exKeys.add(eventKey);
         
         List<FlowExecutor> l = mEventWaitingExecutor.get(eventKey);
         if (l == null) {
@@ -261,19 +269,44 @@ public class EngineImp implements Engine {
     }
 
     public void resumeWaitingFlow(FlowExecutor flow) {
-        InComingEventKey icek = mWaitingFlowToEvent.remove(flow);
-        
-        if (icek != null) {
-            List<FlowExecutor> l = mEventWaitingExecutor.get(icek);
-            
-            if (l != null) {
-                l.remove(flow);
+        //PCK
+//        InComingEventKey icek = mWaitingFlowToEvent.remove(flow);
+//
+//        if (icek != null) {
+//            List<FlowExecutor> l = mEventWaitingExecutor.get(icek);
+//
+//            if (l != null) {
+//                l.remove(flow);
+//            }
+//
+//            queueFlowExecutor(flow);
+//        }
+        Set<InComingEventKey> exKeys = mWaitingFlowToEvent.remove(flow);
+        if (exKeys != null) {
+            for (InComingEventKey icek : exKeys) {
+               List<FlowExecutor> l = mEventWaitingExecutor.get(icek);
+
+              if (l != null) {
+                    l.remove(flow);
+              }
             }
-            
             queueFlowExecutor(flow);
         }
     }
-    
+
+
+    public void removeFlowFromWaiting(FlowExecutor flow) {
+        Set<InComingEventKey> exKeys = mWaitingFlowToEvent.remove(flow);
+        if (exKeys != null) {
+            for (InComingEventKey icek : exKeys) {
+               List<FlowExecutor> l = mEventWaitingExecutor.get(icek);
+
+              if (l != null) {
+                    l.remove(flow);
+              }
+            }
+        }
+    }
     
 
     public void addEventSubjet(InComingEventKey eventKey, MessageContainer mc) {

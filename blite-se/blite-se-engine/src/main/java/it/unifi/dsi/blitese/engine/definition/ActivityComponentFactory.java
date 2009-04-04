@@ -24,6 +24,7 @@ import it.unifi.dsi.blitese.engine.runtime.activities.imp.EmptyActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.FlowActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.IterationActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.PickActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.SequenceActivity;
@@ -36,6 +37,7 @@ import it.unifi.dsi.blitese.parser.BLTDEFEmptyActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFFlowActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFIterationActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFPickActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFThrowActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
@@ -134,6 +136,10 @@ public class ActivityComponentFactory {
 
             return new DefClass(IterationActivity.class, bltDefNode);
             
+        } else if (bltDefNode instanceof BLTDEFPickActivity ) {
+
+            return new DefClass(PickActivity.class, bltDefNode);
+
         } else {
             
             //throw new RuntimeException("Not yet supported Activity " + bltDefNode);
