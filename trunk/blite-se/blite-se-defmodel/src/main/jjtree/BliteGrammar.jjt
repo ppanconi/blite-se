@@ -96,6 +96,9 @@ TOKEN :
 | < FLOWBEGIN: "flw" >
 | < FLOWEND: "wlf" >
 | < FLOWSEP: "|" >
+| < PICKBEGIN: "pck" >
+| < PICKEND: "kcp" >
+| < PICKSEP: "+" >
 | < COMSEP : "," >
 | < DEPSEP : "||" >
 | < SEQSEP : ";" >
@@ -941,6 +944,8 @@ BLTDEFStartActivity StartActivity() :
       StartScopeActivity()
     |
       StartFlowActivity()
+    |
+      StartPickActivity()
   )
   { return jjtThis; }
 }
@@ -949,7 +954,8 @@ BLTDEFActivity Activity() :
 { 
 }
 {
-    ( BasicActivity() | SequenceActivity() | Scope() | FlowActivity() | ConditionalActivity() | IterationActivity() )
+    ( BasicActivity() | SequenceActivity() | Scope() | PickActivity() |
+      FlowActivity() | ConditionalActivity() | IterationActivity()  )
     { return jjtThis; }
 }
 
@@ -992,6 +998,48 @@ void FlowActivity() :
 {}
 {
     <FLOWBEGIN> Activity() ( <FLOWSEP> Activity() )+ <FLOWEND>
+}
+
+void StartPickActivity() :
+{   BLTDEFReceiveActivity receiveActivity = null;
+    BLTDEFActivity activity = null;
+}
+{
+    <PICKBEGIN>
+        receiveActivity = ReceiveActivity() <SEQSEP>  activity = Activity() <SEQSEP>
+            {
+                jjtThis.addSeq(receiveActivity, activity);
+                markReciveAsCreateInst(receiveActivity);
+            }
+
+        ( <PICKSEP> receiveActivity = ReceiveActivity() <SEQSEP> activity = Activity() <SEQSEP>
+            {
+                jjtThis.addSeq(receiveActivity, activity);
+                markReciveAsCreateInst(receiveActivity);
+            }
+        )+
+
+    <PICKEND>
+}
+
+
+void PickActivity() :
+{   BLTDEFReceiveActivity receiveActivity = null;
+    BLTDEFActivity activity = null;
+}
+{
+    <PICKBEGIN>
+        receiveActivity = ReceiveActivity() <SEQSEP>  activity = Activity() <SEQSEP>
+            { 
+                jjtThis.addSeq(receiveActivity, activity);
+            }
+        ( <PICKSEP> receiveActivity = ReceiveActivity() <SEQSEP> activity = Activity() <SEQSEP>
+            {   
+                jjtThis.addSeq(receiveActivity, activity);
+            }
+        )+
+
+    <PICKEND>
 }
 
 void EmptyActivity() :
@@ -1049,11 +1097,13 @@ void ThrowActivity() :
 
 BLTDEFRecPartners RecPartners() :
 {   Token recPart = null;
+    BLTDEFPartnerId otherId = null;
 }
 {
-    <PARBEGIN> recPart = PartnerLitId() ( <COMSEP> PartnerId() )? <PAREND>
+    <PARBEGIN> recPart = PartnerLitId() ( <COMSEP> otherId = PartnerId() )? <PAREND>
     {
         jjtThis.setRecPartToken(recPart);
+        jjtThis.setOtherPatnerId(otherId);
         return jjtThis;
     }
 }
@@ -1061,11 +1111,13 @@ BLTDEFRecPartners RecPartners() :
 BLTDEFInvPartners InvPartners() :
 {
     BLTDEFPartnerId other;
+    Token respPartner = null;
 }
 {
-    <PARBEGIN> other = PartnerId() ( <COMSEP> PartnerLitId() )? <PAREND>
+    <PARBEGIN> other = PartnerId() ( <COMSEP> respPartner = PartnerLitId() )? <PAREND>
     {   
         jjtThis.setOther(other);
+        jjtThis.setRespPartner(respPartner);
         return jjtThis; 
     }
 }
@@ -1076,7 +1128,7 @@ BLTDEFPartnerId PartnerId() :
     Token literalValue = null;
 }
 {
-    (literalValue = PartnerLitId() | varId = VarId())
+    (literalValue = PartnerLitId() | varId = BoundId())
     { 
         if (literalValue != null) jjtThis.setLiteralValue(literalValue.image);
         if (varId != null) jjtThis.setVarableName(varId.getName());
@@ -1090,7 +1142,10 @@ Token PartnerLitId() :
 }
 {
     t  = <STRING_LITERAL>
-    { return t;}
+    {
+        jjtThis.setToken(token);
+        return t;
+    }
 }
 
 BLTDEFOperationId OperationId() :

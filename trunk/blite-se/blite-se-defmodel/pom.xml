@@ -51,6 +51,7 @@
                             -->
                         </configuration>
                     </execution>
+		    	
                 </executions>
             </plugin>
             
@@ -113,6 +114,19 @@
                         
         </plugins>
     </build>
+
+    <reporting>
+	<plugins>
+      		<plugin>
+        		<groupId>org.codehaus.mojo</groupId>
+        		<artifactId>javacc-maven-plugin</artifactId>
+                	<configuration>
+                    		<text>true</text>
+                    	</configuration>
+      		</plugin>
+    	</plugins>
+    </reporting>
+
     
     <dependencies>
         

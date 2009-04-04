@@ -20,14 +20,19 @@ public class BLTDEFInvPartners extends SimpleNode {
     ////////////////////////////////////////////////////////////////////////////
     //added code start here
     private BLTDEFPartnerId other;
-    private BLTDEFPartnerLitId me;
+    private Token respPartner;
 
-    public BLTDEFPartnerLitId getMe() {
-        return me;
+    public Token getRespPartner() {
+        return respPartner;
     }
 
-    public void setMe(BLTDEFPartnerLitId me) {
-        this.me = me;
+    public void setRespPartner(Token respPartner) {
+        this.respPartner = respPartner;
+    }
+
+    public String getRespPartnerName() {
+        if (respPartner == null) return null;
+        return respPartner.image;
     }
 
     public BLTDEFPartnerId getOther() {
