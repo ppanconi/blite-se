@@ -20,6 +20,7 @@ public class BLTDEFRecPartners extends SimpleNode {
 //added code start here ////////////////////////////////////////////////////////
   
     private Token recPartToken;
+    private BLTDEFPartnerId otherPatnerId;
 
     public Token getRecPartToken() {
         return recPartToken;
@@ -33,5 +34,13 @@ public class BLTDEFRecPartners extends SimpleNode {
         return recPartToken.image;
     }
 
-    
+    public BLTDEFPartnerId getOtherPatnerId() {
+        return otherPatnerId;
+    }
+
+    public void setOtherPatnerId(BLTDEFPartnerId otherPatnerId) {
+        this.otherPatnerId = otherPatnerId;
+    }
+
+
 }

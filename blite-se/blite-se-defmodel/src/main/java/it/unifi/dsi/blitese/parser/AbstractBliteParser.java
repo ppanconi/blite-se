@@ -93,7 +93,7 @@ public class AbstractBliteParser {
             
             Token t = receiveActivity.getPartners().getRecPartToken();
             throw new ParseException("The deployments are not well-formated. " +
-                    "The service name " + serviceName + " definined at line " + t.beginLine + " , column " + t.beginColumn + " is used in other Deploy/ServiceInsatance definition");
+                    "The service name " + serviceName + " definined at line " + t.beginLine + " , column. " + t.beginColumn + " is used in other Deploy/ServiceInsatance definition");
         }
         
         boolean portConformity = currentServEle.checkOperationConfomity(receiveActivity);
