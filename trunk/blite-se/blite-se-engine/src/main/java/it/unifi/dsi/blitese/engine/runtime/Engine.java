@@ -84,6 +84,13 @@ public interface Engine {
     public List<FlowExecutor> resumeFlowWaitingEvent(InComingEventKey eventKey);
 
     public void resumeWaitingFlow(FlowExecutor flow);
+
+    /**
+     * remove the flow executor from waiting structeures without putting it
+     * into to queue to run.
+     * @param flow
+     */
+    public void removeFlowFromWaiting(FlowExecutor flow);
     
     public void addEventSubjet(InComingEventKey eventKey, MessageContainer mc);
     

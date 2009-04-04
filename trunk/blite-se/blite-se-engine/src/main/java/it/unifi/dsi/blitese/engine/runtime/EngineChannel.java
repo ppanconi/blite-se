@@ -32,10 +32,12 @@ public interface EngineChannel {
      * @param instance the Process Instance initiatin the echange.
      * 
      * @return Object messageExchangeId 
-     *         the indetificator key for the protocol state communication.
+     *         the idetificator key for the protocol state communication.
      *         
      */
-     public Object createExchange(ServiceIdentifier serviceId, String operation, ProcessInstance instance);
+     public Object createExchange(ServiceIdentifier serviceId, 
+                                  String operation,
+                                  ProcessInstance instance);
    
     /**
      * Send a message container into the created exchange. This a created post
@@ -43,7 +45,8 @@ public interface EngineChannel {
      * 
      * @param  inComingEventKey
      */
-    public  void sendIntoExchange(Object messageExchangeId, MessageContainer messageContainer);
+    public  void sendIntoExchange(Object messageExchangeId,
+                                  MessageContainer messageContainer);
 
     /**
      * Close the exchange.

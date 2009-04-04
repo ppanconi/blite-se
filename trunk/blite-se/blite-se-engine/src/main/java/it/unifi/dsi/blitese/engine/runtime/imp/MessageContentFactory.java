@@ -21,6 +21,7 @@ import it.unifi.dsi.blitese.parser.BLTDEFExpression;
 import it.unifi.dsi.blitese.parser.BLTDEFInvParam;
 import it.unifi.dsi.blitese.parser.BLTDEFInvParams;
 import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
+import it.unifi.dsi.blitese.parser.BLTDEFPartnerLitId;
 
 /**
  *
@@ -29,12 +30,22 @@ import it.unifi.dsi.blitese.parser.BLTDEFInvokeActivity;
 public class MessageContentFactory {
 
     static public MessageContent createInvokeMC(ExecutionContext context, BLTDEFInvokeActivity activity) {
-        
+
         BLTDEFInvParams params = activity.getParams();
-        
+
         int n = params.getActualParams().size();
+
+        String respPartnerName = activity.getPartners().getRespPartnerName();
+        if (respPartnerName != null) n++;
+
         Object[] parts = new Object[n];
+        
         int i = 0;
+
+        if (respPartnerName != null) {
+            parts[i++] = respPartnerName;
+        }
+
         for (BLTDEFInvParam param : params.getActualParams()) {
 
              BLTDEFExpression expr = (BLTDEFExpression) param.jjtGetChild(0);

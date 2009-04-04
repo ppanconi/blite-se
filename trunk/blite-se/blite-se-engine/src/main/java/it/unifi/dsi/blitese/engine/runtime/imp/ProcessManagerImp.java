@@ -168,8 +168,14 @@ public class ProcessManagerImp implements ProcessManager {
         } else {
             //we test the conformity
             BLTDEFReceiveActivity recDef = mPortIdToPortDef.get(portId).get(0);
+
+            int totPart = recDef.getParams().provideFormalParamN();
+
+            if (recDef.getPartners().getOtherPatnerId() != null) {
+                totPart++;
+            }
             
-            if (recDef.getParams().provideFormalParamN() != parts.length) {
+            if (totPart != parts.length) {
                 LOGGER.info("INVALID request for portId " + portId + " mismatch in the number of params");
                 //we report the error
                 Object exchangeId = messageContainer.getId();

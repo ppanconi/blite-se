@@ -54,9 +54,19 @@ public class ReceiveActivity extends ActivityComponentBase {
         icek = InComingEventKeyFactory.createRequestInComingEventKey(sid, portId);
         
         List<BLTDEFBoundId> l = def.getParams().getFormalParams();
-        fparamNames = new String[l.size()];
-        
+
         int i = 0;
+
+        if (def.getPartners().getOtherPatnerId() != null
+         && !def.getPartners().getOtherPatnerId().isLeteral()) {
+
+            fparamNames = new String[l.size() + 1];
+            fparamNames[i++] = def.getPartners().getOtherPatnerId().getVarableName();
+            
+        } else {
+            fparamNames = new String[l.size()];
+        }
+        
         for (BLTDEFBoundId var : l) {
             fparamNames[i++] = var.getName(); 
         }
@@ -77,37 +87,52 @@ public class ReceiveActivity extends ActivityComponentBase {
                 return true;
             }
             
-            List<MessageContainer> mcs = manager.provideEvents(icek);
-            
-            for (MessageContainer mc : mcs) {
-                boolean toDiscard = false;
-                
-                Object[] parts = mc.getContent().getParts();
+//            List<MessageContainer> mcs = manager.provideEvents(icek);
+//
+//            for (MessageContainer mc : mcs) {
+//                boolean toDiscard = false;
+//
+//                Object[] parts = mc.getContent().getParts();
+//
+//                int partIdx = 0;
+//
+//                if (def.getPartners().getOtherPatnerId() != null
+//                 && def.getPartners().getOtherPatnerId().isLeteral()) {
+//
+//                    Object myName = def.getPartners().getOtherPatnerId().getLiteralValue();
+//                    if (!myName.equals(parts[partIdx++])) {
+//                        continue; //we pass to the next message...
+//                    }
+//
+//                }
+//
+//                for (int i = 0; i < fparamNames.length; i++) {
+//                    Object part = parts[partIdx++];
+//                    String var = fparamNames[i];
+//
+//                    if (! getContext().matchCorrelation(var, part)) {
+//                        //this is not a message of mine...
+//                        toDiscard = true;
+//                        break; //try the next one...
+//                    }
+//                }
+//
+//                if (! toDiscard) {
+//                    mcs.remove(mc); //we consume event
+//                    matchingMessage = mc;
+//                    break; //we have found one message we stop searching...
+//                }
+//            }
+            matchingMessage = matchAMessage(true);
 
-                for (int i = 0; i < parts.length; i++) {
-                    Object part = parts[i];
-                    String var = fparamNames[i];
-
-                    if (! getContext().matchCorrelation(var, part)) {
-                        //this is not a message of mine...
-                        toDiscard = true;
-                        break; //try the next one...
-                    }
-                }
-                
-                if (! toDiscard) {
-                    mcs.remove(mc); //we consume event
-                    matchingMessage = mc;
-                    break; //we have found one message we stop searching...
-                }
-            }
-            
             if (matchingMessage == null) {
                 //we haven't found anything we continue to wait...
                 manager.getEngine().addFlowWaitingEvent(getExecutor(), icek);
                 
                 return false;
             }
+
+
         } // END of Syncronized Definition Level Block ------------------------
         
         assert matchingMessage != null;
@@ -142,4 +167,48 @@ public class ReceiveActivity extends ActivityComponentBase {
         return matchingMessage;
     }
 
+    public RequestInComingEventKey getIcek() {
+        return icek;
+    }
+
+    //PCK
+    public MessageContainer matchAMessage(boolean consuming) {
+        List<MessageContainer> mcs = manager.provideEvents(icek);
+
+        for (MessageContainer mc : mcs) {
+            boolean toDiscard = false;
+
+            Object[] parts = mc.getContent().getParts();
+
+            int partIdx = 0;
+
+            if (def.getPartners().getOtherPatnerId() != null
+             && def.getPartners().getOtherPatnerId().isLeteral()) {
+
+                Object myName = def.getPartners().getOtherPatnerId().getLiteralValue();
+                if (!myName.equals(parts[partIdx++])) {
+                    continue; //we pass to the next message...
+                }
+
+            }
+
+            for (int i = 0; i < fparamNames.length; i++) {
+                Object part = parts[partIdx++];
+                String var = fparamNames[i];
+
+                if (! getContext().matchCorrelation(var, part)) {
+                    //this is not a message of mine...
+                    toDiscard = true;
+                    break; //try the next one...
+                }
+            }
+
+            if (! toDiscard) {
+                if (consuming) mcs.remove(mc); //we consume event
+                return mc; //we have found one message we stop searching...
+            }
+        }
+
+        return null;
+    }
 }
