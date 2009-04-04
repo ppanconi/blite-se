@@ -1,8 +1,14 @@
 {
     :: seq
-        inv <"s1"> start("HELLO WORLD!");
-        inv <"s1"> corre("HELLO WORLD!");
+        inv <"s1"> start("john");
+        inv <"s1"> corre("john");
     qes,
+    
+    :: seq
+        inv <"s1"> start("bill");
+        inv <"s1"> corre("bill");
+    qes,
+    
     [
         seq
             rcv <"s1"> start(y);

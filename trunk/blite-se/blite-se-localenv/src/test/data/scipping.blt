@@ -1,0 +1,9 @@
+{
+    [
+        seq
+            rcv<"on_me"> operation(id, c, items, cust);
+            rcv<"on_me"> operation(x)
+        qes
+        
+    ]
+}
