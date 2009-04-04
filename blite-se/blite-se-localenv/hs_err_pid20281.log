@@ -1,0 +1,512 @@
+#
+# An unexpected error has been detected by Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xb7eca9bc, pid=20281, tid=3085110160
+#
+# Java VM: Java HotSpot(TM) Server VM (11.0-b15 mixed mode linux-x86)
+# Problematic frame:
+# C  [libc.so.6+0x739bc]  memcpy+0x1c
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x08058800):  JavaThread "main" [_thread_in_native, id=20282, stack(0xb7de0000,0xb7e31000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=2 (SEGV_ACCERR), si_addr=0x90b20000
+
+Registers:
+EAX=0x90af5b98, EBX=0xb7d6f7fc, ECX=0x00002a68, EDX=0x90b1b5c1
+ESP=0xb7e2da1c, EBP=0xb7e2da48, ESI=0x90b20000, EDI=0x90a7edd1
+EIP=0xb7eca9bc, CR2=0x90b20000, EFLAGS=0x00210202
+
+Top of Stack: (sp=0xb7e2da1c)
+0xb7e2da1c:   b7d6adcb 90a7a3c0 90b1b5ef 0000f3b1
+0xb7e2da2c:   08058eb4 000002b8 0000e506 0000f3b1
+0xb7e2da3c:   b7d6f7fc 90a42518 00000000 b7e2da78
+0xb7e2da4c:   b7d6b03b 90a5a678 90a42518 00000000
+0xb7e2da5c:   b1752218 08058800 9136042e c741d915
+0xb7e2da6c:   b7d6f7fc b7e2dac0 08058914 b7e2dee8
+0xb7e2da7c:   b7d621e9 90a5a678 b7e2dac0 0000002d
+0xb7e2da8c:   0000002d b7e2dac0 b7e2da94 91360dff 
+
+Instructions: (pc=0xb7eca9bc)
+0xb7eca9ac:   8b 74 24 08 fc d1 e9 73 01 a4 d1 e9 73 02 66 a5
+0xb7eca9bc:   f3 a5 89 c7 89 d6 8b 44 24 04 c3 90 90 90 90 90 
+
+Stack: [0xb7de0000,0xb7e31000],  sp=0xb7e2da1c,  free space=310k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x739bc]  memcpy+0x1c
+C  [libzip.so+0xc03b]  ZIP_GetEntry+0x10b
+C  [libzip.so+0x31e9]  Java_java_util_zip_ZipFile_getEntry+0xc9
+j  java.util.zip.ZipFile.getEntry(JLjava/lang/String;Z)J+0
+j  java.util.zip.ZipFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry;+31
+j  java.util.jar.JarFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry;+2
+j  java.util.jar.JarFile.getJarEntry(Ljava/lang/String;)Ljava/util/jar/JarEntry;+2
+j  sun.misc.URLClassPath$JarLoader.getResource(Ljava/lang/String;Z)Lsun/misc/Resource;+48
+j  sun.misc.URLClassPath.getResource(Ljava/lang/String;Z)Lsun/misc/Resource;+53
+j  java.net.URLClassLoader$1.run()Ljava/lang/Object;+26
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x375a7d]
+V  [libjvm.so+0x5055d8]
+V  [libjvm.so+0x375910]
+V  [libjvm.so+0x3cbbb3]
+C  [libjava.so+0xaa5c]  Java_java_security_AccessController_doPrivileged__Ljava_security_PrivilegedExceptionAction_2Ljava_security_AccessControlContext_2+0x3c
+j  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedExceptionAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;+0
+j  java.net.URLClassLoader.findClass(Ljava/lang/String;)Ljava/lang/Class;+13
+j  java.lang.ClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class;+43
+j  sun.misc.Launcher$AppClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class;+41
+j  java.lang.ClassLoader.loadClass(Ljava/lang/String;)Ljava/lang/Class;+3
+j  java.lang.ClassLoader.loadClassInternal(Ljava/lang/String;)Ljava/lang/Class;+2
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x375a7d]
+V  [libjvm.so+0x5055d8]
+V  [libjvm.so+0x3755a1]
+V  [libjvm.so+0x37568a]
+V  [libjvm.so+0x5a6467]
+V  [libjvm.so+0x5a4f05]
+V  [libjvm.so+0x5a3f77]
+V  [libjvm.so+0x5a3c82]
+V  [libjvm.so+0x2cf753]
+V  [libjvm.so+0x36d136]
+j  it.unifi.dsi.blitese.parser.BliteParser.Scope()V+0
+j  it.unifi.dsi.blitese.parser.BliteParser.Activity()Lit/unifi/dsi/blitese/parser/BLTDEFActivity;+204
+j  it.unifi.dsi.blitese.parser.BliteParser.SequenceActivity()V+260
+j  it.unifi.dsi.blitese.parser.BliteParser.Activity()Lit/unifi/dsi/blitese/parser/BLTDEFActivity;+198
+j  it.unifi.dsi.blitese.parser.BliteParser.ServiceInstance()Lit/unifi/dsi/blitese/parser/BLTDEFServiceInstance;+28
+j  it.unifi.dsi.blitese.parser.BliteParser.Service()Lit/unifi/dsi/blitese/parser/BLTDEFService;+79
+j  it.unifi.dsi.blitese.parser.BliteParser.Deployment()Lit/unifi/dsi/blitese/parser/BLTDEFDeployment;+30
+j  it.unifi.dsi.blitese.parser.BliteParser.Deployments()Lit/unifi/dsi/blitese/parser/BLTDEFDeployments;+88
+j  it.unifi.dsi.blitese.parser.BliteParser.CompilationUnit()Lit/unifi/dsi/blitese/parser/BLTDEFCompilationUnit;+22
+j  it.unifi.dsi.blitese.parser.BliteParser.parse()Lit/unifi/dsi/blitese/parser/BltDefBaseNode;+0
+j  it.unifi.dsi.blitese.localenv.AExecution.testExecute()V+29
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x375a7d]
+V  [libjvm.so+0x5055d8]
+V  [libjvm.so+0x375910]
+V  [libjvm.so+0x54f755]
+V  [libjvm.so+0x55232c]
+V  [libjvm.so+0x3e1e05]
+C  [libjava.so+0x152e4]  Java_sun_reflect_NativeMethodAccessorImpl_invoke0+0x34
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+161
+j  junit.framework.TestCase.runTest()V+108
+j  junit.framework.TestCase.runBare()V+7
+j  junit.framework.TestResult$1.protect()V+4
+j  junit.framework.TestResult.runProtected(Ljunit/framework/Test;Ljunit/framework/Protectable;)V+1
+j  junit.framework.TestResult.run(Ljunit/framework/TestCase;)V+18
+j  junit.framework.TestCase.run(Ljunit/framework/TestResult;)V+2
+j  junit.framework.TestSuite.runTest(Ljunit/framework/Test;Ljunit/framework/TestResult;)V+2
+j  junit.framework.TestSuite.run(Ljunit/framework/TestResult;)V+37
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x375a7d]
+V  [libjvm.so+0x5055d8]
+V  [libjvm.so+0x375910]
+V  [libjvm.so+0x54f755]
+V  [libjvm.so+0x55232c]
+V  [libjvm.so+0x3e1e05]
+C  [libjava.so+0x152e4]  Java_sun_reflect_NativeMethodAccessorImpl_invoke0+0x34
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+161
+j  org.apache.maven.surefire.junit.JUnitTestSet.execute(Lorg/apache/maven/surefire/report/ReporterManager;Ljava/lang/ClassLoader;)V+87
+j  org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(Lorg/apache/maven/surefire/testset/SurefireTestSet;Lorg/apache/maven/surefire/report/ReporterManager;Ljava/lang/ClassLoader;)V+43
+j  org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(Lorg/apache/maven/surefire/report/ReporterManager;Ljava/lang/ClassLoader;)V+57
+j  org.apache.maven.surefire.Surefire.run(Ljava/util/List;Ljava/util/List;Ljava/lang/ClassLoader;Ljava/lang/ClassLoader;Ljava/lang/Boolean;)I+164
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x375a7d]
+V  [libjvm.so+0x5055d8]
+V  [libjvm.so+0x375910]
+V  [libjvm.so+0x54f755]
+V  [libjvm.so+0x55232c]
+V  [libjvm.so+0x3e1e05]
+C  [libjava.so+0x152e4]  Java_sun_reflect_NativeMethodAccessorImpl_invoke0+0x34
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+161
+j  org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess()I+273
+j  org.apache.maven.surefire.booter.SurefireBooter.main([Ljava/lang/String;)V+693
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x375a7d]
+V  [libjvm.so+0x5055d8]
+V  [libjvm.so+0x375910]
+V  [libjvm.so+0x39f0c6]
+V  [libjvm.so+0x3908c8]
+...<more frames>...
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  java.util.zip.ZipFile.getEntry(JLjava/lang/String;Z)J+0
+j  java.util.zip.ZipFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry;+31
+j  java.util.jar.JarFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry;+2
+j  java.util.jar.JarFile.getJarEntry(Ljava/lang/String;)Ljava/util/jar/JarEntry;+2
+j  sun.misc.URLClassPath$JarLoader.getResource(Ljava/lang/String;Z)Lsun/misc/Resource;+48
+j  sun.misc.URLClassPath.getResource(Ljava/lang/String;Z)Lsun/misc/Resource;+53
+j  java.net.URLClassLoader$1.run()Ljava/lang/Object;+26
+v  ~StubRoutines::call_stub
+j  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedExceptionAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;+0
+j  java.net.URLClassLoader.findClass(Ljava/lang/String;)Ljava/lang/Class;+13
+j  java.lang.ClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class;+43
+j  sun.misc.Launcher$AppClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class;+41
+j  java.lang.ClassLoader.loadClass(Ljava/lang/String;)Ljava/lang/Class;+3
+j  java.lang.ClassLoader.loadClassInternal(Ljava/lang/String;)Ljava/lang/Class;+2
+v  ~StubRoutines::call_stub
+j  it.unifi.dsi.blitese.parser.BliteParser.Scope()V+0
+j  it.unifi.dsi.blitese.parser.BliteParser.Activity()Lit/unifi/dsi/blitese/parser/BLTDEFActivity;+204
+j  it.unifi.dsi.blitese.parser.BliteParser.SequenceActivity()V+260
+j  it.unifi.dsi.blitese.parser.BliteParser.Activity()Lit/unifi/dsi/blitese/parser/BLTDEFActivity;+198
+j  it.unifi.dsi.blitese.parser.BliteParser.ServiceInstance()Lit/unifi/dsi/blitese/parser/BLTDEFServiceInstance;+28
+j  it.unifi.dsi.blitese.parser.BliteParser.Service()Lit/unifi/dsi/blitese/parser/BLTDEFService;+79
+j  it.unifi.dsi.blitese.parser.BliteParser.Deployment()Lit/unifi/dsi/blitese/parser/BLTDEFDeployment;+30
+j  it.unifi.dsi.blitese.parser.BliteParser.Deployments()Lit/unifi/dsi/blitese/parser/BLTDEFDeployments;+88
+j  it.unifi.dsi.blitese.parser.BliteParser.CompilationUnit()Lit/unifi/dsi/blitese/parser/BLTDEFCompilationUnit;+22
+j  it.unifi.dsi.blitese.parser.BliteParser.parse()Lit/unifi/dsi/blitese/parser/BltDefBaseNode;+0
+j  it.unifi.dsi.blitese.localenv.AExecution.testExecute()V+29
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+161
+j  junit.framework.TestCase.runTest()V+108
+j  junit.framework.TestCase.runBare()V+7
+j  junit.framework.TestResult$1.protect()V+4
+j  junit.framework.TestResult.runProtected(Ljunit/framework/Test;Ljunit/framework/Protectable;)V+1
+j  junit.framework.TestResult.run(Ljunit/framework/TestCase;)V+18
+j  junit.framework.TestCase.run(Ljunit/framework/TestResult;)V+2
+j  junit.framework.TestSuite.runTest(Ljunit/framework/Test;Ljunit/framework/TestResult;)V+2
+j  junit.framework.TestSuite.run(Ljunit/framework/TestResult;)V+37
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+161
+j  org.apache.maven.surefire.junit.JUnitTestSet.execute(Lorg/apache/maven/surefire/report/ReporterManager;Ljava/lang/ClassLoader;)V+87
+j  org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(Lorg/apache/maven/surefire/testset/SurefireTestSet;Lorg/apache/maven/surefire/report/ReporterManager;Ljava/lang/ClassLoader;)V+43
+j  org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(Lorg/apache/maven/surefire/report/ReporterManager;Ljava/lang/ClassLoader;)V+57
+j  org.apache.maven.surefire.Surefire.run(Ljava/util/List;Ljava/util/List;Ljava/lang/ClassLoader;Ljava/lang/ClassLoader;Ljava/lang/Boolean;)I+164
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+161
+j  org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess()I+273
+j  org.apache.maven.surefire.booter.SurefireBooter.main([Ljava/lang/String;)V+693
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x90af4800 JavaThread "pool-28-thread-4" [_thread_blocked, id=20836, stack(0x8fa58000,0x8faa9000)]
+  0x90af3000 JavaThread "pool-28-thread-3" [_thread_blocked, id=20835, stack(0x8faa9000,0x8fafa000)]
+  0x90af1800 JavaThread "pool-28-thread-2" [_thread_blocked, id=20834, stack(0x8fafa000,0x8fb4b000)]
+  0x90af0000 JavaThread "pool-28-thread-1" [_thread_blocked, id=20833, stack(0x8fb4b000,0x8fb9c000)]
+  0x90aeec00 JavaThread "pool-25-thread-4" [_thread_blocked, id=20745, stack(0x8fb9c000,0x8fbed000)]
+  0x90aed400 JavaThread "pool-25-thread-3" [_thread_blocked, id=20744, stack(0x8fbed000,0x8fc3e000)]
+  0x90aebc00 JavaThread "pool-25-thread-2" [_thread_blocked, id=20743, stack(0x8fc3e000,0x8fc8f000)]
+  0x90aea400 JavaThread "pool-25-thread-1" [_thread_blocked, id=20742, stack(0x8fc8f000,0x8fce0000)]
+  0x90ae8c00 JavaThread "pool-21-thread-4" [_thread_blocked, id=20641, stack(0x8fce0000,0x8fd31000)]
+  0x90ae7c00 JavaThread "pool-21-thread-3" [_thread_blocked, id=20640, stack(0x8fd31000,0x8fd82000)]
+  0x90ae6c00 JavaThread "pool-21-thread-2" [_thread_blocked, id=20639, stack(0x8fd82000,0x8fdd3000)]
+  0x90ae5400 JavaThread "pool-21-thread-1" [_thread_blocked, id=20638, stack(0x8fdd3000,0x8fe24000)]
+  0x90ae3c00 JavaThread "pool-18-thread-4" [_thread_blocked, id=20601, stack(0x8fe24000,0x8fe75000)]
+  0x90ae3000 JavaThread "pool-18-thread-3" [_thread_blocked, id=20600, stack(0x8fe75000,0x8fec6000)]
+  0x90ad9c00 JavaThread "pool-18-thread-2" [_thread_blocked, id=20599, stack(0x8fec6000,0x8ff17000)]
+  0x90ad8c00 JavaThread "pool-18-thread-1" [_thread_blocked, id=20598, stack(0x8ff17000,0x8ff68000)]
+  0x90adac00 JavaThread "pool-17-thread-1" [_thread_blocked, id=20561, stack(0x8ff68000,0x8ffb9000)]
+  0x90ad7000 JavaThread "pool-15-thread-4" [_thread_blocked, id=20560, stack(0x8ffb9000,0x9000a000)]
+  0x90ad6000 JavaThread "pool-15-thread-3" [_thread_blocked, id=20559, stack(0x9000a000,0x9005b000)]
+  0x90ad5000 JavaThread "pool-15-thread-2" [_thread_blocked, id=20558, stack(0x9005b000,0x900ac000)]
+  0x90a0e800 JavaThread "pool-15-thread-1" [_thread_blocked, id=20557, stack(0x900ac000,0x900fd000)]
+  0x90a0d000 JavaThread "pool-12-thread-4" [_thread_blocked, id=20515, stack(0x900fd000,0x9014e000)]
+  0x90a0c000 JavaThread "pool-12-thread-3" [_thread_blocked, id=20514, stack(0x9014e000,0x9019f000)]
+  0x90a0ac00 JavaThread "pool-12-thread-2" [_thread_blocked, id=20513, stack(0x901f0000,0x90241000)]
+  0x90a0a000 JavaThread "pool-12-thread-1" [_thread_blocked, id=20512, stack(0x9019f000,0x901f0000)]
+  0x90a08800 JavaThread "pool-10-thread-4" [_thread_blocked, id=20477, stack(0x90241000,0x90292000)]
+  0x90a07400 JavaThread "pool-10-thread-3" [_thread_blocked, id=20476, stack(0x90292000,0x902e3000)]
+  0x90adfc00 JavaThread "pool-10-thread-2" [_thread_blocked, id=20475, stack(0x902e3000,0x90334000)]
+  0x90ade800 JavaThread "pool-10-thread-1" [_thread_blocked, id=20474, stack(0x90334000,0x90385000)]
+  0x90add400 JavaThread "pool-7-thread-4" [_thread_blocked, id=20439, stack(0x90385000,0x903d6000)]
+  0x90ad3c00 JavaThread "pool-7-thread-3" [_thread_blocked, id=20438, stack(0x903d6000,0x90427000)]
+  0x90ad2c00 JavaThread "pool-7-thread-2" [_thread_blocked, id=20437, stack(0x90427000,0x90478000)]
+  0x90ad1c00 JavaThread "pool-7-thread-1" [_thread_blocked, id=20436, stack(0x90478000,0x904c9000)]
+  0x9071b000 JavaThread "pool-4-thread-4" [_thread_blocked, id=20338, stack(0x904c9000,0x9051a000)]
+  0x90719c00 JavaThread "pool-4-thread-3" [_thread_blocked, id=20337, stack(0x9051a000,0x9056b000)]
+  0x90714000 JavaThread "pool-4-thread-2" [_thread_blocked, id=20336, stack(0x9056b000,0x905bc000)]
+  0x90713400 JavaThread "pool-4-thread-1" [_thread_blocked, id=20335, stack(0x9060d000,0x9065e000)]
+  0x08196800 JavaThread "pool-3-thread-2" [_thread_blocked, id=20301, stack(0x905bc000,0x9060d000)]
+  0x9071c000 JavaThread "pool-3-thread-1" [_thread_blocked, id=20299, stack(0x9065e000,0x906af000)]
+  0x90712800 JavaThread "pool-1-thread-4" [_thread_blocked, id=20298, stack(0x906af000,0x90700000)]
+  0x9070c800 JavaThread "pool-1-thread-3" [_thread_blocked, id=20297, stack(0x9080b000,0x9085c000)]
+  0x90a5bc00 JavaThread "pool-1-thread-2" [_thread_blocked, id=20296, stack(0x9085c000,0x908ad000)]
+  0x90acf000 JavaThread "pool-1-thread-1" [_thread_blocked, id=20295, stack(0x908ad000,0x908fe000)]
+  0x90a02800 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=20293, stack(0x90b20000,0x90b71000)]
+  0x90a00800 JavaThread "CompilerThread1" daemon [_thread_blocked, id=20292, stack(0x9097f000,0x90a00000)]
+  0x080f4000 JavaThread "CompilerThread0" daemon [_thread_in_native, id=20291, stack(0x90b71000,0x90bf2000)]
+  0x080f2400 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=20290, stack(0x90bf2000,0x90c43000)]
+  0x080de400 JavaThread "Finalizer" daemon [_thread_blocked, id=20289, stack(0x90c89000,0x90cda000)]
+  0x080dd000 JavaThread "Reference Handler" daemon [_thread_blocked, id=20288, stack(0x90cda000,0x90d2b000)]
+=>0x08058800 JavaThread "main" [_thread_in_native, id=20282, stack(0xb7de0000,0xb7e31000)]
+
+Other Threads:
+  0x080d9800 VMThread [stack: 0x90d2b000,0x90dac000] [id=20287]
+  0x90a04800 WatcherThread [stack: 0x908fe000,0x9097f000] [id=20294]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 3584K, used 3566K [0xb1460000, 0xb1860000, 0xb4c90000)
+  eden space 3072K, 99% used [0xb1460000,0xb175d988,0xb1760000)
+  from space 512K, 98% used [0xb1760000,0xb17de130,0xb17e0000)
+  to   space 512K, 0% used [0xb17e0000,0xb17e0000,0xb1860000)
+ PSOldGen        total 28736K, used 172K [0x95290000, 0x96ea0000, 0xb1460000)
+  object space 28736K, 0% used [0x95290000,0x952bb070,0x96ea0000)
+ PSPermGen       total 16384K, used 3941K [0x91290000, 0x92290000, 0x95290000)
+  object space 16384K, 24% used [0x91290000,0x916697a0,0x92290000)
+
+Dynamic libraries:
+06000000-06676000 r-xp 00000000 08:05 904087     /opt/java/jdk1.6.0_10/jre/lib/i386/server/libjvm.so
+06676000-066bb000 rwxp 00675000 08:05 904087     /opt/java/jdk1.6.0_10/jre/lib/i386/server/libjvm.so
+066bb000-06add000 rwxp 066bb000 00:00 0 
+08048000-08052000 r-xp 00000000 08:05 801538     /opt/java/jdk1.6.0_10/jre/bin/java
+08052000-08053000 rwxp 00009000 08:05 801538     /opt/java/jdk1.6.0_10/jre/bin/java
+08053000-083b6000 rwxp 08053000 00:00 0          [heap]
+8fa58000-8fa5b000 ---p 8fa58000 00:00 0 
+8fa5b000-8faa9000 rwxp 8fa5b000 00:00 0 
+8faa9000-8faac000 ---p 8faa9000 00:00 0 
+8faac000-8fafa000 rwxp 8faac000 00:00 0 
+8fafa000-8fafd000 ---p 8fafa000 00:00 0 
+8fafd000-8fb4b000 rwxp 8fafd000 00:00 0 
+8fb4b000-8fb4e000 ---p 8fb4b000 00:00 0 
+8fb4e000-8fb9c000 rwxp 8fb4e000 00:00 0 
+8fb9c000-8fb9f000 ---p 8fb9c000 00:00 0 
+8fb9f000-8fbed000 rwxp 8fb9f000 00:00 0 
+8fbed000-8fbf0000 ---p 8fbed000 00:00 0 
+8fbf0000-8fc3e000 rwxp 8fbf0000 00:00 0 
+8fc3e000-8fc41000 ---p 8fc3e000 00:00 0 
+8fc41000-8fc8f000 rwxp 8fc41000 00:00 0 
+8fc8f000-8fc92000 ---p 8fc8f000 00:00 0 
+8fc92000-8fce0000 rwxp 8fc92000 00:00 0 
+8fce0000-8fce3000 ---p 8fce0000 00:00 0 
+8fce3000-8fd31000 rwxp 8fce3000 00:00 0 
+8fd31000-8fd34000 ---p 8fd31000 00:00 0 
+8fd34000-8fd82000 rwxp 8fd34000 00:00 0 
+8fd82000-8fd85000 ---p 8fd82000 00:00 0 
+8fd85000-8fdd3000 rwxp 8fd85000 00:00 0 
+8fdd3000-8fdd6000 ---p 8fdd3000 00:00 0 
+8fdd6000-8fe24000 rwxp 8fdd6000 00:00 0 
+8fe24000-8fe27000 ---p 8fe24000 00:00 0 
+8fe27000-8fe75000 rwxp 8fe27000 00:00 0 
+8fe75000-8fe78000 ---p 8fe75000 00:00 0 
+8fe78000-8fec6000 rwxp 8fe78000 00:00 0 
+8fec6000-8fec9000 ---p 8fec6000 00:00 0 
+8fec9000-8ff17000 rwxp 8fec9000 00:00 0 
+8ff17000-8ff1a000 ---p 8ff17000 00:00 0 
+8ff1a000-8ff68000 rwxp 8ff1a000 00:00 0 
+8ff68000-8ff6b000 ---p 8ff68000 00:00 0 
+8ff6b000-8ffb9000 rwxp 8ff6b000 00:00 0 
+8ffb9000-8ffbc000 ---p 8ffb9000 00:00 0 
+8ffbc000-9000a000 rwxp 8ffbc000 00:00 0 
+9000a000-9000d000 ---p 9000a000 00:00 0 
+9000d000-9005b000 rwxp 9000d000 00:00 0 
+9005b000-9005e000 ---p 9005b000 00:00 0 
+9005e000-900ac000 rwxp 9005e000 00:00 0 
+900ac000-900af000 ---p 900ac000 00:00 0 
+900af000-900fd000 rwxp 900af000 00:00 0 
+900fd000-90100000 ---p 900fd000 00:00 0 
+90100000-9014e000 rwxp 90100000 00:00 0 
+9014e000-90151000 ---p 9014e000 00:00 0 
+90151000-9019f000 rwxp 90151000 00:00 0 
+9019f000-901a2000 ---p 9019f000 00:00 0 
+901a2000-901f0000 rwxp 901a2000 00:00 0 
+901f0000-901f3000 ---p 901f0000 00:00 0 
+901f3000-90241000 rwxp 901f3000 00:00 0 
+90241000-90244000 ---p 90241000 00:00 0 
+90244000-90292000 rwxp 90244000 00:00 0 
+90292000-90295000 ---p 90292000 00:00 0 
+90295000-902e3000 rwxp 90295000 00:00 0 
+902e3000-902e6000 ---p 902e3000 00:00 0 
+902e6000-90334000 rwxp 902e6000 00:00 0 
+90334000-90337000 ---p 90334000 00:00 0 
+90337000-90385000 rwxp 90337000 00:00 0 
+90385000-90388000 ---p 90385000 00:00 0 
+90388000-903d6000 rwxp 90388000 00:00 0 
+903d6000-903d9000 ---p 903d6000 00:00 0 
+903d9000-90427000 rwxp 903d9000 00:00 0 
+90427000-9042a000 ---p 90427000 00:00 0 
+9042a000-90478000 rwxp 9042a000 00:00 0 
+90478000-9047b000 ---p 90478000 00:00 0 
+9047b000-904c9000 rwxp 9047b000 00:00 0 
+904c9000-904cc000 ---p 904c9000 00:00 0 
+904cc000-9051a000 rwxp 904cc000 00:00 0 
+9051a000-9051d000 ---p 9051a000 00:00 0 
+9051d000-9056b000 rwxp 9051d000 00:00 0 
+9056b000-9056e000 ---p 9056b000 00:00 0 
+9056e000-905bc000 rwxp 9056e000 00:00 0 
+905bc000-905bf000 ---p 905bc000 00:00 0 
+905bf000-9060d000 rwxp 905bf000 00:00 0 
+9060d000-90610000 ---p 9060d000 00:00 0 
+90610000-9065e000 rwxp 90610000 00:00 0 
+9065e000-90661000 ---p 9065e000 00:00 0 
+90661000-906af000 rwxp 90661000 00:00 0 
+906af000-906b2000 ---p 906af000 00:00 0 
+906b2000-9074a000 rwxp 906b2000 00:00 0 
+9074a000-90800000 ---p 9074a000 00:00 0 
+9080b000-9080e000 ---p 9080b000 00:00 0 
+9080e000-9085c000 rwxp 9080e000 00:00 0 
+9085c000-9085f000 ---p 9085c000 00:00 0 
+9085f000-908ad000 rwxp 9085f000 00:00 0 
+908ad000-908b0000 ---p 908ad000 00:00 0 
+908b0000-908fe000 rwxp 908b0000 00:00 0 
+908fe000-908ff000 ---p 908fe000 00:00 0 
+908ff000-9097f000 rwxp 908ff000 00:00 0 
+9097f000-90982000 ---p 9097f000 00:00 0 
+90982000-90afe000 rwxp 90982000 00:00 0 
+90afe000-90b00000 ---p 90afe000 00:00 0 
+90b0c000-90b10000 r-xs 000ca000 08:05 2688880    /opt/java/jdk1.6.0_10/jre/lib/ext/localedata.jar
+90b10000-90b13000 r-xs 00028000 08:05 3256308    /home/panks/.m2/repository_2_0_9/jsyntaxpane/jsyntaxpane/0.9.3/jsyntaxpane-0.9.3.jar
+90b13000-90b16000 r-xs 0001b000 08:05 1491809    /home/panks/.m2/repository_2_0_9/junit/junit/3.8.2/junit-3.8.2.jar
+90b16000-90b1a000 r-xs 0003d000 08:05 1000272    /home/panks/.m2/repository_2_0_9/javax/swing/application/swing-appframework/1.0.3/swing-appframework-1.0.3.jar
+90b1a000-90b1d000 r-xs 00016000 08:05 263782     /home/panks/sviluppo/progetti/blite-se/blite-se-defmodel/target/blite-se-defmodel-1.0-SNAPSHOT.jar
+90b1d000-90b20000 r-xs 0000d000 08:05 4485268    /home/panks/sviluppo/progetti/blite-se/blite-se-engine/target/blite-se-engine-1.0-SNAPSHOT.jar
+90b20000-90b23000 ---p 90b20000 00:00 0 
+90b23000-90b71000 rwxp 90b23000 00:00 0 
+90b71000-90b74000 ---p 90b71000 00:00 0 
+90b74000-90bf2000 rwxp 90b74000 00:00 0 
+90bf2000-90bf5000 ---p 90bf2000 00:00 0 
+90bf5000-90c43000 rwxp 90bf5000 00:00 0 
+90c43000-90c4a000 r-xs 00000000 08:05 1555334    /usr/lib/gconv/gconv-modules.cache
+90c4a000-90c89000 r-xp 00000000 08:05 1602550    /usr/lib/locale/it_IT.utf8/LC_CTYPE
+90c89000-90c8c000 ---p 90c89000 00:00 0 
+90c8c000-90cda000 rwxp 90c8c000 00:00 0 
+90cda000-90cdd000 ---p 90cda000 00:00 0 
+90cdd000-90d2b000 rwxp 90cdd000 00:00 0 
+90d2b000-90d2c000 ---p 90d2b000 00:00 0 
+90d2c000-90ddf000 rwxp 90d2c000 00:00 0 
+90ddf000-90f6f000 r-xs 02eed000 08:05 2650554    /opt/java/jdk1.6.0_10/jre/lib/rt.jar
+90f6f000-90f70000 ---p 90f6f000 00:00 0 
+90f70000-90ff0000 rwxp 90f70000 00:00 0 
+90ff0000-90ff1000 ---p 90ff0000 00:00 0 
+90ff1000-91079000 rwxp 90ff1000 00:00 0 
+91079000-91091000 rwxp 91079000 00:00 0 
+91091000-910a0000 rwxp 91091000 00:00 0 
+910a0000-91172000 rwxp 910a0000 00:00 0 
+91172000-9117a000 rwxp 91172000 00:00 0 
+9117a000-91192000 rwxp 9117a000 00:00 0 
+91192000-911a1000 rwxp 91192000 00:00 0 
+911a1000-91272000 rwxp 911a1000 00:00 0 
+91272000-91275000 rwxp 91272000 00:00 0 
+91275000-9128f000 rwxp 91275000 00:00 0 
+9128f000-92290000 rwxp 9128f000 00:00 0 
+92290000-95290000 rwxp 92290000 00:00 0 
+95290000-96ea0000 rwxp 95290000 00:00 0 
+96ea0000-b1460000 rwxp 96ea0000 00:00 0 
+b1460000-b1860000 rwxp b1460000 00:00 0 
+b1860000-b4c90000 rwxp b1860000 00:00 0 
+b4c90000-b4c99000 r-xs 00073000 08:05 1000797    /home/panks/.m2/repository_2_0_9/org/apache/maven/surefire/surefire-api/2.4.2/surefire-api-2.4.2.jar
+b4c99000-b4c9f000 r-xs 0003a000 08:05 1000794    /home/panks/.m2/repository_2_0_9/org/apache/maven/surefire/surefire-booter/2.4.2/surefire-booter-2.4.2.jar
+b4c9f000-b4ca8000 rwxp b4c9f000 00:00 0 
+b4ca8000-b4d5f000 rwxp b4ca8000 00:00 0 
+b4d5f000-b4f9f000 rwxp b4d5f000 00:00 0 
+b4f9f000-b7d5f000 rwxp b4f9f000 00:00 0 
+b7d5f000-b7d6e000 r-xp 00000000 08:05 1133251    /opt/java/jdk1.6.0_10/jre/lib/i386/libzip.so
+b7d6e000-b7d70000 rwxp 0000e000 08:05 1133251    /opt/java/jdk1.6.0_10/jre/lib/i386/libzip.so
+b7d70000-b7d93000 r-xp 00000000 08:05 1133249    /opt/java/jdk1.6.0_10/jre/lib/i386/libjava.so
+b7d93000-b7d95000 rwxp 00023000 08:05 1133249    /opt/java/jdk1.6.0_10/jre/lib/i386/libjava.so
+b7d95000-b7d9e000 r-xp 00000000 08:05 4366599    /lib/tls/i686/cmov/libnss_files-2.7.so
+b7d9e000-b7da0000 rwxp 00008000 08:05 4366599    /lib/tls/i686/cmov/libnss_files-2.7.so
+b7da0000-b7da8000 r-xp 00000000 08:05 4366601    /lib/tls/i686/cmov/libnss_nis-2.7.so
+b7da8000-b7daa000 rwxp 00007000 08:05 4366601    /lib/tls/i686/cmov/libnss_nis-2.7.so
+b7daa000-b7dbe000 r-xp 00000000 08:05 4366596    /lib/tls/i686/cmov/libnsl-2.7.so
+b7dbe000-b7dc0000 rwxp 00013000 08:05 4366596    /lib/tls/i686/cmov/libnsl-2.7.so
+b7dc0000-b7dc2000 rwxp b7dc0000 00:00 0 
+b7dc2000-b7dc3000 r-xs 00003000 08:05 1000810    /home/panks/.m2/repository_2_0_9/org/apache/maven/surefire/surefire-junit/2.4.2/surefire-junit-2.4.2.jar
+b7dc3000-b7dce000 r-xp 00000000 08:05 1133248    /opt/java/jdk1.6.0_10/jre/lib/i386/libverify.so
+b7dce000-b7dcf000 rwxp 0000b000 08:05 1133248    /opt/java/jdk1.6.0_10/jre/lib/i386/libverify.so
+b7dcf000-b7dd7000 rwxs 00000000 08:05 114940     /tmp/hsperfdata_panks/20281
+b7dd7000-b7dde000 r-xp 00000000 08:05 4366606    /lib/tls/i686/cmov/librt-2.7.so
+b7dde000-b7de0000 rwxp 00006000 08:05 4366606    /lib/tls/i686/cmov/librt-2.7.so
+b7de0000-b7de3000 ---p b7de0000 00:00 0 
+b7de3000-b7e31000 rwxp b7de3000 00:00 0 
+b7e31000-b7e54000 r-xp 00000000 08:05 4366594    /lib/tls/i686/cmov/libm-2.7.so
+b7e54000-b7e56000 rwxp 00023000 08:05 4366594    /lib/tls/i686/cmov/libm-2.7.so
+b7e56000-b7e57000 rwxp b7e56000 00:00 0 
+b7e57000-b7fa0000 r-xp 00000000 08:05 4366590    /lib/tls/i686/cmov/libc-2.7.so
+b7fa0000-b7fa1000 r-xp 00149000 08:05 4366590    /lib/tls/i686/cmov/libc-2.7.so
+b7fa1000-b7fa3000 rwxp 0014a000 08:05 4366590    /lib/tls/i686/cmov/libc-2.7.so
+b7fa3000-b7fa6000 rwxp b7fa3000 00:00 0 
+b7fa6000-b7fa8000 r-xp 00000000 08:05 4366593    /lib/tls/i686/cmov/libdl-2.7.so
+b7fa8000-b7faa000 rwxp 00001000 08:05 4366593    /lib/tls/i686/cmov/libdl-2.7.so
+b7faa000-b7fb1000 r-xp 00000000 08:05 801552     /opt/java/jdk1.6.0_10/jre/lib/i386/jli/libjli.so
+b7fb1000-b7fb3000 rwxp 00006000 08:05 801552     /opt/java/jdk1.6.0_10/jre/lib/i386/jli/libjli.so
+b7fb3000-b7fb4000 rwxp b7fb3000 00:00 0 
+b7fb4000-b7fc8000 r-xp 00000000 08:05 4366604    /lib/tls/i686/cmov/libpthread-2.7.so
+b7fc8000-b7fca000 rwxp 00013000 08:05 4366604    /lib/tls/i686/cmov/libpthread-2.7.so
+b7fca000-b7fcc000 rwxp b7fca000 00:00 0 
+b7fcc000-b7fce000 r-xs 00002000 08:05 1000263    /home/panks/.m2/repository_2_0_9/org/swinglabs/swing-worker/1.1/swing-worker-1.1.jar
+b7fce000-b7fcf000 r-xs 00000000 08:05 2208606    /tmp/surefirebooter50898.jar (deleted)
+b7fcf000-b7fd6000 r-xp 00000000 08:05 4366597    /lib/tls/i686/cmov/libnss_compat-2.7.so
+b7fd6000-b7fd8000 rwxp 00006000 08:05 4366597    /lib/tls/i686/cmov/libnss_compat-2.7.so
+b7fd8000-b7fde000 r-xp 00000000 08:05 752750     /opt/java/jdk1.6.0_10/jre/lib/i386/native_threads/libhpi.so
+b7fde000-b7fdf000 rwxp 00006000 08:05 752750     /opt/java/jdk1.6.0_10/jre/lib/i386/native_threads/libhpi.so
+b7fdf000-b7fe0000 rwxp b7fdf000 00:00 0 
+b7fe0000-b7fe1000 r-xp b7fe0000 00:00 0 
+b7fe1000-b7fe3000 rwxp b7fe1000 00:00 0 
+b7fe3000-b7fe4000 r-xp b7fe3000 00:00 0          [vdso]
+b7fe4000-b7ffe000 r-xp 00000000 08:05 3892041    /lib/ld-2.7.so
+b7ffe000-b8000000 rwxp 00019000 08:05 3892041    /lib/ld-2.7.so
+bfcc1000-bfcd6000 rwxp bffeb000 00:00 0          [stack]
+
+VM Arguments:
+java_command: /tmp/surefirebooter50898.jar /tmp/surefire50896tmp /tmp/surefire50897tmp
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/opt/java/jdk1.6.0_10
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11:/usr/games
+USERNAME=panks
+LD_LIBRARY_PATH=/opt/java/jdk1.6.0_10/jre/lib/i386/server:/opt/java/jdk1.6.0_10/jre/lib/i386:/opt/java/jdk1.6.0_10/jre/../lib/i386:/opt/java/jdk1.6.0_10/jre/lib/i386/client:/opt/java/jdk1.6.0_10/jre/lib/i386:/opt/java/jdk1.6.0_10/jre/../lib/i386
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x606f90], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x606f90], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x504690], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x504690], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x504690], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x504690], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x506b60], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x506900], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: SIG_IGN, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGTERM: [libjvm.so+0x506900], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x506900], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:lenny/sid
+
+uname:Linux 2.6.24-23-generic #1 SMP Mon Jan 26 00:13:11 UTC 2009 i686
+libc:glibc 2.7 NPTL 2.7 
+rlimit: STACK 8192k, CORE 0k, NPROC 16318, NOFILE 1024, AS infinity
+load average:0.29 0.26 0.20
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 15 stepping 6, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3
+
+Memory: 4k page, physical 2067424k(338636k free), swap 0k(0k free)
+
+vm_info: Java HotSpot(TM) Server VM (11.0-b15) for linux-x86 JRE (1.6.0_10-b33), built on Sep 26 2008 01:05:20 by "java_re" with gcc 3.2.1-7a (J2SE release)
+
+time: Sat Apr  4 14:16:46 2009
+elapsed time: 450 seconds
+
