@@ -6,6 +6,7 @@
 package it.unifi.dsi.blide.monitor.widgets;
 
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
+import org.netbeans.api.visual.layout.Layout;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.Scene;
@@ -25,7 +26,9 @@ public class SequenceWidget extends ActivityWidget {
     public SequenceWidget(Scene scene, ActivityComponent activity) {
         super(scene, activity);
 
-        setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+        Layout lay = LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0);
+   
+        setLayout(lay);
     }
 
     @Override

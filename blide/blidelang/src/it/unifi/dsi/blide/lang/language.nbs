@@ -18,6 +18,8 @@ TOKEN:braces:(
 | "ch:"
 | "if"
 | "while"
+| "pck"
+| "kcp"
 )
 TOKEN:separator:(
  "|"
@@ -88,6 +90,7 @@ COMPLETE "[:]"
 COMPLETE "<:>"
 COMPLETE "seq:qes"
 COMPLETE "flw:wlf"
+COMPLETE "pck:kcp"
 COMPLETE "inv:<s> operation(x)"
 COMPLETE "rcv:<\"on_me\"> operation(x)"
 
@@ -98,7 +101,7 @@ BRACE "[:]"
 BRACE "<:>"
 BRACE "seq:qes"
 BRACE "flw:wlf"
-
+BRACE "pck:kcp"
 
 # indentation support
 INDENT "{:}"
@@ -107,7 +110,7 @@ INDENT "{:}"
 INDENT "[:]"
 INDENT "seq:qes"
 INDENT "flw:wlf"
-
+INDENT "pck:kcp"
 
 # code completion
 #COMPLETION:keyword, operator, identifier, whitespace: {

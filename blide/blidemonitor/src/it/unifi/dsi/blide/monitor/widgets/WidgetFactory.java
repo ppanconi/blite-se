@@ -12,6 +12,7 @@ import it.unifi.dsi.blitese.engine.runtime.activities.imp.ConditionalActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.EmptyActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.FlowActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.PickActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.SequenceActivity;
@@ -78,6 +79,11 @@ public class WidgetFactory {
             ConditionalActivity conditionalActivity  = (ConditionalActivity) activityComponent;
 
             widget = new ConditionalWidget(scene, conditionalActivity);
+
+        } else if (activityComponent instanceof PickActivity) {
+            PickActivity pickActivity  = (PickActivity) activityComponent;
+
+            widget = new PickWidget(scene, pickActivity);
         }
 
         return widget;
