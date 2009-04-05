@@ -73,7 +73,7 @@ public class PickActivity extends ActivityComponentBase {
                         //we hava a message
                         reviced = true;
                         rcvOption = i;
-                        manager.getEngine().resumeWaitingFlow(getExecutor());
+                        manager.getEngine().removeFlowFromWaiting(getExecutor());
 
                         BLTDEFPickActivity.PickSequence pickSequence = mOptions.get(receiveActivity);
                         BLTDEFSequenceActivity seqDef =
