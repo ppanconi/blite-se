@@ -514,3 +514,126 @@ la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}
 % \end{table}
 
 \section{Un esempio d'uso}
+
+In questa sezione si presenta un esempio d'uso degli strumenti
+realizzati. Si considera l'esempio introdotti nel documento di specifca di
+\emph{BPEL4WS 1.1} \cite{BPEL11Spec} (sezione 16.1) e ripreso in
+\cite{LaPuTie1}.
+
+L'esempio, pur risultando essere una semplificazione di uno scenario reale,
+permette di sperimentare un buon numero della caratteristiche del linguaggio,	
+come i partner link dinamici, i correlation set, i fault handler e i
+compensation handler.
+\\
+
+Si realizza un servzio di spedizioni (\emph{Shipping Service}) che gestisce
+gli ordini dei clienti. Gli ordini sono composti da un numero di
+articoli e il servizio mette a disposizione due tipi di spedizioni: una in cui
+tutti articoli dell'ordine sono inviati insieme, e l'altra, in cui è possibile
+spedire in parti, gruppi di articoli, in base alla disponibilità degli stessi in
+un ipotetico magazzino.
+
+Il servizio di spedizione da noi realizzato, interagisce con altri due servizi
+di backend, un servizio di gestione del magaziono (\emph{Store Service}) e un
+servizio di accredito dei pagamenti (\emph{Billing Service}). I due servizi
+sono realizzati con interfaccie stateless la cui implemetazione è
+esclusivamente rivolta a fornire un supporto per un'esecuzione verosimile del
+processo realizzato dal servizio spedizioni.
+
+
+\begin{figure}[tp]
+\begin{center}
+  \includegraphics[scale=0.80,clip]{blide/dia/shipper}
+   \caption[Codice Blite, il Servizio Spedizioni]{Il codice Blite che realizza
+   lo
+   \emph{Shipping Service}}
+  \label{fig:shipper}
+\end{center}
+\end{figure}
+
+Il servizio spedizioni è realizzato con la definizione di processo Blite di
+Figura \ref{fig:shipper}. Il Deployment definisce un Correlation Set con la
+variabile \texttt{id} che rappresenta un identificativo univoco per gli ordini.
+Tale identificativo è utilizzato per creare la correlazione dei messaggi che
+arrivano dai servizi di backend con l'istanza appropriata del processo
+spedizini. Anche i processi client del servizio spedizioni utilizzano tale valore per
+correlare le diverse istanze con i messaggi scambiati.
+
+La definizione di processo presenta  
+$$
+	\verb#rcv<"ship", cust> req(id, c, items)#
+$$
+come attività di creazione delle istanze, in cui la ricezione è fatta tramite un
+partner link bidirezionale, in cui la locazione del richidente è resa dinamica
+tramite l'identificativo \texttt{cust}. I valori ricevuti rappresentano
+rispettivamente: \texttt{id}, l'identificativo dell'ordine (già introdotto e
+utilizzato per correlare la comunicazione), \texttt{c} un valore booleano che
+discrimina fra le due possibilità di invio degli articoli, \texttt{items} un
+intero che rappresenta il numero degli articoli nell'ordine.
+
+Se \texttt{c} ha il valore \texttt{true} il processo prova ad inviare tutti gli
+articoli in una sola spedizione. Tramite l'invocazione
+$$
+	\verb#inv<"bend", "ship"> packall(id, items)#
+$$
+richiede al servzio di maggazino l'imballaggio di tutti gli articoli e
+tramite
+$$
+	\verb#rcv<"ship"> packallcb(id, ok)#
+$$
+attende la risposta di questo. In questo caso il partner link è pure
+bidierezionale ma le due parti sono staticamente note: \verb#"bend"#, 
+identifica il servizio di magazino e \verb#"ship"#, il 
+servizio spedizione. Il valore di \texttt{ok} discrimina se la
+spedizione sia possibile o meno. Se questo ha valore \texttt{true} il processo
+sottomette il conto e invia la nota di spezione tramite le invocazioni
+$$
+\begin{array}{c}
+	\verb#inv<"bill"> bill(id, items);#\\
+	\verb#inv<cust> notice(id, items)#
+\end{array}
+$$
+in cui è utilizzato il valore attuale di \texttt{cust} per identificare il
+client, altrimenti se il valore di \texttt{ok} è \texttt{false} si comunica un
+errore con 
+$$
+	\verb#inv<cust> err(id, "sorry")#
+$$
+
+Quando \texttt{c} ha il valore \texttt{false} il processo può inviare gli
+articoli in maniera differita. Per prima cosa il processo inizializza uno scope
+(o contesto) in cui viene svolta l'attività principale e definito un fault
+handler tramite cui, in caso di eccezione, si comunica l'errore al client. 
+
+La politica del servizio è quella di attribuire subuto tutto il costo della
+spedizione, per cui si esegue il sotto scope seguente, in cui vi è l'interazione
+con il servizio di backend per la gestione dei pagamenti
+\begin{verbatim}
+         [  //accredito pagamento
+            inv<"bill"> bill(id, items)
+            ch: //compensazione accredito
+               seq
+                  noshiped := items - shiped;
+                  inv<"bill"> revoke(id, noshiped);
+               qes
+         ] 
+\end{verbatim}
+Se l'attribuzione del pagamento avviene con successo tramite l'invocazione 
+$$
+	\verb#inv<"bill"> bill(id, items)#
+$$
+viene istallato un compensation handler che tramite la seguente sequenza di
+azioni annulla il pagamento degli articoli che non sono stati effettivamente
+inviati
+\begin{verbatim}
+               seq
+                  noshiped := items - shiped;
+                  inv<"bill"> revoke(id, noshiped);
+               qes
+\end{verbatim}
+Si deve osservare che, nel momento in cui il compensation handler verrà
+eseguito la variabile \texttt{shiped} sarà effettivamente valorizzata al numero
+degli articoli inviati. Questo in accordo con la sematica di Blite per cui lo
+stato della memoria dell'istanza è unico e condiviso da tutte le attività
+comprese quelle eseguite nei vari fault e compesation handler.
+
