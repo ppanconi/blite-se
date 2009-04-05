@@ -142,10 +142,17 @@ public class ReceiveActivity extends ActivityComponentBase {
             //we assign the incaming values into the contextual variable scope;
             Object[] parts = matchingMessage.getContent().getParts();
 
+            int partIdx = 0;
+            if (def.getPartners().getOtherPatnerId() != null
+             && def.getPartners().getOtherPatnerId().isLeteral()) {
+                partIdx++;
+            }
+
+
             String vs = "";
             for (int i = 0; i < fparamNames.length; i++) {
+                Object value = parts[partIdx++];
                 String varName = fparamNames[i];
-                Object value = parts[i];
 
                 assing(varName, value);
 
