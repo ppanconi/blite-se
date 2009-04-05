@@ -108,6 +108,9 @@ public class MonitorScene extends Scene //        GraphPinScene
 
     private void addInstance(LocalInstanceMonitor monitor) {
 
+        //
+        exchangeFlow = null;
+
         Widget w = new Widget(this);
         w.setMinimumSize(new Dimension(20, 10));
         mainLayer.addChild(w);
@@ -167,6 +170,8 @@ public class MonitorScene extends Scene //        GraphPinScene
                         //                    System.out.println("===============================>> Activity " + activityComponent + " with parent " + parentActivity +  " ADDED!!");
                         }
                     }
+
+                    widget.setUp();
 
                     mActToWidget.put(activityComponent, widget);
 
@@ -296,12 +301,12 @@ public class MonitorScene extends Scene //        GraphPinScene
 
         ConnectionWidget edge = new ConnectionWidget(this);
         ew.addConnection(edge);
+        
 
         edge.setSourceAnchor(AnchorFactory.createDirectionalAnchor(ew, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
         edge.setTargetAnchor(AnchorFactory.createDirectionalAnchor(rw, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
         edge.setRouter(RouterFactory.createOrthogonalSearchRouter(
-                                    getMainLayer(),
-                connectionLayer));
+                                    connectionLayer, getMainLayer()));
 
         edge.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 //        edge.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
@@ -320,8 +325,7 @@ public class MonitorScene extends Scene //        GraphPinScene
         edge.setSourceAnchor(AnchorFactory.createDirectionalAnchor(iw, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
         edge.setTargetAnchor(AnchorFactory.createDirectionalAnchor(ew, AnchorFactory.DirectionalAnchorKind.HORIZONTAL));
         edge.setRouter(RouterFactory.createOrthogonalSearchRouter(
-                getMainLayer(),
-                connectionLayer));
+                                connectionLayer, getMainLayer()));
 
         edge.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 //        edge.setControlPointShape(PointShape.SQUARE_FILLED_BIG);

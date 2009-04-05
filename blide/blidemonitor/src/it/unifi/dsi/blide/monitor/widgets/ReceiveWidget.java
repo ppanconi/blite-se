@@ -9,15 +9,7 @@ import it.unifi.dsi.blide.monitor.MonitorScene;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
-import java.awt.Color;
-import org.netbeans.api.visual.anchor.AnchorFactory;
-import org.netbeans.api.visual.anchor.AnchorShape;
-import org.netbeans.api.visual.anchor.PointShape;
-import org.netbeans.api.visual.router.RouterFactory;
-import org.netbeans.api.visual.widget.ConnectionWidget;
-import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Scene;
-import org.netbeans.api.visual.widget.Widget;
 
 /**
  *
@@ -35,15 +27,18 @@ public class ReceiveWidget extends IconActivityWidget {
 
         mc = receiveActivity.getMatchingMessage();
 
+    }
+
+    @Override
+    public void setUp() {
+        super.setUp();
         if (mc != null) {
-
-            MonitorScene monitorScene = (MonitorScene) scene;
-            LayerWidget connectionLayer = monitorScene.getConnectionLayer();
+            MonitorScene monitorScene = (MonitorScene) getScene();
             monitorScene.addExchange(mc, this);
-
-            
         }
     }
+
+
 
     @Override
     public String getIconPath() {

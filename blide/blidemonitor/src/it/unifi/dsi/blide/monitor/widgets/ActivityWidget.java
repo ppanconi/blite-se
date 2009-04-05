@@ -35,6 +35,9 @@ public class ActivityWidget extends Widget {
         return activity;
     }
 
+    public void setUp() {
+    }
+
     /**
      * This notifay the possibility to update widget state.
      * 

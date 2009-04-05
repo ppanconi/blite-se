@@ -10,8 +10,10 @@ import it.unifi.dsi.blitese.engine.runtime.FlowOwner;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.AssignActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ConditionalActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.EmptyActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ExitActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.FlowActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.InvokeActivity;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.IterationActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.PickActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.engine.runtime.activities.imp.ScopeActivity;
@@ -84,6 +86,14 @@ public class WidgetFactory {
             PickActivity pickActivity  = (PickActivity) activityComponent;
 
             widget = new PickWidget(scene, pickActivity);
+        } else if (activityComponent instanceof IterationActivity) {
+            IterationActivity iterActivity  = (IterationActivity) activityComponent;
+
+            widget = new IterationWidget(scene, iterActivity);
+        } else if (activityComponent instanceof ExitActivity) {
+            ExitActivity exitActivity  = (ExitActivity) activityComponent;
+
+            widget = new ExitWidget(scene, exitActivity);
         }
 
         return widget;
