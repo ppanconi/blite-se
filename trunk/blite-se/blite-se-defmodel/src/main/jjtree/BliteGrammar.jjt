@@ -65,6 +65,11 @@ SKIP :
 | "\f"
 }
 
+SPECIAL_TOKEN : /* COMMENTS */
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+}
+
 /* RESERVED WORDS */
 
 TOKEN :
@@ -1405,8 +1410,7 @@ BLTDEFBooleanLiteral BooleanLiteral() :
     Token t = null;
 }
 {
-
-    ( t  = < TRUELITERAL> | <FALSELITERAL> )
+    ( t  = < TRUELITERAL> | t  = <FALSELITERAL> )
     {
         jjtThis.setToken(t);
         return jjtThis;
