@@ -541,7 +541,6 @@ esclusivamente rivolta a fornire un supporto per un'esecuzione verosimile del
 processo realizzato dal servizio spedizioni e non vuole essere in nessun modo
 una soluzione alle problematiche presenti in scenari reali.
 
-
 \begin{figure}[tp]
 \begin{center}
   \includegraphics[scale=0.80,clip]{blide/dia/shipper}
@@ -553,7 +552,7 @@ una soluzione alle problematiche presenti in scenari reali.
 \end{figure}
 
 Il servizio spedizioni è realizzato con la definizione di processo Blite di
-Figura \ref{fig:shipper}. Il Deployment definisce un Correlation Set con la
+Figura \ref{fig:shipper}. Il Deployment definisce un correlation set con la
 variabile \texttt{id} che rappresenta un identificativo univoco per gli ordini.
 Tale identificativo è utilizzato per creare la correlazione dei messaggi che
 arrivano dai servizi di backend con l'istanza appropriata del processo
@@ -670,8 +669,135 @@ in più passi diferiti, il valore di \texttt{shiped} diventi uguale a quello di
 l'invio di tutti gli ordini.
 
 Si deve osservare che il processo di invio articoli termina positivamente anche
-quandon non è solevata l'eccezione in quanto questa è gestità internamente.
+quando è solevata l'eccezione in quanto questa è gestità internamente.
+\\
 
+\begin{figure}[t!]
+\begin{center}
+  \includegraphics[scale=0.80,clip]{blide/dia/clients}
+   \caption[Codice Blite, Clienti del Servizio Spedizioni]{Il codice Blite che
+   definisce i client del Servizio Spedizioni.}
+  \label{fig:clients}
+\end{center}
+\end{figure}
+
+In Figura \ref{fig:clients} è presentato il codice Blite in cui è definita la
+composizione di due Deployment, ciascuno dei quali definisce una
+Ready-to-Run-Instance che realizza un processo client per lo Shipping Service.
+Il primo dei due richiede l'invio completo dell'ordine, il secondo l'invio
+anche differito. Di seguito tali processi verrano identificati rispattivamente
+come \emph{All} e \emph{Dif}.
+
+Il codice è abbastanza semplice e intuibile. In entrambi i casi i processi 
+eseguno l'inizializzazione preliminare delle variabili utilizzate, in
+perticolare: alla variabile \texttt{id}, è assegnato il valore
+identificativo dell'ordine, tale variabile è anche utilizzata per ralizzare la
+correlazione, alla variabile \texttt{c} viene assegnato un vaolre booleano per
+discriminare la tipologia di invio articoli richiesta, alla variabile
+\texttt{items} viene assegnato il numero di articoli che compongono l'ordine.
+
+Fatto questo entrambi i processi eseguono un'invocazione del servizio di
+spedizioni, producendone rispettivamente la creazione di un'istanza.
+L'invocazione comunica anche la locazione dei servizi client andando a
+valorizzare dinamicamente il partner link con i rispettivi identificativi.
+Il client All esegue
+$$
+	\verb#inv<"ship", "cust-all"> req(id, c, items)#
+$$
+e il client Dif 
+$$
+	\verb#inv<"ship", "cust-dif"> req(id, c, items)#
+$$
+
+A questo punto i comportamenti dei due client si differiscono in base alla
+tipologia di invio articoli richiesta. In particolare All espone allo Shipping Service
+semplicemete la scelta fra le due operazioni \texttt{notice} e \texttt{err}
+tramite la seguente Pick Activity:
+\begin{verbatim}
+      pck
+         rcv<"cust-all"> notice(id, items);
+         empty;
+       +
+         //tale invio non e' disponibile
+         rcv<"cust-all"> err(id, err);
+         exit; //si fallisce l'istanza
+      kcp 
+\end{verbatim}
+Se viene attivata la prima opzione l'istanza di processo termina con successo,
+mentre nel caso della seconda viene eseguità l'attivtà \texttt{exit} che produce la
+terminazione forzata e il fallimento dell'istanza.
+
+L'istanza client Diff, invece esegue la Pick Activity all'interno del seguente
+un ciclo \texttt{while} 
+\begin{verbatim}
+         while (shiped < items)
+            pck
+                rcv<"cust-dif"> notice(id, count);
+                shiped := shiped + count;
+             +
+                rcv<"cust-dif"> err(id, err);
+                exit; //si fallisce l'istanza
+            kcp 
+\end{verbatim}
+in cui viene accumulato nella variabile \texttt{shiped} il numero degli
+articoli attualmenti inviati. L'iterazione temina quando tale valore diviene
+uguale a quello \texttt{items} e l'isatnza completa positivamente l'esecuzione.
+Nel caso in cui venga attivata dal servizio spedizione l'opzione associata
+all'operazione \texttt{err}, l'attività \texttt{exit} produce l'uscita
+immediata dall'iterazione e il fallimento dell'istanza.
+
+Per completeza in Figura \ref{fig:store} e in Figura \ref{fig:billing} vengono
+riportati anche i programmi Blite che definisco rispetivamente lo Store Service e il Billing
+Service. Facciamo osservare ancora che tale codice ha semplicemente la
+funzionalità di definere delle interfaccie verosimili utilizzabili dal servizio
+spedizioni, l'implemetazione invece è di volta in volta adeguata in base alle
+esigenze delle simuliazioni realizzate.
+\\
+
+Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide
+
+\begin{figure}[t!]
+\begin{center}
+  \includegraphics[scale=0.80,clip]{blide/dia/store}
+   \caption[Codice Blite, interfaccia Store Service]{Il codice Blite che
+   il Servizio di gestione del magazzino.}
+  \label{fig:store}
+\end{center}
+\end{figure}
+
+\begin{figure}[b!]
+\begin{center}
+  \includegraphics[scale=0.80,clip]{blide/dia/billing}
+   \caption[Codice Blite, interfaccia Billing Service]{Il codice Blite che
+   il Servizio di gestione pagamenti.}
+  \label{fig:billing}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[p]
+\begin{center}
+  \includegraphics[scale=0.85,clip]{blide/dia/Sim1}
+   \caption[]{}
+  \label{fig:Sim1}
+\end{center}
+\end{figure}
+
+\begin{figure}[p]
+\begin{center}
+  \includegraphics[scale=0.85,clip]{blide/dia/Sim2}
+   \caption[]{}
+  \label{fig:Sim2}
+\end{center}
+\end{figure}
+
+\begin{figure}[p]
+\begin{center}
+  \includegraphics[scale=1,clip]{blide/dia/Sim3}
+   \caption[]{}
+  \label{fig:Sim3}
+\end{center}
+\end{figure}
 
 
 
