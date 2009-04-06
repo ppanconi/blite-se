@@ -754,9 +754,7 @@ spedizioni, l'implemetazione invece è di volta in volta adeguata in base alle
 esigenze delle simuliazioni realizzate.
 \\
 
-Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide
-
-\begin{figure}[t!]
+\begin{figure}[p!]
 \begin{center}
   \includegraphics[scale=0.80,clip]{blide/dia/store}
    \caption[Codice Blite, interfaccia Store Service]{Il codice Blite che
@@ -765,7 +763,7 @@ Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide
 \end{center}
 \end{figure}
 
-\begin{figure}[b!]
+\begin{figure}[p!]
 \begin{center}
   \includegraphics[scale=0.80,clip]{blide/dia/billing}
    \caption[Codice Blite, interfaccia Billing Service]{Il codice Blite che
@@ -773,6 +771,18 @@ Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide
   \label{fig:billing}
 \end{center}
 \end{figure}
+
+Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide. In
+Figura \ref{fig:Sim1} è rappresentato lo scenario in cui un'istanza client
+richede l'invio di tutti gli articoli allo Shipping Service. Poichè la
+disponibiltà di magazino è tale da soddifare la richiesta il servizio di
+spedizione risponde invocando l'operazione \texttt{notice} del servizio client,
+si attua la correlazione del messaggio con l'istanza e questa termina con
+successo la propria esecuzione.
+
+In Figura \ref{fig:Sim2} ad una richiesta di invio dell'ordine completo, il
+servizio di spedizione risponde invocando l'operazione \texttt{err}, questo
+produce la terminazione forzata e il fallimento dell'istanza client.
 
 
 \begin{figure}[p]
@@ -799,5 +809,12 @@ Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide
 \end{center}
 \end{figure}
 
+\begin{figure}[p]
+\begin{center}
+  \includegraphics[scale=0.90,clip]{blide/dia/Sim4}
+   \caption[]{}
+  \label{fig:Sim4}
+\end{center}
+\end{figure}
 
 

@@ -31,14 +31,14 @@ tabsize=4,
 \usepackage{fleqn}      %for left aligned equations.
 \usepackage{txfonts}   
  %optional font package, if document is to be formatted with Times and compatible math fonts.
-\usepackage{hyperref}   %optional packages if hyper linking is required in the document.
+\usepackage{hyperref}   %optional packages if hyper linking is required in thedocument.
 % the natbib package allows both number and author-year (Harvard)
 % style referencing;
-\usepackage{natbib}
 \usepackage{wasysym}
 \usepackage{marvosym}
 \usepackage{color}
 \usepackage{subfigure}
+\usepackage{eso-pic}
 
 
 \input{macro}
@@ -70,6 +70,8 @@ tabsize=4,
 
 \newcommand{\icode}[1]{\textsf{#1}}
 
+\newcommand{\logo}[1]{\AddToShipoutPicture*{\AtPageCenter
+{\makebox(0,0){\centering \includegraphics[width=0.8\paperwidth]{#1}}}}}
 %\newtheorem{deff}{Definizione}
 %\newtheorem{es}{Esempio}
 %\newtheorem{pro}{Proposizione}
@@ -90,16 +92,17 @@ co-min-cias-se a-spet-ti si-mu-la-re se-con-do an-dia-mo sta-ti-ca}
 \sloppy
 
 \title{\textsf{ \textbf{Realizzazione di un motore d'esecuzione per un
-linguaggio di orchestrazione di servizi} \\ 
-\em \large Blite ovvero BPEL in versione lite}\\ } 
-\author{Paolo Panconi}
-
-\maketitle
-
+  linguaggio di orchestrazione di servizi} \\ 
+  \em \large Blite ovvero BPEL in versione lite}\\ } 
+  \author{Paolo Panconi}
+ 
 % \uselengthunit{pt}
 % \printlength{\textwidth}
 % \printlength{\textheight}
 %\abstractract{Tesi di Laura di Paolo Panconi \ldots}
+\maketitle
+%\include{fronte1} % frontespizio
+\newpage
 
 \tableofcontents
 

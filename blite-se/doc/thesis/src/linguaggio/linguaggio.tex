@@ -49,16 +49,16 @@ basato su XML per la definizione di processi aziendali realizzati come
 composizione di funzionalità esposte da Servizi Web. BPEL storicamente nasce
 dalla fusione di due teconlogie sviluppate indipendetemente all'inizio degli
 anni 2000: WSFL (Web Service Flow Language) di IBM e XLANG di Microsoft. La
-prima versione del linguaggio (BPEL4WS ``Business Process Execution Language for Web Services - Version 1.0'')
-risale al 31 Luglio 2002 e fu prodotta dal lavoro congiunto di grandi
-aziende come IBM, BEA, SAP, Siebel e Microsoft. Dall'Aprile del 2003 il lavoro
-di stesura della versione successiva (1.1) è stato affidato alla supervisione di
-OASIS, società nata con il compito di realizzare standard aperti e condivisi
-dalla comunità internazionale, al 5 Maggio 2003 è datato il rilascio di questa
+prima versione del linguaggio (BPEL4WS ``Business Process Execution Language
+for Web Services - Version 1.0'' \cite{BPEL10Spec}) risale al 31 Luglio 2002 e
+fu prodotta dal lavoro congiunto di grandi aziende come IBM, BEA, SAP, Siebel e Microsoft. Dall'Aprile del 2003 il lavoro
+di stesura della versione successiva (1.1 \cite{BPEL11Spec})  è stato affidato
+alla supervisione di OASIS \cite{OASISSite}, società nata con il compito di
+realizzare standard aperti e condivisi dalla comunità internazionale, al 5 Maggio 2003 è datato il rilascio di questa
 versione nella stesura ufficiale. Oasis è  anche la curatrice della
 versione 2.0 dello standard (WS-BPEL ``Web Services Business Process Execution
-Language Version 2.0'') che ha visto il primo rilascio ufficiale in data
-11 Aprile 2007.
+Language Version 2.0'' \cite{BPEL20Spec}) che ha visto il primo rilascio
+ufficiale in data 11 Aprile 2007.
 \\
 
 BPEL, come molti linguaggi legati alla tecnologia dei servizi web, ha una
@@ -212,6 +212,138 @@ dichiarati in un elemento \texttt{<correlationSets>} con la seguente sintassi:
 
 dove \texttt{qname-list} è una lista di nomi di proprietà separati da uno
 spazio.
+
+Di seguito è mostrata la struttura XML di una difinizione di processo BPEL
+\begin{verbatim}
+<process name="pName"  ...>
+     <partnerLinks>?
+          ...
+     </partnerLinks>
+     <partners>?
+          ...
+     </partners>
+     <variables>?
+          ...
+     </variables>
+     <correlationSets>?
+          ...
+     </correlationSets>
+     <faultHandlers>?
+          ...
+     </faultHandlers>
+     <compensationHandler>?
+          ...
+     </compensationHandler>
+     <eventHandlers>?
+          ...
+     </eventHandlers>
+     activity <!-- attivita' principale del processo -->
+</process>
+\end{verbatim}
+L'attività principale del processo indicata \texttt{activity} è una delle
+attività elementari o strutturate di BPEL e definisce il comportamento del processo.
+
+Le attività BPEL sono i blocchi con i quali si definisce la logica di orche-
+strazione del processo e si dividono in elementari e strutturate. Le attività
+elementari sono elencate di seguito, accompagnate da una breve descrizione
+degli effetti della loro esecuzione:
+
+\texttt{<receive>} il processo rimane in attesa della ricezione di un messaggio
+     corrispondente all'invocazione, da parte di un partner, di una delle
+     operazioni contenute in una delle interfacce WSDL del processo stesso;
+
+\texttt{<reply>} il processo invia un messaggio ad un partner in risposta
+all'invocazione -da parte dello stesso partner- di un'operazione di tipo
+request-response del processo;
+
+\texttt{<invoke>} il processo invia un messaggio per invocare un'operazione di
+tipo request-response oppure one-way contenuta nell'interfaccia WSDL di
+un partner (nel caso di operazione request-response, dopo avere inviato
+il messaggio di richiesta, il processo attende la ricezione di una risposta
+orrelata, che può anche essere un messaggio di errore);
+
+\texttt{<assign>} il processo aggiorna il contenuto di una o più variabili,
+attraverso uno o più assegnamenti elementari che vengono eseguiti in modo atomico (cioè
+tutti o nessuno); 
+
+\texttt{<wait>} il processo attende senza fare nulla fino allo scadere di un
+timeout o fino a che non si raggiunge un certo istante di tempo (detto deadline);
+     
+\texttt{<empty>} l'esecuzione di questa attività non ha alcun effetto (spesso
+viene usata per sincronizzare attività concorrenti o per ignorare un errore);
+                                     
+\texttt{<throw>} l’esecuzione di questa attività provoca il sollevamento di
+un'eccezione, cioè notifica al resto del proceso una situazione anormale o di errore;
+
+\texttt{<compensate>} vengono annullati gli effetti di un'attività
+precedentemente completata con successo, cioè senza che essa abbia sollevato eccezioni;
+
+\texttt{<terminate>} l'esecuzione del processo viene interrotta in maniera
+immediata.
+
+Sottolineiamo che un processo BPEL implementa un'operazione WSDL di tipo 
+request-response tramite una coppia di attività receive e reply, mentre a
+un'operazione di tipo one-way viene implementata attraverso una singola
+attività receive. Un'operazione contenuta nell'interfaccia di un partner viene
+invocata dal processo mediante l'attivita invoke.
+
+Di seguito descriviamo le attività strutturate:
+
+\texttt{<sequence>} le attività annidate tra i tag \texttt{<sequence>} e
+\texttt{</sequence>} vengono eseguite  una dopo l'altra nell'ordine in cui
+compaiono tra i due tag;
+
+\texttt{<switch>} l'attività \texttt{<switch>} definisce un insieme di attività
+alternative, associate a condizioni in base alle quali viene selezionata ed eseguita
+una sola di tali attività;
+
+\texttt{<while>} l’attività annidata nel costrutto while viene eseguita
+ripetutamente fino a che una data condizione di controllo è verificata;                             
+
+\texttt{<pick>} si attende fino a che non viene ricevuto uno specifico
+messaggio, corrispondente all'invocazione di una delle operazioni WSDL del processo;
+
+\texttt{<flow>} le attività annidate tra i tag \texttt{<flow>} e
+\texttt{</flow>} vengono eseguite in modo concorrente;
+
+\texttt{<scope>} un'attività \texttt{<scope>} corrisponde ad un'unità logica di
+elaborazione e definisce un contesto (in inglese scope) per l'attività principale annidata 
+nel tag \texttt{<scope>}, cioè indica quali sono le variabili locali, i gestori
+e delle eccezioni, l'attività di compensazione ed i gestori degli eventi dell'attività principale.
+
+BPEL utilizza un meccanismo di gestione degli errori chiamato \emph{Long-Running
+(Business) Transaction} (LRTs), che permette di controllare in modo flessibile
+l'esecuzione di transazioni long-running.
+Quando si ha a che fare con questo tipo di transazioni è necessario poter
+definire delle procedure di compensazione, cioè delle attività che tentano di
+annullare gli effetti delle transazioni completate con successo. Un'attività di
+compensazione puà essere invocata solo dopo che la transazione -per la o
+quale è stata definita- ha completato con successo la sua esecuzione e se -in
+seguito- si verifica qualche situazione eccezionale che richieda l'annullamento
+degli effetti della suddetta transazione. Nel caso delle transazioni sul web
+non è solitamente possibile eseguire delle operazioni di \emph{rollback totale}
+come nel caso delle transazioni tradizionali su una base di dati (in quel caso il
+rollback riporta la base di dati esattamente allo stato precedente l'esecuzione
+della transazione); per le transazioni su web invece si programmano delle
+procedure di \emph{rollback ad hoc}, in base alla specifica business logic, che
+cercano per quanto possibile di annullare gli effetti della transazione per la quale sono
+state definite.
+
+L'elemento \texttt{<faultHandlers>} annidato in un'attività \texttt{scope} (o
+nello stesso elemento radice \texttt{<process>}) definisce un insieme di gestori
+delle eccezioni o fault handler, che sono attività che vengono eseguite se
+l'attività principale dello \texttt{scope} (o del processo) genera un'eccezione.
+Infatti, se viene sollevata un'eccezione, l'esecuzione dell'attività principale si
+interrompe e viene selezionato uno dei fault handler in base al tipo
+dell'eccezione.
+
+L'elemento \texttt{<compensationHandler>} annidato in un'attività scope (o
+nello stesso elemento radice \texttt{<process>}) definisce invece l'attività di
+compensazione dello scope (o del processo stesso). Tale attività può essere
+invocata dopo il completamento dello scope attraverso l'esecuzione di
+un'attività compensate, che può essere contenuta in un fault handler o nel
+compensation handler dello scope in cui è annidato lo scope da compensare.
+
 
 
 \vspace{1cm}
