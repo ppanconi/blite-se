@@ -516,7 +516,7 @@ la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}
 \section{Un esempio d'uso}
 
 In questa sezione si presenta un esempio d'uso degli strumenti
-realizzati. Si considera l'esempio introdotti nel documento di specifca di
+realizzati. Si considera l'esempio introdotti nel documento di specifca
 \emph{BPEL4WS 1.1} \cite{BPEL11Spec} (sezione 16.1) e ripreso in
 \cite{LaPuTie1}.
 
@@ -527,7 +527,7 @@ compensation handler.
 \\
 
 Si realizza un servzio di spedizioni (\emph{Shipping Service}) che gestisce
-gli ordini dei clienti. Gli ordini sono composti da un numero di
+gli ordini di clienti. Gli ordini sono composti da un numero di
 articoli e il servizio mette a disposizione due tipi di spedizioni: una in cui
 tutti articoli dell'ordine sono inviati insieme, e l'altra, in cui è possibile
 spedire in parti, gruppi di articoli, in base alla disponibilità degli stessi in
@@ -535,10 +535,11 @@ un ipotetico magazzino.
 
 Il servizio di spedizione da noi realizzato, interagisce con altri due servizi
 di backend, un servizio di gestione del magaziono (\emph{Store Service}) e un
-servizio di accredito dei pagamenti (\emph{Billing Service}). I due servizi
+servizio di adebito dei pagamenti (\emph{Billing Service}). I due servizi
 sono realizzati con interfaccie stateless la cui implemetazione è
 esclusivamente rivolta a fornire un supporto per un'esecuzione verosimile del
-processo realizzato dal servizio spedizioni.
+processo realizzato dal servizio spedizioni e non vuole essere in nessun modo
+una soluzione alle problematiche presenti in scenari reali.
 
 
 \begin{figure}[tp]
@@ -632,8 +633,45 @@ inviati
                qes
 \end{verbatim}
 Si deve osservare che, nel momento in cui il compensation handler verrà
-eseguito la variabile \texttt{shiped} sarà effettivamente valorizzata al numero
-degli articoli inviati. Questo in accordo con la sematica di Blite per cui lo
-stato della memoria dell'istanza è unico e condiviso da tutte le attività
+eseguito la variabile \texttt{shiped} sarà effettivamente valorizzata al numero degli articoli
+inviati. Questo in accordo con la sematica di Blite per cui lo stato della memoria dell'istanza è unico e condiviso da tutte le attività
 comprese quelle eseguite nei vari fault e compesation handler.
+
+Terminato quest'ultimo scope il processo inizia un iterazione in cui ad ogni
+passo interroga il servizio di magazzino richiedento l'invio degli articoli
+attualmente disponimili, le due attività seguenti aseguano in maniera asincrona
+l'interazione 
+\begin{verbatim}
+            inv<"bend", "ship"> pack(id, shiped, items);
+            rcv<"ship"> packcb(id, count);
+\end{verbatim}
+la prima invocazione invia i valori \texttt{id}, identificativo dell'ordine,
+\texttt{shiped}, numero degli articoli attualmente inviati, \texttt{items}
+numero complessivo degli articoli al servizio di backend, e la
+successiva ricezzione, utilizzando ancora il valore dell'\texttt{id} per
+attuare la correlazione, valorizza nella variabile \texttt{count} il numero
+degli articoli inviati in questo passo.
+
+Se il volore di \texttt{count} è maggiore di zero il processo invia al client
+una nota di spedizione con tale valore ed aggiorna la variabile
+\texttt{shiped} con il numero di tutti gli articoli attualmente inviati. Al
+contrario se \texttt{count} ha valore minore o uguale a zero il processo solleva
+un'eccezione e l'esecuzione esce forzatamente dal ciclo iterativo. L'eccezione 
+viene gestita nello scope che contiene l'iterazione, poichè in questo, come
+precedentemente è stato fatto osservare, è istallato il compensation handler
+del stottoscope completato, esso verrà eseguito, revocando il pagamento degli
+articoli non inviati. Poiché lo scope che gestisce l'eccezione definisce un
+faulthandler, questo verrà seguito subuto dopo il compesation handler,
+comunicando così al client un errore.
+
+Se le politichè e le disponibilità del magazzino sono tali da far sì, che anche
+in più passi diferiti, il valore di \texttt{shiped} diventi uguale a quello di
+\texttt{items} l'iterazione termina e il processo si conclude avendo eseguto
+l'invio di tutti gli ordini.
+
+Si deve osservare che il processo di invio articoli termina positivamente anche
+quandon non è solevata l'eccezione in quanto questa è gestità internamente.
+
+
+
 
