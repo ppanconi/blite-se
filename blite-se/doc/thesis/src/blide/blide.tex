@@ -516,27 +516,27 @@ la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}
 \section{Un esempio d'uso}
 
 In questa sezione si presenta un esempio d'uso degli strumenti
-realizzati. Si considera l'esempio introdotti nel documento di specifca
+realizzati. Si considera l'esempio introdotto nel documento di specifca
 \emph{BPEL4WS 1.1} \cite{BPEL11Spec} (sezione 16.1) e ripreso in
 \cite{LaPuTie1}.
 
 L'esempio, pur risultando essere una semplificazione di uno scenario reale,
-permette di sperimentare un buon numero della caratteristiche del linguaggio,	
+permette di sperimentare un buon numero delle caratteristiche del linguaggio,	
 come i partner link dinamici, i correlation set, i fault handler e i
 compensation handler.
 \\
 
-Si realizza un servzio di spedizioni (\emph{Shipping Service}) che gestisce
+Si realizza un servizio di spedizioni (\emph{Shipping Service}) che gestisce
 gli ordini di clienti. Gli ordini sono composti da un numero di
 articoli e il servizio mette a disposizione due tipi di spedizioni: una in cui
 tutti articoli dell'ordine sono inviati insieme, e l'altra, in cui è possibile
-spedire in parti, gruppi di articoli, in base alla disponibilità degli stessi in
+spedire in parti gruppi di articoli, in base alla disponibilità degli stessi in
 un ipotetico magazzino.
 
-Il servizio di spedizione da noi realizzato, interagisce con altri due servizi
-di backend, un servizio di gestione del magaziono (\emph{Store Service}) e un
-servizio di adebito dei pagamenti (\emph{Billing Service}). I due servizi
-sono realizzati con interfaccie stateless la cui implemetazione è
+Il servizio di spedizione da noi realizzato interagisce con altri due servizi
+di backend, un servizio di gestione del magazzino (\emph{Store Service}) e un
+servizio di addebito dei pagamenti (\emph{Billing Service}). I due servizi
+sono realizzati con interfacce stateless, la cui implementazione è
 esclusivamente rivolta a fornire un supporto per un'esecuzione verosimile del
 processo realizzato dal servizio spedizioni e non vuole essere in nessun modo
 una soluzione alle problematiche presenti in scenari reali.
@@ -546,7 +546,7 @@ una soluzione alle problematiche presenti in scenari reali.
   \includegraphics[scale=0.80,clip]{blide/dia/shipper}
    \caption[Codice Blite, il Servizio Spedizioni]{Il codice Blite che realizza
    lo
-   \emph{Shipping Service}}
+   \emph{Shipping Service}.}
   \label{fig:shipper}
 \end{center}
 \end{figure}
@@ -556,37 +556,37 @@ Figura \ref{fig:shipper}. Il Deployment definisce un correlation set con la
 variabile \texttt{id} che rappresenta un identificativo univoco per gli ordini.
 Tale identificativo è utilizzato per creare la correlazione dei messaggi che
 arrivano dai servizi di backend con l'istanza appropriata del processo
-spedizini. Anche i processi client del servizio spedizioni utilizzano tale valore per
-correlare le diverse istanze con i messaggi scambiati.
+spedizioni. Anche i processi client del servizio spedizioni utilizzano tale
+valore per correlare le diverse istanze con i messaggi scambiati.
 
-La definizione di processo presenta  
+La definizione di processo presenta:  
 $$
 	\verb#rcv<"ship", cust> req(id, c, items)#
 $$
 come attività di creazione delle istanze, in cui la ricezione è fatta tramite un
-partner link bidirezionale, in cui la locazione del richidente è resa dinamica
+partner link bidirezionale, in cui la locazione del richiedente è resa dinamica
 tramite l'identificativo \texttt{cust}. I valori ricevuti rappresentano
 rispettivamente: \texttt{id}, l'identificativo dell'ordine (già introdotto e
-utilizzato per correlare la comunicazione), \texttt{c} un valore booleano che
-discrimina fra le due possibilità di invio degli articoli, \texttt{items} un
+utilizzato per correlare la comunicazione), \texttt{c}, un valore booleano che
+discrimina fra le due modalità di invio degli articoli, \texttt{items}, un
 intero che rappresenta il numero degli articoli nell'ordine.
 
 Se \texttt{c} ha il valore \texttt{true} il processo prova ad inviare tutti gli
-articoli in una sola spedizione. Tramite l'invocazione
+articoli in una sola spedizione. Tramite l'invocazione:
 $$
 	\verb#inv<"bend", "ship"> packall(id, items)#
 $$
-richiede al servzio di maggazino l'imballaggio di tutti gli articoli e
-tramite
+richiede al servizio di magazzino l'imballaggio di tutti gli articoli e
+tramite:
 $$
 	\verb#rcv<"ship"> packallcb(id, ok)#
 $$
 attende la risposta di questo. In questo caso il partner link è pure
-bidierezionale ma le due parti sono staticamente note: \verb#"bend"#, 
-identifica il servizio di magazino e \verb#"ship"#, il 
+bidirezionale, ma le due parti sono staticamente note: \verb#"bend"# 
+identifica il servizio di magazzino e \verb#"ship"# il 
 servizio spedizione. Il valore di \texttt{ok} discrimina se la
-spedizione sia possibile o meno. Se questo ha valore \texttt{true} il processo
-sottomette il conto e invia la nota di spezione tramite le invocazioni
+spedizione sia possibile o meno. Se questo ha valore \texttt{true}, il processo
+sottomette il conto e invia la nota di spedizione tramite le invocazioni:
 $$
 \begin{array}{c}
 	\verb#inv<"bill"> bill(id, items);#\\
@@ -594,20 +594,21 @@ $$
 \end{array}
 $$
 in cui è utilizzato il valore attuale di \texttt{cust} per identificare il
-client, altrimenti se il valore di \texttt{ok} è \texttt{false} si comunica un
-errore con 
+client; altrimenti, se il valore di \texttt{ok} è \texttt{false}, si comunica un
+errore con: 
 $$
 	\verb#inv<cust> err(id, "sorry")#
 $$
 
 Quando \texttt{c} ha il valore \texttt{false} il processo può inviare gli
 articoli in maniera differita. Per prima cosa il processo inizializza uno scope
-(o contesto) in cui viene svolta l'attività principale e definito un fault
-handler tramite cui, in caso di eccezione, si comunica l'errore al client. 
+(o contesto) in cui viene svolta l'attività principale ed è definito un fault
+handler per mezzo del quale, in caso di eccezione, si comunica l'errore al
+client.
 
-La politica del servizio è quella di attribuire subuto tutto il costo della
+La politica del servizio è quella di attribuire subito tutto il costo della
 spedizione, per cui si esegue il sotto scope seguente, in cui vi è l'interazione
-con il servizio di backend per la gestione dei pagamenti
+con il servizio di backend per la gestione dei pagamenti:
 \begin{verbatim}
          [  //accredito pagamento
             inv<"bill"> bill(id, items)
@@ -618,13 +619,13 @@ con il servizio di backend per la gestione dei pagamenti
                qes
          ] 
 \end{verbatim}
-Se l'attribuzione del pagamento avviene con successo tramite l'invocazione 
+Se l'attribuzione del pagamento avviene con successo tramite l'invocazione: 
 $$
 	\verb#inv<"bill"> bill(id, items)#
 $$
-viene istallato un compensation handler che tramite la seguente sequenza di
-azioni annulla il pagamento degli articoli che non sono stati effettivamente
-inviati
+viene istallato un compensation handler che, tramite la seguente sequenza di
+azioni, annulla il pagamento degli articoli che non sono stati effettivamente
+inviati:
 \begin{verbatim}
                seq
                   noshiped := items - shiped;
@@ -632,44 +633,48 @@ inviati
                qes
 \end{verbatim}
 Si deve osservare che, nel momento in cui il compensation handler verrà
-eseguito la variabile \texttt{shiped} sarà effettivamente valorizzata al numero degli articoli
-inviati. Questo in accordo con la sematica di Blite per cui lo stato della memoria dell'istanza è unico e condiviso da tutte le attività
-comprese quelle eseguite nei vari fault e compesation handler.
+eseguito, la variabile \texttt{shiped} sarà effettivamente valorizzata al
+numero degli articoli inviati. Questo in accordo con la semantica di Blite per
+cui lo stato della memoria dell'istanza è unico e condiviso da tutte le 
+attività, comprese quelle eseguite nei vari fault e compesation handler.
 
-Terminato quest'ultimo scope il processo inizia un iterazione in cui ad ogni
-passo interroga il servizio di magazzino richiedento l'invio degli articoli
-attualmente disponimili, le due attività seguenti aseguano in maniera asincrona
-l'interazione 
+Terminato quest'ultimo scope il processo inizia un'iterazione, in cui ad ogni
+passo interroga il servizio di magazzino, richiedendo l'invio degli articoli
+attualmente disponibili. Le due attività seguenti eseguono in maniera asincrona
+l'interazione:
 \begin{verbatim}
             inv<"bend", "ship"> pack(id, shiped, items);
             rcv<"ship"> packcb(id, count);
 \end{verbatim}
-la prima invocazione invia i valori \texttt{id}, identificativo dell'ordine,
-\texttt{shiped}, numero degli articoli attualmente inviati, \texttt{items}
-numero complessivo degli articoli al servizio di backend, e la
-successiva ricezzione, utilizzando ancora il valore dell'\texttt{id} per
+La prima invocazione invia i seguenti valori al servizio di backend:
+\texttt{id}, identificativo dell'ordine,
+\texttt{shiped}, numero degli articoli attualmente inviati, \texttt{items},
+numero complessivo degli articoli. La
+successiva ricezione, utilizzando ancora il valore dell'\texttt{id} per
 attuare la correlazione, valorizza nella variabile \texttt{count} il numero
 degli articoli inviati in questo passo.
 
-Se il volore di \texttt{count} è maggiore di zero il processo invia al client
+Se il valore di \texttt{count} è maggiore di zero, il processo invia al client
 una nota di spedizione con tale valore ed aggiorna la variabile
 \texttt{shiped} con il numero di tutti gli articoli attualmente inviati. Al
-contrario se \texttt{count} ha valore minore o uguale a zero il processo solleva
-un'eccezione e l'esecuzione esce forzatamente dal ciclo iterativo. L'eccezione 
-viene gestita nello scope che contiene l'iterazione, poichè in questo, come
-precedentemente è stato fatto osservare, è istallato il compensation handler
-del stottoscope completato, esso verrà eseguito, revocando il pagamento degli
-articoli non inviati. Poiché lo scope che gestisce l'eccezione definisce un
-faulthandler, questo verrà seguito subuto dopo il compesation handler,
-comunicando così al client un errore.
+contrario, se \texttt{count} ha valore minore o uguale a zero, il processo
+solleva un'eccezione e l'esecuzione esce forzatamente dal ciclo iterativo.
 
-Se le politichè e le disponibilità del magazzino sono tali da far sì, che anche
-in più passi diferiti, il valore di \texttt{shiped} diventi uguale a quello di
-\texttt{items} l'iterazione termina e il processo si conclude avendo eseguto
+L'eccezione viene gestita nello scope che contiene l'iterazione. 
+In questo, come precedentemente è stato fatto osservare, verrà eseguito 
+il compensation handler del sottoscope completato,
+revocando il pagamento degli articoli non inviati.
+Poiché lo scope che gestisce l'eccezione definisce un
+faulthandler, questo verrà eseguito subito dopo il compesation handler,
+comunicando così al client l'errore.
+
+Se le politiche e le disponibilità del magazzino sono tali che, anche
+in più passi differiti, il valore di \texttt{shiped} diventi uguale a quello di
+\texttt{items}, l'iterazione termina e il processo si conclude avendo eseguito
 l'invio di tutti gli ordini.
 
 Si deve osservare che il processo di invio articoli termina positivamente anche
-quando è solevata l'eccezione in quanto questa è gestità internamente.
+quando è sollevata l'eccezione, in quanto questa è gestita internamente.
 \\
 
 \begin{figure}[t!]
@@ -685,14 +690,14 @@ In Figura \ref{fig:clients} è presentato il codice Blite in cui è definita la
 composizione di due Deployment, ciascuno dei quali definisce una
 Ready-to-Run-Instance che realizza un processo client per lo Shipping Service.
 Il primo dei due richiede l'invio completo dell'ordine, il secondo l'invio
-anche differito. Di seguito tali processi verrano identificati rispattivamente
-come \emph{All} e \emph{Dif}.
+anche differito. Di seguito tali processi verrano identificati rispettivamente
+come: \emph{All} e \emph{Dif}.
 
-Il codice è abbastanza semplice e intuibile. In entrambi i casi i processi 
-eseguno l'inizializzazione preliminare delle variabili utilizzate, in
-perticolare: alla variabile \texttt{id}, è assegnato il valore
-identificativo dell'ordine, tale variabile è anche utilizzata per ralizzare la
-correlazione, alla variabile \texttt{c} viene assegnato un vaolre booleano per
+Il codice è abbastanza semplice ed intuibile. In entrambi i casi i processi 
+eseguono l'inizializzazione preliminare delle variabili utilizzate, in
+particolare: alla variabile \texttt{id}, è assegnato il valore
+identificativo dell'ordine, tale variabile è anche utilizzata per realizzare la
+correlazione, alla variabile \texttt{c} viene assegnato un valore booleano per
 discriminare la tipologia di invio articoli richiesta, alla variabile
 \texttt{items} viene assegnato il numero di articoli che compongono l'ordine.
 
@@ -700,18 +705,18 @@ Fatto questo entrambi i processi eseguono un'invocazione del servizio di
 spedizioni, producendone rispettivamente la creazione di un'istanza.
 L'invocazione comunica anche la locazione dei servizi client andando a
 valorizzare dinamicamente il partner link con i rispettivi identificativi.
-Il client All esegue
+Il client All esegue:
 $$
 	\verb#inv<"ship", "cust-all"> req(id, c, items)#
 $$
-e il client Dif 
+e il client Dif: 
 $$
 	\verb#inv<"ship", "cust-dif"> req(id, c, items)#
 $$
 
 A questo punto i comportamenti dei due client si differiscono in base alla
 tipologia di invio articoli richiesta. In particolare All espone allo Shipping Service
-semplicemete la scelta fra le due operazioni \texttt{notice} e \texttt{err}
+semplicemente la scelta fra le due operazioni \texttt{notice} ed \texttt{err}
 tramite la seguente Pick Activity:
 \begin{verbatim}
       pck
@@ -723,12 +728,12 @@ tramite la seguente Pick Activity:
          exit; //si fallisce l'istanza
       kcp 
 \end{verbatim}
-Se viene attivata la prima opzione l'istanza di processo termina con successo,
-mentre nel caso della seconda viene eseguità l'attivtà \texttt{exit} che produce la
-terminazione forzata e il fallimento dell'istanza.
+Se viene attivata la prima opzione l'istanza di processo termina con successo;
+mentre nel caso della seconda viene eseguita l'attività \texttt{exit}, che
+produce la terminazione forzata e il fallimento dell'istanza.
 
-L'istanza client Diff, invece esegue la Pick Activity all'interno del seguente
-un ciclo \texttt{while} 
+L'istanza client Diff invece esegue la Pick Activity all'interno del seguente
+ciclo \texttt{while}: 
 \begin{verbatim}
          while (shiped < items)
             pck
@@ -740,25 +745,25 @@ un ciclo \texttt{while}
             kcp 
 \end{verbatim}
 in cui viene accumulato nella variabile \texttt{shiped} il numero degli
-articoli attualmenti inviati. L'iterazione temina quando tale valore diviene
-uguale a quello \texttt{items} e l'isatnza completa positivamente l'esecuzione.
-Nel caso in cui venga attivata dal servizio spedizione l'opzione associata
-all'operazione \texttt{err}, l'attività \texttt{exit} produce l'uscita
+articoli attualmente inviati. L'iterazione termina quando tale valore diviene
+uguale a quello di \texttt{items} e l'istanza completa positivamente
+l'esecuzione. Nel caso in cui venga attivata dal servizio spedizioni l'opzione
+associata all'operazione \texttt{err}, l'attività \texttt{exit} produce l'uscita
 immediata dall'iterazione e il fallimento dell'istanza.
 
-Per completeza in Figura \ref{fig:store} e in Figura \ref{fig:billing} vengono
-riportati anche i programmi Blite che definisco rispetivamente lo Store Service e il Billing
-Service. Facciamo osservare ancora che tale codice ha semplicemente la
-funzionalità di definere delle interfaccie verosimili utilizzabili dal servizio
-spedizioni, l'implemetazione invece è di volta in volta adeguata in base alle
-esigenze delle simuliazioni realizzate.
+Per completezza in Figura \ref{fig:store} e in Figura \ref{fig:billing} vengono
+riportati anche i programmi Blite che definiscono rispettivamente lo Store
+Service e il Billing Service. Facciamo osservare ancora che tale codice ha semplicemente la
+funzione di definire delle interfacce verosimili utilizzabili dal servizio
+spedizioni; l'implementazione invece è di volta in volta adeguata in base alle
+esigenze delle simulazioni realizzate.
 \\
 
 \begin{figure}[p!]
 \begin{center}
   \includegraphics[scale=0.80,clip]{blide/dia/store}
    \caption[Codice Blite, interfaccia Store Service]{Il codice Blite che
-   il Servizio di gestione del magazzino.}
+   definisce il Servizio di gestione del magazzino.}
   \label{fig:store}
 \end{center}
 \end{figure}
@@ -767,28 +772,43 @@ esigenze delle simuliazioni realizzate.
 \begin{center}
   \includegraphics[scale=0.80,clip]{blide/dia/billing}
    \caption[Codice Blite, interfaccia Billing Service]{Il codice Blite che
-   il Servizio di gestione pagamenti.}
+   definisce il Servizio di gestione pagamenti.}
   \label{fig:billing}
 \end{center}
 \end{figure}
 
-Diseguito vengono mostrate alcune simulazioni effetuate tramite Blide. In
-Figura \ref{fig:Sim1} è rappresentato lo scenario in cui un'istanza client
+Di seguito vengono mostrate alcune simulazioni effettuate tramite Blide. In
+Figura \ref{fig:Sim1} è rappresentato lo scenario, in cui un'istanza client
 richede l'invio di tutti gli articoli allo Shipping Service. Poichè la
-disponibiltà di magazino è tale da soddifare la richiesta il servizio di
-spedizione risponde invocando l'operazione \texttt{notice} del servizio client,
-si attua la correlazione del messaggio con l'istanza e questa termina con
+disponibiltà di magazzino è tale da soddifare la richiesta, il servizio di
+spedizione risponde invocando l'operazione \texttt{notice} del servizio client.
+Si attua la correlazione del messaggio con l'istanza e questa termina con
 successo la propria esecuzione.
 
 In Figura \ref{fig:Sim2} ad una richiesta di invio dell'ordine completo, il
 servizio di spedizione risponde invocando l'operazione \texttt{err}, questo
 produce la terminazione forzata e il fallimento dell'istanza client.
 
+In Figura \ref{fig:Sim3} è rappresentata la comunicazione fra un client che
+supporta l'invio differito degli articoli e il servizio di spedizione. Come si
+può osservare le esecuzioni presentano la ripetizione delle attività contenute
+all'interno del ciclo \texttt{while}. In particolare il servizio spedizioni
+interagisce due volte con il magazzino e con il client, facendo sì che
+quest'ultimo porti a termine positivamente la propria esecuzione.
+
+In Figura \ref{fig:Sim4} sono illustrati ancora i processi associati al
+tentativo di spedizione differita. In questo caso però al servizio spedizioni,
+nel secondo ciclo dell'iterazione, viene comunicata l'indisponibilità degli
+articoli. Si genera così un'eccezione che avvia il
+\emph{Proteced Scope}, in cui viene prima compensata l'attività di accredito
+pagamenti e poi comunicato l'errore al client. Quest'ultimo processo, ricevuto
+tale messaggio di errore, termina forzatamente la propria esecuzione. 
 
 \begin{figure}[p]
 \begin{center}
   \includegraphics[scale=0.85,clip]{blide/dia/Sim1}
-   \caption[]{}
+   \caption[Blide, simulazione 1]{La spedizione completa dell'ordine è
+   possibile, l'istanza client All termina con successo la propria esecuzione}
   \label{fig:Sim1}
 \end{center}
 \end{figure}
@@ -796,7 +816,8 @@ produce la terminazione forzata e il fallimento dell'istanza client.
 \begin{figure}[p]
 \begin{center}
   \includegraphics[scale=0.85,clip]{blide/dia/Sim2}
-   \caption[]{}
+   \caption[Blide, simulazione 2]{La spedizione completa dell'ordine
+   non è possibile, l'istanza client All fallisce.}
   \label{fig:Sim2}
 \end{center}
 \end{figure}
@@ -804,7 +825,8 @@ produce la terminazione forzata e il fallimento dell'istanza client.
 \begin{figure}[p]
 \begin{center}
   \includegraphics[scale=1,clip]{blide/dia/Sim3}
-   \caption[]{}
+   \caption[Blide, simulazione 3]{Spedizione differita degli articoli
+   di un ordine.}
   \label{fig:Sim3}
 \end{center}
 \end{figure}
@@ -812,7 +834,9 @@ produce la terminazione forzata e il fallimento dell'istanza client.
 \begin{figure}[p]
 \begin{center}
   \includegraphics[scale=0.90,clip]{blide/dia/Sim4}
-   \caption[]{}
+   \caption[Blide, simulazione 4]{Il processo di spedizione differita fallisce,
+   il compesation e il fault handler sono eseguiti in un Proteced Scope
+   (rettangolo tratteggiato di rosso).}
   \label{fig:Sim4}
 \end{center}
 \end{figure}
