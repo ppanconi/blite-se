@@ -1,4 +1,14 @@
-\chapter{Il linguaggio per l'orchestrazione}
+\chapter{Linguaggi per l'orchestrazione}
+
+\textsf{
+In questo capitolo si offre una panoramica ad alto livello di BPEL, il
+linguaggio che è diventato lo standard per l'orchestrazione dei Servizi Web.
+Di seguito viene introdotto Blite, na variante semplificata di
+BPEL, che ne riproduce alcune delle funzionalità più caratteristiche al fine
+di definire una sematica formale. Tale sematica è presentate e commentata nel
+dettaglio nella Sezione 2.2. Della sintassi astratta di Blite si ricava una
+grammatica EBNF da cui si realizza un compilatore, tale procedimento è
+presentato nella Sezione 2.3.}
 
 \section{BPEL, lo standard per l'orchestrazione di Servizi Web}
 Abbiamo detto come SOA e i Servizi Web siano una delle risposte più recenti
@@ -10,11 +20,11 @@ aziendali.
 Alla base della metodologia SOA vi è l'approccio ``bottom-up'', secondo cui è
 possibile comporre le funzionalità di base offerte dalle diverse applicazioni
 aziendali per crearne di più complesse e articolate. Gli standard e i linguaggi
-dei Web Services foniscono il supporto tecnologico e formale per realizzare tale
+dei Servizi Web foniscono il supporto tecnologico e formale per realizzare tale
 integrazione che nella maggior parte degli scenari reali prevede di dover far
 comunicare tecnologie e formalismi del tutto eterogeni e incompatibli. Una delle
 possibilità più interessanti è quella di poter utilizzare il patrimonio storico
-(``legacy'') del software azindale tramite standard moderni e aperti, e poter
+(``legacy'') del software aziendale tramite standard moderni e aperti, e poter
 fare dialogare le applicazioni di ultima generazione con quelle più ``mature'',
 che spesso mantengono un alto valore aziendale ma si basano su tecnologie e
 metodologie proprietarie ormai difficilmente manutenibili.
@@ -41,21 +51,21 @@ diversi livelli aziendali, compreso e adoperato dalle diverse figure
 professionali che partecipano alla definizione e attuazione dei processi
 stessi. Si vorrebbe disporre non solo di un linguaggio di programmazione
 utile ai tecnici del software ma anche di un formalismo utilizzabile dai manager
-e dagli esperti dei domini applicativi, che potese realizzare una piattaforma comune
-per la collaborazione fra le diverse aree disciplinari.
+e dagli esperti dei domini applicativi, che possa realizzare una piattaforma
+comune per la collaborazione fra le diverse aree disciplinari.
 
-E' proprio come risposta a tale necessità che si propone BPEL, un linguaggio
+\`E proprio come risposta a tale necessità che si propone BPEL, un linguaggio
 basato su XML per la definizione di processi aziendali realizzati come
 composizione di funzionalità esposte da Servizi Web. BPEL storicamente nasce
-dalla fusione di due teconlogie sviluppate indipendetemente all'inizio degli
-anni 2000: WSFL (Web Service Flow Language) di IBM e XLANG di Microsoft. La
-prima versione del linguaggio (BPEL4WS ``Business Process Execution Language
-for Web Services - Version 1.0'' \cite{BPEL10Spec}) risale al 31 Luglio 2002 e
+dalla fusione di due tecnologie sviluppate indipendetemente all'inizio degli
+anni 2000: WSFL (Web Service Flow Language) di IBM \cite{WSFL} e XLANG di
+Microsoft \cite{XLANG}. La prima versione del linguaggio (BPEL4WS ``Business
+Process Execution Language for Web Services - Version 1.0'' \cite{BPEL10Spec}) risale al 31 Luglio 2002 e
 fu prodotta dal lavoro congiunto di grandi aziende come IBM, BEA, SAP, Siebel e Microsoft. Dall'Aprile del 2003 il lavoro
 di stesura della versione successiva (1.1 \cite{BPEL11Spec})  è stato affidato
-alla supervisione di OASIS \cite{OASISSite}, società nata con il compito di
-realizzare standard aperti e condivisi dalla comunità internazionale, al 5 Maggio 2003 è datato il rilascio di questa
-versione nella stesura ufficiale. Oasis è  anche la curatrice della
+alla supervisione di Oasis \cite{OASISSite}, società nata con il compito di
+realizzare standard aperti e condivisi dalla comunità internazionale; al 5
+Maggio 2003 è datato il rilascio di questa versione nella stesura ufficiale. Oasis è  anche la curatrice della
 versione 2.0 dello standard (WS-BPEL ``Web Services Business Process Execution
 Language Version 2.0'' \cite{BPEL20Spec}) che ha visto il primo rilascio
 ufficiale in data 11 Aprile 2007.
@@ -196,7 +206,7 @@ esattamente nella parte \texttt{cfUtente}:
 \end{verbatim}
 
 Tipiche informazione di correlazione possono essere il numero di un ordine,
-il codice di un cliente, l'identificativo di una transazione, etc \ldots .
+il codice di un cliente, l'identificativo di una transazione, etc.
 Quando le informazioni contenute nei messaggi inviati o ricevuti dal processo 
 devono essere confrontate con le informazioni di correlazione possedute dal
 processo, le attività tramite cui tali messaggi sono inviati o ricevuti devono 
@@ -381,13 +391,13 @@ le versioni leggermente modificate di cui è stata realizzata l'implementazione.
 
 Come già detto Blite è un linguaggio che può essere visto come una
 semplificazione di BPEL, nel senso che ne ripropone solo alcuni aspetti
-essenziali come, partner links, process e activity termination, message
+essenziali come, partner link, process e activity termination, message
 correlation, fault handler e compesation handler, e ne tralascia altri come
 timeout, eventi, termination handler e flow graph.
 
 Anche il modello di invocazione dei servizi è stato semplificato. In BPEL difatti
 sono possibili sia invocazioni one-way che request-response. Le prime sono
-invocazioni asincrone, in cui il clinet dopo aver invocato può continuare la sua
+invocazioni asincrone, in cui il client dopo aver invocato può continuare la sua
 elaborazione senza dover attendere alcuna risposta, le seconde invece realizzano
 invocazioni sincrone, in cui l'operazione di richiesta blocca il client fino al
 sopraggiungere del risultato. In Blite è stato di fatto scelto di supportare
@@ -398,37 +408,39 @@ asincrone.
 % \texttt{invoke}, \texttt{receive} e \texttt{replay}, in Blite rimangono
 % solamente la \texttt{invoke} e la \texttt{receive}
 
-Anche il meccanismo di instradamento dei messaggi alle opportune istanze di
-processo è stato semplificato. In generale in BPEL tale obiettivo può essere
-realizzato con due tecniche alternative: il \emph{WS-Addressing}, che guida
-l'indirizzamento in base al valore di meta infomazioni
-contenute negli header, e la \emph{Correlazione (Message
-Correlation)} che invece discrimina rispetto ai valori applicativi contenuti in
-determinate parti del corpo stesso dei messaggi. In Blite è stato scelto di
-rappresentare solamente quest'ultima metodologia. 
+In generale in BPEL il meccanismo di instradamento dei messaggi alle opportune
+istanze di processo è realizzato tramite la \emph{Correlazione (Message
+Correlation)} che discrimina rispetto ai valori applicativi contenuti in determinate parti del
+corpo stesso dei messaggi. In Blite viene rappresentata tale metodologia e si
+tralasciano tecniche alternative, come il \emph{WS-Addressing}, che guida
+l'indirizzamento in base al valore di metainfomazioni contenute negli
+header\footnote{\emph{WS-Addressing}, sebbene non faccia direttamente parte
+delle specifiche del linguaggio BPEL, viene utilizzato in numerose
+implementazioni come tecnica aggiuntiva alla Message
+Correlation.}.
 
-In definitiva è stato selezionato un core di BPEL, per cui fosse abbastanza
+In definitiva è stato selezionato un core di BPEL per cui fosse abbastanza
 agevole definire una semantica formale e con cui, tramite ``encoding'', fosse
-possibile riproporre tutte le funzionalità del linguaggio. In [LaPuTie1]
-vengono presentate in dettaglio le regole per la realizzazione dell'encoding
-dei costrutti BPEL, che non sono stati inclusi in tale core, tramite Blite. 
+possibile riproporre tutte le funzionalità del linguaggio. In \cite{LaPuTie1}
+vengono presentate in dettaglio le regole per la realizzazione dell'encoding,
+tramite Blite, dei costrutti BPEL che non sono stati inclusi in tale core. 
 
 La sintassi di Blite è data in Tabella \ref{tab:syntaxwsbpel}. La categoria
 sintattica \emph{Servizio (Service)} rappresenta  sia la definizione di
 processo $\xproc{\xsa}{\xh_f}$, che le istanze nella loro esecuzione a runtime
-con uno specifico stato della memeoria, $\xinst{\xsigma}{\xs}$; quest'ultima
-forma non specifica ulteriormente il linguaggio, ma serve per poter introdurre
-una rappresentazione della fase di esecuzione indispensabile per
-poter definire la semantica operazionale.
+con uno specifico stato della memoria, $\xinst{\xsigma}{\xs}$; quest'ultima
+forma non è utilizzabile direttamente dal programmatore, ma serve per poter
+introdurre una rappresentazione della fase di esecuzione indispensabile per
+definire la semantica operazionale.
 
 Una definizione di servizio è semplicemente uno \emph{Scope} (o
 \emph{Contesto}) in cui è definita una
 \emph{Start Activity} $\xsa$ e un \emph{Fault Handler} $\xh_f$. Difatti si
 impone che le attività iniziali di un processo siano un sott'insieme di tutte
 quelle possibili e che in pratica la prima attività operativa (o \emph{Basic
-Activity}) sia una ricezione. Le attività infatti sono divise in due categorie
-principali, le \emph{Basic Activity} e le \emph{Structured activities}. Le
-prime sono l'attività primitive, cioè individuano le operazioni di
+Activity}) sia una ricezione. Le attività sono divise in due categorie
+principali: le \emph{Basic Activity} e le \emph{Structured activities}. Le
+prime sono le attività primitive, cioè individuano le operazioni di
 base compiute da un'istanza di processo, le seconde sono una composizione
 strutturale di quest'ultime. Di fatto le attività di base sono costituite
 dalla invocazione asincrona $\xinv{\plinv}{\xo}{\bar{\xx}}$ di un'operazione
@@ -505,9 +517,9 @@ composizione parallela di attività $\xs_1\xpar\, \xs_2$ e per finire dal costru
 detta \emph{Contest Activity} $\xs$ viene associato un \emph{Fault Handler}
 $\xh_f$ e un \emph{Compensation Handler} $\xh_c$.
 
-La sintassi afferma che le operazioni di comunicazione siano
-definite su i partners link $\plinv$ per l'invocazione e $\plrec$ per la
-recezione. Un'ulteriore imposizione viene fatta sulla struttura sintattica di
+La sintassi afferma che le operazioni di comunicazione sono
+definite sui partner link $\plinv$ per l'invocazione e $\plrec$ per la
+ricezione. Un'ulteriore imposizione viene fatta sulla struttura sintattica di
 tali oggetti, richiedendo che essi siano tuple di uno o al massimo due elementi,
 con la seguente ulteriore restrizione
 
@@ -534,7 +546,7 @@ evetualemente variabile}
 \end{array}
 $$
 
-Di fatto i partner link possono essere monodirezzionali $\arr{\cdot}$ o
+Di fatto i partner link possono essere monodirezionali $\arr{\cdot}$ o
 bidirezionali $\arr{s1, s2}$. In quest'ultimo caso sottindendono una
 comunicazione asincrona richiesta-risposta secondo cui ad una invocazione sul servizio $s1$
 quest'ultimo risponderà in maniera asincrona con una risposta sul servizio $s2$.
@@ -560,13 +572,13 @@ runtime.
 \end{figure}
 
 La composizione distribuita di diversi processi viene definita dalla categoria
-sintattica \emph{Deployments}. Il termine $\xd_1 \xspar \xd_2$ rappresenta la
+sintattica \emph{Deployments}. Un termine $\xd_1 \xspar \xd_2$ rappresenta la
 contemporanea escuzione di tutte le istanze ottenute dalle
-definizioni presenti in $\xd_1$ con quelle di $\xd_2$. Il \emph{Deployment}
-$\xeng{\xI}{\xcorr}$ è la definizione di processo $\xI$ con tutte le 
+definizioni presenti in $\xd_1$ e in $\xd_2$. Un \emph{Deployment}
+$\xeng{\xI}{\xcorr}$ è formato dalla definizione di processo $\xI$ con tutte le 
 istanze locali a cui è stato associato il \emph{Correlation Set} $\xcorr$. Tale
-insime individua fra tutte le variabili presenti nella definizione del processo quelle
-che dovranno essere considerate per valutare la correlazione di un messaggio
+insieme individua fra tutte le variabili presenti nella definizione del
+processo quelle che dovranno essere considerate per valutare la correlazione di un messaggio
 ad una particolare istanza. Vedremo come la semantica di Blite definisca tale
 processo di attribuzione di un messaggio a una istanza e come tale
 semantica sia stata implemetata del nostro engine di esecuzione.
@@ -575,10 +587,10 @@ In generale si impone la restrizione che un insieme di deployments sia
 \emph{ben formato}, nel senso che i nomi nei partner link utilizzati per le
 ricezioni non siano condivisi fra diversi deployment. In questo modo ogni
 definizione di processo avrà i propri nomi di servizo univoci e dato un nome
-sarà sempre possibile individuare un deployment preciso.
+sarà sempre possibile individuare un deployment specifico.
 
 In seguito, nella definizione della semantica, si farà uso della notazione
-$\bar{\cdot}$, per sottintendere tuple di valori o variabili, $\bar{\xx}$ può
+$\bar{\cdot}$, per denotare tuple di valori o variabili, $\bar{\xx}$ può
 essere considerata l'abbreviazione di $\arr{\xx_1,
 \ldots, \xx_h}$ (con $h \geq 0$). L'ulteriore notazione $\tilde{\cdot}$
 indicherà tuple speciali di uno o al massimo due elementi ($\tilde{\xp}$ starà
@@ -589,7 +601,7 @@ $\arr{\xx_1,\ldots,\xx_h}$ scrivendo $\xapp{\arr{\xp,
 \xu}}{\arr{\xx_1,\ldots,\xx_h}}$.
 \\
 
-Per concludere si deve osservare come la sintassi esposta debba ancora essere 
+Per concludere si osservi come la sintassi esposta debba ancora essere 
 considerata ``astratta'', in quanto non definisce tutti gli aspetti necessari
 all'imlemetazione. In particolar modo non definisce i tipi dei valori
 attribuibili alle variabili, né la sintassi delle espressioni supportate, e
@@ -603,12 +615,12 @@ realizzata fa riferimento ad una sintassi concreta che definisce in maniera
 formale anche questi aspetti. In particolare vedremo come  i semplici
 operatori binari siano trasformati in costrutti con 
 delimitatori di blocco. In questo modo risulta più semplice
-l'implementazione del parser, 
+l'implementazione del parser 
 %in quanto evita la necessità di eseguire \emph{lookahead}, 
 e anche la
 precedenza di un attività rispetto l'altra risulta esplicitata nella codifica
-stessa dei blocchi. In questo modo il codice risulta più leggibile e più simile nella struttura sia ai tradizionali linguaggi di
-programmazione che ad un linguaggio come BPEL basato su XML .
+stessa dei blocchi. Così il codice risulta più leggibile e più simile nella
+struttura sia ai tradizionali linguaggi di programmazione che ad un linguaggio come BPEL basato su XML .
 \\
 
 Presentiamo ora la semantica formale in termini operazionali. Le relazioni
@@ -618,17 +630,17 @@ simboli e costrutti, rispetto a quelli definiti dalla sintassi di Tabella
 dell'esecuzione. In particolare vengono introdotti:
 
 \begin{itemize}
-  \item \emph{Protected activities}, $\xprot{\xs}$, utilizzato per sostituire
+  \item \emph{Protected activity}, $\xprot{\xs}$, utilizzato per sostituire
   contesti falliti con i rispettivi compesation handler da eseguire in maniera
   protetta. La sematica chiarirà il significato di esecuzione protetta.
   
   \item \emph{Unsuccessful termination}, $\xstop$, utilizzato per uniformare il
   comportamento delle attività $\xexit$ e $\xthr$.
   
-  \item \emph{Messages} $\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}$, utilizzato per
+  \item \emph{Message} $\xmsg{\tilde{\xp}}{\xo}{\bar{\xv}}$, utilizzato per
   rappresentare i messaggi prodotti dalle attività invoke.
     
-  \item \emph{Scope} in forma $\xscope{\xs'}{\xs_f}{\xs_c}{\xs_d}$,
+  \item \emph{Scope} dalla forma $\xscope{\xs'}{\xs_f}{\xs_c}{\xs_d}$,
   utilizzato per rappresentare l'evoluzione del contesto
   $\xscopefc{\xs}{\xs_f}{\xs_c}$, in cui il completamento di sottocontesti
   definiti in $\xs$ hanno prodotto l'istallazione di compensation handler
@@ -659,9 +671,9 @@ di deployment attraverso le comunicazioni.
 La \emph{Congruenza Strutturale}, identifica come equivalenti termini
 sitatticamente diversi ma che intuitivamente rappresentano il medesimo
 comportamento. Essa è definita come la più grande congruenza indotta dalle
-relazioni reppresentate in Tabella \ref{tab:congwsbpel}, dove peraltro non sono
-riportate le banali relazioni che esplicitano le ovvie proprietà di
-commutazione e associatività per gli operatori binari.
+equazioni reppresentate in Tabella \ref{tab:congwsbpel}, dove peraltro non sono
+riportate le leggi che esplicitano le ovvie proprietà di
+commutatività e associatività per gli operatori binari.
 
 %%%%% STRUCTURAL CONG Blite %%%%%
 \begin{table}[t]
@@ -750,15 +762,15 @@ messaggi possono essere estratti dall'operatore di protezione.
 All'inizio dell'esecuzione di uno scope il compensation handler istallato è da
 considerarsi uguale all'attività $\xskip$. Importante è notare come la
 produzione di messaggi non blocchi le attività successive, né il completamento
-di contesti a meno che nel contesto stesso non sia attivato un $\xthr$
+di scope a meno che nello scope stesso non sia attivato un $\xthr$
 (quest'ultima possibilità è verificata tramite il predicato $\nothr{\xdot}$ che
-verrà formalizzato più avanti). Quest'ultime equivalenze concorrono alla
+verrà formalizzato più avanti). Quest'ultime equazioni concorrono alla
 definizione di un modello di comunicazione puramente ascincrono per i processi
 Blite. Le equazioni rimanenti risultano particolarmente ovvie, in quanto
 estendono la congruenza strutturale all'applicazione dei costrutti di scope,
-deployment e composizione di deployment. Per concludere si osserva che istanze
+deployment e composizione di deployment. Per concludere si osservi che istanze
 del tipo $\xinst{\xsigma}{\xskip}$ e $\xinst{\xsigma}{\xstop}$ risultano
-terminate e possono essere eliminate, equivalentemente istallazioni contenenti
+terminate e possono essere eliminate, equivalentemente deployment contenenti
 solamente istanze terminate sono da considerarsi terminate e possono a loro
 volta essere eliminate.
 \\
@@ -940,15 +952,16 @@ J}\xrec{\plrec_j}{\xo_j}{\bar{\xx}_j}\recsep\xs_j $ $}
 $$
 \end{small}
   \vspace*{-1.20cm}
-  \caption{Semantica operazionale per le attività.}
+  \caption[Semantica operazionale per le attività]{Semantica operazionale per
+  le attività.}
   \label{tab:allSOS}
   \vspace*{-0.3cm}
 \end{table}
 
 L'evoluzione delle attività di una istanza di processo è descritta dalla
-relazione di transizione etichettata $\bpeltsarrow{\xalpha}$ presentata in
-Tabella \ref{tab:allSOS} e dove le etichette o azioni $\xalpha$ sono generate dalla
-seguente grammatica:
+relazione di transizione etichettata $\bpeltsarrow{\xalpha}$, le cui regole
+sono presentate in Tabella \ref{tab:allSOS}, dove le etichette o azioni
+$\xalpha$ sono generate dalla seguente grammatica:
 
 $$
 \begin{array}
@@ -968,7 +981,7 @@ azioni:
 \begin{itemize}
   \item $\xtau$ indica la produzione di un messaggio o operazioni interne come
   la valutazione di test nella scelta condizionata e nella iterazione
-  o istallazione/attivazione di compesation handler.
+  o l'istallazione/attivazione di compesation handler.
   \item $\xassl{\xx}{\xv}$ indica l'assegnamento del valore $\xv$ alla
   variabile $\xx$.
   \item $\xinvl{\tilde{\xp}}{\xo}{\bar{\xv}}$ e
@@ -979,18 +992,18 @@ azioni:
   \item $\xexitl$ indica la richiesta di una terminazione forzata di una
   istanza di processo.
   \item $\xthrl$ indica la generazione di una eccezione.
-  \item $\xdonel{\xs}$ indica il completamento con successo di un scopo
-  che potrà essere eventualmente compesato tramite l'attività $\xs$.
+  \item $\xdonel{\xs}$ indica il completamento con successo di uno scope
+  che potrà essere eventualmente compensato tramite l'attività $\xs$.
 \end{itemize}
 
 La relazione $\bpeltsarrow{\xalpha}$ è definita con l'ausilio della funzione di
-stato $\xsigma$ che associa un possibile valore ad ogni variabile dell'istanza
-(vi è uno stato distinto e unico per ogni istanza di processo, mentre non vi il
-concetto di stato locale associato ai contesti). In particolare $\xsigma(\xx)$
-restituisce il valore della variabile $\xx$ sullo stato $\xsigma$ e
-$\xsigma(\xe)$ restituisce il risultato della valutazione dell'espressione $\xe$.
-La funzione stato $\xsigma$ può essere aggiornata con $\xsigma'$, scrivendo   
-$\xsigma \xupd \xsigma'$, in modo da avere 
+stato $\xsigma$ che associa un valore ad ogni variabile dell'istanza a cui è
+associata (vi è uno stato distinto e unico per ogni istanza di processo, mentre
+non vi è il concetto di stato locale associato ai contesti). In particolare
+$\xsigma(\xx)$ restituisce il valore della variabile $\xx$ nello stato $\xsigma$
+e $\xsigma(\xe)$ restituisce il risultato della valutazione dell'espressione
+$\xe$ nello stato $\xsigma$. La funzione stato $\xsigma$ può essere aggiornata
+con $\xsigma'$, scrivendo $\xsigma \xupd \xsigma'$, in modo da avere 
 
 $$
 \xsigma \xupd \xsigma'(\xx) = \left\{ 
@@ -1001,7 +1014,7 @@ $$
 \right.
 $$
 
-Bisogna osservare che in alcune produzioni di Tabella \ref{tab:allSOS} tale
+Bisogna osservare che in alcune regole di Tabella \ref{tab:allSOS} tale
 funzione non è esplicitata, per esempio per semplicità si è scritto
 $\xinstnostate{\xsigma}{\xs}
 \bpeltsarrow{\xalpha} \xinstnostate{\xsigma}{\xs'}$ invece di $\xinst{\xsigma}{\xs} \bpeltsarrow{\xalpha}
@@ -1011,10 +1024,8 @@ Alcune funzioni e predicati ausiliari, come già precedentemente osservato, sono
 stati introdotti a supporto della definizione semantica. In particolare i
 predicati $\noexit{\xs}$ and $\nothr{\xs}$ valutano la capacità di 
 $\xs$ di eseguire $\xexit$ o $\xthr$, rispettivamente. Essi sono definiti per
-induzione sulla struttura sintattica delle attività e di fatto agiscono come un
-??omomorfismo?? (?? qual'è la struttura algebrica d'arrivo? (true, flase)
-per cui non andrebbe definito come gli operatori agisco??), tranne che per la
-scelta condizionata e l'iterazione per cui non valgono e per i casi seguenti in cui si ha:
+induzione sulla struttura sintattica delle attività e di fatto valgono sempre
+falso tranne che per i casi seguenti in cui si ha:
 
 $$
 \begin{array}{c}
@@ -1033,19 +1044,53 @@ $$
 \justifies \
 \nothr{\xs_1 \xsucc \xs_2}
 \endprooftree
-\qquad
+
+\\[0.7cm]
 \prooftree
 \noexit{\xs}
 \justifies \
 \noexit{\xscope{\xs}{\xs_f}{\xs_c}{\xs_d}}
 \endprooftree
+
+\qquad
+
+\prooftree
+\noexit{\xs}
+\justifies \
+\noexit{\xprot{\xs}}
+\endprooftree
+
+\qquad
+
+\prooftree
+\noexit{\xs}
+\justifies \
+\nothr{\xprot{\xs}}
+\endprooftree
+
+\\[0.7cm]
+\prooftree
+\noexit{\xs_1} \, \vee \, \noexit{\xs_2}  
+\justifies \
+\noexit{\xs_1 \xpar \xs_2}
+\endprooftree
+
+\qquad
+
+\prooftree
+\nothr{\xs_1} \, \vee \, \nothr{\xs_2}  
+\justifies \
+\nothr{\xs_1 \xpar \xs_2}
+\endprooftree
+
+\\[0.5cm]
 \end{array}
 $$
 
 Per rappresentare la semantica della terminazione viene introdotta la
 funzione $\xhalt{\xdot}$, che applicata ad un'attività, la restituisce
 in modo da lasciare solamente le attività short-lived e quelle protette. Anche
-tale funzione è definita sulla struttura sintattica delle attvità e si ha che 
+tale funzione è definita sulla struttura sintattica delle attività e si ha che 
 $\forall \xs \; \xhalt{\xs} = \xstop$ tranne i seguenti casi
  
 $$
@@ -1089,8 +1134,8 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
   \end{array}
   $$
    
-  \item[\rulelabel{$\x{rec}$}] Una operazione di ricezione offre la
-  possibilità  di invocazione di un operazione locale su un fissato partner
+  \item[\rulelabel{$\x{rec}$}] Un'operazione di ricezione offre la
+  possibilità di invocazione di un'operazione locale su un fissato partner
   link. Da osservare che a differenza della invocazione la ricezione blocca le
   attività sequenzialmente successive.
   
@@ -1102,9 +1147,9 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
   indipendentemente dalla sua generazione.
   
   \item[\rulelabel{$\x{prot}$}] Il costrutto $\xprot{\xs}$ permette la
-  normale esecuzione di $\xs$ al suo interno. Tramite la precedente relazione
-  $\xhalt{\xprot{\xs}}=\xprot{\xs}$ si ottiene la protezione di $\xs$
-  dalle richieste esterne di terminazione.
+  normale esecuzione di $\xs$ al suo interno. Poiché
+  $\xhalt{\xprot{\xs}}=\xprot{\xs}$, con l'operatore $\xprot{\cdot}$ si ottiene
+  la protezione di $\xs$ dalle richieste esterne di terminazione.
  
   \item[\rulelabel{$\x{seq}$} \rulelabel{$\x{pick}$} \rulelabel{$\x{if}$}
   \rulelabel{$\x{while}$}] Esprimono una semantica standard rispetto ai
@@ -1115,20 +1160,20 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
   \item[\rulelabel{$\x{par}_1$} \rulelabel{$\x{par}_2$}] Esprimono la semantica
   caratteristica di BPEL riguardo alla terminazione nella composizione
   parallela con attività fallite. Di fatto esse affermano che l'esecuzione di
-  attività parallele evolve come atteso se nessuna di esse ha sollevvato un
-  eccezione o richiesto una terminazione. Viceversa, se questo accade tutti i
-  rami della composizione parallela vengono terminati. Si ricordi anche che
-  abbiamo imposto $\xhalt{ \xs' \xpar \xs'' } =  \xhalt{\xs'} \xpar
+  attività parallele evolve come atteso se nessuna di esse ha sollevato
+  un'eccezione o richiesto una terminazione. Viceversa, se questo accade, tutti
+  i rami della composizione parallela vengono terminati. Si ricordi anche che 
+  per definizione $\xhalt{ \xs' \xpar \xs'' } =  \xhalt{\xs'} \xpar
   \xhalt{\xs''}$.
   
   \item[\rulelabel{$\xdl_1$} \rulelabel{$\xdl_3$}] Esprimono la caratteristica
   di BPEL secondo cui contesti completati con successo istallano nei rispettivi
   contesti padre i loro compensation handler per un'eventuale successiva
-  compensazione. Il contestopadre colleziona in sequenza i compensation halder
-  di contesti figli completati (\rulelabel{$\xdl_3$}). Questa
+  compensazione. Il contesto padre colleziona in sequenza i compensation halder
+  di contesti figli completati \rulelabel{$\xdl_3$}. Questa
   semantica, differentemente dalla specifica informale di BPEL, prevede che i
   compesation handler siano mantenuti attraverso un solo grado di parentela
-  nella gerarchia dei contesti. Di fatti un contesto completato istalla nel suo
+  nella gerarchia dei contesti. Difatti un contesto completato istalla nel suo
   padre solo il suo conpensation handler e non quelli istallati dai suoi figli.
   Una semantica alternativa poteva essere:
   $$
@@ -1136,16 +1181,16 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
 \bpeltsarrow{\xdonel{\xs_d;\xs_c}}
 \xinstnostate{\xsigma}{\xskip} 
   $$
-  in cui si mantengono i conpensation handler precedentemente istallati.
+  in cui si mantengono anche i conpensation handler precedentemente istallati.
 
   \item[\rulelabel{$\x{exec}$}] Se non si producono eccezioni l'esecuzione
   interna ad uno scope procede come atteso. Da osservare che questa regola è da
   applicare anche nel caso in cui $\xs$ richieda una terminazione 
   (${\xs} \bpeltsarrow{\xexitl} \xs' \bpeltsarrow{} \ldots {\xstop}$); qui a
-  differenza di \rulelabel{$\x{fault}$} l'azione $\xexitl$ viene propagata anche aldifuori
-  del contesto per produrre la terminazione di tutta l'istanza e successivamente
-  tramite l'applicazione di \rulelabel{$\xdl_2$} vengono eseguiti i
-  compesation handler istallati e il fault hadler del contesto attuale.
+  differenza di \rulelabel{$\x{fault}$} l'azione $\xexitl$ viene propagata
+  anche al di fuori del contesto per produrre la terminazione di tutta
+  l'istanza e successivamente tramite l'applicazione di \rulelabel{$\xdl_2$} vengono eseguiti i
+  compesation handler istallati e il fault hadler del contesto corrente.
   
   \item[\rulelabel{$\xdl_2$}] In uno scope in cui la contest activity giunge a 
   $\xstop$ a causa di una eccezione o di una richiesta di terminazione,
@@ -1163,9 +1208,9 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
 
 Abbiamo definito il comportamento delle attività interne delle istanze di
 processo, vediamo ora come avviene la creazione di tali istanze e la
-comunicazione in sistemi di deployment. Il comportamento di quest'utlimi è
-definito dalla relazione di riduzione $\bpelredarrow{}$ presentata in Tabella
-\ref{tab:deploySOS}.
+comunicazione in sistemi composti da più deployment. Il comportamento di
+questi ultimi è definito dalla relazione di riduzione $\bpelredarrow{}$,
+le cui regole sono presentate in Tabella \ref{tab:deploySOS}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % RIDUZIONE PER I deployment
@@ -1259,32 +1304,33 @@ presenza di informazioni aggiuntive che possono essere utilizzate per guidare
 tali scelte.
 
 Di fatto si è scelto di definire un ordinamento fra tutte le istanze di
-processo che concorrono alla ricezione di un messaggio e di dare la possibilità
-di consumarlo solo alla prime istanze dell'ordinamento. Importante è
-capire come tale ordinamento possa individuare più di un'istanza destinataria
+processo che concorrono alla ricezione di un determinato messaggio e di dare la
+possibilità di consumare il messaggio solo alle prime istanze dell'ordinamento.
+Talvolta tale ordinamento può individuare più di un'istanza destinataria
 del messaggio, in questo caso la semantica non specifica ulteriormente la scelta
-e lascia indeterminismo nel comportamento.
+e consente un comportamento non deterministico.
 
-In maniera informale l'ordinamento si basa sul seguente ragionamento: ``i
-messaggi, che giungono alle porte di una definizione di processo, possono,
-tramite i parametri formali, aggiungere più o meno informazione nello stato delle
-istanze. Un messaggio costituito dalla tupla $\arr{\xv_1, \ldots, \xv_n}$ letto
-con in parametri formali $\arr{\xx_1, \ldots, \xx_n}$ può avere un \emph{grado
-di definizione} $k \; (k \le n)$, se definisce o ridefinisce con nuovi valori
-esattamente $k$ variabili formali e ne lascia immutato lo stato delle restanti $n
-- k$. Quindi un messaggio verrà consumato solamente da una fra le instanze con
-grado di definizione minimo''. Insieme a questa regola si impone il vincolo
-generale che l'assegnamento ad una variabile inclusa nel correlation set possa
-essere fatto un'unica volta, cioè che non sia possibile assegnare un valore
-diverso ad una variabile del correlation già precedetemente valorizzata. Se
-ne conclude che non sia possibile leggere un messaggio che porterebbe un valore
-diverso su una varibile di correlazione già precedentemente inizializzata.
+In maniera informale l'ordinamento si basa sul seguente criterio: ``i messaggi
+che giungono alle porte di una definizione di processo possono, tramite i
+parametri formali, aggiungere più o meno informazione nello stato di una istanza
+che riceve. Un messaggio costituito dalla tupla $\arr{\xv_1, \ldots, \xv_n}$,
+tramite i parametri formali $\arr{\xx_1, \ldots, \xx_n}$ ha \emph{grado di
+definizione} $k \; (k \le n)$, se il messaggio definisce o ridefinisce con nuovi
+valori esattamente $k$ variabili formali e lascia immutato lo stato delle
+restanti $n - k$. Un messaggio può essere consumato solamente da una fra le
+instanze con grado di definizione minimo''. Insieme a questa regola si impone il
+vincolo generale che l'assegnamento ad una variabile inclusa nel correlation set
+può essere fatto una sola volta, cioè non è possibile assegnare un valore
+diverso ad una variabile del correlation set già precedetemente inizializzata.
+Se ne conclude che non è possibile leggere un messaggio che assegnarebbe un
+valore diverso ad una varibile di correlazione già precedentemente
+inizializzata.
 
 Questi ragionamenti vengono formalizzati nella seguente funzione
 $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$, che prende un correlation
 set $\xcorr$, una funzione di stato $\xsigma$, una tupla di variabili $\xx$ e
 un tupla di valori $\xv$ e restituisce una funzione di stato eventualmente anche vuota
-su un sottoinsieme delle variabili di $\xx$:
+su un sottoinsieme delle variabili di $\bar{\xx}$:
 
 $$
 \begin{array}{c}
@@ -1316,13 +1362,13 @@ $$
 \end{array}
 $$
 
-Si oasservi come $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ non sia
+Si osservi come $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ non sia
 definita nel caso in cui le tuple $\bar{\xx}$ e $\bar{\xv}$ abbiano diversa
 lunghezza e quando si abbia per un qualche $i$ che $\xx_i \in \xcorr$ e
 $\updat{\xx_i}{\xv'} \in \xsigma$ con $\xv' \neq \xv_i$. 
 Quest'ultimo fatto impone quanto precedentemente detto che un'istanza non possa
 ricevere messaggi i cui valori assegnati alle variabili attuali non siano
-compatibili con lo stato del correleation set.
+compatibili con lo stato del correlation set.
 
 \begin{table}[t!]
 \begin{small}
@@ -1433,9 +1479,11 @@ $$
 \end{small}
   \vspace*{-1.20cm}
   \caption[Definizione predicato match di ricezione]{Definizione del predicato
-  $\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$. C'è un'attività di ricezione attiva sul partner link $\tilde{\xp}$ e
-  operazione $\xo$ che può essere i match con i valori del
-  messaggio $\bar{\xv}$?}
+  $\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$. 
+  %C'è un'attività di ricezione attiva sul partner link $\tilde{\xp}$ e
+  %operazione $\xo$ che può essere i match con i valori del
+  %messaggio $\bar{\xv}$?
+  }
   \label{tab:barbeRec}
   \vspace*{-.3cm}
 \end{table}
@@ -1443,14 +1491,14 @@ $$
 Con la funzione  $\xxnewmatch{\cdot}{\cdot}{\cdot}{\cdot}$ è
 possibile definire il predicato
 $\xnoCONF{\xcorr}{\xI}{\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}}{\xnum}$,
-che valuta se un'istanza di processo $\xI$ con correlation set $\xcorr$ abbia
-una attività di ricezione attiva che possa ricevere il messaggio
+che valuta se un'istanza di processo $\xI$ con correlation set $\xcorr$ ha
+un'attività di ricezione attiva che possa ricevere il messaggio
 $\xapp{\tilde{\xp}\,}{\xapp{\,\xo\,}{\,\bar{\xv}}}$ con un grado di definizione
 minore di $n$. In Tabella \ref{tab:barbeRec} tale predicato viene definito
 induttivamente sulla struttura sintattica di $\xI$
 
 A questo punto il comportamento descritto dalle regole di Tabella
-\ref{tab:deploySOS}, risulta abbastanza intuitivo e può essere sintetizzato nel
+\ref{tab:deploySOS} risulta abbastanza intuitivo e può essere sintetizzato nel
 seguente modo:
 
 \begin{description}
@@ -1466,17 +1514,17 @@ seguente modo:
  processo a partire dalla definizione $\xproc{\xsa}{\xh_f}$ a seguito
  dell'arrivo di un messaggio $\talpha_2 =
   \xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}$ che risulti in matching con una delle start activity della
- definizione stessa. Ancora una volta la nuova istanza verrà creata solo se non
- ci sia già una istanza capace di ricevere il messaggio con un grado di
+ definizione stessa. La nuova istanza verrà creata solo se non
+ c'è già un'istanza capace di ricevere il messaggio con un grado di
  definizione minore della start activity.
  \item[\rulelabel{$\x{var}$}] Afferma quanto già precedentemente detto che
  l'assegnamento di un valore $\xv$ ad una variabile $\xx$ del correlation set
- su uno stato $\xsigma$ possa avvenire solo se $ \xx \notin dom(\xsigma)$ o se $
+ su uno stato $\xsigma$ può avvenire solo se $ \xx \notin dom(\xsigma)$ o se $
  \updat{\xx}{\xv} \in \xsigma$.
  \item[\rulelabel{$\x{part}$} \rulelabel{$\x{pass}$} \rulelabel{$\x{cong}$}]
  Tali regole risultano particolarmente ovvie ed esprimono rispettivamente
  l'evoluzione parallela di un sistema di deployment, l'esecuzione
- indipendente delle operazioni interne in ciascuna istanza, l'uguaglianze delle
+ indipendente delle operazioni interne in ciascuna istanza, l'uguaglianza delle
  riduzioni di deployment strutturalmente congruenti.
 \end{description}
 
@@ -1502,15 +1550,16 @@ $$
 \xs \xsucc\xs  \!\sepgr\! \xs \xpar \xs \quad \ldots 
 \end{array}
 $$
-che la rendano ambigua, per cui ad una frase del linguaggio può corrispondere
+che la rendono ambigua, per cui ad una frase del linguaggio può corrispondere
 più di un albero sintattico. Risulta chiaro quindi che il primo obiettivo è
 stato quello di ottenere una grammatica direttamente implementabile 
-dal cui linguaggio sia possibile ottenere i programmi Blite. Di seguito si
-chiameranno termini Blite gli elementi del linguaggio derivato dalla sintassi di
-Tabella \ref{tab:syntaxwsbpel}, mentre si chiameranno programmi Blite le frasi
+dal cui linguaggio sia possibile ottenere i programmi Blite. Di seguito
+chiameremo termini Blite gli elementi del linguaggio derivato dalla sintassi di
+Tabella \ref{tab:syntaxwsbpel}, mentre chiameremo programmi Blite le frasi
 del linguaggio da noi realmente implementato.
 \\
 
+\subsubsection{Cenni di teroria dei linguaggi.}
 Dalla teoria sappiamo che le grammatiche per generare linguaggi
 analizzabili con parser deterministici, cioè che non fanno uso di tecniche di
 backtraking, sono raggruppabili in sotto classi specifiche fra tutte le
@@ -1537,23 +1586,25 @@ grammatica $S$ arriva alla frase di input applicando ad ogni passo una
 sostituzione di un simbolo non terminale $X$ con una parte destra $Y$ presente in
 una regola della grammatica del tipo $X ::= Y$. 
 
-Una derivazione può essere scritta come $$ S \Rightarrow \cdots \Rightarrow
+Una derivazione può essere scritta come 
+$$ S \Rightarrow \cdots \Rightarrow
 abcX\ldots \Rightarrow abcY\ldots \cdots \Rightarrow abcdeZ\ldots \Rightarrow
-\cdots \Rightarrow abcdef\ldots mn $$ in cui l'ultima stringa è formata solo da
+\cdots \Rightarrow abcdef\ldots mn $$ 
+in cui l'ultima stringa è formata solo da
 terminali. Con il simbolo $ \Rightarrow^*$ si intendono zero o più passi
 successivi e con $\Rightarrow^+$ uno o più passi successivi. I singoli passi
-della derivazione legano forme di frasi ammesse dalla grammatica, una forma di
-frase non è altro che una stringa $s \in V^*$, con $V$ insieme dei terminali e
+della derivazione legano forme di frasi ammesse dalla grammatica, dove una forma
+di frase non è altro che una stringa $s \in V^*$, con $V$ insieme dei terminali e
 non terminali della grammatica. In un'analisi top-down si realizza la
-derivazione canonica sinistra, cioè si impone la sostituzione del primo simbolo
+derivazione canonica sinistra, cioè si impone la sostituzione del simbolo
 non terminale che compare più a sinistra nella forma di frase corrente. Quindi
 quest'ultima avrà sempre una forma del tipo $aXw$ con $a \in VT^*$ ($VT$ insieme
 dei simboli terminali del linguaggio), $X$ simbolo non terminale corrente e $w
 \in V^*$. La stringa $a$ costituirà un prefisso della frase di input e
 indicherà la parte di essa già riconosciuta. 
 
-Alternativamente alla derivazione canonica sinistra si definisce la derivazione
-canonica destra che sceglie di sostituire il primo simbolo non terminale che
+Analogamente alla derivazione canonica sinistra si definisce la derivazione
+canonica destra che sceglie di sostituire il simbolo non terminale che
 compare più a destra nella forma di frase corrente. L'analisi bottom-up realizza
 la riduzione destra che è la sequenza inversa della derivazione canonica destra.
 
@@ -1565,18 +1616,18 @@ la realizzazione del parser, in quanto è necessario implementare algoritmi e
 strutture dati più raffinati.
 
 Inoltre le grammatiche LL hanno caratteristiche che le rendono facilmente
-individuabili, e da una generica grammatica, come può essere quella di
+individuabili, e da una generica grammatica, come quella di
 Tabella \ref{tab:syntaxwsbpel}, si può ottenere un grammatica LL applicando i seguenti
 passi:\footnote{Per una trattazione formale riguardo al riconoscimento di
 grammatiche LL(k) si rimanda ai testi specifici della teoria del linguaggi
-formali come [Bruno] e [DragonBook].} 
+formali come \cite{Bruno} e \cite{DragonBook}.} 
 \begin{itemize}
   \item Eliminazione della ricorsione sinistra diretta o indiretta. Una
-  grammatica in generale presenta ricorsione sinistra quando ammette derivazioni del tipo
+  grammatica presenta ricorsione sinistra quando ammette derivazioni del tipo
  $X \Rightarrow^+ Xu$, dove $X \in VN$ e $u \in V^+$ (la ricorsione diretta si
  ha banalmente quando sono presenti regole del tipo $X ::= Xu$), in tal caso
- l'analizzatore top-down può entrare in ciclo infinito. Esiste un algortmo
- rigoroso per eliminare tale problema (si veda [Bruno]), ma in generale può
+ l'analizzatore top-down può entrare in un ciclo infinito. Esiste un algoritmo
+ per eliminare tale problema (si veda \cite{Bruno}), ma in generale può
  essere evitato semplicemente aggiungendo nuovi non terminali e riorganizzando
  le regole. Per esempio la seguente grammatica 
  $$
@@ -1601,9 +1652,9 @@ formali come [Bruno] e [DragonBook].}
  
   \item Fattorizzazione sinistra. Questo procedimento serve ad eliminare un
   eventuale prefisso comune a due parti destre di regole associate allo stesso
-  simbolo non terminale, cosa che in generale porta indeterminismo nel processo
-  di derivazione canonica sinistra. Se, ad esempio, una regola della grammatica
-  presenta due parti destre del tipo $A ::= yv \;|\; yw$ con $y \in V^+$, $v
+  simbolo non terminale, cosa che in generale porta non determinismo nel
+  processo di derivazione canonica sinistra. Se, ad esempio, una regola della grammatica
+  è del tipo $A ::= yv \;|\; yw$ con $y \in V^+$, $v
   \in V^*$ e $w \in V^+$ e le stringhe $v$, $w$ non hanno prefissi comuni,
   l'analizzatore top-down, quando espande il simbolo non terminale $A$ non può,
   in generale, scegliere con certezza la parte destra di A da usare,
@@ -1618,12 +1669,13 @@ formali come [Bruno] e [DragonBook].}
   comune.
 \end{itemize}
 
+\subsubsection{La grammatica per Blite}
+
 Nel realizzare la nostra implementazione si è scelto di produrre una
 grammatica LL(k) per rappresentare i programmi Blite. Per la precisione una grammatica LL(1), cioè
 una grammatica il cui parser è in grado di riconoscere le frasi del linguaggio
 senza fare \emph{lookahead}, ma utilizzando unicamente il primo token ancora
 non riconosciuto nella frase di input.
-\\
 
 Nel momento in cui ci si trovi a dover realizzare un parser le strade da poter
 percorrere sono fondamentalmente due: la prima è quella di munirsi di un buon
@@ -1685,7 +1737,7 @@ sintattico. In Figura \ref{fig:lin:jjproc} è rappresentato l'uso
 congiunto di JJTree e JavaCC per la produzione del codice Java che realizza il
 parser con la gestione automatica dell'albero sintattico.
 
-\begin{figure}[!ht]
+\begin{figure}[!t]
 \begin{center}
   \includegraphics[scale=0.95]{linguaggio/dia/jjporc}
    \caption[Un parser con JJTree e JavaCC]{Generazione in due passi di un
@@ -1711,7 +1763,7 @@ e le istanze pronte per essere eseguite (\emph{Ready to Run Instance}).
 
 Come illustrato i passi da compiere sono quelli di eliminare la ricorsione
 sinistra e i prefissi comuni nelle diverse parti destre associate al medesimo
-terminale. Di fatto tali criticità sono presenti nelle regole EBNF di tipo:
+non terminale. Di fatto tali criticità sono presenti nelle regole EBNF di tipo:
 
 $$
 \begin{array}{rcl}
@@ -1754,9 +1806,9 @@ grammatica che si traduce in una complicazione nella gestione
 dell'albero sintattico in quanto dovranno essere implementate in maniera
 specifica le azioni associate a ciascuna regola.
 
-Tale approccio è stato utilizzato da noi solo per la categoria sintattica dei
+Tale approccio è stato utilizzato solo per la categoria sintattica dei
 deployment $\xd$ ma non per quella delle attività strutturate $\xs$. Per
-quest'ultime si è preferito un approccio che aggiungendo dei nuovi simboli
+queste ultime si è preferito un approccio che aggiungendo dei nuovi simboli
 terminali (usati come delimitatori di blocco) permettesse di ottenere un
 grammatica LL(1) mantenendo una certa simmetria nella definizione e facilitando
 la gestione dell'albero sintattico.
@@ -1816,17 +1868,8 @@ precedenze fra gli operatori. In questo modo il codice stesso espliciterà tutte
 relazioni di sequenzialità fra le diverse attività strutturate, e l'utilizzatore non sarà
 obbligato a ricordare le regole di priorità fra i vari costrutti.
 
-\begin{figure}[!h]
-\begin{center}
-  \includegraphics[scale=0.80,clip]{linguaggio/dia/blt1}
-   \caption[Codice Blite, esempio delimitatori di blocco]{Esempio di programma
-   Blite con la sintassi dei delimitatori di blocco per le attività struturate.}
-  \label{fig:lin:blt1}
-\end{center}
-\end{figure}
-
-In Figura \ref{fig:lin:blt1} è rappresentato il codice nella sintassi
-da noi implementata corrispondente al termine seguente:
+In Figura \ref{fig:lin:blt1} è rappresentato, nella sintassi
+da noi implementata, il programma corrispondente al termine seguente:
 
 $$
 \begin{array}{rl}
@@ -1845,13 +1888,23 @@ $$
 \end{array}
 $$
 
-A scapito di una maggiore compattezza si è guadagnato in espressività, inoltre
+A scapito di una maggiore compattezza si è guadagnato in chiarezza. Inoltre
 le tecnologie attuali offrono un alto grado di assistenza all'editing del
 codice, per cui sarà facilmente implementabile un editor che possa supportare
 l'utente nella scrittura dei costrutti previsti dalla nostra grammatica.
 \\
 
-Un'altro aspetto da considerare nella sintassi di Tabella \ref{tab:syntaxwsbpel}
+\begin{figure}[!t]
+\begin{center}
+  \includegraphics[scale=0.80,clip]{linguaggio/dia/blt1}
+   \caption[Codice Blite, esempio delimitatori di blocco]{Esempio di programma
+   Blite con la sintassi dei delimitatori di blocco per le attività struturate.}
+  \label{fig:lin:blt1}
+\end{center}
+\end{figure}
+
+
+Un altro aspetto da considerare nella sintassi di Tabella \ref{tab:syntaxwsbpel}
 è quello legato alla definizione dei termini \textit{Services}, tramite la
 regola:
 
@@ -1870,8 +1923,8 @@ fase di esecuzione con uno stato di memoria ($\xinst{\xsigma}{\xs}$), ma anche d
 dare la possibilità di definire, e quindi di rendere immediatamente disponibili
 nei deployment, istanze di processo che sono già pronte per andare in
 esecuzione, senza dover ricevere messaggi di attivazione.
-Tali definizioni sono qui identificate con l'espressione \emph{Ready to Run
-Instance}. 
+Tali definizioni sono qui identificate con l'espressione
+\emph{Ready-to-Run Instance}.
 
 Nel linguaggio da noi implementato si è voluto mantenere quest'ultima
 possibilità in quanto ci sembra molto utile, nell'ottica di voler fornire uno
@@ -1886,32 +1939,28 @@ invocazione ad una porta di una start activity e istanziare il processo BPEL}.
 
 I tal senso si vuole dare la possibilità all'utente di poter definire dei
 deployment del tipo: 
-
 $$
 \xeng{
 \xs_1 \xmid \ldots \xmid \xs_n \xmid
 \xproc{\xsa}{\xh_f}  
 }{\xcorr}
 $$
-
-in cui è presente la definizione di processo  $\xproc{\xsa}{\xh_f}$ e $n$ ready
-to run instance. Per non appesantire ulteriormente la sintassi, il linguaggio da
-noi implementato non prevede un formalismo specifico per la definizione della
-funzione di stato $\xsigma$ nelle ready to run instance, anche perché lo stato
+in cui è presente la definizione di processo  $\xproc{\xsa}{\xh_f}$ e $n$
+ready-to-run instance. Per non appesantire ulteriormente la sintassi, il
+linguaggio da noi implementato non prevede un formalismo specifico per la definizione della funzione di stato $\xsigma$ nelle ready to run instance, anche perché lo stato
 iniziale di tali istanze può essere definito semplicemente con attività di
-assegnamento. Di fatto quindi la distinzione fra le ready to run instance e la
-definizione di processo sta semplicemente nel fatto che quest'ultime devono
+assegnamento. Di fatto quindi la distinzione fra le ready-to-run instance e la
+definizione di processo sta semplicemente nel fatto che quest'ultima deve
 obbligatoriamente avere la struttura  $\xproc{\xsa}{\xh_f}$, mentre le prime
 possono essere generiche attività strutturate. Nel caso quindi queste siano dei
 contesti, devono sempre esplicitare il compensation handler
 ($\xscopefc{\xsa}{\xh_f}{\xh_c}$) per essere distinguibili dalle definizioni.
 
 Si capisce come limitandosi a tale sintassi non sia possibile prescindere
-dall'eseguire lookahead sintattico per distinguere le definizioni dalle ready to
-run instance, in quanto in generale tali termini possono avere prefissi comuni
-del tipo $[\xs \bullet \xh_f$. Anche in questo caso si è preferito
-introdurre un nuovo terminale che preposto alle ready to run instance le rendesse
-immediatamente riconoscibili, ottenendo quindi una grammatica LL(1)
+dall'eseguire lookahead sintattico per distinguere le definizioni dalle
+ready-to-run instance, in quanto in generale tali termini possono avere prefissi comuni del tipo $"[\xs \bullet \xh_f"$. Anche in questo caso si è preferito
+introdurre un nuovo terminale che preposto alle ready-to-run instance le
+rendesse immediatamente riconoscibili, ottenendo quindi una grammatica LL(1)
 e aumentando la leggibilità dei programmi.
 
 In pratica si è introdotto il simbolo $\verb#::#$ e nella grammatica si sono
@@ -1932,8 +1981,8 @@ ServiceDef & ::= & \verb#"["# \hspace{0.2cm} StartActivity \hspace{0.2cm} (
 $$
 
 Usando un prefisso per distinguere le ready to run instance dalle
-definizioni di processo, cade l'obbligatorietà di avere sempre un campesation
-handler nelle scope activity generiche, per cui quest'ultime potranno essere
+definizioni di processo, cade l'obbligatorietà di avere sempre un compensation
+handler nelle scope activity generiche, per cui queste ultime potranno essere
 definite tramite la seguente regola in cui risultano opzionali sia la
 definizione del compensation che del fault handler:
 
@@ -1948,7 +1997,7 @@ $$
 I simboli tipografici $\bullet$ e $\star$ sono stati sostituiti rispettivamente
 dalle scritture \verb#fh:# e \verb#ch:# e si assume che un contesto che non
 definisca gli handler, implicitamente preveda l'attività $\xthr$ come fault
-handler e l'attività $\xskip$ come compensation handler. In pretica si assume
+handler e l'attività $\xskip$ come compensation handler. In pratica si assume
 che \label{defHandelr}
 
 $$
@@ -1960,7 +2009,7 @@ $$
   \includegraphics[scale=0.80,clip]{linguaggio/dia/blt2}
    \caption[Codice Blite, esempio ready to run instance]{Esempio di programma
    Blite con un deployment in cui è presente una definizione di processo e due
-   istanze ready to run.}
+   istanze ready-to-run.}
   \label{fig:lin:blt2}
 \end{center}
 \end{figure}
@@ -1979,11 +2028,8 @@ $$
 \xif{\xe}{\xs_1}{\xs_2} \!\sepgr\! \xwhile{\xe}{\xs} & \ldots
 \end{array}
 $$ 
-
-possono essere eliminati i delimitatori di blocco $\{\cdot \}$ e nella
-grammatica definire le seguenti regole:
-
-$$
+possono essere eliminati i delimitatori di blocco $\{\cdot \}$ e definire le
+seguenti regole: $$
 \begin{array}{rcl}
 ConditionalActivity & ::= & \verb#"if"# \hspace{0.2cm} \verb#"("#
 \hspace{0.2cm} Expression \hspace{0.2cm} \verb#")"#  \hspace{0.2cm} Activity
@@ -1999,9 +2045,9 @@ Si deve osservare che dopo la scelta interna devono essere sempre esplicitate
 alternative.
 \\
 
-In appendice è riprtato il lessico e in notazione EBNF la grammatica completa
+In appendice è riportato il lessico e in notazione EBNF la grammatica completa
 che definisce il linguaggio da noi implementato. In essa sono specificati
-i tipi supportati (attualmente stringhe, numeri -interni e decimali- e booleani) e
+i tipi supportati (attualmente stringhe, numeri -interi e decimali- e booleani)
 e la sintassi delle espressioni logiche e aritmetiche.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
