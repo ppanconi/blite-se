@@ -62,7 +62,7 @@ $$
 \left\{
 \begin{array}{l@{\hspace{2ex}}l}
 \\[-.50cm]
-false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} \xx \in
+false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} \in
 \xcorr\ \, \wedge \, \xv \neq \xsigma(\xx)
 \\[-.05cm] true & \textrm{altrimenti} \\
 \end{array}
@@ -196,7 +196,7 @@ invocazione e la definizione WSDL associata.
 
 Una volta che si dispone dei file WSDL e delle associazioni fra questi e le
 operazioni di comunicazione di Blite, si può pensare di generare un tool
-(\texttt{java2Blite}) in grado di produrre il codice Java, che a
+(\texttt{blite2Java}) in grado di produrre il codice Java, che a
 runtime andrà ad eseguire l'effettiva integrazione fra il framework per Web
 Service utilizzato (ad esempio uno fra JAX-WS \cite{JAXWS}, Axis2 \cite{AXIS},
 CXF \cite{CXF}, ecc) e l'interfaccia \icode{EngineChannel}. Il nostro tool
