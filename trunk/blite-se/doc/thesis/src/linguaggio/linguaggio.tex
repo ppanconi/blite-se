@@ -388,7 +388,7 @@ le versioni leggermente modificate di cui è stata realizzata l'implementazione.
 % BLITE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Blite, un approccio formale a BPEL}
-
+\label{sec:blite}
 Come già detto Blite è un linguaggio che può essere visto come una
 semplificazione di BPEL, nel senso che ne ripropone solo alcuni aspetti
 essenziali come, partner link, process e activity termination, message
@@ -1361,6 +1361,8 @@ $$
 \\[.7cm]
 \end{array}
 $$
+\label{pag:match}
+
 
 Si osservi come $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ non sia
 definita nel caso in cui le tuple $\bar{\xx}$ e $\bar{\xv}$ abbiano diversa
@@ -1842,7 +1844,7 @@ $$
 \begin{center}
 \begin{tabular}{|r|c|c|}
 \hline
- & Sintassi Blite & Sintassi Implemetata \\
+ & Sintassi Blite & Sintassi Implementata \\
 \hline
 Sequenza & $\xs_1 \xsucc \xs_2 \ldots \xsucc \xs_n $ & $seq \; \xs_1 \xsucc
 \xs_2 \ldots \xsucc \xs_n \; qes$ \\
@@ -1907,7 +1909,6 @@ l'utente nella scrittura dei costrutti previsti dalla nostra grammatica.
 Un altro aspetto da considerare nella sintassi di Tabella \ref{tab:syntaxwsbpel}
 è quello legato alla definizione dei termini \textit{Services}, tramite la
 regola:
-
 $$
 \begin{array}{rcccl}
 \textit{(Services)} & \xI & ::= &
@@ -2053,3 +2054,114 @@ e la sintassi delle espressioni logiche e aritmetiche.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SEMANTICA CONCRETA
 \section{Alcune osservazioni sulla semantica della correlazione}
+\label{sec:semcor}
+
+La sematica descritta in Sezione \ref{sec:blite} descrive il comportamento dei
+programmi Blite in modo molto elgante e compatto. Il nostro obbiettivo è stato
+quello di creare un motore capace di eseguire i programmi producendo un
+comportamento equivalente a quello specificato nel rispetto di specifiche
+tecniche che tenessero conto il più possibile di problematiche di efficenza,
+scalabilità e requisiti di memoria.
+
+Come vedremo nel capitolo seguente alla base dell'architettura software
+realizzata, ci sono due componenti fondamentali:
+
+\begin{itemize}
+  \item Un oggetto software chiamato \icode{ProcessManger}, che, data una   
+  precisa definizione di processo, ha la rasponsabilità di creare le istanze
+  e di metterle in esecuzione. Inolte ha la responsabilità di gestire -
+  memorizzandoli in opportune strutture dati- i messaggi indirizzati alle porte
+  della propria definizione.
+  \item Un insieme di thread, \icode{ThreadPool}, che eseguono concorrentemente
+  le varie istanze di processo e i flussi paralleli che si generano in esse.
+\end{itemize}
+
+Gli aspetti più critici nella realizzazione del compoeramento specificato
+sono quelli di attribuire i messaggi alle diverse istanze e di discriminare se
+l'arrivo di un messaggio debba produrre o meno la creazione di una nuova
+istanza (regole \rulelabel{$\x{com}$} e \rulelabel{$\x{new}$} di Tabella
+\ref{tab:deploySOS}).
+
+In riferimento alla prima problematica la sematica definisce un ordinamento fra
+tutte le istanze che \emph{contemporaneamente} attivano una ricezione su una
+determinata porta\footnote{Con il termine porta si intende la coppia $\langle
+\texttt{service-name}, \texttt{operation-name} \rangle$, essa indentifica
+univocamente una funzionalità operazione nell'interfaccia associata ad una
+definizione di processo.}, ed in base a tale ordinamento si stabilisce
+l'attribuzione del messaggio. Di fatto in una architettura come la nostra, 
+che usa una tecnologia di \emph{multithreading} per realizzare la non sequezialità specificata dalla semantica di Blite, non ha molto
+senso parlare di attività di ricezione che contemporaneamente attivie su una
+porta. In pratica quando il flusso di escuzione di una istanza arriva ad
+eseguire un ricezione su una determinata porta si deve poter decidere se un
+messaggio associato alla porta è destinabile a tale istanza solamente in base
+allo stato dell'istanza stessa. 
+
+
+Sempificando, per valutare se un messaggio possa essere attribuito ad una
+insanza che esegue l'operazione
+$\xrec{\arr{\x{p}}}{\x{o}}{\bar{\xx}}$, si può pensare di attuare la seguente
+procedura:
+
+\begin{verbatim}
+               m := null
+               for all v in { messages on <p,o>} 
+                   if corr(x, v) m := v
+    
+               if m is null start-wait
+               else 
+                   consume m
+                   continue-execution
+\end{verbatim}
+
+in cui ``\texttt{messages on <p,o>}'' identifica tutti i
+messaggi ricevuti sulla porta \texttt{<p,o>} e la funzione \texttt{corr(x, v)},
+che restituisce un valore booleano, valuta se il messaggio \texttt{v} può essere correlato all'istanza in
+base ai parametri attuali \texttt{x}, allo stato dell'istanza e al correlation
+set definito dal progrmmatore.
+
+In pratica tale funzione può essere ricavata in riferimento alla funzione
+$\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ definita in Sezione
+\ref{pag:match} nel seguente modo:
+$$
+\begin{array}{c}
+\x{corr}(\xcorr, \xsigma, \xx, \xv	) =
+\left\{
+\begin{array}{l@{\hspace{2ex}}l}
+\\[-.50cm]
+false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} \in
+\xcorr\ \, \wedge \, \xv \neq \xsigma(\xx)
+\\[-.05cm] true & \textrm{altrimenti} \\
+\end{array}
+\right.
+\\[.7cm]
+%\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
+%\emptyset \qquad
+\x{corr}(\xcorr, \xsigma, \arr{}, \arr{}) =
+true
+\\[.7cm]
+\prooftree
+\x{corr}(\xcorr, \xsigma, \xx_1, \xv_1) = b'
+\quad
+\x{corr}(\xcorr, \xsigma, \bar{\xx}_2, \bar{\xv}_2) = b''
+\justifies \
+\x{corr}(\xcorr, \xsigma, (\xx_1,\bar{\xx}_2), (\xv_1,\bar{\xv}_2)) =
+b' \wedge b''
+\endprooftree
+\\[.7cm]
+\end{array}
+$$
+in cui $\xsigma$ rappresenta lo stato di momoria associato all'istanza e
+$\xcorr$ il correlation set associato alla definizione di processo da cui
+l'istanza è ricavata.
+
+Questa strategia risolve il problema della correlazione dei messaggi con
+le istanze di processo, producedendo un comportamento equivalente ad quello
+specificato dalla sematica formale di Blite. Si fa notare infatti che
+le semtica formale di 
+
+% -con l'eccezione delle \emph{multiple
+% start activity}\footnote{Con il termine \emph{multiple
+% start activity}} per cui 
+
+
+
