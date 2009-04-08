@@ -2088,13 +2088,14 @@ determinata porta\footnote{Con il termine porta si intende la coppia $\langle
 \texttt{service-name}, \texttt{operation-name} \rangle$, essa indentifica
 univocamente una funzionalità operazione nell'interfaccia associata ad una
 definizione di processo.}, ed in base a tale ordinamento si stabilisce
-l'attribuzione del messaggio. Di fatto in una architettura come la nostra, 
-che usa una tecnologia di \emph{multithreading} per realizzare la non sequezialità specificata dalla semantica di Blite, non ha molto
-senso parlare di attività di ricezione che contemporaneamente attivie su una
-porta. In pratica quando il flusso di escuzione di una istanza arriva ad
-eseguire un ricezione su una determinata porta si deve poter decidere se un
-messaggio associato alla porta è destinabile a tale istanza solamente in base
-allo stato dell'istanza stessa. 
+l'attribuzione del messaggio. Di fatto in una architettura come la nostra, che
+usa una tecnologia di \emph{multithreading} per realizzare la non sequezialità
+specificata dalla semantica di Blite, non ha molto senso parlare di attività di
+ricezione contemporaneamente attivie su una porta. In pratica quando il
+flusso di escuzione di una istanza arriva ad eseguire un ricezione su una
+determinata porta si deve poter decidere se un messaggio associato alla porta è
+destinabile a tale istanza solamente in base allo stato attuale dell'istanza
+stessa.
 
 
 Sempificando, per valutare se un messaggio possa essere attribuito ad una
@@ -2105,7 +2106,9 @@ procedura:
 \begin{verbatim}
                m := null
                for all v in { messages on <p,o>} 
-                   if corr(x, v) m := v
+                   if corr(x, v) 
+                      m := v
+                      break iteration
     
                if m is null start-wait
                else 
@@ -2157,11 +2160,80 @@ l'istanza è ricavata.
 Questa strategia risolve il problema della correlazione dei messaggi con
 le istanze di processo, producedendo un comportamento equivalente ad quello
 specificato dalla sematica formale di Blite. Si fa notare infatti che
-le semtica formale di 
+la sematica non risolve più conflitti rispetto alla nostra implemetazione in
+quanto la regola \rulelabel{$\x{pass}$} porta ad attivare in modo indeterminato
+le attività di ricezione delle diverse istanze.
 
-% -con l'eccezione delle \emph{multiple
-% start activity}\footnote{Con il termine \emph{multiple
-% start activity}} per cui 
+I concetti di \emph{grado di definizione} e di ordinamento delle istanze
+rispetto alla possibilità di consumare messaggi in arrivo, introdotti dalla
+semantica di Blite, risultano determinanti per descriminare quando si deve
+creare una nuova istanza, e in particolare per realizzare le \emph{multiple
+start activity}.
 
+Le multiple start activity, sono attività di inzio istanza del tipo:
+$$
+	\xrec{\plrec_1}{\xo_1}{\bar{\xx_1}} \xsucc \xs_1 
+	\, \xpar \, 
+	\xrec{\plrec_2}{\xo_2}{\bar{\xx_2}} \xsucc \xs_2
+$$
+in cui la start activity è costituita dalla composizione parallela di due
+ricezioni. 
+
+La specifica BPEL afferma, anche se in maniera non molto
+esplicita\footnote{Per esempio, nella specifica di BEPEL4WS 1.1
+\cite{BPEL11Spec} il comportamento associato alle multiple start activity era addirittura descritto semplicemente con un
+esempio (sezione 1.6).}, che la correlazione di un messaggio ad una istanza
+abbia precedenza sulla creazione di nuove istanze.
+
+Questo comportamento è espresso alla perfezione dalla sematica di Blite che
+per le 
+\\
+
+Nella nostra implemetazione il \icode{ProcessManager}, nel momento in cui arriva
+un nuovo messaggio deve poter decidere se creare una nuova istanza o meno in
+base alle informazioni di cui dispone in quel momento.
+
+In generale si potrebbe pensare di risolvere semplicemente il problema a livello
+sintattico rendendo distinguibili le porte di
+ricezione su cui vengono create le istanze (\emph{create port}). In pratica si
+potrebbe semplicemete dire che un messaggio su una porta che è utilizzata in
+una start activity porta sempre alla creazione di una nuova istanza, lasciando
+al programmatore la responsabilità di non riutilizzare tali porte per
+effettuare la correlazione (in quanto tale correlazione mai si realizzarebbe).
+
+\`E ovvio che questa tecnica non permetta di realizzare le multiple start
+activity, in cui una porta è contemporaneamente di creazione e di possibile
+correlazione. Per realizzare le multiple start activity ci deve essere un
+flusso d'informazione che dalle istanze passa al \icode{ProcessManager} nel
+momento in cui \ldots
+
+viene assegnato un valore ad una variabile producendo
+l'istanziazione di uno \emph{stato di correlazione} associato ad una porta.
+
+% Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
+% un'istanza in grado di correlare con un messaggio in arrivo ad una
+% porta\footnote{Ovviamente la correlazione è solo potenziale in quanto non vi è
+% la garanzia che essa avvenga certamente, l'istanza nella sua evoluzione può
+% anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
+% per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
+% 
+% Si può pensare che il \icode{ProcessManager} mantenga una struttura associativa
+% che ad ogni identificativo di porta \texttt{portId}, realizzato dalla coppia
+% $\arr{p,o}$, associ l'insieme delle istanze che hanno valorizzato almeno una
+% variabile di correlazione usata con quella porta. Tale struttura sarà indicata
+% di seguito come \verb#{ instances on <p,o> }# e verrà aggiornata nel momento in
+% cui
+% 
+% 
+% A questo punto il \icode{ProcessManager} 
+% all'arrivo di un messaggio $\xmsg{{\xp}}{\xo}{\bar{\xv}}$ esegue la segente
+% procedura:
+% \begin{verbatim}
+%                if <p,o> is a create-port
+%                    if { instances on <p,o> } is empty
+%                        create a new instance 			
+%                
+%                add v in { messages on <p,o> } 
+% \end{verbatim}
 
 
