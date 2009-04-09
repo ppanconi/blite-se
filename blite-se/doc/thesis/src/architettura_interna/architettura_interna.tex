@@ -1,23 +1,15 @@
-\chapter{Progetto di un motore per l'orchestrazione}
+\chapter{Blite-se}
 
-\textsf{
-In questo capitolo si offre una panoramica del progetto software
-%\emph{Blite-se}, 
-che realizza l'implementazione del linguaggio precedentemente esposto. Vengono
-presentati ad alto livello i diversi moduli con le loro funzionalità e in
-particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
+Come già precedentemente detto il software realizzato può essere distinto
+in due progetti a sè stanti: \emph{Blite-se} e \emph{Blide}. In questo capitolo
+si descrive il primo, in particolare sono presentati ad alto livello i diversi
+moduli con le loro funzionalità e in particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
 Blite, si descrive l'architettura in maniera dettagliata. Di questa si cerca di
 mettere in luce il modello di esecuzione ideato, basato su il \emph{``Composite
 Pattern''}, secondo cui ogni attività è rappresentabile come un componente che
 apporta il proprio contributo all'esecuzione dell'istanza di processo.
-}
 
-\section{Blite-se}
-
-Come già precedentemente detto il software realizzato può essere distinto
-in due progetti a sè stanti: \emph{Blite-se} e \emph{Blide}. In questo capitolo
-si descrive il primo, mentre il secondo verrà presentato nel prossimo.
-
+\section{Progetto di un motore per l'orchestrazione}
 Blite-se (Blite Service Engine) è il progetto principale e implementa il
 linguaggio presentato nel capitolo precedente. Realizzare un linguaggio per
 l'orchestrazione di servizi è una attività complessa, che spazia in molteplici

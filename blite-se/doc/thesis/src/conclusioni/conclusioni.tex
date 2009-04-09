@@ -95,19 +95,17 @@ ricezione in base alle informazioni di cui dispone in quel momento.
 In generale si potrebbe pensare di risolvere semplicemente il problema a livello
 sintattico\footnote{La soluzione può sembrare ingenua, ma per esempio è ciò che
 di fatto fa Oralce Process Manager.}, rendendo distinguibili le porte di
-ricezione su cui vengono create le istanze (\emph{create port}). E' ovvio che questa tecnica non permetta di realizzare le multiple start
-activity, in cui una porta è contemporaneamente di creazione e di possibile
-correlazione. Per realizzare le multiple start activity ci deve essere un
-flusso d'informazione che dalle istanze passa al \icode{ProcessManager} nel
-momento in cui viene assegnato un valore ad una variabile producendo
-l'istanziazione di uno \emph{stato di correlazione} associato ad una porta.
+ricezione su cui vengono create le istanze (\emph{create port}). E' ovvio che
+questa tecnica non permetta di realizzare le multiple start activity, in cui una
+porta è contemporaneamente di creazione e di possibile correlazione. Per
+realizzare le multiple start activity è necessario implemetare 
 
-Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
-un'istanza in grado di correlare con un messaggio in arrivo ad una
-porta\footnote{Ovviamente la correlazione è solo potenziale in quanto non vi è
-la garanzia che essa avvenga certamente, l'istanza nella sua evoluzione può
-anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
-per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
+% Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
+% un'istanza in grado di correlare con un messaggio in arrivo ad una
+% porta\footnote{Ovviamente la correlazione è solo potenziale in quanto non vi è
+% la garanzia che essa avvenga certamente, l'istanza nella sua evoluzione può
+% anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
+% per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
 
 E' chiaro che la semantica attuale di Blite specifica alla perfezione il
 comportamento voluto, ma crea un notevole scarto tra la sfera teorica e quella

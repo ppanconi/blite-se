@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt, italian]{book}
+ \documentclass[a4paper,12pt, italian]{book}
 % \usepackage[a4paper]{geometry}
 \usepackage[utf8x]{inputenc}
 \usepackage[italian]{babel}
@@ -70,13 +70,15 @@ tabsize=4,
 
 \newcommand{\icode}[1]{\textsf{#1}}
 
-\newcommand{\logo}[1]{\AddToShipoutPicture*{\AtPageCenter
-{\makebox(0,0){\centering \includegraphics[width=0.8\paperwidth]{#1}}}}}
 %\newtheorem{deff}{Definizione}
 %\newtheorem{es}{Esempio}
 %\newtheorem{pro}{Proposizione}
 %\newtheorem{thm}{Teorema}
 %\newtheorem{lem}{Lemma}
+
+\AtBeginDocument{\renewcommand{\bibname}{Riferimenti}}
+
+
 
 \linespread{1.2}
 \setlength{\topmargin}{20pt}
