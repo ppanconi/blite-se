@@ -1,0 +1,45 @@
+{[
+  seq
+    rcv<"ship", cust> req(id, c, items);
+    if (c)
+    //invio completo
+       seq
+          inv<"bend", "ship"> packall(id, items);
+          rcv<"ship"> packallcb(id, ok);
+          if (ok)
+            seq
+              inv<"bill"> bill(id, items);
+              inv<cust> notice(id, items);
+            qes
+          inv<cust> err(id, "sorry")
+       qes
+    //else - invio in parti
+    [
+       seq
+         shiped := 0;
+         [  //accredito pagamento
+            inv<"bill"> bill(id, items)
+            ch: //compensazione accredito
+               seq
+                  noshiped := items - shiped;
+                  inv<"bill"> revoke(id, noshiped);
+               qes
+         ];
+         while (shiped < items)
+            seq
+               inv<"bend", "ship"> pack(id, shiped, items);
+               rcv<"ship"> packcb(id, count);
+               if (count > 0)
+                  seq
+                     inv<cust> notice(id, count);
+                     shiped := shiped + count;
+                  qes
+               //else - articoli non disponibili
+               throw;
+           qes
+       qes
+       fh:
+          inv<cust> err(id, "sorry")
+    ]
+  qes
+]}(id)

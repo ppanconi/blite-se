@@ -1,0 +1,11 @@
+{ // Billing Service
+    [
+        pck
+            rcv<"bill"> bill(id, items);
+            empty;
+         +
+            rcv<"bill"> revoke(id, items);
+            empty;
+        kcp
+    ]
+}
