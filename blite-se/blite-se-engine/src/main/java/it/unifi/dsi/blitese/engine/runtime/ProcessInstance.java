@@ -15,6 +15,7 @@
 package it.unifi.dsi.blitese.engine.runtime;
 
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 
 
 public interface ProcessInstance extends FlowOwner, ActivityComponent, ExecutionContext {
@@ -30,5 +31,7 @@ public interface ProcessInstance extends FlowOwner, ActivityComponent, Execution
     void setMonitor(InstanceMonitor monitor);
 
     InstanceMonitor getMonitor();
+
+    public void createRecActivated(BLTDEFReceiveActivity rec);
 }
 

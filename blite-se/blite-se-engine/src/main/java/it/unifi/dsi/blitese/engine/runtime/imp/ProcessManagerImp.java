@@ -14,9 +14,12 @@
  */
 package it.unifi.dsi.blitese.engine.runtime.imp;
 
+import it.unifi.dsi.blitese.engine.definition.ActivityComponentFactory;
 import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
+import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.DefinitionMonitor;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
+import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.InComingEventKey;
 import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
@@ -24,6 +27,7 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessInstance;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager; 
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
+import it.unifi.dsi.blitese.engine.runtime.activities.imp.ReceiveActivity;
 import it.unifi.dsi.blitese.parser.ABltValueHolder;
 import it.unifi.dsi.blitese.parser.BLTDEFInvPartners;
 import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
@@ -151,7 +155,7 @@ public class ProcessManagerImp implements ProcessManager {
         return i;
     }
 
-    public void manageRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
+    synchronized public void manageRequest(ServiceIdentifier serviceId, String operation, MessageContainer messageContainer) {
         
         //we locate the target port for this request
         String portId = BLTDEFReceiveActivity.makePortId(serviceId.provideStringServiceName(), operation);
@@ -192,38 +196,75 @@ public class ProcessManagerImp implements ProcessManager {
             
         LOGGER.info("Managing Request to port " + portId);
         
-        //test if we target a create instance
-        if (mBliteProcessDef.getServiceElement().isCreateInstancePort(portId)) {
-            //we create a new instance
+        ProcessInstance newInstance = null;
 
-            ProcessInstance pi = createInstance();
-            
-            LOGGER.info("Created new instance with id " + pi.getInstanceId() + " for request to port " + portId);
-            
-            synchronized (getDefinitionProcessLevelLock()) {
-                getEngine().addEventSubjet(icek, messageContainer);
+        synchronized (getDefinitionProcessLevelLock()) {
+            getEngine().addEventSubjet(icek, messageContainer);
+            //test if we target a create instance
+//            if (mBliteProcessDef.getServiceElement().isCreateInstancePort(portId)) {
+            if (isToCreateANewInsatnce(portId, icek, messageContainer)) {
+                //we create a new instance
+
+                newInstance = createInstance();
+
+                LOGGER.info("Created new instance with id " + newInstance.getInstanceId() + " for request to port " + portId);
+
+    //            synchronized (getDefinitionProcessLevelLock()) {
+    //                getEngine().addEventSubjet(icek, messageContainer);
+    //            }
+
+            } else {
+                //we notify the incoming event
+
+    //            synchronized (getDefinitionProcessLevelLock()) {
+
+    //                getEngine().addEventSubjet(icek, messageContainer);
+                    getEngine().resumeFlowWaitingEvent(icek);
+
+    //            }
             }
-            
-            pi.activete();
-            
-        } else {
-            //we notify the incoming event
-            
-            synchronized (getDefinitionProcessLevelLock()) {
-                
-                getEngine().addEventSubjet(icek, messageContainer);
-                getEngine().resumeFlowWaitingEvent(icek);
-                
-            }        
-            
         }
-        
+
         //we send the done the one-way protocol is done.
         mEngine.sendResponseDoneStatus(icek, messageContainer.getId());
-        
+
+        if (newInstance != null) {
+            
+            synchronized (newInstance) {
+                newInstance.activete();
+                try {
+                    Logger.getLogger(ProcessManagerImp.class.getName()).log(Level.INFO, " ###################Process Manager wait for Instance " + newInstance.getInstanceId() + " ACTIVATION!");
+                    newInstance.wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ProcessManagerImp.class.getName())
+                            .log(Level.INFO, "###################Instance " + newInstance.getInstanceId() + " COMPLETELY ACTIVATED!!");
+                }
+
+                Logger.getLogger(ProcessManagerImp.class.getName())
+                            .log(Level.INFO, "###################Instance " + newInstance.getInstanceId() + " COMPLETELY ACTIVATED!!");
+            }
+        }
     }
 
-    
+    public boolean isToCreateANewInsatnce(String portId, InComingEventKey icek, MessageContainer mc) {
+        List<BLTDEFReceiveActivity> recDefs = mPortIdToPortDef.get(portId);
+
+        List<FlowExecutor> waitngFlows = getEngine().getFlowWaitingEvent(icek);
+
+        for (FlowExecutor flowExecutor : waitngFlows) {
+
+            ActivityComponent waitAct = flowExecutor.getCurrentActivity();
+
+            if (waitAct instanceof ReceiveActivity) {
+                ReceiveActivity receiveActivity = (ReceiveActivity) waitAct;
+
+                if (receiveActivity.matchAMessage(false) == mc) return false;
+            }
+
+        }
+
+        return mBliteProcessDef.getServiceElement().isCreateInstancePort(portId);
+    }
     
 }
 

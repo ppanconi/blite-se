@@ -268,6 +268,17 @@ public class EngineImp implements Engine {
         return l;
     }
 
+    public List<FlowExecutor> getFlowWaitingEvent(InComingEventKey eventKey) {
+
+        List<FlowExecutor> l = mEventWaitingExecutor.get(eventKey);
+
+        if (l == null) {
+            l = new ArrayList<FlowExecutor>();
+        }
+
+        return l;
+    }
+
     public void resumeWaitingFlow(FlowExecutor flow) {
         //PCK
 //        InComingEventKey icek = mWaitingFlowToEvent.remove(flow);

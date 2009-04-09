@@ -9,7 +9,7 @@ import it.unifi.dsi.blitese.engine.definition.ActivityComponentFactory;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.parser.BLTDEFPickActivity;
-import it.unifi.dsi.blitese.parser.BLTDEFPickActivity.PickSequence;
+import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BLTDEFSequenceActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +71,9 @@ public class PickActivity extends ActivityComponentBase {
                     
                     if (receiveActivity.matchAMessage(false) != null) {
                         //we hava a message
+
+                        notifyActivation(mOptions.get(receiveActivity).receiveActivity);
+
                         reviced = true;
                         rcvOption = i;
                         manager.getEngine().removeFlowFromWaiting(getExecutor());
@@ -89,6 +92,7 @@ public class PickActivity extends ActivityComponentBase {
                     } else {
                         //we wait for the message
                         manager.getEngine().addFlowWaitingEvent(getExecutor(), receiveActivity.getIcek());
+                        notifyActivation(mOptions.get(receiveActivity).receiveActivity);
                     }
                     i++;
                 }
@@ -119,5 +123,10 @@ public class PickActivity extends ActivityComponentBase {
         return rcvs;
     }
 
+    private void notifyActivation(BLTDEFReceiveActivity def) {
+        if (def.isCreate()) {
+            getContext().getProcessInstance().createRecActivated(def);
+        }
+    }
     
 }
