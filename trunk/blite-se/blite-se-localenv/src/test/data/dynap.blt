@@ -1,0 +1,15 @@
+{
+    [
+        seq
+            rcv<"server", "client"> operation(x);
+            inv<"client"> callback(x)
+        qes
+    ]
+} 
+||
+{
+    :: seq
+        inv<"server", "client"> operation(10);
+        rcv<"client"> callback(x)
+    qes
+} (x)

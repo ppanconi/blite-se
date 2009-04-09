@@ -1,0 +1,22 @@
+{ // Store Service
+    [
+        pck
+            // invio completo dell'ordine
+            rcv<"bend", "ship"> packall(id, items);
+            seq
+                inv<"ship"> packallcb(id, true);
+            qes;
+         +
+            // invio anche differito dell'ordine
+            rcv<"bend", "ship"> pack(id, shiped, items);
+            seq
+                if (shiped > 0)
+                    inv<"ship"> packcb(id, 0)
+                seq
+                    packed := items / 2;
+                    inv<"ship"> packcb(id, packed)
+                qes
+            qes;
+        kcp
+    ]
+} 
