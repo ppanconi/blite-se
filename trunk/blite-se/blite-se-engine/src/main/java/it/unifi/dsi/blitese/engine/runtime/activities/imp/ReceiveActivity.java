@@ -15,6 +15,7 @@
 
 package it.unifi.dsi.blitese.engine.runtime.activities.imp;
 
+import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
 import it.unifi.dsi.blitese.engine.runtime.MessageContainer;
 import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.ServiceIdentifier;
@@ -40,7 +41,7 @@ public class ReceiveActivity extends ActivityComponentBase {
     private MessageContainer matchingMessage = null;
 
     private String[] fparamNames;
-    
+
     @Override
     public void init() {
         super.init();
@@ -128,7 +129,8 @@ public class ReceiveActivity extends ActivityComponentBase {
             if (matchingMessage == null) {
                 //we haven't found anything we continue to wait...
                 manager.getEngine().addFlowWaitingEvent(getExecutor(), icek);
-                
+                notifyActivation();
+
                 return false;
             }
 
@@ -136,6 +138,7 @@ public class ReceiveActivity extends ActivityComponentBase {
         } // END of Syncronized Definition Level Block ------------------------
         
         assert matchingMessage != null;
+        notifyActivation();
         
         if (!getContext().isInAFaultedBranch()) {
 
@@ -166,6 +169,7 @@ public class ReceiveActivity extends ActivityComponentBase {
         }
         
         flowParent();
+
         return true;
         
     }
@@ -177,6 +181,8 @@ public class ReceiveActivity extends ActivityComponentBase {
     public RequestInComingEventKey getIcek() {
         return icek;
     }
+
+
 
     //PCK
     public MessageContainer matchAMessage(boolean consuming) {
@@ -217,5 +223,11 @@ public class ReceiveActivity extends ActivityComponentBase {
         }
 
         return null;
+    }
+
+    private void notifyActivation() {
+        if (def.isCreate()) {
+            getContext().getProcessInstance().createRecActivated(def);
+        }
     }
 }

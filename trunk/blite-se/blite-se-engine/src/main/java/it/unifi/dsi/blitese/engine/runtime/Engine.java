@@ -83,6 +83,14 @@ public interface Engine {
      */
     public List<FlowExecutor> resumeFlowWaitingEvent(InComingEventKey eventKey);
 
+
+    /**
+     * get all waiting flow
+     * @param eventKey
+     * @return
+     */
+    public List<FlowExecutor> getFlowWaitingEvent(InComingEventKey eventKey);
+
     public void resumeWaitingFlow(FlowExecutor flow);
 
     /**

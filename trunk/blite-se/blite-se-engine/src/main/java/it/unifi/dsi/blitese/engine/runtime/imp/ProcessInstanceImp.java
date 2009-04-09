@@ -20,7 +20,6 @@ import it.unifi.dsi.blitese.engine.definition.BliteDeploymentDefinition;
 import it.unifi.dsi.blitese.engine.runtime.ActivityComponent;
 import it.unifi.dsi.blitese.engine.runtime.Engine;
 import it.unifi.dsi.blitese.engine.runtime.ExecutionContext;
-import it.unifi.dsi.blitese.engine.runtime.Fault;
 import it.unifi.dsi.blitese.engine.runtime.FlowExecutor;
 import it.unifi.dsi.blitese.engine.runtime.InstanceMonitor;
 import it.unifi.dsi.blitese.engine.runtime.ProcessInstance; 
@@ -29,6 +28,7 @@ import it.unifi.dsi.blitese.engine.runtime.ProcessManager;
 import it.unifi.dsi.blitese.engine.runtime.RuntimeVariable;
 import it.unifi.dsi.blitese.engine.runtime.VariableScope;
 import it.unifi.dsi.blitese.parser.AServiceElement;
+import it.unifi.dsi.blitese.parser.BLTDEFReceiveActivity;
 import it.unifi.dsi.blitese.parser.BltDefBaseNode;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,6 +49,8 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
 
     private InstanceMonitor monitor;
 
+    private int numberOfCreateRec = 0;
+
     public ProcessInstanceImp(Engine mEngine, ProcessManager mProcessManager, 
                               String instanceId, 
                               //SimpleNode bliteDefinition, 
@@ -59,7 +61,8 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
 //        this.bliteDefinition = bliteDefinition;
         this.deploymentDefinition = deploymentDefinition;
         this.correlationSet = deploymentDefinition.getServiceElement().getCorrelationSet();
-        
+
+        this.numberOfCreateRec = deploymentDefinition.getServiceElement().getMAllCreateReceive().size();
     }
     
     public ProcessManager getManager() {
@@ -185,6 +188,24 @@ public class ProcessInstanceImp extends ABaseContext implements ProcessInstance,
         if (monitor != null) monitor.stateChanged();
     }
 
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Added for sincronize activation
+    private int activetedCreateRec = 0;
+
+    public void createRecActivated(BLTDEFReceiveActivity rec) {
+        activetedCreateRec++;
+
+        LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + activetedCreateRec + "/" + numberOfCreateRec);
+
+        if (activetedCreateRec >= numberOfCreateRec) {
+            synchronized (this) {
+                LOGGER.info("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOTIFYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY!!");
+                this.notify();
+            }
+        }
+    }
 
 }
 
