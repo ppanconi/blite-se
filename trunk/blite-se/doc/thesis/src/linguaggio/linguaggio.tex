@@ -1,6 +1,5 @@
 \chapter{Linguaggi per l'orchestrazione}
 
-\textsf{
 In questo capitolo si offre una panoramica ad alto livello di BPEL, il
 linguaggio che è diventato lo standard per l'orchestrazione dei Servizi Web.
 Di seguito viene introdotto Blite, na variante semplificata di
@@ -8,7 +7,7 @@ BPEL, che ne riproduce alcune delle funzionalità più caratteristiche al fine
 di definire una sematica formale. Tale sematica è presentate e commentata nel
 dettaglio nella Sezione 2.2. Della sintassi astratta di Blite si ricava una
 grammatica EBNF da cui si realizza un compilatore, tale procedimento è
-presentato nella Sezione 2.3.}
+presentato nella Sezione 2.3.
 
 \section{BPEL, lo standard per l'orchestrazione di Servizi Web}
 Abbiamo detto come SOA e i Servizi Web siano una delle risposte più recenti
@@ -2105,12 +2104,12 @@ procedura:
 
 \begin{verbatim}
                m := null
-               for all v in { messages on <p,o>} 
+               for each v in { messages on <p,o>} 
                    if corr(x, v) 
                       m := v
                       break iteration
     
-               if m is null start-wait
+               if m is null start wainting on <p,o>
                else 
                    consume m
                    continue-execution
@@ -2122,9 +2121,9 @@ che restituisce un valore booleano, valuta se il messaggio \texttt{v} può esser
 base ai parametri attuali \texttt{x}, allo stato dell'istanza e al correlation
 set definito dal progrmmatore.
 
-In pratica tale funzione può essere ricavata in riferimento alla funzione
+In pratica tale funzione può essere ricavata, in riferimento alla funzione
 $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ definita in Sezione
-\ref{pag:match} nel seguente modo:
+\ref{pag:match}, nel seguente modo:
 $$
 \begin{array}{c}
 \x{corr}(\xcorr, \xsigma, \xx, \xv	) =
@@ -2176,17 +2175,19 @@ $$
 	\, \xpar \, 
 	\xrec{\plrec_2}{\xo_2}{\bar{\xx_2}} \xsucc \xs_2
 $$
-in cui la start activity è costituita dalla composizione parallela di due
+in cui la start activity è costituita dalla composizione parallela di più
 ricezioni. 
 
-La specifica BPEL afferma, anche se in maniera non molto
-esplicita\footnote{Per esempio, nella specifica di BEPEL4WS 1.1
-\cite{BPEL11Spec} il comportamento associato alle multiple start activity era addirittura descritto semplicemente con un
-esempio (sezione 1.6).}, che la correlazione di un messaggio ad una istanza
-abbia precedenza sulla creazione di nuove istanze.
+La specifica BPEL afferma, anche se in maniera non molto esplicita\footnote{Per
+esempio, nella specifica di BEPEL4WS 1.1 \cite{BPEL11Spec} il comportamento
+associato alle multiple start activity era addirittura descritto semplicemente
+con un esempio (sezione 1.6).}, che nel caso delle multiple start activity, la
+correlazione di un messaggio ad una istanza abbia precedenza sulla creazione di
+nuove istanze.
 
 Questo comportamento è espresso alla perfezione dalla sematica di Blite che
-per le 
+determina in maniera univoca il comporatamento del seguente termine:\\
+\ldots
 \\
 
 Nella nostra implemetazione il \icode{ProcessManager}, nel momento in cui arriva
@@ -2201,39 +2202,50 @@ una start activity porta sempre alla creazione di una nuova istanza, lasciando
 al programmatore la responsabilità di non riutilizzare tali porte per
 effettuare la correlazione (in quanto tale correlazione mai si realizzarebbe).
 
-\`E ovvio che questa tecnica non permetta di realizzare le multiple start
-activity, in cui una porta è contemporaneamente di creazione e di possibile
-correlazione. Per realizzare le multiple start activity ci deve essere un
-flusso d'informazione che dalle istanze passa al \icode{ProcessManager} nel
-momento in cui \ldots
+\`E ovvio che questa tecnica, non permetta di realizzare le multiple
+start activity, in cui una porta è contemporaneamente di creazione e di possibile
+correlazione, e in generale produca comportamenti non coformi alla sematica
+specificata.
+\\
 
-viene assegnato un valore ad una variabile producendo
-l'istanziazione di uno \emph{stato di correlazione} associato ad una porta.
+Per ottenere il comportamento specificato dalla semantica di
+Blite, compreso il caso delle multiple start activity, si fare in modo
+che il \icode{ProcessManager}, all'arrivo di un messaggio
+$\xmsg{{\xp}}{\xo}{\bar{\xv}}$,  attui la seguente procedura:
+\begin{verbatim}
+On a new message v:
 
-% Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
-% un'istanza in grado di correlare con un messaggio in arrivo ad una
-% porta\footnote{Ovviamente la correlazione è solo potenziale in quanto non vi è
-% la garanzia che essa avvenga certamente, l'istanza nella sua evoluzione può
-% anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
-% per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
-% 
-% Si può pensare che il \icode{ProcessManager} mantenga una struttura associativa
-% che ad ogni identificativo di porta \texttt{portId}, realizzato dalla coppia
-% $\arr{p,o}$, associ l'insieme delle istanze che hanno valorizzato almeno una
-% variabile di correlazione usata con quella porta. Tale struttura sarà indicata
-% di seguito come \verb#{ instances on <p,o> }# e verrà aggiornata nel momento in
-% cui
-% 
-% 
-% A questo punto il \icode{ProcessManager} 
-% all'arrivo di un messaggio $\xmsg{{\xp}}{\xo}{\bar{\xv}}$ esegue la segente
-% procedura:
-% \begin{verbatim}
-%                if <p,o> is a create-port
-%                    if { instances on <p,o> } is empty
-%                        create a new instance 			
-%                
-%                add v in { messages on <p,o> } 
-% \end{verbatim}
+               put v in { messages on <p,o> } 
+               for each 'rcv <p> o x' wainting on <p,o>
+                   if cor(x, v) goto continue
+
+               if <p,o> is a create port 
+                   create a new instance i
+                   start i
+                   wait until all start rcv of i are activated
+               
+   continue:   manage next message ...  
+\end{verbatim}
+
+In pratica viene creata una nuova istanza solo se il messaggio è indirizzato
+a una porta di creazione, e non c'è nessuna attività di
+ricezione (fra tutte le varie istanze) in attesa su tale porta che possa
+correlare con il messaggio. Inoltre si fa notare come la procedura di gestione
+dei nuovi messaggi, dopo aver creato un nuova istanza e averla messa in
+escuzione, attenda che tutte le sue start activity di ricezzione si siano
+attivate, cioè si siano registrate come in attesa sulle rispettive porte. 
+Solo dopo questo tornerà a gestire altri messaggi in arrivo.
+In questo modo si realizza l'atomicità del passo descritto dalle regola (new),
+in cui in un solo posso si crea un nuova istanza, si attivano le attività di
+ricezione, e così si realizza la sematica delle multiple start activity secondo
+cui la correlazione ha priorità sulla creazione di istanze.
+
+Queste osservazioni risulteranno più chiare dopo ever letto il Capitolo 4 in cui
+verrà presentata l'architettura e il modello di esecuzione dell'Engine. In questa
+fase sono state presentate per illustrare com processo di interpretazione della
+sematica abbia
+
+
+ 
 
 
