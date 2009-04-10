@@ -2055,8 +2055,8 @@ e la sintassi delle espressioni logiche e aritmetiche.
 \section{Alcune osservazioni sulla semantica della correlazione}
 \label{sec:semcor}
 
-La sematica descritta in Sezione \ref{sec:blite} descrive il comportamento dei
-programmi Blite in modo molto elgante e compatto. Il nostro obbiettivo è stato
+La sematica presentata in Sezione \ref{sec:blite} descrive il comportamento dei
+programmi Blite in modo molto elgante e sintetico. Il nostro obbiettivo è stato
 quello di creare un motore capace di eseguire i programmi producendo un
 comportamento equivalente a quello specificato nel rispetto di specifiche
 tecniche che tenessero conto il più possibile di problematiche di efficenza,
@@ -2068,8 +2068,8 @@ realizzata, ci sono due componenti fondamentali:
 \begin{itemize}
   \item Un oggetto software chiamato \icode{ProcessManger}, che, data una   
   precisa definizione di processo, ha la rasponsabilità di creare le istanze
-  e di metterle in esecuzione. Inolte ha la responsabilità di gestire -
-  memorizzandoli in opportune strutture dati- i messaggi indirizzati alle porte
+  e di metterle in esecuzione. Inolte, tale oggetto ha la responsabilità di
+  gestire - memorizzandoli in opportune strutture dati- i messaggi indirizzati alle porte
   della propria definizione.
   \item Un insieme di thread, \icode{ThreadPool}, che eseguono concorrentemente
   le varie istanze di processo e i flussi paralleli che si generano in esse.
@@ -2114,7 +2114,6 @@ procedura:
                    consume m
                    continue-execution
 \end{verbatim}
-
 in cui ``\texttt{messages on <p,o>}'' identifica tutti i
 messaggi ricevuti sulla porta \texttt{<p,o>} e la funzione \texttt{corr(x, v)},
 che restituisce un valore booleano, valuta se il messaggio \texttt{v} può essere correlato all'istanza in
@@ -2165,8 +2164,8 @@ le attività di ricezione delle diverse istanze.
 
 I concetti di \emph{grado di definizione} e di ordinamento delle istanze
 rispetto alla possibilità di consumare messaggi in arrivo, introdotti dalla
-semantica di Blite, risultano determinanti per descriminare quando si deve
-creare una nuova istanza, e in particolare per realizzare le \emph{multiple
+semantica di Blite, risultano invece determinanti per descriminare quando si
+deve creare una nuova istanza, e in particolare per realizzare le \emph{multiple
 start activity}.
 
 Le multiple start activity, sono attività di inzio istanza del tipo:
@@ -2187,8 +2186,68 @@ nuove istanze.
 
 Questo comportamento è espresso alla perfezione dalla sematica di Blite che
 determina in maniera univoca il comporatamento del seguente termine:\\
-\ldots
+$$
+\begin{array}{l}
+\{
+\xscopez{ (\xrec{\arr{\xp_1}}{\xo}{\arr{\xx}}
+	 \xpar  \xrec{\arr{\xp_2}}{\xo}{\arr{\xx, \xz}}) 
+	 \xsucc \xs}
+\,\}_{\{\xx\}}
+\\ 
+\xspar 
+\{
+\xinst{\xenv{\assoc{\xy}{\xv}}}{\xinv{\arr{\xp_1}}{\xo}{\arr{\xy}}}
+\}
 \\
+\xspar 
+\{
+\xinst{\xenv{\assoc{\xy_1}{\xv},
+\assoc{\xy_2}{\xv'}}}{\xinv{\arr{\xp_2}}{\xo}{\arr{\xy_1, \xy_2}}}
+\}
+\end{array}
+$$
+$$
+\begin{array}{c}
+\ldots \bpelredarrow{} \ldots
+\end{array}
+$$
+$$
+\begin{array}{l}
+\{
+\xscopez{ (\xrec{\arr{\xp_1}}{\xo}{\arr{\xx}}
+	 \xpar  \xrec{\arr{\xp_2}}{\xo}{\arr{\xx, \xz}}) 
+	 \xsucc \xs}
+\, , 
+\xinst{\xenv{\assoc{\xx}{\xv}}}{ 
+	\xscopez{\xrec{\arr{\xp_2}}{\xo}{\arr{\xx, \xz}})
+	\xsucc \xs }} 
+\}_{\{\xx\}}
+\\
+\xspar 
+\{
+\xinst{\xenv{\assoc{\xy_1}{\xv},
+\assoc{\xy_2}{\xv'}}}{\xinv{\arr{\xp_2}}{\xo}{\arr{\xy_1, \xy_2}}}
+\}
+\end{array}
+$$
+$$
+\begin{array}{c}
+\ldots \bpelredarrow{} \ldots
+\end{array}
+$$
+$$
+\begin{array}{l}
+\{
+\xscopez{ (\xrec{\arr{\xp_1}}{\xo}{\arr{\xx}}
+	 \xpar  \xrec{\arr{\xp_2}}{\xo}{\arr{\xx, \xz}}) 
+	 \xsucc \xs}
+\, , 
+\xinst{\xenv{\assoc{\xx}{\xv}, \assoc{\xz}{\xv'}}}{ 
+\xscopez{\xs} } 
+\}_{\{\xx\}}
+\end{array}
+$$
+in cui dalla definizione viene creata un'unica istanza di processo.
 
 Nella nostra implemetazione il \icode{ProcessManager}, nel momento in cui arriva
 un nuovo messaggio deve poter decidere se creare una nuova istanza o meno in
@@ -2209,7 +2268,7 @@ specificata.
 \\
 
 Per ottenere il comportamento specificato dalla semantica di
-Blite, compreso il caso delle multiple start activity, si fare in modo
+Blite, compreso il caso delle multiple start activity, si deve fare in modo
 che il \icode{ProcessManager}, all'arrivo di un messaggio
 $\xmsg{{\xp}}{\xo}{\bar{\xv}}$,  attui la seguente procedura:
 \begin{verbatim}
@@ -2224,7 +2283,7 @@ On a new message v:
                    start i
                    wait until all start rcv of i are activated
                
-   continue:   manage next message ...  
+   continue:   manage next message 
 \end{verbatim}
 
 In pratica viene creata una nuova istanza solo se il messaggio è indirizzato
@@ -2237,7 +2296,7 @@ attivate, cioè si siano registrate come in attesa sulle rispettive porte o
 abbiamo consumato qualche messaggio. Solo dopo questo tornerà a gestire altri
 messaggi in arrivo. In questo modo si realizza l'atomicità del passo descritto dalle regola (new),
 in cui in un solo posso si crea un nuova istanza, si attivano le attività di
-ricezione, e così si realizza la sematica delle multiple start activity secondo
+ricezione. Così si realizza la semantica delle multiple start activity secondo
 cui la correlazione ha priorità sulla creazione di istanze.
 
 Queste osservazioni risulteranno più chiare dopo ever letto il Capitolo 4 in cui
