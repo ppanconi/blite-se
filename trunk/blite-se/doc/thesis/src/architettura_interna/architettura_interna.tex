@@ -10,7 +10,7 @@ mettere in luce il modello di esecuzione ideato, basato sul pattern
 come un componente che apporta il proprio contributo all'esecuzione dell'istanza di processo.
 
 \section{Progetto di un motore per l'orchestrazione}
-
+\label{sec:progmot}
 \begin{figure}[t]
 \begin{center}
 \includegraphics[scale=0.50]
@@ -43,7 +43,6 @@ necessarie:
   nodi dell'albero sintattico. Tali classi sono tutte discendenti della classe
   \icode{BltDefBaseNode} che fornisce un interfaccia comune per accedere ai
   rispettivi nodi padre e figli, inoltre fornisce il metodo
-  	\lstset{frame=NONE}
 	\begin{lstlisting}
 		/** Accept the visitor. **/
 		public Object jjtAccept(BliteParserVisitor visitor, Object data);
@@ -57,7 +56,6 @@ necessarie:
   L'efficenza risulta aumentata ma ovviamente, vi può essere un
   unico compilatore per virtual machine e successive compilazioni devono
   prevedere una di fase di reinizializzazione.}:
-	\lstset{frame=NONE}
 	\begin{lstlisting}	
 		static public void init(java.io.InputStream stream)
 
@@ -103,7 +101,6 @@ necessarie:
   
   A livello di Engine è definita e utilizzata la seguente interfaccia
   \icode{EngineChannel}:
-  \lstset{frame=NONE}
 	\begin{lstlisting}
 	/**
 	 * This interface represents the communication channel between 
@@ -204,7 +201,7 @@ eventi, quali l'arrivo di messaggi indirizzati alle porte delle sue definizioni.
 Dal punto di vista logico relazionale abbiamo già individuato le
 macro entità e relazioni rappresentate in Figura \ref{fig:1}.
 
-\begin{figure}[!htp]
+\begin{figure}[th]
 \begin{center}
   \includegraphics{architettura_interna/dia/engine}
   \caption[Blite-se: Engine, ProcessManager e ProcessInstace]{
@@ -517,9 +514,7 @@ l'esecuzione. Quest'ultimo passaggio verrà realizzato tramite l'interfaccia
 dell'Engine che dispone del seguente metodo per notificare gli executor pronti
 per essere eseguiti e metterli a disposizione del pool di thread:
 
-\lstset{frame=NONE}
 \lstinputlisting {architettura_interna/java/queueFlowExecutor.java}
-\lstset{frame=tblr}
 
 Inoltre quando un flusso giungerà a conclusione (l'istanza di processo termina o
 una esecuzione parallela definita in una flow Activity si conclude) si dovrà
@@ -541,17 +536,22 @@ A questo punto \`e lecito domandarsi quando si dovrà considerare terminato un
 flusso di esecuzione. In generale si applica il seguente ragionamento. Le varie
 \icode{ActivityComponent}, che sono legate in una struttura gerarchica che
 riflette la definizione statica del programma, termineranno la loro esecuzione
-mettendo come attività corrente nel loro \icode{FlowExecutor} la propria
-attività padre (\icode{parentComponent}). In accordo con questa osservazione
-risulta quindi corretto affermare che un flusso di esecuzione può essere considerato terminato dal
-FlowExecutor quando questo si troverà ad eseguire come attività corrente proprio
-il suo FlowOwner. In questo caso su di esso il FlowExecutor non dovrà invocare il
-metodo \icode{doActivity()} ma il metodo \icode{flowCompleted()} e fatto questo,
-dovrà terminare di eseguire il flusso. Il codice seguente spiega meglio di mille parole la logica
-alla base di tutto il modello di esecuzione del Blite Engine; in poche righe \`e
-sintetizzato il cuore dell'architettura
+mettendo come attività corrente nel loro \icode{FlowExecutor} la propria attività
+padre (\icode{parentComponent}). In accordo con questa osservazione risulta
+quindi corretto affermare che un flusso di esecuzione può essere considerato
+terminato dal \icode{FlowExecutor} quando questo si troverà ad eseguire come
+attività corrente proprio il suo \icode{FlowOwner}. In questo caso su di esso il
+FlowExecutor non dovrà invocare il metodo \icode{doActivity()} ma il metodo
+\icode{flowCompleted()} e fatto questo, dovrà terminare di eseguire il flusso. Il
+codice del Listato \ref{lst:FlowExecutorImp} spiega meglio di mille parole la
+logica alla base di tutto il modello di esecuzione dell'Engine; in poche righe \`e sintetizzato il cuore
+dell'architettura.
 
-\lstinputlisting{architettura_interna/java/FlowExecutorImp.java}
+\lstinputlisting[caption={Classe che implementa il \icode{FlowExecutor}. Il
+metodo \icode{executeCurrentActivity()} è il cuore del modello d'esecuzione
+realizzato dall'Engine. Esso esegue l'attività corrente fintanto che essa non
+sia uguale al \icode{FlowOwner}.},
+label=lst:FlowExecutorImp]{architettura_interna/java/FlowExecutorImp.java}
 
 In generale possiamo quindi dedurre le seguenti affermazioni che ci possono
 aiutare a definire alcune proprietà invarianti.
@@ -575,34 +575,33 @@ aiutare a definire alcune proprietà invarianti.
 \end{itemize}
 
 Oltre a creare, eseguire e terminare flussi sarà anche necessario sospenderne
-alcuni già in esecuzione, vedi per esempio il caso dell'attività di ricezione
-che deve fermare il flusso corrente in attesa di un evento remoto. In questo
+alcuni già in esecuzione, si veda per esempio il caso dell'attività di ricezione
+che deve arrestare il flusso corrente in attesa di un evento remoto. In questo
 caso, l'attività utilizzando l'interfaccia dell'Engine e in particolare il
-seguente metodo
+seguente metodo:
 
 \lstinputlisting{architettura_interna/java/addFlowWaitingEvent.java}
-
 potrà mettere in attesa il suo FlowExecutor su di un evento identificato dalla
-chiave \texttt{eventKey} e che lei stessa aveva provveduto
-precedentemente a ricavare\footnote{Si usa qui il termine ricavare e non generare in maniera
-  voluta. Le chiavi di evento non sono identificate da oggetti in memoria ma
-  hanno una loro entità indipendente
+chiave \texttt{eventKey} e che essa stessa aveva provveduto precedentemente a
+ricavare\footnote{Si usa qui il termine ricavare, e non generare, in maniera
+voluta. Le chiavi di evento non sono identificate da oggetti in memoria ma hanno
+una loro entità indipendente
   dagli oggetti che posso essere creati per rappresentarle. Per un esempio le
   chiavi utilizzate per la ricezione saranno costituite dalla coppia
-  nomeservizio/nomeoperazione, tale coppia verrà indicata come
-  \texttt{portId}.}. Fatto questo, l'attività ritornerà dal proprio
+  $\langle \texttt{service-name}, \texttt{operation-name} \rangle$, tale coppia
+  verrà indicata come \texttt{portId}.}. Fatto questo, l'attività ritornerà dal proprio
 metodo doActivity con il valore false, in questo modo il FlowExecutor terminerà
 l'esecuzione del Flow corrente. Nel momento in cui il messaggio sarà recapitato,
 l'Engine potrà individuare il FlowExecutor tramite la chiave \texttt{eventKey} e
-rimetterlo in esecuzione, poiché l'attività corrente di quest'ultimo sarà rimasta
-l'attività di ricezione essa potrà riprendere il suo lavoro, consumando il
-messaggio e permettendo al suo flusso di esecuzione di continuare. Nella sezione
+rimetterlo in esecuzione. Poiché l'attività corrente di quest'ultimo sarà rimasta
+l'attività di ricezione, essa potrà riprendere la sue esecuzione, consumando il
+messaggio e permettendo al suo flusso di esecuzione di procedere. Nella sezione
 successiva verrà illustrato nel dettaglio come si realizza la comunicazione e la
 notifica degli eventi.
 
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[angle=90,scale=0.60]
+\includegraphics[angle=90,scale=0.626,clip]
 {architettura_interna/dia/flowClassDiagram}
 \caption[Diagramma di classe FlowExecutor \ldots] {
    	Diagramma di classe FlowExecutor, FlowOwner e ThreadPool}
@@ -611,7 +610,7 @@ notifica degli eventi.
 \end{figure}
 
 In Figura \ref{fig:flowclass} \`e rappresentato un diagramma di classe che
-raffigura fra le altre entità il FlowExecutor e FlowOwner e le principali
+raffigura, fra le altre entità, il FlowExecutor e FlowOwner e le principali
 relazioni che le coinvolgono.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -621,7 +620,7 @@ relazioni che le coinvolgono.
 Da quanto abbiamo già esposto risulta chiaro che l'esecuzione di un processo \`e
 caratterizzata dallo svolgersi di attività interne e l'accadere di eventi
 esterni di cui le attività possono essere in attesa. In generale si può
-considerare che gli eventi siano generati a livello di Enviroment, e che possano
+considerare che gli eventi sono generati a livello di Enviroment, e che possono
 essere prodotti dall'arrivo di nuovi messaggi verso le porte locali o
 dalla notifica degli ack/nok delle invocazioni locali
 verso porte remote. Attualmente le funzionalità espresse da Blite non
@@ -631,7 +630,7 @@ soddisfacesse i requisiti attuali del linguaggio ma che non escludesse eventuali
 possibilità di estensione verso altre caratteristiche tipiche di BPEL
 (comunicazione Request-Response, EventActivity, ecc).
 
-Per l'implementazione dello schema di comunicazione prescelto saranno richieste
+Per l'implementazione dello schema di comunicazione prescelto sono richieste
 le seguenti funzionalità:
 
 \begin{enumerate}
@@ -644,12 +643,12 @@ le seguenti funzionalità:
   
   \item In un qualsiasi momento al ProcessManager potranno essere notificati
   eventi. In tal caso esso dovrà provvedere a ricavarsi la chiave e a
-  memorizzare in uma mappa associativa l'evento con la chiave per poterlo poi
+  memorizzare in una mappa associativa l'evento con la chiave per poterlo poi
   rendere disponibile alle attività interessate. Il ProcessManager dovrà anche
   provvedere a ``risvegliare'' tutti i flussi di esecuzione che
   eventualmente si sono messi in attesa di quell'evento specifico.
    
-  \item In un qualsiasi momento e anche più volte nel suo ciclo di vita una
+  \item In un qualsiasi momento, e anche più volte nel suo ciclo di vita, una
   attività potrà interrogare l'Engine (o meglio il ProcessManager responsabile
   della sua istanza) chiedendogli se un evento associato ad una particolare
   chiave sia avvenuto. In caso affermativo l'attività potrà consumare l'evento.
@@ -663,9 +662,9 @@ le seguenti funzionalità:
 % Tali funzionalità serrano rese disponibili nelle diverse interfacce 
 % \ldots
 
-In particolare si può vedere come queste funzionalità di base possano essere
+In particolare si può vedere come queste funzionalità di base possono essere
 utilizzate nel caso dell'attività \icode{ReceiveActivity}, e come
-l'attività stessa collabori con il ProcessManager perché si realizzi la
+l'attività stessa collabora con il ProcessManager affinché si realizzi la
 ricezione di messaggi. La \icode{ReceiveActivity} nel suo metodo
 \icode{doActivity()} compierà i seguenti passi:
 
@@ -673,96 +672,100 @@ ricezione di messaggi. La \icode{ReceiveActivity} nel suo metodo
   \item Ricava la chiave d'evento \texttt{eventKey}. In questo caso
   particolare la chiave sarà di tipo \icode{RequestInComingEventKey} e la sua
   unicità sarà costituita dal \texttt{portId} (ovvero la coppia 
-  serviceName/operationName) della porta su cui si sta eseguendo l'operazione di 
-  ricezione. Ovviamente la ReceiveActivity potrà ricavare il \texttt{portId}
-  dal nodo della definizione sintattica a lei associata.
+  $\langle \texttt{service-name}, \texttt{operation-name} \rangle$) della porta
+  su cui si sta eseguendo l'operazione di ricezione. Ovviamente la 
+  ReceiveActivity potrà ricavare il \texttt{portId} dal nodo della definizione sintattica a lei associata.
   
   \item Richiede al ProcessManager il set degli eventi associati alla
-  \texttt{eventKey}. Se non c'è alcun evento associato mette in attesa il
-  FlowExecutor sull'evento \texttt{eventKey}, e termina ritornando
-  \texttt{false}, al contrario si procede con il passo successivo.
+  \texttt{eventKey}. Se non c'è alcun evento associato, mette in attesa il
+  FlowExecutor sull'evento \texttt{eventKey}, e termina restituendo
+  \texttt{false}; al contrario, si procede con il passo successivo.
   
   \item Analizza il set degli eventi (che in questo caso possono essere
   identificati con tutti i messaggi indirizzati alla porta in questione non
   ancora consumati) per vedere se ce ne possa essere uno indirizzabile alla
   istanza della ReceiveActivity in questione. Questo controllo \`e fatto in
-  base alle regole di correlazione (si veda il capitolo x). Se un tale messaggio
-  non viene identificato mette in attesa il FlowExecutor sull'evento
-  \texttt{eventKey} e termina ritornando \texttt{false}, al contrario procede 
-  con il passo successivo.
+  base alle regole di correlazione, in pratica viene implementata la procedura e
+  la funzione \texttt{corr(x, v)} presentate nella Sezione \ref{sec:semcor}. Se
+  un tale messaggio non viene identificato, la \icode{ReceiveActivity} mette in attesa il
+  FlowExecutor sull'evento \texttt{eventKey} e termina restituendo
+  \texttt{false}, al contrario procede con il passo successivo.
   
-  \item E' stato individuato un messaggio inviato alla porta e alla istanza in
-  questione. Tale messaggio viene consumato aggiornando lo stato delle variabili
-  coinvolte nella ricezione, viene impostata la parentComponet come attività
-  corrente del FlowExecutor, e il metodo termina ritornando \texttt{true}.
+  \item In questo caso è stato individuato un messaggio inviato alla porta e
+  all'istanza in questione. Tale messaggio viene consumato aggiornando lo stato
+  delle variabili coinvolte nella ricezione, viene impostata la parentComponet come attività
+  corrente del FlowExecutor, e il metodo termina restituendo \texttt{true}.
 \end{enumerate}
 
-D'altro canto un oggetto ProcessManager nel metodo \icode{manageRequest( 
-ServiceIdentifier service, String operation, MessageContainer
-messageContainer)}\footnote{Bisogna notare che
-l'invocazione di tale metodo sarà scatenata lato Environment, e che la sua
-esecuzione avverrà a carico di un Thread allocato a livello stesso di
-Environment e logicamente del tutto indipendente dai thread del pool
-dell'Engine.} eseguirà le seguenti operazioni:
+D'altro canto un oggetto ProcessManager nel metodo
+\icode{manageRequest( ServiceIdentifier service, String operation,
+MessageContainer messageContainer)}\footnote{Bisogna notare che l'invocazione di
+tale metodo sarà scatenata lato Environment, e che la sua esecuzione avverrà a
+carico di un Thread allocato a livello stesso di Environment e logicamente del
+tutto indipendente dai thread del pool dell'Engine.} eseguirà le seguenti
+operazioni, in accordo con la procedura presentata nella Sezione \ref{sec:semcor}:
 
 \begin{enumerate}
-  \item Si verifica che la terna (serviceName/operationName/numero parti del
-  messaggio) identifichi effettivamente una porta valida per la definizione 
-  di processo in questione. Se non \`e cosi si notifica una
-  situazione di errore all'Environment e questo provvederà ad inviare un NOK al
-  processo invocante.
+  \item Verifica che la terna $\langle \texttt{service-name},
+  \texttt{operation-name}, \texttt{n.parti messagio} \rangle$  identifichi
+  effettivamente una porta valida per la definizione di processo in questione. 
+  Se non \`e così, notifica una situazione di errore all'Environment il quale
+  provvederà ad inviare un NOK al processo invocante.
  
- \item Si ricava la \texttt{eventKey} di tipo RequestInComingEventKey associata
- alla porta e con questa si provvede a memorizzare il messaggio in arrivo in 
+ \item Ricava la \texttt{eventKey} di tipo RequestInComingEventKey associata
+ alla porta e con questa provvede a memorizzare il messaggio in arrivo in 
  una struttura dati associativa.
  
- \item Se la porta in questione individua una start activity si crea una nuova
- istanza di processo e la si mette in esecuzione, alternativamente 
+ \item Se la porta in questione individua una start activity e non vi è nessuna attività di
+ ricezione (fra tutte le varie istanze) in attesa su tale porta che possa
+ correlare con il messaggio, crea una nuova istanza di processo e la mette in
+ esecuzione; alternativamente, se la porta non \`e associata ad una start
+ activity risveglia tutti i FlowExecutor in attesa di eventi individuati dalla \texttt{eventKey}.
  
- \item Se la porta non \`e associata ad una start activity si risvegliano tutti
- i FlowExecutor in attesa di eventi individuati dalla \texttt{eventKey}.
+ \item Se è stata creata un nuova istanza, il \icode{ProcessManager}, prima di
+ gestire un nuovo messaggio, attende che tutte le start \icode{ReceiveActivity}
+ di questa si siano attivate. 
 \end{enumerate}
 
 Già pensando che le due procedure precedenti saranno eseguite concorrentemente
 si capisce che un punto particolarmente critico del meccanismo di
 notifica/consumo di eventi stà nel fatto che l'elevato grado di parallelismo
-presente possa portare ad una perdita eventi (ovvero non consegna di messaggi).
-Quest'ultima \`e di fatto un'ipotesi assolutamente inammissibile e che deve
+presente possa portare ad una perdita eventi (ovvero mancata consegna di
+messaggi). Quest'ultima \`e di fatto un'ipotesi inammissibile e che deve
 essere assolutamente evitata. Di fatto essa si manifesterebbe allorché le precedenti
-attività parallele fossero sequenzializzate per esempio nel seguente modo
+attività parallele fossero sequenzializzate, per esempio nel seguente modo:
 
 \begin{itemize}
   \item La \icode{ReceiveActivity} arriva ad eseguire metà del passo 2. Cioè
   ricerca eventi non trovandoli ma non arriva a registrare il FlowExecutor come
   in attesa dell'evento.
   \item Il controllo passa al ProcessManager a cui viene effettivamente
-  notificato l'evento di interesse della attività. Esso pero' non trovando
+  notificato l'evento di interesse dell'attività. Esso però non trovando
   nessun FlowExecutor in attesa registra l'evento e termina.
-  \item Il controllo ripassa all'attività che registra il suo FlowExecutor come
-  in attesa. Essendo pero' l'evento già accaduto nessuno a questo punto sarà
-  in grado di notificarlo alla nostra ReceiveActivity, di fatto si ha una
-  perdita del messaggio.
+  \item Il controllo passa nuovo alla \icode{ReceiveActivity} che registra il
+  suo FlowExecutor come in attesa. Essendo però l'evento già accaduto nessuno a
+  questo punto sarà in grado di notificarlo alla attività, di fatto si ha una
+  mancata consegna del messaggio.
 \end{itemize}
 
 Per evitare questi scenari alquanto deprecabili sono attuabili due strategie.
 Una potrebbe essere quella di dotare l'Engine di una procedura temporizzata che
-ogni dato intervallo di tempo analizzi la mappa degli eventi accaduti e risvegli
+ogni dato intervallo di tempo analizza la mappa degli eventi accaduti e risvegla
 gli eventuali FlowExecutor registrati in attesa di essi. In questo modo il
-ProcessManager verrebbe sollevato da quest'ultimo compito e la possibilità di
+ProcessManager sarebbe sollevato da quest'ultimo compito e la possibilità di
 avere la sequenzializzazione sopra descritta non sarebbe più un problema.
 L'altra strategia potrebbe essere quella di eseguire alcuni passi delle
 procedure in mutua esclusione, di fatto realizzare due sezioni critiche su un
-medesimo semaforo; la prima per la ReceiveActivity dovrebbe comprendere i passi
-2 e 3 mentre quella per il ProcessManager raggruppare i passi 2 e 4, o nel caso
-della creazione di una nuova istanza i passi 2 e 3.
+medesimo monitor; la prima, per la ReceiveActivity dovrebbe comprendere i passi
+2 e 3, mentre quella per il ProcessManager dovrebbe raggruppare i passi 2 e 4, o
+nel caso della creazione di una nuova istanza, i passi 2 e 3.
 
 Per semplicità di realizzazione, e poiché ad una analisi poco più attenta si
-capisce che di un certo grado di sincronizzazione non si possa fare a meno\footnote{Se
-non altro l'accesso alle strutture dati deve essere sincronizzato fra i vari
+capisce che di un certo grado di sincronizzazione non si può fare a
+meno\footnote{Se non altro l'accesso alle strutture dati deve essere sincronizzato fra i vari
 thread.}, si \`e scelto di implementare la seconda strategia. Di fatto si \`e
 scelto la possibilità di realizzare una sincronizzazione a livello di
-definizione di processo. Il ProcessManager esporrà il seguente metodo
-
+definizione di processo. Il ProcessManager esporrà il seguente metodo:
 \begin{lstlisting}
 /**
 * Provides a lock at Process definition Level
@@ -771,60 +774,84 @@ definizione di processo. Il ProcessManager esporrà il seguente metodo
 */
 public Object getDefinitionProcessLevelLock();
 \end{lstlisting}
-
-che restituisce un oggetto che potrà essere utilizzato per sincronizzare un'
-istanza di processo con il ProcessManager, ma anche le diverse istanze fra di
-loro. Tele necessità \`e evidente in quanto ci saranno strutture dati (ad
+che restituisce un oggetto che potrà essere utilizzato per sincronizzare
+un'istanza di processo con il ProcessManager, ma anche le diverse istanze fra di loro. Tale necessità \`e evidente in quanto ci saranno strutture dati (ad
 esempio la mappa che mantiene gli eventi/messaggi per le porte) che saranno
 condivise fra le diverse istanze di una definizione di processo. In un certo
-modo si può pensare che le diverse istanze siano in ``race'' su tali eventi
-nel limite di quelle che sono le regole di correlazione stabilite dal
-linguaggio.
+modo si può pensare che le diverse istanze siano in competizione (``race'') su
+tali eventi nel limite di quelle che sono le regole di correlazione stabilite dal
+linguaggio. Nel momento in cui è necessario creare una sezione critica, in cui
+accedere alle strutture dati condivise, questo può
+essere fatto nel seguente modo:
+\begin{lstlisting}
+   	MessageContainer consumedMes = null;
+	InComingEventKey icek = 
+		InComingEventKeyFactory.createRequestInComingEventKey(portId);
+
+	synchronized (manager.getDefinitionProcessLevelLock()) {
+		List<MessageContainer> mcs = manager.provideEvents(icek);
+
+		for (MessageContainer mc : mcs) {
+			if (corr(mc, formalParams)) {
+				consumedMes = mc;
+				mcs.remove(mc); 
+				break;
+			}
+     	}
+		if (consumedMes == null)
+			manager.getEngine().addFlowWaitingEvent(getExecutor(), icek);
+   	}
+\end{lstlisting}
+
+Il codice precedente è esattamente l'implementazione dei passi 2 e 3 della
+procedura precedentemente descritta, realizzata dalla \icode{ReceiveActivity}
+per consumare i messaggi desinati alla proprio porta.
 \\
 
 Lo schema di comunicazione di Blite risulta semplificato rispetto al modello
 proposto da BPEL. In Blite sono possibili solamente invocazioni asincrone, in
 cui una istanza invoca una operazione remota con degli input senza attendere
-nessuna risposta, il risultato dell'elaborazione sarà reso disponibile
+nessuna risposta; il risultato dell'elaborazione sarà reso disponibile
 all'invocante tramite una successiva ricezione sfruttando il meccanismo della
 correlazione. 
 
-E' stato scelto di realizzare tale schema di comunicazione applicativa tramite lo
-schema più semplice di comunicazione infrastrutturale, ovvero lo
+\`E stato scelto di realizzare tale schema di comunicazione applicativa tramite
+lo schema più semplice di comunicazione infrastrutturale, ovvero lo
 schema \emph{One-Way} (o se si preferisce \emph{In-Only} secondo la terminologia
-del WSDL 2.0 http://www.w3.org/TR/2004/WD-wsdl20-extensions-20040803/ ). Tale
+delle \emph{``WSDL 2.0  Extensions''} \cite{WSDLEx}). Tale
 schema può essere rappresentato nell'ambito della nostra architettura come in
 Figura \ref{fig:oneway}. In pratica un'istanza consumer invocherà tramite una
 \texttt{request} una porta presso un Engine remoto, provider del servizio
-richiesto. Questo dopo aver verificato la disponibilità della porta richiesta e
+richiesto. Questo, dopo aver verificato la disponibilità della porta richiesta e
 la conformità formale del messaggio in arrivo rispetto alla stessa, invierà un
-\texttt{status-done} (acknowledgment) al richiedente, il quale potrà continuare
-la sua esecuzione. Al contrario se si sarà verificato un qualche problema un
-\texttt{status-error} verrà recapitato al consumer; questo potrà esser fatto
-dall'Engine remoto ma anche dall'Environment locale stesso qualora si arrivasse
-allo scadere di certo timeout senza aver ricevuto alcuno status di risposta (caso
-quest'ultimo in cui il provider risulta non raggiungibile). Da notare come tale
-schema di comunicazione realizzi un modello di cooperazione dei servizi asincrono
-secondo quanto specificato dalla semantica Blite. Il consumo e l'elaborazione del
-messaggio da parte di una istanza provider sarà eseguito in maniera del tutto
+acknowledgment \texttt{status-done} al richiedente, il quale potrà continuare
+la sua esecuzione. Al contrario, se si sarà verificato un qualche problema, un
+segnale \texttt{status-error} verrà recapitato al consumer; questo potrà esser
+fatto dall'Engine remoto ma anche dall'Environment locale stesso qualora si arrivasse
+allo scadere di un certo timeout senza aver ricevuto alcuno status di risposta
+(caso quest'ultimo in cui il provider risulta non raggiungibile). Da notare come tale
+schema di comunicazione realizzi un modello asincrono di cooperazione dei
+servizi secondo quanto specificato dalla semantica Blite. Il consumo e l'elaborazione del
+messaggio da parte di una istanza provider sono eseguiti in maniera del tutto
 indipendente, in termini di dipendenze temporali, e quindi anche eventuali errori
 nella elaborazioni della richiesta non verranno comunicate al consumer all'interno
 di questa comunicazione.
 
-\begin{figure}[th]
+\begin{figure}[t]
 \begin{center}
 \includegraphics
 {architettura_interna/dia/oneway}
 \caption[Comunicazione One-Way] {
-   	\textsf{{\small Il modello di comunicazione One-Way realizzato dai Blite
-   	Engine}} }
+   	Il modello di comunicazione One-Way realizzato dai Blite
+   	Engine.}
+   	\rule{7cm}{0.01cm}
   \label{fig:oneway}
 \end{center}
 \end{figure}
 
 
-Tele modello ci \`e sembrato il più adatto per poter realizzare i seguenti
-comportamenti
+Tele modello ci \`e sembrato il più adatto per poter realizzare i 
+comportamenti seguenti:
 
 \begin{itemize}
   \item Una istanza di processo può invocare operazioni di altri servizi in
@@ -832,8 +859,8 @@ comportamenti
   l'elaborazione remota \`e in atto.
   
   \item Se un'istanza invoca un servizio che non esiste, o che \`e
-  momentaneamente indisponibile o con modalità non conformi, l'Istanza deve essere notificata
-  di tale accadimento.
+  momentaneamente indisponibile o con modalità non conformi, l'istanza deve
+  essere ricevere notifica di tale accadimento.
 \end{itemize}
 
 Di fatto questo c'\`e sembrato il giusto compromesso fra una comunicazione
@@ -842,29 +869,28 @@ sincrona (che del resto può sempre essere riprodotta) e una comunicazione puram
 istanze procedono i maniera totalmente svincolata senza poter fare nessuna ipotesi sull'esito della comunicazione. Inoltre questo
 modello di comunicazione \`e quello che meglio si adatta al binding su
 protocolli di trasporto tipo HTTP, in cui ad una richiesta c'e sempre una
-risposta del server che chiude la connessione. In HTTP una invocazione remota secondo lo scema
-One-Way può essere semplicemente implementata:
+risposta del server che chiude la connessione. In HTTP una invocazione remota 
+secondo lo scema One-Way può essere implementata come segue:
 
 \begin{itemize}
-  \item Il client esegue una \emph{HTTP GET} o \emph{HTTP POST}
-  \item Il server risponde con \emph{202 Accepted} nel caso il messaggio possa
-  essere accettato.
-  \item Il server risponde con un error code della serie 400 o 500 (es. 400 Bad
-  Request), nel momento in cui ci sia una qualche problema con la richiesta
+  \item il client esegue una \emph{HTTP GET} o \emph{HTTP POST}
+  \item il server risponde con \emph{202 Accepted}, nel caso il messaggio possa
+  essere accettato, o con un error code della serie 400 o 500 (es. 400 Bad
+  Request), nel caso in cui ci sia una qualche problema con la richiesta
   ricevuta.
 \end{itemize}
 
 
 Per concludere questa sezione facciamo vedere come lo schema di comunicazione
-One-Way possa essere facilmente realizzato con il modello ad eventi previsto
+One-Way può essere facilmente realizzato con il modello ad eventi previsto
 dalla nostra architettura. Per far questo riportiamo i passi logici eseguiti
-dal componente \icode{InvokeActivity}
+dal componente \icode{InvokeActivity}:
 
 \begin{enumerate}
-  \item Si costruisce il messaggio (\icode{MessageContent}) e si crea un
-  identificativo del Service Provider tramite il metodo messo a disposizione
-  dell'interfaccia del ProcessManager
-  \lstset{frame=NONE}
+  \item Si costruisce il messaggio e l'oggetto \icode{MessageConteniner}, 
+  utilizzato per inviare il messaggio stesso nell'\icode{EngineChanel} (si
+  veda la Sezione \ref{sec:progmot}). Si crea un identificativo del Service Provider
+  tramite il seguente metodo messo a disposizione dell'interfaccia del ProcessManager:
   \begin{lstlisting}
   	/**
      * Resolve PartnerLink at rintime.
@@ -879,39 +905,39 @@ dal componente \icode{InvokeActivity}
     
   \end{lstlisting}  
   
-  \item Tramite il metodo fornito dalla interfaccia del ProcessManager
+  \item Tramite il seguente metodo: 
   \begin{lstlisting}
   	InComingEventKey invoke(ServiceIdentifier serviceId, String operation, 
 							MessageContainer messageContainer);
   \end{lstlisting}
-  si avvia la comunicazione. Si osservi che il metodo ritorna un oggetto
-  \texttt{eventKey} rappresentante come sempre una chiave di tipo
-  \icode{InComingEventKey}. Nel caso particolare sarà un oggetto della classe
+  fornito dalla interfaccia del \icode{ProcessManager}, si avvia la
+  comunicazione. Si osservi che il metodo restituisce un oggetto
+  \texttt{eventKey} rappresentante come sempre una chiave di tipo \icode{InComingEventKey}. Nel caso particolare sarà un oggetto della classe
   \icode{StatusInComingEventKey} che individuerà l'arrivo dello status
   associato alla richiesta. Questo tipo di chiavi verranno generate a livello di
   Environment negli strati di più basso livello e le caratteristiche di unicità dipenderanno fortemente dalla tecnologia di comunicazione
- utilizzata. Per esempio nell'ambito della tecnologia JBI tali chiavi potranno
- coincidere con i \icode{MessgeaExchange}, o in ambito puramente TCP potranno
- essere ricavate dagli identificativi di connessione. In ogni modo a livello di Engine
+ utilizzata. Per esempio nell'ambito della tecnologia JBI \cite{JBI} tali chiavi
+ potranno coincidere con i \icode{MessgeaExchange}, mentre in ambito puramente
+ TCP potranno essere ricavate dagli identificativi di connessione. In ogni modo a livello di Engine
  \`e possibile astrarre (e lo si deve fare) completamente dalla loro natura e
  utilizzarle semplicemente come identificatori univoci di eventi.
   
   \item In sezione critica sul monitor \icode{DefinitionProcessLevelLock}, si
-  prova a consumare l'evento associato all'\texttt{eventKey}, se questo \`e
+  prova a consumare l'evento associato all'\texttt{eventKey}. Se questo \`e
   effettivamente già disponibile si valuta lo status di ritorno. Se si \`e
   avuto uno \texttt{status-done} si termina l'attività mettendo come
-  attività corrente del FlowExecutor il parentComponet e si ritorna
+  attività corrente del FlowExecutor il parentComponet e si restituisce
   \texttt{true}, se invece si \`e avuto \texttt{status-error} si avvia la
   procedura di errore. Se l'evento associato all'\texttt{eventKey} non fosse
   ancora disponibile si registra il FlowExecutor come in attesa dello stesso e
-  si termina il metodo \icode{doAtivity()} ritornando \texttt{false}.
+  si termina il metodo \icode{doAtivity()} restituendo \texttt{false}.
   
   \item Quando l'evento atteso sarà disponibile il FlowExecutor verrà
   risvegliato e l'invokeActivity potrà essere di nuovo messa in esecuzione.
-  Questa disponendo già di \texttt{eventKey} potrà rendersi conto di aver
+  Questa, disponendo già di \texttt{eventKey}, potrà rendersi conto di aver
   già eseguito l'invocazione e potrà semplicemente consumare l'evento
-  atteso e procedere nell'analisi dello status come descritto sopra. Si deve
-  osservare che in questo caso non sarà necessario operare in sezione critica.
+  atteso e procedere nell'analisi dello status come descritto sopra. Si
+  osservi che in questo caso non sarà necessario operare in sezione critica.
 \end{enumerate}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1063,7 +1089,7 @@ specificata.
 \lstinputlisting{architettura_interna/java/ExecutionContext.java}
 
 \begin{table}[h!]
-\begin{tabular}{| p{0.45\textwidth } | p{0.55\textwidth}|}
+\begin{tabular}{| p{0.42\textwidth } | p{0.52\textwidth}|}
 \hline
 \icode{ExecutionContext} &  \\
 
