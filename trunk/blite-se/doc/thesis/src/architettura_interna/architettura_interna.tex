@@ -2,14 +2,26 @@
 
 Come già precedentemente detto il software realizzato può essere distinto
 in due progetti a sè stanti: \emph{Blite-se} e \emph{Blide}. In questo capitolo
-si descrive il primo, in particolare sono presentati ad alto livello i diversi
+si descrive il primo; sono presentati ad alto livello i diversi
 moduli con le loro funzionalità e in particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
 Blite, si descrive l'architettura in maniera dettagliata. Di questa si cerca di
-mettere in luce il modello di esecuzione ideato, basato su il \emph{``Composite
-Pattern''}, secondo cui ogni attività è rappresentabile come un componente che
-apporta il proprio contributo all'esecuzione dell'istanza di processo.
+mettere in luce il modello di esecuzione ideato, basato sul pattern
+\emph{Composite} \cite{GANGo4}, secondo cui ogni attività è rappresentabile
+come un componente che apporta il proprio contributo all'esecuzione dell'istanza di processo.
 
 \section{Progetto di un motore per l'orchestrazione}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.50]
+{architettura_interna/dia/BliteModule}
+\caption[I moduli di Blite-se] {I moduli software del progetto \emph{Blite-se}
+e le loro dipendenze.}
+\rule{7cm}{0.01cm}
+  \label{fig:modules}
+\end{center}
+\end{figure}
+
 Blite-se (Blite Service Engine) è il progetto principale e implementa il
 linguaggio presentato nel capitolo precedente. Realizzare un linguaggio per
 l'orchestrazione di servizi è una attività complessa, che spazia in molteplici
@@ -36,15 +48,15 @@ necessarie:
 		/** Accept the visitor. **/
 		public Object jjtAccept(BliteParserVisitor visitor, Object data);
   	\end{lstlisting}  
-  che permette la visita dell'albero secondo il \emph{Pattern Visitor}.
-  Oltre alle varie classi che implementano i nodi dell'albero sintattico  
+  che permette la visita dell'albero secondo il pattern \emph{Visitor}
+  \cite{GANGo4}. Oltre alle varie classi che implementano i nodi dell'albero sintattico  
   ovviamente è reso disponibile il parser tramite la classe \icode{BliteParser}.
   Questa dispone di due metodi statici\footnote{In JavaCC è stata usata
   l'opzione \textrm{STATIC = ``true''}, in questo modo il parser top-down a
-  discesa ricorsiva è generato tutto tramite metodi statici.
+  discesa ricorsiva è generato esclusivamente tramite metodi statici.
   L'efficenza risulta aumentata ma ovviamente, vi può essere un
-  unico compilatore per virtual machine e successice compilazioni devo prevdere
-  una di fase di reinizializzazione.}:
+  unico compilatore per virtual machine e successive compilazioni devono
+  prevedere una di fase di reinizializzazione.}:
 	\lstset{frame=NONE}
 	\begin{lstlisting}	
 		static public void init(java.io.InputStream stream)
@@ -94,7 +106,7 @@ necessarie:
   \lstset{frame=NONE}
 	\begin{lstlisting}
 	/**
-	 * This is interface represents the communication channel between 
+	 * This interface represents the communication channel between 
  	 * the Engine and the Environment.  
  	 * 
  	 * @author panks
@@ -170,51 +182,42 @@ necessarie:
   rete per rendere disponibili i processi Blite ai client. Nei
   paragrafi successivi di questo capitolo verrà illustrata nel dettaglio
   l'architettura di questa parte di software. Questo modulo utilizza il
-  \emph{Blite-se Definition Model} per accedere modello statico rappresentante
-  la definizione dei programmi Blite.
+  \emph{Blite-se Definition Model} per accedere al modello statico
+  rappresentante la definizione dei programmi Blite.
   
 \end{enumerate}
 
 In Figura \ref{fig:modules} è illustrato un diagramma (senza un
 formalismo specifico) che rappresenta i vari moduli e le loro dipendenze.
-
-\begin{figure}[t]
-\begin{center}
-\includegraphics[scale=0.50]
-{architettura_interna/dia/BliteModule}
-\caption[I moduli di Blite-se] {I moduli software del progetto \emph{Blite-se}
-e le loro dipendenze.}
-  \label{fig:modules}
-\end{center}
-\end{figure}
-
 \newpage
 
 \section{Specifica dell'Engine}
 
 In uno scenario reale, in cui i processi sono distribuiti, avremo un Engine per
 locazione o, nodo di rete, e su ognuno di questi componenti sarà possibile
-installare o rimuovere definizioni di processi Blite. In pratica un engine
+istallare o rimuovere definizioni di processi Blite. In pratica un engine
 gestir\`a un insieme di definizioni, creando a partire da queste istanze di
 processi e utilizzerà l'Environment per interagire con gli altri Engine. 
 Dall'Environment stesso l'Engine riceverà notifiche riguardo l'accadere di
 eventi, quali l'arrivo di messaggi indirizzati alle porte delle sue definizioni.
 
-Dal punto di vista logico relazionale abbiamo già individuato le seguenti
-macro entità e relazioni
+Dal punto di vista logico relazionale abbiamo già individuato le
+macro entità e relazioni rappresentate in Figura \ref{fig:1}.
 
 \begin{figure}[!htp]
 \begin{center}
   \includegraphics{architettura_interna/dia/engine}
-%   \caption[]{
-%   	\textsf{{\small Passaggio da reazioni a processi}}
-%   }
+  \caption[Blite-se: Engine, ProcessManager e ProcessInstace]{
+  	Un Engine, ha $n$ definizioni di processo e per ognuna di esse un
+  	\icode{ProcessManager}. Questo gestisce le \icode{ProcessInstace}
+  	istanziandole dalla definizione.}
+   \rule{7cm}{0.01cm}
   \label{fig:1}
 \end{center}
 \end{figure}
 
 Per ogni definizione istallata sull'Engine sarà presente un oggetto 
-della classe \icode{ProcessManager}, che avrà il compito di gestire, nel loro
+della classe \icode{ProcessManager} che avrà il compito di gestire, nel loro
 ciclo di vita, le istanze di processo derivate dalla definizione.
 
 Prima di entrare nel dettaglio delle scelte architetturali ricapitoliamo quali
@@ -222,7 +225,7 @@ sono le caratteristiche peculiari di un sistema che deve gestire programmi per
 l'orchestrazione di servizi, in modo che sia pi\`u facile da una parte
 comprendere e dall'altra giustificare le scelte fatte.
 
-A nostro vantaggio abbiamo che:
+A nostro vantaggio abbiamo che: \nopagebreak
 \begin{itemize}
   \item Un Engine contiene in generale un numero contenuto di definizioni, per
   cui non ci interessa la scalabilità rispetto alla quantità di definizioni
@@ -281,7 +284,7 @@ basata sulle seguenti specifiche fondamentali:
   parallelo le attività secondo le definizioni Blite.
   
   \item Il modello di esecuzione deve essere Activity Centric. L'engine deve
-  trattare ogni attività secondo una astrazione generica che possa permettere di
+  trattare ogni attività secondo un'astrazione generica che possa permettere di
   fattorizzare i comportamenti comuni e mantenere semplice e pulita
   l'implementazione della semantica di esecuzione del linguaggio.
 \end{enumerate}
@@ -292,27 +295,27 @@ basata sulle seguenti specifiche fondamentali:
 \section{Un modello per le attività}
 A questo punto, dopo aver esposto a grandi linee quelle che devono essere le
 caratteristiche fondamentali di un Engine, entriamo nel dettaglio del progetto
-della architettura. Nella realizzazione di questa abbiamo scelto di utilizzare
+dell'architettura. Nella realizzazione di questa abbiamo scelto di utilizzare
 il formalismo degli oggetti e delle classi secondo il consueto paradigma
 ``Object Oriented''. Inoltre abbiamo preso come fonte di
-ispirazione il ``Composite Pattern'' [GANGo4] cercandone una trasposizione nella
-problematica dell'esecuzione di un programma Blite. In particolare
+ispirazione il ``Composite Pattern'' \cite{GANGo4} cercandone una trasposizione
+nella problematica dell'esecuzione di un programma Blite. In particolare
 l'astrazione di componente \`e stata applicata all'entità ``attività''. Come i
 componenti contribuiscono alla realizzazione di un documento o di una
 interfaccia utente, le singole attività contribuiscono allo svolgersi
-dell'esecuzione del processo Blite.
+dell'esecuzione di un processo Blite.
  
 Inoltre la tipica struttura gerarchica presente staticamente negli elementi
 sintattici di una definizione può essere naturalmente riprodotta a runtime tra
-i singoli step di esecuzione, andato a completare l'analogia con le strutture
+i singoli passi di esecuzione, andato a completare l'analogia con le strutture
 gerarchiche ad albero tipiche dei tradizionali domini di applicazione del
 Composite Pattern. 
 
 L'entità fondamentale del nostro dominio applicativo \`e stata quindi
 individuata nella \icode{ActivityComponent}, trasposizione a runtime
 dell'elemento sintattico Activity definito dalla grammatica di Blite.
-Ogni \icode{ActivityComponent} \`e rappresentabile tramite la seguente
-interfaccia sitetizzata in Tabella \ref{it:actcomp}.
+Ogni \icode{ActivityComponent} \`e rappresentabile tramite 
+interfaccia del Listato \ref{lst:ActivityComponent} e descritta in Tabella \ref{it:actcomp}.
 
 \lstinputlisting
 [caption={Interfaccia base del modello di escuzione dell'Engine Blite},
@@ -327,27 +330,27 @@ label=lst:ActivityComponent]
 \icode{ActivityComponent} &  \\
 \hline
 \small{\icode{boolean doActivity()}} & \small{Costituisce il metodo
-centrale per lo svolgersi dell'esecuzione del programma. L'invocazione di tale metodo su
-un oggetto attività fa si che essa possa eseguirsi. Il valore booleano
-restituito sarà il discriminate del fatto che il flusso di esecuzione
+centrale per lo svolgersi dell'esecuzione del programma. L'invocazione di tale 
+metodo su un oggetto attività fa si che essa possa essere eseguita. Il valore
+booleano restituito sarà il discriminante del fatto che il flusso di esecuzione
 corrente dovrà o meno interrompersi. Ogni attività oltre che eseguire se
 stesa sarà quindi anche responsabile nel guidare il flusso nel passo
 successivo. Utilizzando la gerarchia ad essa nota imposterà la nuova attività
-corrente da eseguire (l'attività padre o un figlio) e restituirà il valore
+corrente da eseguire (l'attività padre o figlio) e restituirà il valore
 true. Al contrario, potrà interrompere il flusso corrente restituendo false.
 }\\
  
 & \\
-\small{\icode{ActivityComponent \linebreak getParentComponent()}} &
-\small{Tale metodo restituisce l'elemento padre 
-dell'attività corrente. In questo modo si realizza la struttura gerarchica fra
+\small{\icode{ActivityComponent \linebreak 
+\hspace*{\stretch{3}} getParentComponent()}} & \small{Tale metodo restituisce
+ l'elemento padre dell'attività corrente. In questo modo si realizza la struttura gerarchica fra
 i vari componenti dell'esecuzione.}\\
 & \\
-\small{\icode{BltDefBaseNode \linebreak getBltDefNode()}} &
-\small{\textsf{Ogni attività componente dell'esecuzione \`e strettamente 
+\small{\icode{BltDefBaseNode \linebreak  \hspace*{\stretch{3}} getBltDefNode()}}
+& \small{Ogni attività componente dell'esecuzione \`e strettamente 
 associata ad un elemento sintattico del programma. Con questo metodo ogni 
 oggetto attività restituisce il nodo che la definisce nell'albero sintattico
-ricavato dal parsing del codice Blite. }}\\
+ricavato dal parsing del codice Blite.}\\
 
 \hline
 \end{tabular}
@@ -356,27 +359,30 @@ ricavato dal parsing del codice Blite. }}\\
 \end{center}
 \end{table}
 
-Lo scenario che si va a delineare \`e quindi quello di due strutture gerarchiche
-associate: una costituita dall'AST (Abstract Syntax Tree) ricavato dal
-parsing del codice Blite, e che come si detto \`e mantenuta nella sua interezza,
-l'altra costituita dall'albero dinamico delle ActivityComponent che
-realizzano l'esecuzione a runtime. Quest'ultima struttura, una per ogni
-istanza, non \`e però costruita in un unico momento in fase di inizializzazione
-del  processo, ma al contrario \`e istanziata man mano che l'esecuzione
-procede.  Come già accennato le attività stesse avranno il compito di creare
-i loro successori e di metterli in esecuzione. Inoltre gli oggetti attività
-già eseguiti dovranno essere rilasciati il prima possibile in modo da poter 
-essere collezionati dal Garbage Collector e rilasciare le risorse di memoria.
-
-\begin{figure}[!htp]
+\begin{figure}[t]
 \begin{center}
   \includegraphics{architettura_interna/dia/tries}
-%   \caption[]{
-%   	\textsf{{\small Passaggio da reazioni a processi}}
-%   }riscrivera
-  \label{fig:1}
+  \caption[Blite-se: modello statico e modello dinamico]{Il modello statico è
+  utilizzato a runtime per costruire il modello dinamico delle
+  \icode{ActivityComponent}.}
+   \rule{7cm}{0.01cm}
+  \label{fig:2}
 \end{center}
 \end{figure}
+
+Lo scenario che si va a delineare \`e quindi quello di due strutture gerarchiche
+associate: una costituita dall'AST (Abstract Syntax Tree) ricavato dal parsing
+del codice Blite, e che come si detto \`e mantenuta nella sua interezza, l'altra
+costituita dall'albero dinamico delle ActivityComponent che realizzano
+l'esecuzione a runtime (Figura \ref{fig:2}). Quest'ultima struttura, una per ogni
+istanza, non \`e però costruita in un unico momento in fase di inizializzazione
+del  processo, ma al contrario \`e istanziata man mano che l'esecuzione procede. 
+Come già accennato le attività stesse avranno il compito di creare i loro
+successori e di metterli in esecuzione. Inoltre gli oggetti attività già eseguiti
+dovranno essere rilasciati il prima possibile in modo da poter essere
+collezionati dal Garbage Collector e rilasciare le risorse di memoria.
+
+
 
 Per ogni tipologia di attività prevista dalla grammatica di Blite esiste
 una sottoclasse specifica che implementa l'interfaccia
@@ -395,18 +401,18 @@ varie istanze di processo nell'engine, implementa l'interfaccia
 \icode{ActivityComponent}).
 
 Le varie istanze di \icode{ActivityComponent} del tipo specializzato verranno
-create tramite una classe Factory \icode{ActivityComponentFactory} che
-espone il metodo \icode{ActivityComponent
- makeRuntimeActivity(BltDefBaseNode bltDefNode,\ldots )} 
-In Figura \ref{fig:actclass} viene riportato un diagramma di classe
-abbastanza dettagliato per le entità \icode{ActivityComponent}.
-
-
+create tramite una classe Factory \icode{ActivityComponentFactory}, Listato
+\ref{lst:ActivityComponentFactory}, che espone il metodo
+\icode{ActivityComponent makeRuntimeActivity($\cdot$)}. In Tabella
+\ref{it:fact} è descritta la segnatura di tale metodo.
+ 
 \lstinputlisting
 [caption={ActivityComponentFactory, permette di creare oggetti
 ActivityComponent}, label=lst:ActivityComponentFactory]
 {architettura_interna/java/ActivityComponentFactory.java}
 
+In Figura \ref{fig:actclass} viene riportato un diagramma di classe
+abbastanza dettagliato per le entità \icode{ActivityComponent}.
 
 \begin{table}
 \begin{center}
@@ -438,11 +444,11 @@ attività}
 
 \begin{figure}[p]
 \begin{center}
-\includegraphics[angle=90,scale=0.80]
+\includegraphics[angle=90,scale=0.75]
 {architettura_interna/dia/actclass}
-\caption[Gerarchia delle ActivityComponent]{
-   	\textsf{{\small Diagramma di classe per la gerarchia delle
-   	ActivityComponent}} }
+\caption[Blite-se: Gerarchia delle ActivityComponent]{
+   	Diagramma di classe per la gerarchia delle
+   	\icode{ActivityComponent}}
   \label{fig:actclass}
 \end{center}
 \end{figure}
@@ -452,52 +458,52 @@ attività}
 % Esecuzione e parallelismo
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Esecuzione e parallelismo}
-Abbiamo visto che i componenti base per l'esecuzione siano oggetti delle varie
-sottoclassi che implementano l'interfaccia \icode{ActivityComponent}, e che
+Abbiamo visto che i componenti base per l'esecuzione sono oggetti delle varie
+sottoclassi che implementano l'interfaccia \icode{ActivityComponent} e che
 l'esecuzione ha atto tramite l'invocazione del metodo
 \icode{doActivity()} su tali oggetti. A questo punto però dobbiamo
 domandarci da chi e in che modo tale metodo è invocato. Nel rispondere a questa
-domanda dobbiamo tenere conto che in un engine verranno eseguite
+domanda dobbiamo tenere conto che in un Engine verranno eseguite
 contemporaneamente molteplici istanze di processo e che inoltre il formalismo
-stesso del linguaggio da la possibilità di richiedere l'esecuzione concorrente
+stesso del linguaggio dà la possibilità di richiedere l'esecuzione concorrente
 di diverse attività (costrutto flow). Quindi su ciascun Engine dovranno essere
 disponibili più thread per poter realizzare un livello di
 parallelismo sufficiente.
 
-Si capisce bene che istanziare un nuovo oggetto Thread per ogni nuovo
-flusso logico presente sull'engine non sia un approccio assolutamente
-vantaggioso. Come già accennato infatti tale politica non sarebbe per nulla
-scalabile rispetto al numero delle richieste remote gestite dell'engine; inoltre,
-poiché ogni istanza di processo tendenzialmente trascorrerà la gran parte del suo
-tempo in attesa di comunicazioni remote\footnote{Come già osservato i tempi di
-comunicazione remota sono di vari ordini di grandezza maggiori rispetto
-a quelli delle operazioni interne per cui ogni istanza nel suo ciclo di vita si
-troverà ad occupare realmente la CPU per tempi quasi infinitesimi rispetto ai tempi di
-attesa di eventi remoti.}, ci troveremmo con un gran numero di thread in stato
-di attesa, con un del tutto ingiustificabile spreco di risorse. Più banalmente
-gestire direttamente oggetti Thread \`e una pratica alquanto sconsigliabile
+Si capisce bene che istanziare un nuovo oggetto Thread per ogni nuovo flusso
+logico presente sull'engine non sia un approccio assolutamente vantaggioso. Come
+già accennato infatti tale politica non sarebbe per nulla scalabile rispetto al
+numero delle richieste remote gestite dell'engine; inoltre, poiché ogni istanza
+di processo tendenzialmente trascorrerà la gran parte del suo tempo in attesa di
+comunicazioni remote\footnote{Come già osservato i tempi di comunicazione remota
+sono di vari ordini di grandezza maggiori rispetto a quelli delle operazioni
+interne per cui ogni istanza nel suo ciclo di vita si troverà ad occupare
+realmente la CPU per tempi quasi trascurabili rispetto ai tempi di attesa di
+eventi remoti.}, ci troveremmo con un gran numero di thread in stato di attesa,
+con uno spreco di risorse del tutto ingiustificabile. Più banalmente gestire
+direttamente oggetti Thread \`e una pratica alquanto sconsigliabile
 \footnote{Questo \`e ancor pi\`u vero dalla versione 5 in poi di Java, in cui
-sono stato introdotti i pacchetti \icode{java.util.concurrent.*} che mettono a
+sono stati introdotti i pacchetti \icode{java.util.concurrent.*} che mettono a
 disposizione un framework ad alto per la concorrenza livello che ottimizza e
 astrae l'uso delle API a più basso livello.}, in quanto può portare ad errori di
 programmazione o a Memory Leaks nel caso in cui il ciclo di vita di tali oggetti
-non sia sempre ben gestito dal programmatore. Per questi motivi si \`e
-scelto di utilizzare la tecnica del Pooling per gestire un insieme di Thread a
-livello di Engine. Con tale tecnica si isola la gestione della tecnologia di
-multitasking e si possono applicare politiche anche molto raffinate capaci di
-adattare la quantità di risorse utilizzate al carico di lavoro da svolgere. Nella
+non sia sempre ben gestito dal programmatore. Per questi motivi si \`e scelto di
+utilizzare la tecnica del Pooling per gestire un insieme di Thread a livello di
+Engine. Con tale tecnica si isola la gestione della tecnologia di multitasking e
+si possono applicare politiche anche molto raffinate capaci di adattare la
+quantità di risorse utilizzate al carico di lavoro da svolgere. Nella
 implementazione attuale dell'Engine si \`e fatto uso dei thread pool forniti
 dalla classe \icode{java.util.concurrent.Executors} presente nella piattaforma
 standard Java 5.
  
-La scelta che quindi \`e stata fatta per realizzare il 
-parallelismo \`e la seguente: ogni flusso logico attivo presente nelle varie istanze di
-processo sarà associato all'entità \icode{FlowExecutor} (tale entità \`e già
-comparsa in alcuni diagrammi precedentemente illustrati in questo capitolo, per
-cui il lettore avrà già intuito la sua funzionalità). Tali oggetti
-presenteranno un'interfaccia che permetterà da un lato di impostare l'attività corrente che
-dovrà essere eseguita da uno dei thread del pool, dall'altro di eseguire
-effettivamente tale attività.
+La scelta che quindi \`e stata fatta per realizzare il parallelismo \`e la
+seguente: ogni flusso logico attivo presente nelle varie istanze di processo sarà
+associato all'entità \icode{FlowExecutor} (tale entità \`e già comparsa in alcuni
+diagrammi precedentemente illustrati in questo capitolo, per cui il lettore avrà
+già intuito la sua funzionalità). Tali oggetti presentano l'interfaccia
+descritta dal Listato \ref{lst:FlowExecutor}, essa permette da un lato di
+impostare l'attività corrente che dovrà essere eseguita da uno dei thread del pool, 
+dall'altro di eseguire effettivamente tale attività.
 
 \lstinputlisting
 [caption={I FlowExecutors saranno gli oggetti che realizzeranno i flussi di
@@ -508,23 +514,27 @@ A questo punto, quando ci sarà bisogno di creare un nuovo flusso di esecuzione
 per l'ActivityComponent \texttt{act} si dovrà creare un nuovo FlowExecutor
 impostarvi \texttt{act} come attività corrente e renderlo disponibile ad un thread per
 l'esecuzione. Quest'ultimo passaggio verrà realizzato tramite l'interfaccia
-dell'Engine che disporrà di un metodo per notificare gli executor pronti per
-essere eseguiti e metterli a disposizione del pool di thread.
+dell'Engine che dispone del seguente metodo per notificare gli executor pronti
+per essere eseguiti e metterli a disposizione del pool di thread:
 
+\lstset{frame=NONE}
 \lstinputlisting {architettura_interna/java/queueFlowExecutor.java}
+\lstset{frame=tblr}
 
 Inoltre quando un flusso giungerà a conclusione (l'istanza di processo termina o
-un' esecuzione parallela definita in una flow Activity si conclude) si dovrà
+una esecuzione parallela definita in una flow Activity si conclude) si dovrà
 registrare tale evento e produrre eventualmente altri effetti. Per far si che si
-realizzi questa necessità si \`e introdotto il concetto di \icode{FlowOwner}.
-Ogni attività che nel suo eseguirsi si troverà a creare nuovi flussi di
-esecuzione, e quindi oggetti \icode{FlowExecutor},  dovrà implementare
-l'interfaccia \icode{FlowOwner} e impostare se stessa nel FlowExecutor da essa
-creato. In questo modo quando il flusso logico terminerà, il FlowOwner potrà
+realizzi questa necessità si \`e introdotto il concetto di \icode{FlowOwner},
+Listato \ref{lst:FlowOwner}. Ogni attività che nel suo eseguirsi si
+troverà a creare nuovi flussi di esecuzione, e quindi oggetti \icode{FlowExecutor},  dovrà implementare
+l'interfaccia \icode{FlowOwner} e impostare se stessa nel \icode{FlowExecutor}
+da essa creato. In questo modo quando il flusso logico terminerà, il FlowOwner potrà
 ricevere notifica di tale accadimento tramite l'invocazione del metodo
 \icode{flowCompleted()}.
 
 \lstinputlisting
+[caption={Interfaccia \icode{FlowOwner}, gli oggetti che creeranno i flussi di
+dovranno implementare tale interfaccia.}, label=lst:FlowOwner]
 {architettura_interna/java/FlowOwner.java}
 
 A questo punto \`e lecito domandarsi quando si dovrà considerare terminato un
@@ -590,22 +600,20 @@ messaggio e permettendo al suo flusso di esecuzione di continuare. Nella sezione
 successiva verrà illustrato nel dettaglio come si realizza la comunicazione e la
 notifica degli eventi.
 
-In Figura \ref{fig:flowclass} \`e rappresentato un diagramma di classe che
-raffigura fra le altre entità il FlowExecutor e FlowOwner e le principali
-relazioni che le coinvolgono.
-
-\begin{figure}[p]
+\begin{figure}[!t]
 \begin{center}
-\includegraphics[angle=90,scale=0.65]
+\includegraphics[angle=90,scale=0.60]
 {architettura_interna/dia/flowClassDiagram}
 \caption[Diagramma di classe FlowExecutor \ldots] {
-   	\textsf{{\small Diagramma di classe FlowExecutor, FlowOwner e ThreadPool}} }
+   	Diagramma di classe FlowExecutor, FlowOwner e ThreadPool}
   \label{fig:flowclass}
 \end{center}
 \end{figure}
 
+In Figura \ref{fig:flowclass} \`e rappresentato un diagramma di classe che
+raffigura fra le altre entità il FlowExecutor e FlowOwner e le principali
+relazioni che le coinvolgono.
 
-\newpage
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EVENTI E COMUNICAZIONE
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
