@@ -2,75 +2,74 @@
 
 Nell'era di Internet e della globalizzazione dell'informazione le necessità di
 coloro che utilizzano il software per svolgere le loro attività primarie sono
-cambiati drasticamente. Per le grandi organizzazioni (siano queste aziende
+cambiate drasticamente. Per le grandi organizzazioni (siano queste aziende
 private, pubbliche amministrazioni o altro) risulta indispensabile avere un
 modello di attività dinamico e aperto che possa permettere loro di modificare
 rapidamente le politiche e le strategie, e di dialogare in maniera sicura ed
-efficiente con il maggior numero di partner e clienti. E' quindi ovvio che la
+efficiente con il maggior numero di partner e clienti. \`E quindi ovvio che la
 risposta del mondo del software e della tecnologia non potesse che muoversi in
 tal direzione. 
 
 Il primo passo è stato quello di creare, tramite processi condivisi, gli
-standard pubblici che permettessero di creare una ``lingua franca'' tramite, cui
-scambiare l'informazione. La creazione dello standard XML \cite{XML}, ha permesso di
-descrivere i dati tramite una rappresentazione testuale che autoesplicitasse lo schema di
+standard pubblici che permettessero di ideare una ``lingua franca'' tramite cui
+scambiare l'informazione. La creazione dello standard XML \cite{XML} ha permesso di
+descrivere i dati tramite una rappresentazione testuale che autoesplicita lo schema di
 encoding utilizzato per rappresentare i caratteri in sequenze di byte. In questo
 modo si è realizzata la completa indipendenza dei dati dalle specifiche
 architetture hardware/software e l'informazione è diventata finalmente portabile
 attraverso le diverse piattaforme. Insieme alla necessità di rappresentare i dati
 a basso livello vi è sempre quella di poterli strutturare in tipi e forme sempre
-più complessi. DTD prima, e XML Schema, poi in maniera definitiva, hanno
-permesso di risolvere brillantemente tale problematica nell'ambito di XML stesso.
+più complessi. DTD \cite{XML10} prima, e XML Schema \cite{XMLSchema} poi, in
+maniera definitiva, hanno permesso di risolvere brillantemente tale problematica nell'ambito di XML stesso.
 
 A questo punto avendo modo di rappresentare l'informazione in maniera totalmente
 portabile e tipata ci si è rivolti ad individuare un modello di
-comunicazione che permettesse lo scambio di tale informazione. E' stata
-individuata l'astrazione del Servizio, inteso semplicemente come un interfaccia
-formalmente specificata ad una risorsa puramente stateless. Una risorsa è da
-intendersi in senso generale come un documento statico, ma anche un'unità
-elaborativa capace di restituire dinamicamente dei dati in base al valore
-di parametri ricevuti in input.
+comunicazione che permettesse lo scambio di tale informazione. \'E stata
+individuata l'astrazione di ``servizio'', inteso semplicemente come un
+interfaccia formalmente specificata ad una risorsa puramente \emph{stateless}.
+Il concetto di ``risorsa'' è da intendersi in senso generale, come un documento
+statico, ma anche come unità elaborativa capace di restituire dinamicamente
+dei dati in base al valore di parametri ricevuti in input.
 
-La definizione della specifica formale dei Servizi non poteva avvenire che
+La definizione della specifica formale dei servizi non poteva avvenire che
 nell'ambito di XML e XML Schema e l'introduzione di WSDL \cite{WSDL}, liguaggio
 direttamente basato su questi standard, ha permesso la realizzazione di
 interfacce in cui si definiscono operazioni i cui parametri di input ed output
 sono formalmente tipati e la loro descrizione astrae completamente dalle
-teconologie utilizzate per implementarle. Se WSDL rappresenta le interfacce, SOAP
-\cite{SOAP} e WSDL Binding definiscono il modo in cui l'informazione che transita
-per tali interfacce viene strutturata e ``imbustata'' in messaggi. A questo
-punto non rimane altro che determinare il mezzo con con cui inviare tali
+tecnologie utilizzate per implementarle. Se WSDL rappresenta le interfacce, SOAP
+\cite{SOAP} e WSDL Binding \cite{WSDL} definiscono il modo in cui l'informazione
+che transita per tali interfacce viene strutturata e ``imbustata'' in messaggi. A
+questo punto non rimane altro che determinare il mezzo con cui inviare tali
 messaggi. E la scelta più ovvia non poteva che essere quella di utilizzare i
-mezzi più diffusi e collaudati ovvero HTTP e i protocolli di Internet.
+mezzi più diffusi e collaudati, ovvero HTTP e i protocolli di Internet.
 
-
-La composizione di XML, XML Schema, WSDL, SOAP e HTTP, è in generale individuata
-dal termine Web Service, anche se spesso con tale termine si tende a definire
-una classe più ampia di Servizi non necessariamente basati su tutte le
+Servizi basati sull'utilizzo combinato di XML, XML Schema, WSDL, SOAP e HTTP
+sono in generale individuati col termine ``Servizi Web'', anche se spesso con
+tale termine si tende a definire una classe più ampia di Servizi non necessariamente basati su tutte le
 precedenti tecnologie.
 
 Avere delle specifiche con un così alto livello di descrizione formale, fa sì
-che sia possibile realizzare tool per la creazione
-automatica di ampie parti di codice nei vari linguaggi di programmazione. In
-pratica, semplicemente dalla definizione del Servizio è possibile creare parte
-dell'implemetazione di esso o parte dei client. Questa è stata una della
-caratteristiche che hanno contribuito maggiormente al diffondersi dei Web
-Service ed a determinarne il successo.
+che sia possibile realizzare strumenti per la creazione
+automatica di ampie parti di codice in vari linguaggi di programmazione. In
+pratica, semplicemente dalla definizione di un dato servizio è possibile creare
+parte dell'implementazione di esso o parte dei client. Questa è stata una della
+caratteristiche che hanno contribuito maggiormente alla diffusione dei Servizi
+Web ed a determinarne il successo.
 
 Disporre di un sistema di comunicazione così promettente ha fatto sì che si
-cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione (o
-di sviluppo di applicazioni), in cui al concetto di Servizio si debba
-inevitabilmente affiancare il concetto di stato (praticamente tutti sanno che per
+cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione, 
+e di sviluppo di applicazioni, in cui al concetto di servizio si debba
+inevitabilmente affiancare il concetto di stato (tutti sanno che per
 realizzare applicazioni poco più che banali è indispensabile mantenere uno
-stato). SOC (Service Oriented Computing) è la sigla, che in termini abbastanza
-sfumati, racchiude tutte quelle attività tese alla definizione di un modello di
-sviluppo software, basato sull'assemblaggio di componenti che possono essere
+stato). Tale paradigma è noto SOC (Service Oriented Computing).
+In termini piuttosto sfumati, SOC racchiude tutte quelle attività tese alla
+definizione di un modello di sviluppo software basato sull'assemblaggio di componenti che possono essere
 specificati tramite i formalismi dei servizi ma che possono eventualmente
 mantenere anche uno stato. WS-Addressing \cite{WS-Addressing}, per esempio, è
 una tecnologia che contribuisce alla definizione del concetto di stato all'interno degli standard
 dei Web Service.
 
-In SOC, oltre al concetto fondamentale di Servizio, confluiscono diverse
+In SOC, oltre al concetto fondamentale di servizio, confluiscono diverse
 metodologie per la realizzazione delle funzionalità più complesse tramite la
 composizione di funzionalità più semplici offerte dai servizi componenti.
 
@@ -79,34 +78,34 @@ identificato con il termine \emph{Business Process Oriented Approach}, secondo
 cui ogni attività aziendale\footnote{Il termine aziendale deve essere inteso in
 senso generale di organizzazione o di entità, in cui più soggetti collaborano
 per il raggiungimento di un fine comune secondo regole e strategie condivise.} deve
-avere un preciso obiettivo (mettere a disposizione un prodotto o un servizio
-eventulmente anche solo per altre attività) e un ciclo di vita formale, secondo
-cui ad un evento di inizio attività (istanziazione del processo), deve
-corrispondere un evoluzione e un esito sempre individuabile come positivo o
-fallito.
+avere un preciso obiettivo (per esempio, mettere a disposizione un prodotto o un
+servizio eventualmente anche solo per altre attività) e un ciclo di vita
+formale, secondo cui, ad un evento di inizio attività (istanziazione del
+processo), deve corrispondere un'evoluzione e un esito sempre individuabile
+come positivo o negativo.
 
 Ogni attività è quindi un processo composto da una serie di passi, visti
 esternamente come unità atomiche, ma che in realtà possono racchiudere a loro
-volta sottoprocessi (componibilità), che vengono svolti sencondo regole di
+volta sottoprocessi (composizionalità), che vengono svolti secondo regole di
 evoluzione precise (workflow) che ne stabiliscono le dipendenze logiche e
 temporali. Le sottoattività utilizzate da un processo possono spaziare
 nell'intero dominio aziendale ed essere svolte sotto la responsabilità di diverse
-figure dell'organigramma societario. I tempi di evoluzioni delle attività possono
-essere in generale fortemente variabili e dipendenti da innumerevoli fattori. I
+figure dell'organigramma societario. I tempi di evoluzione delle attività possono
+essere in generale fortemente variabili e dipendenti da innumerevoli fattori. In
 tal senso i processi, pur trovandosi spesso a garantire stringenti requisiti
-temporali, devono fare i conti con sotto attivita perticolarmente riluttanti a
-rispettare particolari vincoli temporali.
+temporali, devono fare i conti con sottoattività particolarmente riluttanti a
+rispettare specifici vincoli temporali.
 
 % A livello informatico
-Nell'ambito di SOC, tale metodologia ha trovato attuazione utilizzando i Web
-Service come tecnologia, sia per la realizzazione delle interfacce delle
-attività, sia per la rappresentazione e la comunicazione dei dati e
+Nell'ambito di SOC, tale metodologia ha trovato attuazione utilizzando i Servizi
+Web come tecnologia, sia per la realizzazione delle interfacce delle
+attività, sia per la rappresentazione e la comunicazione dei dati, e
 sviluppando un linguaggio come BPEL \cite{BPEL11Spec} per la codifica dei workflow.
-Tale linguaggio permette di utilizzare i Web Service per accedere alle
-sottoattività e, a sua volta, espone il processo stesso come un Web Service,
-permettendo di realizzare la componibilità e uniformando il modo in cui ogni
-risorsa è vista esternamente. Come può essere intuibile, un linguaggio come BPEL
-risulta uno strumento molto complesso, ricco di costrutti sia per la gestione
+Tale linguaggio permette di utilizzare i Servizi Web per accedere alle
+sottoattività e, a sua volta, espone il processo stesso come un Servizio Web,
+permettendo di realizzare la composizionalità e uniformando il modo in cui ogni
+risorsa è vista esternamente. Come si può intuire, un linguaggio come
+BPEL risulta uno strumento molto complesso, ricco di costrutti sia per la gestione
 dei flussi interni che per la realizzazione della comunicazione.
 % In particolare risulta critico la realizzazione su tempi lunghi e fortemente
 % variabili di transazioni aziedali () \ldots
@@ -114,11 +113,11 @@ dei flussi interni che per la realizzazione della comunicazione.
 In pratica riguardo a BPEL risulta difficile: la realizzazione della sua
 specifica, l'implemetazione della stessa, nonché il suo utilizzo. Attualmente
 BPEL è specificato da documenti, scritti in linguaggio naturale, prodotto di un proceso
-di standardizzazione supervisionato da OASIS \cite{OASISSite}. L'assenza di una
+di standardizzazione supervisionato da Oasis \cite{OASISSite}. L'assenza di una
 semantica formale può far sì che si creino dei fraintendimenti e che ci possano
-essere interpretazioni diverse del medesimo concetto, determinando che le
-implementazioni infine risultino incompatibili. Per esempio possono risultare di
-difficile interpretazione la relazione fra le \emph{Multiple Start Activity} e
+essere interpretazioni diverse del medesimo concetto, facendo sì che le
+implementazioni infine risultino incompatibili. Per esempio, possono risultare
+di difficile interpretazione la relazione fra le \emph{Multiple Start Activity} e
 il meccanismo di gestione dei conflitti nell'attribuzione dei messaggi alle
 diverse istanze, o alcuni aspetti legati alle problematiche di terminazione
 delle attività e di compensazione.
