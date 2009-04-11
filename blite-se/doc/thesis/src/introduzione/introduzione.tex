@@ -76,7 +76,7 @@ composizione di funzionalità più semplici offerte dai servizi componenti.
 Per esempio, un approccio che sta avendo un discreto successo è quello
 identificato con il termine \emph{Business Process Oriented Approach}, secondo
 cui ogni attività aziendale\footnote{Il termine aziendale deve essere inteso in
-senso generale di organizzazione o di entità, in cui più soggetti collaborano
+senso generale di organizzazione o di entità in cui più soggetti collaborano
 per il raggiungimento di un fine comune secondo regole e strategie condivise.} deve
 avere un preciso obiettivo (per esempio, mettere a disposizione un prodotto o un
 servizio eventualmente anche solo per altre attività) e un ciclo di vita
@@ -119,32 +119,31 @@ essere interpretazioni diverse del medesimo concetto, facendo sì che le
 implementazioni infine risultino incompatibili. Per esempio, possono risultare
 di difficile interpretazione la relazione fra le \emph{Multiple Start Activity} e
 il meccanismo di gestione dei conflitti nell'attribuzione dei messaggi alle
-diverse istanze, o alcuni aspetti legati alle problematiche di terminazione
-delle attività e di compensazione.
+diverse istanze di processo concorrenti di un servizio, o alcuni aspetti legati
+alle problematiche di terminazione delle attività e di compensazione.
 
-Il processo di realizzazione di applicazioni BPEL
-risulta difficile e fortemente soggetto ad errori anche per la presenza di
-costrutti complessi come: il parallelismo, la concorrenza, la terminazione
-forzata di attività, la correlazione e la compensazione, quest'ultima utilizzata
-per la realizzazione di ``Long-Running Transaction'', e forse ancora non 
-compresa in tutti i suoi aspetti e potenzialità dagli utilizzatori. 
-
-In tal senso si è pensato che un processo di analisi e di formalizzazione di tali
-costrutti potesse essere utile, sia per chi si trova ad utilizzarli, sia per
-coloro che ne definiscono le specifiche in linguaggio naturale, in modo tale da renderne
-più chiaro ed eventualmente semplificarne gli aspetti più delicati.
+Il processo di realizzazione di applicazioni BPEL risulta difficile e fortemente
+soggetto ad errori anche per la presenza di caratteristiche complesse quali:
+parallelismo, concorrenza, terminazione forzata di attività, correlazione e
+ompensazione, quest'ultima utilizzata per la realizzazione di ``Long-Running
+Transaction'', e forse ancora non compresa in tutti i suoi aspetti e potenzialità
+dagli utilizzatori. In tal senso un processo di analisi e di
+formalizzazione di tali costrutti è certamente utile, sia per chi si trova ad
+utilizzarli, sia per coloro che ne realizzano l'implementazione a partire da
+specifiche in linguaggio naturale, in modo tale da renderne più chiaro il
+significato ed eventualmente semplificarne gli aspetti più delicati.
 
 Un approccio, per cercare di affrontare queste problematiche, è stato quello di
-utilizzare la teoria dei metodi formali e delle algebre di processo per la
+utilizzare i metodi formali e la teoria delle ``algebre di processo'' per la
 definizione di una semantica formale e per la realizzazione successiva di una
 piattaforma per la verifica e la dimostrazione di proprietà di applicazioni
-basate su BPEL. Con tale scopo è stato creato Blite \cite{LaPuTie1}, una variante
-semplificata di BPEL, che riproduce alcune delle sue funzionalità più
-caratteristiche, cercando d'altra parte di semplificarne alcuni aspetti ritenuti
-marginali nella realizzazione del modello Process Orinted. In definitiva in
+basate su BPEL. Con tale scopo è stato ideato Blite \cite{LaPuTie1}, una
+variante semplificata di BPEL, che riproduce alcune delle sue funzionalità più
+caratteristiche, cercando d'altra parte di semplificare alcuni aspetti ritenuti
+marginali nella realizzazione del modello Process Oriented. In definitiva in
 Blite è stato selezionato un core di BPEL, per cui fosse abbastanza agevole
-definire una semantica formale e con cui, tramite ``encoding'', fosse possibile riproporre
-tutte le funzionalità del linguaggio.
+definire una semantica formale e con cui, tramite ``encoding'', fosse possibile
+sostanzialmente riproporre tutte le funzionalità del linguaggio.
 
 Il lavoro svolto in questa tesi è da considerarsi a supporto di questa attività,
 come un'ulteriore verifica e confronto del processo di astrazione teorica e
@@ -156,20 +155,20 @@ di esecuzione di BPEL attualmente disponibili. Se da un lato Blite vuole essere
 un'analisi di BPEL, fatta tramite un processo di astrazione e formalizzazione,
 il lavoro qui esposto vuole essere a sua volta un'analisi di tale processo, nel
 senso che ne vuole verificare la compatibilità e l'attinenza con le problematiche
-più concrete e tecnologiche presenti nell'ambito della orchestrazione di servizi.
+più concrete e tecnologiche presenti nell'ambito dell'orchestrazione di servizi.
 Di fatto il lavoro non è altro che un test critico di come i costrutti formali,
-utilizzati per fornire la semantica del liguaggio, potessero essere realmente
-implementati in scenari di sowftware di produzione, e che quindi continuassero a
+utilizzati per fornire la semantica del liguaggio, possano essere realmente
+implementati in scenari di software di produzione, e che quindi continuino a
 mantenere un legame a doppio filo con il mondo delle tecnologie, da cui hanno
 tratto iniziale ispirazione. 
 
 Oltre che nella direzione sopra esposta, la nostra attività di verifica di
-Blite, si è mossa verso la creazione di strumenti che permettessero
+Blite si è mossa verso la creazione di strumenti che possano permettere
 direttamente di scrivere e simulare in maniera rapida processi definiti con
 esso. Ci è sembrato che un modo molto utile per verificare la funzionalità del
 linguaggio creato, fosse quello di poter scrivere ed eseguire programmi e di avere una
 rappresentazione, il più espressiva possibile, dell'avvenuta esecuzione e di
-come si sia attuata la comunicazione.
+come si sia attuata la comunicazione tra i processi.
 
 In pratica sono stati realizzati due progetti software basati su tecnologia
 Java \cite{Java}: \emph{Blite-se} e \emph{Blide}. 
@@ -188,20 +187,20 @@ In Blite-se è realizzato anche il motore (\emph{Engine}) per l'escuzione dei
 processi secondo la semantica formale definita in \cite{LaPuTie1}. Tale parte software
 è stata progettata in riferimento a specifiche che tenessero il più possibile
 conto delle problematiche reali degli ambiti produttivi (efficienza,
-scalabilità, requisiti di memoria, ecc). E' stato ideato inoltre, un modello di
-esecuzione basato su il \emph{``Composite Pattern''} \cite{GANGo4}, secondo cui ogni attività è
-rappresentabile come un componente che apporta il proprio contributo
-all'esecuzione dell'istanza di processo. Dal modello statico viene costruito man
-mano a runtime un \emph{Modello Dinamico}, l'albero dei componenti/attività e
-l'esecuzione procede tramite l'invocazione ricorsiva del metodo
-\icode{doActivity()} su tali camponenti. In sintesi il nostro modello di
+scalabilità, requisiti di memoria, ecc). \`E stato ideato inoltre, un modello di
+esecuzione basato sul pattern \emph{``Composite''} \cite{GANGo4}, secondo cui
+ogni attività è rappresentabile come un componente che apporta il proprio contributo
+all'esecuzione dell'istanza di processo. A partire dal modello statico, a
+runtime viene costruito passo passo un \emph{Modello Dinamico}, l'albero dei
+componenti/attività, e l'esecuzione procede tramite l'invocazione ricorsiva del
+metodo \icode{doActivity()} su tali camponenti. In sintesi, il nostro modello di
 esecuzione può essere definito \emph{Activity Centric}, nel senso che le varie
 attività saranno responsabili nel realizzare la loro esecuzione, ma anche nel
 collaborare, per far sì che i flussi globali dei processi evolvano secondo
 quanto specificato dalla semantica.
 
 L'Engine è stato realizzato astraendo dagli aspetti più concreti e
-tecnologici, quali la comunicazione o il deployment. L'Engine, per comunicare
+tecnologici, quali la comunicazione e il deployment. L'Engine, per comunicare
 con le porte dei servizi esterni, utilizza un'interfaccia
 (\icode{EngineChannel}), che definisce un modello di comunicazione totalmente
 generico, utilizzabile per realizzare molteplici protocolli per lo scambio di
@@ -211,13 +210,13 @@ dal componente software \emph{Environment}, che realizza un contenitore per
 l'Engine nell'ambito di una precisa tecnologia di comunicazione. 
 
 Attualmente è stato creato un \emph{Local Environment} capace di eseguire
-localmente più Engine e simulare la rete e la comunicazione remota, ma molto
-interessante sarebbe realizzare Environment capaci di supportare direttamente gli
-standard tipici della tecnologia Web Services, come WSDL, SOAP e HTTP, e poter
-quindi far dialogare i nostri programmi Blite con ogni servizio di Internet.
-Altre possibilità potrebbero essere quelle di avere Environment capaci
-di supportare lo standard JBI \cite{JBI} e poter integrare il nostro Engine con ESB
-(Enterprise service bus) che supportano tale tecnologia; o Environment
+localmente più Engine e simulare la rete e la comunicazione remota, ma sarebbe
+interessante realizzare Environment capaci di supportare direttamente gli
+standard tipici della tecnologia dei Servizi Web, come WSDL, SOAP e HTTP, e poter
+quindi far dialogare i nostri programmi Blite con ogni servizio disponibile in
+Internet. Altre possibilità potrebbero essere quelle di avere Environment capaci
+di supportare lo standard JBI \cite{JBI} e poter integrare il nostro Engine con
+ESB (Enterprise service bus) che supportano tale tecnologia; o Environment
 integrabili con framework per la comunicazione remota come \emph{IMC} \cite{IMC}.
 \\
 
@@ -228,30 +227,30 @@ l'esecuzione di simulazioni, i programmi Blite. Oltre alle consuete
 funzionalità di gestione ed editing dei file, compilazione ed esecuzione
 integrata dei programmi, Blide fornisce un formalismo e una tecnologia per la
 rappresentazione grafica dell'esecuzione delle istanze e la comunicazione fra
-esse. In pratica le varie istanze vengono monitorate nel loro eseguirsi e
-vengono memorizzate le informazioni necessarie a darne una rappresentazione
+esse. In pratica le varie istanze vengono monitorate durante la loro esecuzione
+e vengono memorizzate le informazioni necessarie a darne una rappresentazione
 grafica. Alcune parti dell'interfaccia grafica mostrano all'utente le varie
-istanze eseguite e in esecuzione, e quest'ultimo può scegliere fra queste
+istanze eseguite e in esecuzione, cosicché l'utente può scegliere fra le istanze
 andando a comporre rappresentazioni della loro interazione.
 
-Blide è stato realizzato tramite la piattaforma \emph{NetBeans Platform}
+Blide è stato realizzato tramite il progetto \emph{NetBeans Platform}
 \cite{NBPlatSite}, un framework studiato per facilitare lo sviluppo di applicazioni
-Java con interfaccia grafica. E' stato scelto tale progetto per la sua
+Java con interfaccia grafica. \`E stato scelto tale progetto per la sua
 completezza e per il modello architetturale offerto. 
 
 NetBeans Platform permette allo sviluppatore di realizzare le proprie
 applicazioni componendo diversi moduli, ciascuno dei quali offre una
 funzionalità specifica. La modularizzazione molto fine e la gestione
-formale delle dipendenze permettono di costruire applicazioni, riuscendo a
+formale delle dipendenze permettono di costruire applicazioni riuscendo a
 selezionare in modo molto mirato solamente i moduli realmente necessari e
 quindi a mantenere limitate le dimensioni complessive dell'applicazione. 
 In questo modo è stato possibile realizzare un modello di distribuzione
-dell'applicazione basato su Java WebStart \cite{JavaWS}, tramite cui gli utenti
-possono eseguire, istallare e aggiornare in maniera trasparente, l'applicazione
-da una pagina Web, semplicemente facendo click sul link. Dalla pagina 
-\emph{http://code.google.com/p/blite-se/} è possibile mettere in esecuzione e
-istallare sulla propria macchina Blide nella sua versione più recente, per poi
-effettuare eventualmente anche esecuzioni offline.
+dell'applicazione basato su Java WebStart \cite{JavaWS}, tramite il quale gli
+utenti possono eseguire, istallare e aggiornare in maniera trasparente l'applicazione
+da una pagina Web, semplicemente selezionando un link. Dalla pagina 
+\emph{http://code.google.com/p/blite-se/} è possibile istallare e mettere in
+esecuzione la versione più recente di Blite sulla propria macchina,
+per poi effettuare eventualmente anche esecuzioni offline.
 \\
 
 Tutto il progetto software realizzato per questa tesi è disponibile online alla
@@ -268,28 +267,27 @@ sotto la licenza \emph{GNU General Public License v3} \cite{GPLv3}.
 % 
 % svn checkout http://blite-se.googlecode.com/svn/trunk/ blite-se-read-only
 
-Dopo aver dato una panoramica delle motivazioni e del lavoro da noi svolto
-andiamo a presentare i contenuti di questa tesi. Nel Capitolo 2 viene introdotto
-il linguaggio per l'orchestrazione partendo da una presentazione ad alto livello
-di BPEL e dei suoi costrutti caratteristici; di seguito viene presentato Blite,
-fornendo la sintassi e la semantica formale con cui è stato definito.
+Dopo aver presentato una panoramica delle motivazioni e del lavoro da noi svolto
+andiamo a illustrare i contenuti di questa tesi. Nel Capitolo 2 viene introdotto
+il linguaggio BPEL per l'orchestrazione, partendo da una presentazione ad alto
+livello dei suoi costrutti caratteristici; successivamente viene presentato
+Blite, fornendone sintassi e semantica operazionale.
 L'implementazione del compilatore necessita di una grammatica formale, e nella
-sezione \ref{gram} vengono presentati i procedimenti che ci hanno portato ad
-ottenerla, a partire dalla sintassi astratta definita in \cite{LaPuTie1}. Il
-capitolo è concluso da una sezione in cui vengono commentati alcuni aspetti della
-semantica rispetto alle problematiche d'implementazione.
+Sezione \ref{gram} vengono presentati i procedimenti che ci hanno portato ad
+ottenerla, a partire dalla sintassi astratta definita in Sezione \ref{sec:blite}. Il
+capitolo si chiude con una sezione in cui vengono commentati alcuni aspetti
+della semantica rispetto alle problematiche d'implementazione.
 
 Nel Capitolo 3 viene presentato il progetto software Blite-se. Dopo aver
 fornito una panoramica del progetto e dei principali moduli che lo compongono si
 presenta nel dettaglio l'architettura del motore di esecuzione, mettendo in
 evidenza il modello per le attività, la gestione del parallelismo e della
-comunicazione, l'implemetazione dei contesti, con la rispettiva gestione delle
+comunicazione, l'implemetazione dei contesti, con la gestione delle
 eccezioni e della compensazione.
 
 Il Capitolo 4 costituisce una panoramica delle funzionalità offerte da Blide e
 dalla sua interfaccia utente e si conclude con la presentazione di un semplice
 caso d'uso. 
 
-Il Capitolo 5 presenta un riepilogo in cui si traggono delle brevi
-conclusioni sul lavoro svolto e si delineano alcune possibilià di ulteriore
-sviluppo per i progetti da noi sviluppati.
+Il Capitolo 5 presenta un riepilogo critico del lavoro svolto e si delineano i
+possibili sviluppi ulteriori.
