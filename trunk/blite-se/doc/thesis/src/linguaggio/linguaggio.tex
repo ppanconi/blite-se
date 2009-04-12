@@ -453,11 +453,12 @@ d'istanza $\xexit$.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SYNTAX TABLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[t]
+\begin{center}
 \begin{small}
 $$
 \delimite{
 \begin{array}{
-@{\hspace{-1ex}}l@{\hspace{2ex}}r@{\hspace{.75ex}}l@{\!}l@{\hspace{1.5ex}}l@{\hspace{-1ex}}}
+@{\hspace{-0.0ex}}l@{\hspace{2ex}}r@{\hspace{.75ex}}l@{\!}l@{\hspace{1.5ex}}l@{\hspace{0ex}}}
 \textit{Basic activities} & \xa & ::= &
 \xinv{\plinv}{\xo}{\bar{\xx}} \!\sepgr\!
 \xrec{\plrec}{\xo}{\bar{\xx}} \!\sepgr\!
@@ -501,8 +502,9 @@ $$
 \end{small}
   \vspace*{-1.20cm}
   \caption{La sintassi di Blite}
-  \label{tab:syntaxwsbpel}
-  \vspace*{-0.3cm}
+   \label{tab:syntaxwsbpel}
+	\rule{7cm}{0.01cm}
+  \end{center} 	
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%% FINE TABLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -521,7 +523,6 @@ definite sui partner link $\plinv$ per l'invocazione e $\plrec$ per la
 ricezione. Un'ulteriore imposizione viene fatta sulla struttura sintattica di
 tali oggetti, richiedendo che essi siano tuple di uno o al massimo due elementi,
 con la seguente ulteriore restrizione
-
 $$
 \begin{array}{ccc}
 
@@ -566,6 +567,7 @@ runtime.
    \caption[Comunicazione asincrona con Blite]{
    	\textsf{{\small Realizzazione della comunicazione asincrona
    	richiesta-risposta con i construtti della sintassi di Blite}} }
+   	\rule{7cm}{0.01cm}
   \label{fig:lin:com}
 \end{center}
 \end{figure}
@@ -675,7 +677,9 @@ riportate le leggi che esplicitano le ovvie proprietà di
 commutatività e associatività per gli operatori binari.
 
 %%%%% STRUCTURAL CONG Blite %%%%%
+
 \begin{table}[t]
+\begin{center} 
 \begin{small}
 $$
 \delimite{
@@ -713,8 +717,8 @@ $$
 \xscope{\xs}{\xs_f}{\xs_c}{\xs_d} \xequiv\,
 \xscope{\xs'}{\xs_f'}{\xs_c'}{\xs_d'}
 \endprooftree
-\\[0.45cm]
-\hline\\[-0.2cm]
+\\[0.60cm]
+%\hline\\[-0.2cm]
 \prooftree \xsa \xequiv \xsa' \qquad \xh_f \xequiv \xh_f' \justifies
 \ \xeng{\xproc{\xsa}{\xh_f}\xmid\xI}{\xcorr} \xequiv
 \xeng{\xI\xmid\xproc{\xsa'}{\xh_f'}}{\xcorr}
@@ -745,9 +749,12 @@ $$
 \end{small}
   \vspace*{-1.20cm}
   \caption{Congruenza Strutturale per le attività e i deployment}
+  \rule{7cm}{0.01cm}
   \vspace*{-0.3cm}
   \label{tab:congwsbpel}
+  \end{center}
 \end{table}
+
 %%%%%%%%%%%%%%%%% STRUCTURAL CONG %%%%%%%%%%%%%%%
 
 Dalla congruenza strutturale deduciamo che: l'attività $\xskip$ agisce come
@@ -775,6 +782,7 @@ volta essere eliminate.
 \\
 
 \begin{table}[t!]
+\begin{center} 
 \begin{small}
 $$
 \delimite{
@@ -953,8 +961,9 @@ $$
   \vspace*{-1.20cm}
   \caption[Semantica operazionale per le attività]{Semantica operazionale per
   le attività.}
+  \rule{7cm}{0.01cm}	
   \label{tab:allSOS}
-  \vspace*{-0.3cm}
+  \end{center}
 \end{table}
 
 L'evoluzione delle attività di una istanza di processo è descritta dalla
@@ -1214,6 +1223,7 @@ le cui regole sono presentate in Tabella \ref{tab:deploySOS}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % RIDUZIONE PER I deployment
 \begin{table}[t]
+\begin{center} 
 \begin{small}
 $$
 \delimite{
@@ -1289,7 +1299,8 @@ $$
   \mbox{$\talpha_2 =
   \xapp{\tilde{\xp}}{\xapp{\xo}{\bar{\xv}}}$}).}
   \label{tab:deploySOS}
-  \vspace*{-0.3cm}
+  \rule{7cm}{0.01cm}
+  \end{center}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1372,6 +1383,7 @@ ricevere messaggi i cui valori assegnati alle variabili attuali non siano
 compatibili con lo stato del correlation set.
 
 \begin{table}[t!]
+\begin{center} 
 \begin{small}
 $$
 \delimite{
@@ -1485,8 +1497,9 @@ $$
   %operazione $\xo$ che può essere i match con i valori del
   %messaggio $\bar{\xv}$?
   }
+  \rule{7cm}{0.01cm}
   \label{tab:barbeRec}
-  \vspace*{-.3cm}
+  \end{center}
 \end{table}
 
 Con la funzione  $\xxnewmatch{\cdot}{\cdot}{\cdot}{\cdot}$ è
@@ -1743,6 +1756,7 @@ parser con la gestione automatica dell'albero sintattico.
   \includegraphics[scale=0.95]{linguaggio/dia/jjporc}
    \caption[Un parser con JJTree e JavaCC]{Generazione in due passi di un
    parser Java con JJTree e JavaCC.}
+   \rule{7cm}{0.01cm}
   \label{fig:lin:jjproc}
 \end{center}
 \end{figure}
@@ -1858,6 +1872,7 @@ Scelta Esterna & $\xrec{}{}{}_1 + \xrec{}{}{}_2
 \end{tabular}
 \caption[Delimitatori di blocco per le attività strutturate]{Utilizzo dei
 delimitatori di blocco per le attività strutturate con operatori binari.}
+\rule{7cm}{0.01cm}
 \label{tab:blokmarks}
 \end{center}
 \end{table}
@@ -1900,6 +1915,7 @@ l'utente nella scrittura dei costrutti previsti dalla nostra grammatica.
   \includegraphics[scale=0.80,clip]{linguaggio/dia/blt1}
    \caption[Codice Blite, esempio delimitatori di blocco]{Esempio di programma
    Blite con la sintassi dei delimitatori di blocco per le attività struturate.}
+   \rule{7cm}{0.01cm}
   \label{fig:lin:blt1}
 \end{center}
 \end{figure}
@@ -2010,6 +2026,7 @@ $$
    \caption[Codice Blite, esempio ready to run instance]{Esempio di programma
    Blite con un deployment in cui è presente una definizione di processo e due
    istanze ready-to-run.}
+   \rule{7cm}{0.01cm}
   \label{fig:lin:blt2}
 \end{center}
 \end{figure}
