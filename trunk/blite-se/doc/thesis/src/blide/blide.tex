@@ -38,7 +38,7 @@ funzionalità specifica. La modularizzazione molto fine e la gestione
 formale delle dipendenze permettono di costruire applicazioni riuscendo a
 selezionare in modo molto mirato solamente i moduli realmente necessari e
 quindi a mantenere limitate le dimensioni complessive dell'applicazione. 
-Per una presentazione approfondita a NetBeans Platform si consulti
+Per una presentazione approfondita di NetBeans Platform si consulti
 \cite{RichClientApp}.
 
 \begin{figure}[t!]
@@ -50,9 +50,9 @@ Per una presentazione approfondita a NetBeans Platform si consulti
   \label{fig:blide1}
 \end{center}
 \end{figure}
- 
+
 In Figura \ref{fig:blide1} è presentata l'interfaccia di Blide al primo avvio. 
-Oltre alle consuete barre dei menù e dei pulsanti posizionate in alto
+Oltre alle consuete barre dei menù e dei pulsanti posizionati in alto
 l'applicazione presenta quattro aree distinte
 
 \begin{enumerate}
@@ -73,11 +73,43 @@ funzionalità dell'interfaccia di Blide.
 
 \subsubsection*{Favorites - Gestione dei Sorgenti Blite}
 
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | c |}
+
+\hline
+\parbox[c][1.8cm][c]{0.8cm}{\includegraphics{blide/dia/biconto}} 
+&
+\parbox[c][1.8cm][c]{0.7\textwidth}{File Blite che deve essere compilato. Il
+file non è mai stato compilato o ha subito modifiche dopo l'ultima
+compilazione.}\\ 
+
+\hline
+\parbox[c][1.8cm][c]{0.8cm}{\includegraphics{blide/dia/biconko}} 
+& 
+\parbox[c][1.8cm][c]{0.7\textwidth}{File Blite che presenta errori di
+compilazione. L'ultima compilazione eseguita sul file ha riportato errori.}
+\\
+
+\hline
+\parbox[c][1.8cm][c]{0.8cm}{\includegraphics{blide/dia/biconok}}
+& 
+\parbox[c][1.8cm][c]{0.7\textwidth}{File Blite compilato con successo. Delle
+definizioni presenti nel file sono disponibili i modelli statici.}\\
+
+\hline
+\end{tabular}
+\caption{Icone associate ai file Blite con estensione \texttt{.blt}}
+\rule{7cm}{0.01cm}
+\label{tab:bficons}
+\end{center}
+\end{table}
+
 Abbiamo detto che questa area permette di accedere al filesystem, in realtà
 non offre un'unica visione dell'albero come i consueti file manager, ma
 permette in pratica di visualizzare direttamente più sotto alberi del
 filesystem. Di fatto l'utente può selezionare un direcotry e con la funzione \emph{``Add to
-Favoritess\ldots''} aggiungere tale directory, con tutto il suo sotto albero,
+Favorites\ldots''} aggiungere tale directory, con tutto il suo sotto albero,
 come una nuova radice che compare direttamente nel pannello. In questo modo l'utente
 si può creare una specie di \emph{Bookmarks} alle directory a cui accede
 maggiormente e in cui probabilmente ha salvato i file di lavoro. Da notare che
@@ -104,21 +136,36 @@ successo o presentino degli errori che ne abbiano compromesso la compilazione.
 In Figura \ref{fig:blideFavo} è rappresentato il pannello in cui è stato aggiunto nei
 favoriti la directory \texttt{data}, questa contiene una serie di file sorgenti
 Blite che vengono visualizzati con le opportune icone. In Tabella
-\ref{tab:bicons} sono rappresentate le varie icone associate ai file Blite con il riferimento alla loro semantica.  
+\ref{tab:bficons} sono rappresentate le varie icone associate ai file Blite con
+il riferimento alla loro semantica.
 \\
 
-\begin{table}
+\begin{table}[t]
 \begin{center}
-\begin{tabular}{cp{0.7\textwidth}}
-\includegraphics{blide/dia/biconto} & File Blite che deve essere compilato. Il
-file non è mai stato compilato o ha subito modifiche dopo l'ultima
-compilazione.\\ \includegraphics{blide/dia/biconko} & File Blite che presenta
-errori di compilazione. L'ultima compilazione eseguita sul file ha riportato errori.\\
-\includegraphics{blide/dia/biconok} & File Blite compilato con successo.
-Delle definizioni presenti nel file sono disponibili i modelli statici.\\
+\begin{tabular}{|c| p{0.7\textwidth}| }
+\hline
+
+\parbox[c][1.7cm][c]{1cm}
+{\includegraphics[scale=0.8]{blide/dia/build24}} 
+& Compilazione del codice Blite.\\
+
+\hline 
+
+\parbox[c][1.7cm][c]{1cm}{\includegraphics[scale=0.8]{blide/dia/deploy24}} &
+Istallazione dei Deployment contenuti nel file sugli Engine.\\
+
+\hline
+
+\parbox[c][1.7cm][c]{1cm}{\includegraphics[scale=0.8]{blide/dia/undeploy24}} &
+Rimozione dei Deployment contenuti nel file dagli Engine.\\
+\hline
+
 \end{tabular}
-\caption{Icone associate ai file Blite con estensione \texttt{.blt}}
-\label{tab:bicons}
+
+\caption[Azioni che possono essere eseguite su un file Blite]{Azioni che
+possono essere eseguite su un file Blite.}
+\rule{7cm}{0.01cm}
+\label{tab:blideactions}
 \end{center}
 \end{table}
 
@@ -135,7 +182,7 @@ abilitata l'azione \emph{``Compile''}, mentre le azioni \emph{``Re/Deploy''} e
 \emph{``Undeploy''} sono ovviamente disabilitate, in quanto non è ancora
 disponibile un modello di definizione da poter istallare. In generale
 tutta l'interfaccia è stata realizzata secondo il paradigma
-\emph{Context-Sensitive Interface} [ContxSensWikiPedia], per cui le sue
+\emph{Context-Sensitive Interface}, per cui le sue
 varie parti sono sensibili allo stato degli oggetti che si trovano a gestire.
 
 \begin{figure}[t]
@@ -171,24 +218,6 @@ attualmente applicabili.
 
 In Tabella \ref{tab:blideactions} sono ricapitolate le azioni eseguibili su file Blite con le
 icone presentate nell'interfaccia.
-
-\begin{table}
-\begin{center}
-\begin{tabular}{c p{0.7\textwidth} }
-\includegraphics[scale=0.8]{blide/dia/build24} & Compilazione del codice
-Blite.\\ 
-\includegraphics[scale=0.8]{blide/dia/deploy24} & Istallazione dei Deployment
-contenuti nel file sugli Engine.\\
-\includegraphics[scale=0.8]{blide/dia/undeploy24} & Rimozione dei Deployment
-contenuti nel file dagli Engine.
-\end{tabular}
-
-\caption[Azioni che possono essere eseguite su un file Blite]{Azioni che
-possono essere eseguite su un file Blite.}
-\label{tab:blideactions}
-\end{center}
-\end{table}
-
 
 \newpage
 
@@ -249,8 +278,8 @@ disposizione le funzionalità specifiche di:
   
 \end{itemize}
 
-Abbiamo visto come la sintassi originale di Blite sia stata arrichita con
-alcune parole riservate e come tutte le attività strutturate siano state
+Abbiamo visto nel Capitolo 2, come la sintassi originale di Blite sia stata
+arrichita con alcune parole riservate e come tutte le attività strutturate siano state
 dotate di delimitatori di blocco. Con il supporto dell'editor tale
 appesantimento sintattico non verrà avvertito dal programmatore.
   
@@ -271,7 +300,7 @@ Figura \ref{fig:blideCompError} è rappresentata questa situazione.
 \begin{center}
 \includegraphics[scale=0.60]
 {blide/dia/BlideEditor}
-\caption[Blide, l'editor per Blite]{L'edior di Blide per con il \emph{``Syntax
+\caption[Blide, l'editor per Blite]{L'editor di Blide per con il \emph{``Syntax
 Highlight''} per il codice Blite.}
   \label{fig:blideEditor}
 \end{center}
@@ -287,8 +316,6 @@ di compilazione.}
 \end{center}
 \end{figure}
 
-\newpage
-
 \subsubsection*{Engines - Deploy ed esecuzione dei processi}
 
 Blide è dotato di un ambiente \emph{Local Environment} per l'esecuzione dei
@@ -299,7 +326,7 @@ comunicazione fra questi simulando la rete.
 Quando un file sorgente di Blite è compilato, è abilitata per questo l'azione
 di \emph{``Deploy''}; a questo punto se l'utente la esegue i \emph{Deployment}
 (si ricorda che nella sintassi i deployment sono individuati dai delimitatori
-$\verb#{# \ldots \verb#}#$) definiti nel file e vengono istallati su
+$\verb#{# \ldots \verb#}#$) definiti nel file vengono istallati su
 opportuni Engine.
 
 Attualmente, per velocizzare il processo di sviluppo dell'utente, l'associazione
@@ -332,6 +359,7 @@ essa, a livello inferiore troviamo le istanze.
 \caption[Blide, feedback alla compilazione]{Rappresentazione del Local
 Environment con gli Engine, in questi le definizioni di processo istallate. Per
 ogni definizione sono visualizzate le istanze eseguite o in esecuzione.}
+\rule{7cm}{0.01cm}
   \label{fig:blidEngines}
 \end{center}
 \end{figure}
@@ -349,24 +377,44 @@ può avviare direttamente delle istanze tramite l'operazione contestuale
 In tabella sono riepilogati (con le rispettive Icone) i vari tipi di nodi che
 si trovano nei livelli dell'albero dei Local Engines.
 
-\begin{table}[hb!]
+\begin{table}[t]
 \begin{center}
-\begin{tabular}{rp{0.7\textwidth}}
-\includegraphics[scale=0.70]{blide/dia/server} & Engine.\\ 
-\includegraphics[scale=0.70]{blide/dia/defnode} & Definizione di Processo.\\
-\includegraphics[scale=0.70]{blide/dia/defnodeRun} & Ready to Run Instance.\\
-\includegraphics[scale=0.70]{blide/dia/instdef} & Istanza in esecuzione.\\
-\includegraphics[scale=0.70]{blide/dia/instdefok} & Istanza completata.\\
-\includegraphics[scale=0.70]{blide/dia/instdefko} & Instanza terminata con
-errori .\\
+\begin{tabular}{| c | p{0.5\textwidth} |}
+
+\hline
+\parbox[c][1.8cm][c]{0.7cm}{\includegraphics[scale=1,clip]{blide/dia/server}} 
+& Engine.\\ 
+
+\hline
+\parbox[c][1.8cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/defnode}} 
+& Definizione di Processo.\\
+
+\hline
+\parbox[c][1.8cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/defnodeRun}} 
+& Ready to Run Instance.\\
+
+\hline
+\parbox[c][1.5cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/instdef}}
+& Istanza in esecuzione.\\
+
+\hline
+\parbox[c][1.5cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/instdefok}} 
+& Istanza completata.\\
+
+\hline
+\parbox[c][1.5cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/instdefko}} 
+& Instanza terminata con errori .\\
+\hline
+
 \end{tabular}
+
 \caption[I vari tipi di nodi nell'albero Local Engines]{I vari tipi di nodi
 nell'albero Local Engines.}
+\rule{7cm}{0.01cm}
 \label{tab:bicons}
 \end{center}
 \end{table}
 
-\newpage
 
 \subsubsection*{Monitor - Visualizzazione dell'istanze}
 
@@ -375,9 +423,10 @@ ed eseguirli all'interno di un Local Environment. L'esecuzione viene avviata
 facendo partire una definizione di tipo \emph{Ready to Run Instance}, da
 questa verrà creata immediatamente un'istanza che probabilmente, invocando le
 porte di start activity di altre definizioni di processo, provocherà la
-creazione di altre istanze. Per esempio si consideri il caso
+creazione di altre istanze. Per esempio si consideri il seguente caso:
 
 \vspace{0.5cm}
+
 \begin{center}
 \begin{tabular}{ccc}
 \includegraphics[scale=0.75]{blide/dia/BlideMon1} 
@@ -386,9 +435,8 @@ creazione di altre istanze. Per esempio si consideri il caso
 \end{tabular}
 \end{center}
 \vspace{0.5cm}
-
 in cui si hanno due Engine: \texttt{faulthandler.blt:1} con la definizione
-\texttt{Definition 1} e \texttt{faulthandler.blt:1} con la \emph{Ready to Run
+\texttt{Definition 1} e \texttt{faulthandler.blt:2} con la \emph{Ready to Run
 Instance} \texttt{Definition 1}. Quest'ultima può essere messa in esecuzione
 direttamente dall'utente facendo click con il tasto destro e selezionando dal
 menù contestuale l'azione \emph{``Run''}. A questo punto come si vede dalla
@@ -412,7 +460,7 @@ pannello viene di seguito identificato con il termine \emph{Monitor View}.
 \includegraphics[scale=0.65,angle=90]
 {blide/dia/BlideMonitor1}
 \caption[Blide: rappresentazione grafica di istanze]{Rappresentazione grafica
-dell'esecuzione delle istanze e dalla loro comunicazione}
+dell'esecuzione delle istanze e dalla loro comunicazione.}
   \label{fig:blideMonitor1}
 \end{center}
 \end{figure}
@@ -448,80 +496,112 @@ messaggio.
 A prima vista potrebbe sorpredere la presenza della seconda Throw (racchiusa
 dal rettangolo tratteggiato di rosso) nell'istanza fallita, in quanto non
 sembrerebbe prevista dal codice. In realtà essa non è altro che l'attività
-Throw prevista dal Default Fault Handler (si veda \ref{defHandelr}). C'è
-sembrato che la scelta migliore per rendere la rappresentazione grafica più chiara possibile fosse
+Throw prevista dal Default Fault Handler (si veda la Sezione \ref{defHandelr}).
+C'è sembrato che la scelta migliore per rendere la rappresentazione grafica più chiara possibile fosse
 quella di rappresentare esplicitamente i Default Fault Handler, in quanto
 condizionano fortemente il flusso di esecuzione, e di nascondere al contrario i
 Default Compensation Handler (Empty Activity) in quanto del tutto ininfluenti.
 \\
 
 Concludiamo questa sezione dando una panoramica dei costrutti grafici utilizzati
-per rappresentare i flussi di esecuzione.
-\vspace{0.3cm}
+per rappresentare i flussi di esecuzione:
 
-\begin{tabular}{cp{0.6 \textwidth}}
-\includegraphics[scale=0.48]{blide/dia/BlideInst} &
-\parbox[b][4cm][t]{0.6 \textwidth}{Le istanze di processo
+\begin{tabular}{c  c}
+%\hline
+\parbox[c][5cm][c]{0.2 \textwidth}
+{\includegraphics[scale=0.48]{blide/dia/BlideInst}} &
+\parbox[c][5cm][c]{0.6 \textwidth}{Le istanze di processo
 sono rappresentate tramite scatole (ombreggiate) che contengono le attvità.
 Le scatole presentano alle estremità due cerchi, di cui quello in basso,
 tramite la sua colorazione indica lo stato della richiesta: grigio, in
-esecuzione, verde completata con successo, rosso fallita.}
-\\
+esecuzione; verde, completata con successo; rosso, fallita.}\\
 \end{tabular}
 
-\begin{tabular}{cp{0.6 \textwidth}}
-\includegraphics[scale=0.80]{blide/dia/BlideInv} &
-\parbox[b][2.5cm][t]{0.6 \textwidth}{Le attività di base (\emph{Basic
+\begin{tabular}{c c}
+\hline
+\parbox[c][3.2cm][c]{0.2 \textwidth}
+{\includegraphics[scale=0.80]{blide/dia/BlideInv}} &
+\parbox[c][3.2cm][c]{0.6 \textwidth}{Le attività di base (\emph{Basic
 Activity}), sono rappresentate come dei quadrati con all'interno una opportuna
-icona la cui grafica rimanda alla semantica della attività.}
+icona la cui grafica rimanda alla semantica della attività.}\\
 \end{tabular}
 
-\begin{tabular}{cp{0.6 \textwidth}}
-\includegraphics[scale=0.95]{blide/dia/BlideSec} &
-\parbox[b][1.7cm][t]{0.6 \textwidth}{L'attività di sequenza è rappresentata con
+\begin{tabular}{c c}
+\hline
+\parbox[c][3cm][c]{0.2 \textwidth}
+{\includegraphics[scale=0.95]{blide/dia/BlideSec}} &
+\parbox[c][3cm][c]{0.6 \textwidth}{L'attività di sequenza è rappresentata con
 una freccia verticale, che unisce dall'alto verso il basso le attività
 sequenzializzate. Le attività che cronologicamente sono eseguite prima si
-trovano più in alto.}
+trovano più in alto.}\\
 \end{tabular}
 
-\vspace{0.5cm}
-
-\begin{tabular}{cp{0.6 \textwidth}}
-\parbox[b][1.2cm][t]{0.17 \textwidth}{
+\begin{tabular}{c c}
+\hline
+\parbox[c][2cm][c]{0.2 \textwidth}{
 \includegraphics[scale=0.40]{blide/dia/BlideFlow}} 
 &
-\parbox[b][1.7cm][t]{0.6 \textwidth}{L'attività di composizione parallela è
+\parbox[c][2cm][c]{0.6 \textwidth}{L'attività di composizione parallela è
 rappresentata come una barra orizzontale sotto di cui, da sinistra a destra,
-vengono rappresentati i flussi di esecuzione.}
+vengono rappresentati i flussi di esecuzione.}\\
 \end{tabular}
 
+%\rule{0cm}{1.5cm}
 
-\begin{tabular}{cp{0.6 \textwidth}}
-\includegraphics[scale=0.30]{blide/dia/BlideContext} & 
-\parbox[b][2.2cm][t]{0.6 \textwidth}{I contesti sono rappresentati come
+\begin{tabular}{c c}
+\hline
+\parbox[c][4cm][c]{0.2 \textwidth}
+{\includegraphics[scale=0.30]{blide/dia/BlideContext}} & 
+\parbox[c][4cm][c]{0.6 \textwidth}{I contesti sono rappresentati come
 rettangoli tratteggiati, al cui interno viene svolta la Context Activity. Se il
 contesto attiva un Protected Scope, questo viene rappresentato a partire
 dell'angolo in alto a destra come un rettangolo con il bordo tratteggiato di
-colore rosso.}
+colore rosso.}\\
 \end{tabular}
 
-\vspace{1.5cm} 
+\begin{tabular}{c c}
+\hline
+\parbox[c][2.5cm][c]{0.2 \textwidth}
+{\includegraphics[scale=0.42]{blide/dia/BlidePick}} & 
+\parbox[c][2.5cm][c]{0.6 \textwidth}{La scelta esterna è rappresentata tramite
+la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}\\
+\end{tabular}
 
-\begin{tabular}{cp{0.6 \textwidth}}
-\includegraphics[scale=0.42]{blide/dia/BlidePick} & 
-\parbox[b][1.5cm][t]{0.6 \textwidth}{La scelta esterna è rappresentata tramite
-la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}
+\begin{tabular}{c c}
+\hline
+\parbox[c][3.5cm][c]{0.2 \textwidth}{
+\begin{center} 
+\includegraphics[scale=0.7]{blide/dia/BlideIf}
+\end{center}
+} & 
+\parbox[c][3.5cm][c]{0.6 \textwidth}{La valutazione della scelta condizionata
+è rappresentata dall'icona a sinistra. Nel caso in cui la condizione di test
+è valutata a false, l'icona ha contorno rosso (come nell'immagine
+riportata), viceversa, se valuta a true ha contorno verde.}\\
+\end{tabular}
+
+\begin{tabular}{c c}
+\hline
+\parbox[c][2.5cm][c]{0.2 \textwidth}{
+\begin{center} 
+\includegraphics[scale=0.7]{blide/dia/BlideWhile}
+\end{center}
+} & 
+\parbox[c][2.5cm][c]{0.6 \textwidth}{Le operazioni eseguite in un ciclo
+d'iterazione sono precedute dall'icona rappresentata a sinistra.}\\
+\hline
 \end{tabular}
 
 % \caption{tablecaption}
 % \label{tablelabel}
 % \end{table}
 
+\vspace{0.5cm}
 \section{Un esempio d'uso}
 
 In questa sezione presentiamo un esempio d'uso degli strumenti
 realizzati. L'esempio considerato è stato introdotto nel documento di specifca
-\emph{BPEL4WS 1.1} \cite{BPEL11Spec} (sezione 16.1) e ripreso in
+\emph{BPEL 1.1} \cite{BPEL11Spec} (sezione 16.1) e ripreso in
 \cite{LaPuTie1}.
 
 L'esempio, pur risultando essere una semplificazione di uno scenario reale,
