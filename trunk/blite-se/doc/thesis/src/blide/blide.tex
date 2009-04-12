@@ -1,15 +1,16 @@
 \chapter{Blide}
 
-In questo capitolo viene presentato \emph{Blide} (Blite Integrated Development
-Environment) un tool che racchiude un ambiente di esecuzione locale e
-fornisce un interfaccia grafica che permette di svolgere in maniera integrata
+Questo capitolo presenta \emph{Blide} (Blite Integrated Development
+Environment) un strumento che racchiude un ambiente di esecuzione locale e
+fornisce un'interfaccia grafica che permette di svolgere in maniera integrata
 tutte le operazioni legate allo sviluppo di programmi Blite. 
 % Nella prima parte
 % del capitolo vengono descritte le caratteristiche e le funzionalità
 % dell'interfaccia, mentre nella seconda parte se ne presetano alcuni
 % esempi di utilizzo.
 In questo capitolo vengono descritte le caratteristiche e le funzionalità
-dell'interfaccia.
+dell'interfaccia e successivamente viene presentato un caso d'uso ispirato ad
+un esempio presentato nella specifica di BPEL 1.1 \cite{BPEL10Spec}.
 
 \section{Un IDE per Blite}
 
@@ -26,9 +27,9 @@ gestire i file con le definizioni dei processi, editarli, compilarli e metterli
 in esecuzione. E' presente anche la funzionalità per visualizzare, tramite una
 rappresentazione grafica, l'esecuzione delle istanze di processo.
 
-Blide è stato realizzato tramite la piattaforma \emph{NetBeans Platform}
-[NBPlatSite], un framework studiato per facilitare lo sviluppo di applicazioni
-Java con interfaccia grafica. E' stato scelto tale progetto per la sua
+Blide è stato realizzato tramite il progetto \emph{NetBeans Platform}
+\cite{NBPlatSite}, un framework studiato per facilitare lo sviluppo di
+applicazioni Java con interfaccia grafica. E' stato scelto tale progetto per la sua
 completezza e per il modello architetturale offerto. 
 
 NetBeans Platform permette allo sviluppatore di realizzare le proprie
@@ -38,20 +39,21 @@ formale delle dipendenze permettono di costruire applicazioni riuscendo a
 selezionare in modo molto mirato solamente i moduli realmente necessari e
 quindi a mantenere limitate le dimensioni complessive dell'applicazione. 
 Per una presentazione approfondita a NetBeans Platform si consulti
-[RichClientApp].
+\cite{RichClientApp}.
 
 \begin{figure}[t!]
 \begin{center}
 \includegraphics[scale=0.60]
 {blide/dia/Blide1}
 \caption[Blide Schermata]{Come si presenta Blide al primo avvio.}
+\rule{7cm}{0.01cm}
   \label{fig:blide1}
 \end{center}
 \end{figure}
  
 In Figura \ref{fig:blide1} è presentata l'interfaccia di Blide al primo avvio. 
 Oltre alle consuete barre dei menù e dei pulsanti posizionate in alto
-l'applicazione presenta quatro aree distinte
+l'applicazione presenta quattro aree distinte
 
 \begin{enumerate}
   \item Un pannello identificato dall'etichetta \emph{``Favorites''} che
@@ -89,6 +91,7 @@ la directory ``home'' dell'utente.
 \includegraphics[scale=0.65]
 {blide/dia/BlideFavo}
 \caption[Il pannello ``Favorites'']{Una direcory con alcuni sorgenti Blite.}
+\rule{7cm}{0.01cm}
   \label{fig:blideFavo}
 \end{center}
 \end{figure}
@@ -145,6 +148,7 @@ visualizza le azioni che l'utente può compiere sul file stesso. Da osservare
 come siano abilitate solo le azioni applicabili, di fatto viene realizzato il
 paradigma \emph{Context-Sensitive Interface}, secondo cui ogni componente
 dell'interfaccia è sensibile allo stato degli oggetti contestuali.}
+\rule{7cm}{0.01cm}
   \label{fig:blideCMenu}
 \end{center}
 \end{figure}
@@ -179,7 +183,8 @@ contenuti nel file sugli Engine.\\
 contenuti nel file dagli Engine.
 \end{tabular}
 
-\caption{Azioni che possono essere eseguite su un file Blite.}
+\caption[Azioni che possono essere eseguite su un file Blite]{Azioni che
+possono essere eseguite su un file Blite.}
 \label{tab:blideactions}
 \end{center}
 \end{table}
@@ -355,7 +360,8 @@ si trovano nei livelli dell'albero dei Local Engines.
 \includegraphics[scale=0.70]{blide/dia/instdefko} & Instanza terminata con
 errori .\\
 \end{tabular}
-\caption{I vari tipi di nodi nell'albero Local Engines.}
+\caption[I vari tipi di nodi nell'albero Local Engines]{I vari tipi di nodi
+nell'albero Local Engines.}
 \label{tab:bicons}
 \end{center}
 \end{table}
@@ -415,8 +421,8 @@ dell'esecuzione delle istanze e dalla loro comunicazione}
 \begin{center}
 \includegraphics[scale=0.79]
 {blide/dia/BlideMonitorCode}
-\caption[Blide: programma blite]{Programma blite associato alla
-rappresentazione grafica di Figura \ref{fig:blideMonitor1}}
+\caption[Blide: programma Blite]{Programma Blite associato alla
+rappresentazione grafica di Figura \ref{fig:blideMonitor1}.}
   \label{fig:blideMonitorCode}
 \end{center}
 \end{figure}
@@ -442,7 +448,7 @@ messaggio.
 A prima vista potrebbe sorpredere la presenza della seconda Throw (racchiusa
 dal rettangolo tratteggiato di rosso) nell'istanza fallita, in quanto non
 sembrerebbe prevista dal codice. In realtà essa non è altro che l'attività
-Throw prevista dal Default Fault Handler (si veda \ref{defHandelr}). C'e'
+Throw prevista dal Default Fault Handler (si veda \ref{defHandelr}). C'è
 sembrato che la scelta migliore per rendere la rappresentazione grafica più chiara possibile fosse
 quella di rappresentare esplicitamente i Default Fault Handler, in quanto
 condizionano fortemente il flusso di esecuzione, e di nascondere al contrario i
@@ -513,8 +519,8 @@ la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}
 
 \section{Un esempio d'uso}
 
-In questa sezione si presenta un esempio d'uso degli strumenti
-realizzati. Si considera l'esempio introdotto nel documento di specifca
+In questa sezione presentiamo un esempio d'uso degli strumenti
+realizzati. L'esempio considerato è stato introdotto nel documento di specifca
 \emph{BPEL4WS 1.1} \cite{BPEL11Spec} (sezione 16.1) e ripreso in
 \cite{LaPuTie1}.
 
@@ -527,8 +533,8 @@ compensation handler.
 Si realizza un servizio di spedizioni (\emph{Shipping Service}) che gestisce
 gli ordini di clienti. Gli ordini sono composti da un numero di
 articoli e il servizio mette a disposizione due tipi di spedizioni: una in cui
-tutti articoli dell'ordine sono inviati insieme, e l'altra, in cui è possibile
-spedire in parti gruppi di articoli, in base alla disponibilità degli stessi in
+tutti gli articoli dell'ordine sono inviati insieme, e l'altra, in cui è
+possibile spedire in parti gruppi di articoli, in base alla disponibilità degli stessi in
 un ipotetico magazzino.
 
 Il servizio di spedizione da noi realizzato interagisce con altri due servizi

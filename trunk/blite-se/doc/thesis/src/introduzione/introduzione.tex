@@ -41,7 +41,8 @@ tecnologie utilizzate per implementarle. Se WSDL rappresenta le interfacce, SOAP
 che transita per tali interfacce viene strutturata e ``imbustata'' in messaggi. A
 questo punto non rimane altro che determinare il mezzo con cui inviare tali
 messaggi. E la scelta più ovvia non poteva che essere quella di utilizzare i
-mezzi più diffusi e collaudati, ovvero HTTP e i protocolli di Internet.
+mezzi più diffusi e collaudati, ovvero HTTP \cite{HTTP} \cite{HTTP1} e i
+protocolli di Internet.
 
 Servizi basati sull'utilizzo combinato di XML, XML Schema, WSDL, SOAP e HTTP
 sono in generale individuati col termine ``Servizi Web'', anche se spesso con
@@ -61,8 +62,8 @@ cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione,
 e di sviluppo di applicazioni, in cui al concetto di servizio si debba
 inevitabilmente affiancare il concetto di stato (tutti sanno che per
 realizzare applicazioni poco più che banali è indispensabile mantenere uno
-stato). Tale paradigma è noto SOC (Service Oriented Computing).
-In termini piuttosto sfumati, SOC racchiude tutte quelle attività tese alla
+stato). Tale paradigma è noto SOC (Service Oriented Computing) \cite{SOC1}
+\cite{WEBSERVICES}. In termini piuttosto sfumati, SOC racchiude tutte quelle attività tese alla
 definizione di un modello di sviluppo software basato sull'assemblaggio di componenti che possono essere
 specificati tramite i formalismi dei servizi ma che possono eventualmente
 mantenere anche uno stato. WS-Addressing \cite{WS-Addressing}, per esempio, è
@@ -97,12 +98,12 @@ temporali, devono fare i conti con sottoattività particolarmente riluttanti a
 rispettare specifici vincoli temporali.
 
 % A livello informatico
-Nell'ambito di SOC, tale metodologia ha trovato attuazione utilizzando i Servizi
-Web come tecnologia, sia per la realizzazione delle interfacce delle
+Nell'ambito di SOC, tale metodologia ha trovato attuazione
+utilizzando i Servizi Web come tecnologia, sia per la realizzazione delle interfacce delle
 attività, sia per la rappresentazione e la comunicazione dei dati, e
-sviluppando un linguaggio come BPEL \cite{BPEL11Spec} per la codifica dei workflow.
-Tale linguaggio permette di utilizzare i Servizi Web per accedere alle
-sottoattività e, a sua volta, espone il processo stesso come un Servizio Web,
+sviluppando un linguaggio come BPEL \cite{BPEL11Spec} per la codifica dei
+workflow dei processi. Tale linguaggio permette di utilizzare i Servizi Web per
+accedere alle sottoattività e, a sua volta, espone il processo stesso come un Servizio Web,
 permettendo di realizzare la composizionalità e uniformando il modo in cui ogni
 risorsa è vista esternamente. Come si può intuire, un linguaggio come
 BPEL risulta uno strumento molto complesso, ricco di costrutti sia per la gestione
@@ -110,11 +111,10 @@ dei flussi interni che per la realizzazione della comunicazione.
 % In particolare risulta critico la realizzazione su tempi lunghi e fortemente
 % variabili di transazioni aziedali () \ldots
 
-In pratica riguardo a BPEL risulta difficile: la realizzazione della sua
-specifica, l'implemetazione della stessa, nonché il suo utilizzo. Attualmente
-BPEL è specificato da documenti, scritti in linguaggio naturale, prodotto di un proceso
-di standardizzazione supervisionato da Oasis \cite{OASISSite}. L'assenza di una
-semantica formale può far sì che si creino dei fraintendimenti e che ci possano
+In pratica riguardo a BPEL risulta difficile, sia realizzarne implemetazioni a
+partire dalle specifiche del linguaggio, sia utilizzare quest'ultime per
+sviluppare applicazioni. Attualmente BPEL è specificato da documenti, scritti
+in linguaggio naturale, prodotto di un proceso di standardizzazione supervisionato da Oasis \cite{OASISSite}. L'assenza di una semantica formale può far sì che si creino dei fraintendimenti e che ci possano
 essere interpretazioni diverse del medesimo concetto, facendo sì che le
 implementazioni infine risultino incompatibili. Per esempio, possono risultare
 di difficile interpretazione la relazione fra le \emph{Multiple Start Activity} e
