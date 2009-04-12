@@ -98,7 +98,13 @@ di fatto fa Oralce Process Manager.}, rendendo distinguibili le porte di
 ricezione su cui vengono create le istanze (\emph{create port}). \`E ovvio che
 questa tecnica non permette di realizzare le multiple start activity, in cui una
 porta è contemporaneamente di creazione e di possibile correlazione. Per
-realizzare le multiple start activity è necessario implemetare 
+realizzare le multiple start activity è necessario implemetare un meccanismo di
+notifica da parte delle start activity di ricezione nei confronti delle istanze
+di processo e di quest'ultime nei confronti del \icode{ProcessManager}. Questo
+flusso d'informazione e l'utilizzo opportuno dei metodi per la sincronizzazione
+dei thread (si veda la Sezione \ref{sec:semcor}) permette di realizzare il comportamento
+specificato dalla semeatica di Blite e in particolare la correlazione e le
+multiple start activity.
 
 % Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
 % un'istanza in grado di correlare con un messaggio in arrivo ad una
