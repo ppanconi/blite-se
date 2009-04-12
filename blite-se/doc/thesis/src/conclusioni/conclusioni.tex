@@ -1,6 +1,6 @@
 \chapter{Conclusioni e sviluppi}
 
-\section{Osservazioni}
+\section{Osservazioni conclusive}
 
 Realizzare un'implementazione del linguaggio ci ha permesso di analizzare
 approfonditamente la semantica formale definita per Blite e di capire quali
@@ -18,7 +18,7 @@ ricavare implementazioni coerenti.
 In particolare abbiamo capito che un linguaggio per l'orchestrazione di servizi,
 come BPEL, risulta essere uno strumento molto complesso, e per questo
 riuscirne a sintetizzare gli aspetti cruciali in una semantica formale è
-veramente un'attività delicata. Contemporaneamente sviluppare un'
+veramente un'attività delicata. Contemporaneamente, sviluppare un'
 implementazione di tale semantica, in rispetto dei requisiti che ci possono
 essere in sistemi di produzione, non è da meno complicato. 
 
@@ -62,8 +62,8 @@ $$
 \left\{
 \begin{array}{l@{\hspace{2ex}}l}
 \\[-.50cm]
-false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} \in
-\xcorr\ \, \wedge \, \xv \neq \xsigma(\xx)
+false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} 
+\, \wedge \, \xv \neq \xsigma(\xx)
 \\[-.05cm] true & \textrm{altrimenti} \\
 \end{array}
 \right.
@@ -88,15 +88,15 @@ $$
 
 Se dal punto di vista dell'attribuzione dei messaggi alle istanze il problema
 può considerarsi risolto, rimane il fatto di distinguere se un
-messaggio in arrivo ne debba produrre o meno una nuova. Il
+messaggio in arrivo debba produrre o meno una nuova istanza. Il
 \icode{ProcessManager} deve di fatto prendere questa decisione al momento della
 ricezione in base alle informazioni di cui dispone in quel momento. 
 
-In generale si potrebbe pensare di risolvere semplicemente il problema a livello
+In generale si potrebbe pensare di risolvere il problema semplicemente a livello
 sintattico\footnote{La soluzione può sembrare ingenua, ma per esempio è ciò che
 di fatto fa Oralce Process Manager.}, rendendo distinguibili le porte di
-ricezione su cui vengono create le istanze (\emph{create port}). E' ovvio che
-questa tecnica non permetta di realizzare le multiple start activity, in cui una
+ricezione su cui vengono create le istanze (\emph{create port}). \`E ovvio che
+questa tecnica non permette di realizzare le multiple start activity, in cui una
 porta è contemporaneamente di creazione e di possibile correlazione. Per
 realizzare le multiple start activity è necessario implemetare 
 
@@ -107,7 +107,7 @@ realizzare le multiple start activity è necessario implemetare
 % anche non arrivare mai a consumare il messaggio correlato.}, e in particolare
 % per le multiple start activity può utilizzare tale informazione per distinguere se trattare la porta come di creazione o di correlazione.
 
-E' chiaro che la semantica attuale di Blite specifica alla perfezione il
+\`E chiaro che la semantica attuale di Blite specifica alla perfezione il
 comportamento voluto, ma crea un notevole scarto tra la sfera teorica e quella
 tecnologica che rende difficile capire quanto l'implementazione realizzi del
 tutto tale comportamento. Inoltre diversi processi di sviluppo possono attuare
@@ -120,9 +120,9 @@ le strategie di specifica siano più in linea con le necessità di sviluppo che
 abbiamo incontrato e che le soluzioni da noi ideate possano in qualche modo
 essere d'ispirazione.
   
-\section{Sviluppi}
+\section{Sviluppi futuri}
 
-Nella direzione dello sviluppo software le attività da poter svolgere sono
+Per ciò che concerne lo sviluppo software, le attività da svolgere sono
 essenzialmente due:
 
 \begin{itemize}
@@ -132,8 +132,8 @@ essenzialmente due:
   rappresentazione delle istanze in Blide.
 \end{itemize} 
 
-Per quanto riguarda il primo punto, come già più volte detto le possibilità sono
-molteplici. 
+Per quanto riguarda il primo punto, come già più volte detto, le possibilità
+sono molteplici. 
 
 Un primo passo molto semplice potrebbe essere quello di creare un Environmet
 che supporti la comunicazione remota fra programmi Blite. In questo caso si
@@ -159,23 +159,22 @@ indirizzo fisico.
 
 Sicuramente molto più interessante sarebbe poter far dialogare i nostri programmi
 Blite con altri tipi di servizi definiti con linguaggi e tecnologie diverse,
-primi fra tutti i Web Service. Per far questo la prima cosa fondamentale è creare un
-meccanismo che relazioni il codice Blite alle definizioni WSDL.
+primi fra tutti i Web Service. Per far questo la cosa fondamentale è creare
+un meccanismo che relazioni il codice Blite alle definizioni WSDL. In pratica
+serve da una parte ricavare una definizione dell'interfaccia del processo Blite,
+e dall'altra associare le operazioni d'invocazione ad alcune definizioni di
+servizi preesistenti.
 
-In pratica serve da una parte ricavare una definizione dell'interfaccia del
-processo Blite, e dall'altra associare le operazioni d'invocazione ad alcune
-definizioni di servizi preesistenti.
-
-Si potrebbe pensare di realizzare un tool \texttt{blite2WSDL}, che, preso in
+Si potrebbe pensare di realizzare un tool \texttt{blite2WSDL} che, preso in
 input un file \texttt{.blt}, esegua le operazioni necessarie ad impostare un
 legame fra il programma e le definizioni WSDL.
 
-Il processo di creazione dell'interfaccia può essere fatto, per esempio
+Il processo di creazione dell'interfaccia può essere fatto, per esempio,
 combinando un'attività utente con un processo automatico. 
 Tramite un'analisi del codice Blite si potrebbe pensare di creare uno
-scheletro per la definizione WSDL, che l'utente possa successivamente
+scheletro per la definizione WSDL, che l'utente può successivamente
 raffinare, andando per esempio ad esplicitare: i tipi XSD delle parti dei
-messaggi, alcuni riferimenti dei namespace o alcuni dettagli del bainding
+messaggi, alcuni riferimenti dei namespace o alcuni dettagli del binding
 WSDL/SOAP. In questo modo non ci sarebbe ovviamente nessun controllo statico che
 i messaggi ricevuti siano usati, all'interno del codice Blite, in maniera
 conforme con il tipo esplicitato nel contratto, ma questo concorda con la gestione
@@ -212,7 +211,7 @@ limitandosi ad una versione specifica del protocollo SOAP.
 Probabilmente risulta più facile realizzare un Environment capace di dialogare
 con un Enterprise Service Bus basato su JBI, in quanto tale standard è stato
 ideato appositamente per l'integrazione di \emph{Service Engine} e quindi
-esistono, oltre ad una serie di API appositamente studiate una buona
+esistono, oltre ad una serie di API appositamente studiate, una buona
 documentazione e diversi esempi su come realizzare tale l'integrazione
 \cite{OPENESB}.
 \\
