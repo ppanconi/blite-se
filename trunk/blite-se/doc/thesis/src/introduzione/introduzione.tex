@@ -10,29 +10,30 @@ efficiente con il maggior numero di partner e clienti. \`E quindi ovvio che la
 risposta del mondo del software e della tecnologia non potesse che muoversi in
 tal direzione. 
 
-Il primo passo è stato quello di creare, tramite processi condivisi, gli
-standard pubblici che permettessero di ideare una ``lingua franca'' tramite cui
-scambiare l'informazione. La creazione dello standard XML \cite{XML} ha permesso di
-descrivere i dati tramite una rappresentazione testuale che autoesplicita lo schema di
-encoding utilizzato per rappresentare i caratteri in sequenze di byte. In questo
-modo si è realizzata la completa indipendenza dei dati dalle specifiche
+Il primo passo è stato quello di creare, tramite processi condivisi, gli standard
+pubblici che permettessero di ideare una ``lingua franca'' tramite cui scambiare
+l'informazione. La creazione dello standard XML \cite{XML} ha permesso di
+descrivere i dati tramite una rappresentazione testuale che autoesplicita lo
+schema di encoding utilizzato per rappresentare i caratteri in sequenze di byte.
+In questo modo si è realizzata la completa indipendenza dei dati dalle specifiche
 architetture hardware/software e l'informazione è diventata finalmente portabile
 attraverso le diverse piattaforme. Insieme alla necessità di rappresentare i dati
 a basso livello vi è sempre quella di poterli strutturare in tipi e forme sempre
 più complessi. DTD \cite{XML10} prima, e XML Schema \cite{XMLSchema} poi, in
-maniera definitiva, hanno permesso di risolvere brillantemente tale problematica nell'ambito di XML stesso.
+maniera definitiva, hanno permesso di risolvere brillantemente tale problematica
+nell'ambito di XML stesso.
 
 A questo punto avendo modo di rappresentare l'informazione in maniera totalmente
-portabile e tipata ci si è rivolti ad individuare un modello di
-comunicazione che permettesse lo scambio di tale informazione. \'E stata
-individuata l'astrazione di ``servizio'', inteso semplicemente come un
-interfaccia formalmente specificata ad una risorsa puramente \emph{stateless}.
-Il concetto di ``risorsa'' è da intendersi in senso generale, come un documento
-statico, ma anche come unità elaborativa capace di restituire dinamicamente
-dei dati in base al valore di parametri ricevuti in input.
+portabile e tipata ci si è rivolti ad individuare un modello di comunicazione che
+permettesse lo scambio di tale informazione. \`E stata individuata l'astrazione
+di ``servizio'', inteso semplicemente come un'interfaccia formalmente specificata
+ad una risorsa puramente \emph{stateless}. Il concetto di ``risorsa'' è da
+intendersi in senso generale, come un documento statico, ma anche come unità
+elaborativa capace di restituire dinamicamente dei dati in base al valore di
+parametri ricevuti in input.
 
 La definizione della specifica formale dei servizi non poteva avvenire che
-nell'ambito di XML e XML Schema e l'introduzione di WSDL \cite{WSDL}, liguaggio
+nell'ambito di XML e XML Schema e l'introduzione di WSDL \cite{WSDL}, linguaggio
 direttamente basato su questi standard, ha permesso la realizzazione di
 interfacce in cui si definiscono operazioni i cui parametri di input ed output
 sono formalmente tipati e la loro descrizione astrae completamente dalle
@@ -58,8 +59,8 @@ caratteristiche che hanno contribuito maggiormente alla diffusione dei Servizi
 Web ed a determinarne il successo.
 
 Disporre di un sistema di comunicazione così promettente ha fatto sì che si
-cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione, 
-e di sviluppo di applicazioni, in cui al concetto di servizio si debba
+cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione 
+e di sviluppo di applicazioni, in cui al concetto di servizio si dovesse
 inevitabilmente affiancare il concetto di stato (tutti sanno che per
 realizzare applicazioni poco più che banali è indispensabile mantenere uno
 stato). Tale paradigma è noto SOC (Service Oriented Computing) \cite{SOC1}
@@ -111,21 +112,23 @@ dei flussi interni che per la realizzazione della comunicazione.
 % In particolare risulta critico la realizzazione su tempi lunghi e fortemente
 % variabili di transazioni aziedali () \ldots
 
-In pratica riguardo a BPEL risulta difficile, sia realizzarne implemetazioni a
+In pratica riguardo a BPEL risulta difficile, sia realizzarne implementazioni a
 partire dalle specifiche del linguaggio, sia utilizzare quest'ultime per
-sviluppare applicazioni. Attualmente BPEL è specificato da documenti, scritti
-in linguaggio naturale, prodotto di un proceso di standardizzazione supervisionato da Oasis \cite{OASISSite}. L'assenza di una semantica formale può far sì che si creino dei fraintendimenti e che ci possano
-essere interpretazioni diverse del medesimo concetto, facendo sì che le
-implementazioni infine risultino incompatibili. Per esempio, possono risultare
-di difficile interpretazione la relazione fra le \emph{Multiple Start Activity} e
-il meccanismo di gestione dei conflitti nell'attribuzione dei messaggi alle
-diverse istanze di processo concorrenti di un servizio, o alcuni aspetti legati
-alle problematiche di terminazione delle attività e di compensazione.
+sviluppare applicazioni. Attualmente BPEL è specificato da documenti, scritti in
+linguaggio naturale, prodotto di un processo di standardizzazione supervisionato
+da Oasis \cite{OASISSite}. L'assenza di una semantica formale può far sì che si
+creino dei fraintendimenti e che ci possano essere interpretazioni diverse del
+medesimo concetto, facendo sì che le implementazioni infine risultino
+incompatibili. Per esempio, possono risultare di difficile interpretazione la
+relazione fra le \emph{Multiple Start Activity} e il meccanismo di gestione dei
+conflitti nell'attribuzione dei messaggi alle diverse istanze di processo
+concorrenti di un servizio, o alcuni aspetti legati alle problematiche di
+terminazione delle attività e di compensazione.
 
 Il processo di realizzazione di applicazioni BPEL risulta difficile e fortemente
 soggetto ad errori anche per la presenza di caratteristiche complesse quali:
 parallelismo, concorrenza, terminazione forzata di attività, correlazione e
-ompensazione, quest'ultima utilizzata per la realizzazione di ``Long-Running
+compensazione, quest'ultima utilizzata per la realizzazione di ``Long-Running
 Transaction'', e forse ancora non compresa in tutti i suoi aspetti e potenzialità
 dagli utilizzatori. In tal senso un processo di analisi e di
 formalizzazione di tali costrutti è certamente utile, sia per chi si trova ad
@@ -145,11 +148,11 @@ Blite è stato selezionato un core di BPEL, per cui fosse abbastanza agevole
 definire una semantica formale e con cui, tramite ``encoding'', fosse possibile
 sostanzialmente riproporre tutte le funzionalità del linguaggio.
 
-Il lavoro svolto in questa tesi è da considerarsi a supporto di questa attività,
+Il lavoro svolto in questa tesi è da considerarsi a supporto di tale attività,
 come un'ulteriore verifica e confronto del processo di astrazione teorica e
 formale con gli aspetti più concreti e tecnologici, legati all'implementazione di
 un linguaggio per l'orchestrazione distribuita di servizi. Infatti l'obiettivo
-primario è stato quello di realizzare un'implemetazione di Blite che potesse
+primario è stato quello di realizzare un'implementazione di Blite che potesse
 essere il più vicino possibile, per caratteristiche ed applicabilità, ai motori
 di esecuzione di BPEL attualmente disponibili. Se da un lato Blite vuole essere
 un'analisi di BPEL, fatta tramite un processo di astrazione e formalizzazione,
@@ -157,8 +160,8 @@ il lavoro qui esposto vuole essere a sua volta un'analisi di tale processo, nel
 senso che ne vuole verificare la compatibilità e l'attinenza con le problematiche
 più concrete e tecnologiche presenti nell'ambito dell'orchestrazione di servizi.
 Di fatto il lavoro non è altro che un test critico di come i costrutti formali,
-utilizzati per fornire la semantica del liguaggio, possano essere realmente
-implementati in scenari di software di produzione, e che quindi continuino a
+utilizzati per fornire la semantica del linguaggio, possano essere realmente
+implementati in scenari di software di produzione e che quindi continuino a
 mantenere un legame a doppio filo con il mondo delle tecnologie, da cui hanno
 tratto iniziale ispirazione. 
 
@@ -183,21 +186,21 @@ Tale modello, di seguito riferito come \emph{Modello Statico}, è in pratica
 l'albero sintattico i cui nodi sono oggetti che espongono funzionalità
 specifiche, in base alla categoria sintattica rappresentata.
 
-In Blite-se è realizzato anche il motore (\emph{Engine}) per l'escuzione dei
-processi secondo la semantica formale definita in \cite{LaPuTie1}. Tale parte software
-è stata progettata in riferimento a specifiche che tenessero il più possibile
-conto delle problematiche reali degli ambiti produttivi (efficienza,
+In Blite-se è realizzato anche il motore (\emph{Engine}) per l'esecuzione dei
+processi secondo la semantica formale definita in \cite{LaPuTie1}. Tale parte
+software è stata progettata in riferimento a specifiche che tenessero il più
+possibile conto delle problematiche reali degli ambiti produttivi (efficienza,
 scalabilità, requisiti di memoria, ecc). \`E stato ideato inoltre, un modello di
 esecuzione basato sul pattern \emph{``Composite''} \cite{GANGo4}, secondo cui
-ogni attività è rappresentabile come un componente che apporta il proprio contributo
-all'esecuzione dell'istanza di processo. A partire dal modello statico, a
-runtime viene costruito passo passo un \emph{Modello Dinamico}, l'albero dei
-componenti/attività, e l'esecuzione procede tramite l'invocazione ricorsiva del
-metodo \icode{doActivity()} su tali camponenti. In sintesi, il nostro modello di
-esecuzione può essere definito \emph{Activity Centric}, nel senso che le varie
-attività saranno responsabili nel realizzare la loro esecuzione, ma anche nel
-collaborare, per far sì che i flussi globali dei processi evolvano secondo
-quanto specificato dalla semantica.
+ogni attività è rappresentabile come un componente che apporta il proprio
+contributo all'esecuzione dell'istanza di processo. A partire dal modello
+statico, a runtime viene costruito passo passo un \emph{Modello Dinamico},
+l'albero dei componenti/attività, e l'esecuzione procede tramite l'invocazione
+ricorsiva del metodo \icode{doActivity()} su tali camponenti. In sintesi, il
+nostro modello di esecuzione può essere definito \emph{Activity Centric}, nel
+senso che le varie attività saranno responsabili nel realizzare la loro
+esecuzione, ma anche nel collaborare, per far sì che i flussi globali dei
+processi evolvano secondo quanto specificato dalla semantica.
 
 L'Engine è stato realizzato astraendo dagli aspetti più concreti e
 tecnologici, quali la comunicazione e il deployment. L'Engine, per comunicare
@@ -205,7 +208,7 @@ con le porte dei servizi esterni, utilizza un'interfaccia
 (\icode{EngineChannel}), che definisce un modello di comunicazione totalmente
 generico, utilizzabile per realizzare molteplici protocolli per lo scambio di
 messaggi, dal più semplice \emph{``fire and forget''} ai più complessi, che necessitano un
-mantenimento dello stato. Le implemetazioni di tale interfaccia verranno fornite
+mantenimento dello stato. Le implementazioni di tale interfaccia verranno fornite
 dal componente software \emph{Environment}, che realizza un contenitore per
 l'Engine nell'ambito di una precisa tecnologia di comunicazione. 
 
@@ -255,8 +258,8 @@ per poi effettuare eventualmente anche esecuzioni offline.
 
 Tutto il progetto software realizzato per questa tesi è disponibile online alla
 pagina \emph{http://code.google.com/p/blite-se/}, da cui è possibile ottenere le
-distribuzioni binarie, la ducumentazione e i sorgenti. Questi ultimi sono
-gestiti con la teccnologia \emph{SVN} \cite{SVN}, messa a disposizione da
+distribuzioni binarie, la documentazione e i sorgenti. Questi ultimi sono
+gestiti con la tecnologia \emph{SVN} \cite{SVN}, messa a disposizione da
 \emph{Google} tramite il progetto \emph{Google Code} \cite{GCode} e sono rilasciati
 sotto la licenza \emph{GNU General Public License v3} \cite{GPLv3}.
 \\
@@ -282,7 +285,7 @@ Nel Capitolo 3 viene presentato il progetto software Blite-se. Dopo aver
 fornito una panoramica del progetto e dei principali moduli che lo compongono si
 presenta nel dettaglio l'architettura del motore di esecuzione, mettendo in
 evidenza il modello per le attività, la gestione del parallelismo e della
-comunicazione, l'implemetazione dei contesti, con la gestione delle
+comunicazione, l'implementazione dei contesti, con la gestione delle
 eccezioni e della compensazione.
 
 Il Capitolo 4 costituisce una panoramica delle funzionalità offerte da Blide e

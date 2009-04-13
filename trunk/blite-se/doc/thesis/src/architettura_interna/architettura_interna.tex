@@ -1,7 +1,7 @@
 \chapter{Blite-se}
 
 Come già precedentemente detto il software realizzato può essere distinto
-in due progetti a sè stanti: \emph{Blite-se} e \emph{Blide}. In questo capitolo
+in due progetti a se stanti: \emph{Blite-se} e \emph{Blide}. In questo capitolo
 si descrive il primo; sono presentati ad alto livello i diversi
 moduli con le loro funzionalità e in particolare per l'Engine, il modulo predisposto all'esecuzione dei programmi
 Blite, si descrive l'architettura in maniera dettagliata. Di questa si cerca di
@@ -10,6 +10,7 @@ mettere in luce il modello di esecuzione ideato, basato sul pattern
 come un componente che apporta il proprio contributo all'esecuzione dell'istanza di processo.
 
 \section{Progetto di un motore per l'orchestrazione}
+
 \label{sec:progmot}
 \begin{figure}[t]
 \begin{center}
@@ -24,7 +25,7 @@ e le loro dipendenze.}
 
 Blite-se (Blite Service Engine) è il progetto principale e implementa il
 linguaggio presentato nel capitolo precedente. Realizzare un linguaggio per
-l'orchestrazione di servizi è una attività complessa, che spazia in molteplici
+l'orchestrazione di servizi è un'attività complessa, che spazia in molteplici
 aree dello sviluppo software. Per questo motivo è fondamentale organizzare il
 progetto in moduli distinti che realizzino le diverse funzionalità in maniera
 indipendente e che interagiscano fra loro con interfacce ben definite,
@@ -39,10 +40,10 @@ necessarie:
   qui è definita la grammatica EBNF, secondo il formalismo di JJTree, da cui è 
   stato ricavato l'analizzatore sintattico. In questo modulo è realizzato anche
   il modello statico per i costrutti del linguaggio. Di fatto sono state
-  implemetate in maniera opportuna le classi i cui oggetti andranno a creare i
+  implementate in maniera opportuna le classi i cui oggetti andranno a creare i
   nodi dell'albero sintattico. Tali classi sono tutte discendenti della classe
-  \icode{BltDefBaseNode} che fornisce un interfaccia comune per accedere ai
-  rispettivi nodi padre e figli, inoltre fornisce il metodo
+  \icode{BltDefBaseNode} che fornisce un'interfaccia comune per accedere ai
+  rispettivi nodi padre e figli, inoltre fornisce il metodo:
 	\begin{lstlisting}
 		/** Accept the visitor. **/
 		public Object jjtAccept(BliteParserVisitor visitor, Object data);
@@ -67,8 +68,8 @@ necessarie:
 	tipo \icode{BltDefBaseNode} e nel caso specifico l'oggetto istanza della classe
 	\icode{BLTDEFCompilationUnit} che costituisce la radice dell'albero
 	rappresentante la struttura del programma Blite. Da osservare l'eccezione
-	\icode{ParseException} eventualmente sollevata dal metodo \icode{parse()}, con
-	essa è realizata la gestione degli errori lessicali e sintattici incontrati
+	\icode{ParseException} eventualmente sollevata dal metodo \icode{parse()}; con
+	essa è realizzata la gestione degli errori lessicali e sintattici incontrati
 	durante una compilazione. Dai suoi metodi è possibile risalire a tutte le
 	informazioni utili eventualmente per correggere l'errore, come: il token
 	corrente, i token attesi, la riga e la colonna a cui si è arrestata la
@@ -167,7 +168,7 @@ necessarie:
 	Le varie tipologie di Environment implementeranno in maniera opportuna tale
 	interfaccia in modo da supportare la tecnologia di comunicazione desiderata.
 	L'enviroment dopo aver creato le istanze della classe Engine imposterà in esse
-	l'oggetto che realizza l'opportuna implemetazione di
+	l'oggetto che realizza l'opportuna implementazione di
 	\icode{EngineChannel}. Il modulo dipende da \emph{Blite-se Definition Model}
 	per svolgere le funzionalità di compilazione e deploy, e ovviamente da
 	\emph{Blite-se Engine} per la realizzazione delle esecuzioni.
@@ -434,7 +435,7 @@ entità verranno descritte nelle sezioni successive}\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Factory per creare le opportune sotto classi che implemetano le
+\caption{Factory per creare le opportune sottoclassi che implementano le
 attività}
 \label{it:fact}
 \end{table}
@@ -1059,7 +1060,7 @@ dove \`e rappresentato il seguente scenario a runtime:
 \begin{center}
 \includegraphics
 {architettura_interna/dia/fault}
-\caption[Propagazione di una eccezione] {
+\caption[Propagazione di un'eccezione] {
    	Un'eccezione sollevata in un flusso di esecuzione produce la
    	terminazione di tutti i flussi paralleli e la conseguente messa in
    	esecuzione di Compensation Handler istallati e FaultHandler definiti nel
@@ -1105,7 +1106,7 @@ dell'interfaccia ExecutionContext.
 {architettura_interna/dia/cntxclass}
 \caption[ExecutionContext Class Diagram]{
    	\icode{ABaseContext} e le sue sottoclassi forniscono 
-   	diverse implemetazioni dell'interfaccia	\icode{ExecutionContext} }
+   	diverse implementazioni dell'interfaccia	\icode{ExecutionContext} }
    	\rule{7cm}{0.01cm}
   \label{fig:cntxclass}
 \end{center}
