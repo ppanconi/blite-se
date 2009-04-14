@@ -37,8 +37,8 @@ nell'ambito di XML e XML Schema e l'introduzione di WSDL \cite{WSDL}, linguaggio
 direttamente basato su questi standard, ha permesso la realizzazione di
 interfacce in cui si definiscono operazioni i cui parametri di input ed output
 sono formalmente tipati e la loro descrizione astrae completamente dalle
-tecnologie utilizzate per implementarle. Se WSDL rappresenta le interfacce, SOAP
-\cite{SOAP} e WSDL Binding \cite{WSDL} definiscono il modo in cui l'informazione
+tecnologie utilizzate per implementarle. Mentre WSDL rappresenta le interfacce,
+SOAP \cite{SOAP} e WSDL Binding \cite{WSDL} definiscono il modo in cui l'informazione
 che transita per tali interfacce viene strutturata e ``imbustata'' in messaggi. A
 questo punto non rimane altro che determinare il mezzo con cui inviare tali
 messaggi. E la scelta più ovvia non poteva che essere quella di utilizzare i
@@ -63,9 +63,9 @@ cominciasse ad utilizzarlo per definire un nuovo paradigma di programmazione
 e di sviluppo di applicazioni, in cui al concetto di servizio si dovesse
 inevitabilmente affiancare il concetto di stato (tutti sanno che per
 realizzare applicazioni poco più che banali è indispensabile mantenere uno
-stato). Tale paradigma è noto SOC (Service Oriented Computing) \cite{SOC1}
-\cite{WEBSERVICES}. In termini piuttosto sfumati, SOC racchiude tutte quelle attività tese alla
-definizione di un modello di sviluppo software basato sull'assemblaggio di componenti che possono essere
+stato). Tale paradigma è noto con il nome di SOC (Service Oriented Computing)
+\cite{SOC1} \cite{WEBSERVICES}. In pratica, SOC racchiude tutte quelle attività
+tese alla definizione di un modello di sviluppo software basato sull'assemblaggio di componenti che possono essere
 specificati tramite i formalismi dei servizi ma che possono eventualmente
 mantenere anche uno stato. WS-Addressing \cite{WS-Addressing}, per esempio, è
 una tecnologia che contribuisce alla definizione del concetto di stato all'interno degli standard
@@ -73,18 +73,17 @@ dei Web Service.
 
 In SOC, oltre al concetto fondamentale di servizio, confluiscono diverse
 metodologie per la realizzazione delle funzionalità più complesse tramite la
-composizione di funzionalità più semplici offerte dai servizi componenti.
-
-Per esempio, un approccio che sta avendo un discreto successo è quello
-identificato con il termine \emph{Business Process Oriented Approach}, secondo
-cui ogni attività aziendale\footnote{Il termine aziendale deve essere inteso in
-senso generale di organizzazione o di entità in cui più soggetti collaborano
-per il raggiungimento di un fine comune secondo regole e strategie condivise.} deve
+composizione di funzionalità più semplici offerte dai servizi componenti. Per
+esempio, un approccio che sta avendo un discreto successo è quello identificato
+con il termine \emph{Business Process Oriented Approach}, secondo cui ogni
+attività aziendale\footnote{Il termine aziendale deve essere inteso in senso
+generale di organizzazione o di entità in cui più soggetti collaborano per il
+raggiungimento di un fine comune secondo regole e strategie condivise.} deve
 avere un preciso obiettivo (per esempio, mettere a disposizione un prodotto o un
-servizio eventualmente anche solo per altre attività) e un ciclo di vita
-formale, secondo cui, ad un evento di inizio attività (istanziazione del
-processo), deve corrispondere un'evoluzione e un esito sempre individuabile
-come positivo o negativo.
+servizio eventualmente anche solo per altre attività) e un ciclo di vita formale,
+secondo cui, ad un evento di inizio attività (istanziazione del processo), deve
+corrispondere un'evoluzione e un esito sempre individuabile come positivo o
+negativo.
 
 Ogni attività è quindi un processo composto da una serie di passi, visti
 esternamente come unità atomiche, ma che in realtà possono racchiudere a loro
@@ -94,8 +93,8 @@ temporali. Le sottoattività utilizzate da un processo possono spaziare
 nell'intero dominio aziendale ed essere svolte sotto la responsabilità di diverse
 figure dell'organigramma societario. I tempi di evoluzione delle attività possono
 essere in generale fortemente variabili e dipendenti da innumerevoli fattori. In
-tal senso i processi, pur trovandosi spesso a garantire stringenti requisiti
-temporali, devono fare i conti con sottoattività particolarmente riluttanti a
+tal senso i processi, pur trovandosi spesso a dover garantire stringenti
+requisiti temporali, devono fare i conti con sottoattività particolarmente riluttanti a
 rispettare specifici vincoli temporali.
 
 % A livello informatico
@@ -112,8 +111,8 @@ dei flussi interni che per la realizzazione della comunicazione.
 % In particolare risulta critico la realizzazione su tempi lunghi e fortemente
 % variabili di transazioni aziedali () \ldots
 
-In pratica riguardo a BPEL risulta difficile, sia realizzarne implementazioni a
-partire dalle specifiche del linguaggio, sia utilizzare quest'ultime per
+In pratica riguardo a BPEL risulta difficile sia realizzarne implementazioni a
+partire dalle specifiche del linguaggio, sia utilizzare queste ultime per
 sviluppare applicazioni. Attualmente BPEL è specificato da documenti, scritti in
 linguaggio naturale, prodotto di un processo di standardizzazione supervisionato
 da Oasis \cite{OASISSite}. L'assenza di una semantica formale può far sì che si
@@ -121,8 +120,8 @@ creino dei fraintendimenti e che ci possano essere interpretazioni diverse del
 medesimo concetto, facendo sì che le implementazioni infine risultino
 incompatibili. Per esempio, possono risultare di difficile interpretazione la
 relazione fra le \emph{Multiple Start Activity} e il meccanismo di gestione dei
-conflitti nell'attribuzione dei messaggi alle diverse istanze di processo
-concorrenti di un servizio, o alcuni aspetti legati alle problematiche di
+conflitti nell'attribuzione dei messaggi alle diverse istanze concorrenti di
+un processo, o alcuni aspetti legati alle problematiche di
 terminazione delle attività e di compensazione.
 
 Il processo di realizzazione di applicazioni BPEL risulta difficile e fortemente
@@ -159,8 +158,8 @@ un'analisi di BPEL, fatta tramite un processo di astrazione e formalizzazione,
 il lavoro qui esposto vuole essere a sua volta un'analisi di tale processo, nel
 senso che ne vuole verificare la compatibilità e l'attinenza con le problematiche
 più concrete e tecnologiche presenti nell'ambito dell'orchestrazione di servizi.
-Di fatto il lavoro non è altro che un test critico di come i costrutti formali,
-utilizzati per fornire la semantica del linguaggio, possano essere realmente
+Di fatto il lavoro svolto rappresenta un test critico di come i costrutti
+formali, utilizzati per fornire la semantica del linguaggio, possano essere realmente
 implementati in scenari di software di produzione e che quindi continuino a
 mantenere un legame a doppio filo con il mondo delle tecnologie, da cui hanno
 tratto iniziale ispirazione. 
@@ -187,13 +186,13 @@ l'albero sintattico i cui nodi sono oggetti che espongono funzionalità
 specifiche, in base alla categoria sintattica rappresentata.
 
 In Blite-se è realizzato anche il motore (\emph{Engine}) per l'esecuzione dei
-processi secondo la semantica formale definita in \cite{LaPuTie1}. Tale parte
-software è stata progettata in riferimento a specifiche che tenessero il più
-possibile conto delle problematiche reali degli ambiti produttivi (efficienza,
-scalabilità, requisiti di memoria, ecc). \`E stato ideato inoltre, un modello di
-esecuzione basato sul pattern \emph{``Composite''} \cite{GANGo4}, secondo cui
-ogni attività è rappresentabile come un componente che apporta il proprio
-contributo all'esecuzione dell'istanza di processo. A partire dal modello
+processi secondo la semantica formale definita in \cite{LaPuTie1}. Tale
+componente software è stata progettata in riferimento a specifiche che tenessero
+il più possibile conto delle problematiche reali degli ambiti produttivi
+(efficienza, scalabilità, requisiti di memoria, ecc). \`E stato ideato inoltre,
+un modello di esecuzione basato sul pattern \emph{Composite} \cite{GANGo4},
+secondo cui ogni attività è rappresentabile come un componente che apporta il
+proprio contributo all'esecuzione dell'istanza di processo. A partire dal modello
 statico, a runtime viene costruito passo passo un \emph{Modello Dinamico},
 l'albero dei componenti/attività, e l'esecuzione procede tramite l'invocazione
 ricorsiva del metodo \icode{doActivity()} su tali camponenti. In sintesi, il
@@ -272,11 +271,11 @@ sotto la licenza \emph{GNU General Public License v3} \cite{GPLv3}.
 
 Dopo aver presentato una panoramica delle motivazioni e del lavoro da noi svolto
 andiamo a illustrare i contenuti di questa tesi. Nel Capitolo 2 viene introdotto
-il linguaggio BPEL per l'orchestrazione, partendo da una presentazione ad alto
-livello dei suoi costrutti caratteristici; successivamente viene presentato
+il linguaggio BPEL per l'orchestrazione di servizi, partendo da una
+presentazione ad alto livello dei suoi costrutti caratteristici; successivamente viene presentato
 Blite, fornendone sintassi e semantica operazionale.
-L'implementazione del compilatore necessita di una grammatica formale, e nella
-Sezione \ref{gram} vengono presentati i procedimenti che ci hanno portato ad
+L'implementazione del compilatore per Blite necessita di una grammatica formale,
+e nella Sezione \ref{gram} vengono presentati i procedimenti che ci hanno portato ad
 ottenerla, a partire dalla sintassi astratta definita in Sezione \ref{sec:blite}. Il
 capitolo si chiude con una sezione in cui vengono commentati alcuni aspetti
 della semantica rispetto alle problematiche d'implementazione.
@@ -288,9 +287,9 @@ evidenza il modello per le attività, la gestione del parallelismo e della
 comunicazione, l'implementazione dei contesti, con la gestione delle
 eccezioni e della compensazione.
 
-Il Capitolo 4 costituisce una panoramica delle funzionalità offerte da Blide e
+Il Capitolo 4 fornisce una panoramica delle funzionalità offerte da Blide e
 dalla sua interfaccia utente e si conclude con la presentazione di un semplice
 caso d'uso. 
 
-Il Capitolo 5 presenta un riepilogo critico del lavoro svolto e si delineano i
+Il Capitolo 5 presenta un riepilogo critico del lavoro svolto e si delinea i
 possibili sviluppi ulteriori.

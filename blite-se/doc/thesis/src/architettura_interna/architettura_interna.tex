@@ -54,7 +54,7 @@ necessarie:
   Questa dispone di due metodi statici\footnote{In JavaCC è stata usata
   l'opzione \textrm{STATIC = ``true''}, in questo modo il parser top-down a
   discesa ricorsiva è generato esclusivamente tramite metodi statici.
-  L'efficenza risulta aumentata ma ovviamente, vi può essere un
+  L'efficienza risulta aumentata ma ovviamente, vi può essere un
   unico compilatore per virtual machine e successive compilazioni devono
   prevedere una di fase di reinizializzazione.}:
 	\begin{lstlisting}	
@@ -97,7 +97,7 @@ necessarie:
   realizzare i test di verifica dell'implementazione dell'Engine\footnote{Nel
   progetto Local Environment è stata realizzata una \emph{Test Suite} basata su \emph{JUnit}
   in cui vengono verificate le attività e i costrutti del linguaggio con
-  test eseguiti nell'ambiente locale.}, e per allestire l'ambiente di escuzione
+  test eseguiti nell'ambiente locale.}, e per allestire l'ambiente di esecuzione
   di \emph{Blide}, strumento nato per fare prototipi e simulazioni di processi.
   
   A livello di Engine è definita e utilizzata la seguente interfaccia
@@ -162,7 +162,7 @@ necessarie:
 	forget''} ai più complessi, che necessitano un mantenimento dello stato.
 	Alla base di questo ci sono l'astrazione \icode{MessageContainer}, che
 	permette di raggruppare i messaggi applicativi con eventuali
-	metainformazioni, e il \icode{messageExchangeId}, che constitisce un
+	metainformazioni, e il \icode{messageExchangeId}, che costituisce un
 	identificativo univoco per la sessione corrente di comunicazione.
 	
 	Le varie tipologie di Environment implementeranno in maniera opportuna tale
@@ -296,8 +296,8 @@ caratteristiche fondamentali di un Engine, entriamo nel dettaglio del progetto
 dell'architettura. Nella realizzazione di questa abbiamo scelto di utilizzare
 il formalismo degli oggetti e delle classi secondo il consueto paradigma
 ``Object Oriented''. Inoltre abbiamo preso come fonte di
-ispirazione il ``Composite Pattern'' \cite{GANGo4} cercandone una trasposizione
-nella problematica dell'esecuzione di un programma Blite. In particolare
+ispirazione il pattern \emph{Composite} \cite{GANGo4} cercandone una
+trasposizione nella problematica dell'esecuzione di un programma Blite. In particolare
 l'astrazione di componente \`e stata applicata all'entità ``attività''. Come i
 componenti contribuiscono alla realizzazione di un documento o di una
 interfaccia utente, le singole attività contribuiscono allo svolgersi
@@ -618,6 +618,7 @@ relazioni che le coinvolgono.
 % EVENTI E COMUNICAZIONE
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Comunicazione ed eventi}
+\label{sec:comevent}
 Da quanto abbiamo già esposto risulta chiaro che l'esecuzione di un processo \`e
 caratterizzata dallo svolgersi di attività interne e l'accadere di eventi
 esterni di cui le attività possono essere in attesa. In generale si può
@@ -751,7 +752,7 @@ attività parallele fossero sequenzializzate, per esempio nel seguente modo:
 
 Per evitare questi scenari alquanto deprecabili sono attuabili due strategie.
 Una potrebbe essere quella di dotare l'Engine di una procedura temporizzata che
-ogni dato intervallo di tempo analizza la mappa degli eventi accaduti e risvegla
+ogni dato intervallo di tempo analizza la mappa degli eventi accaduti e risveglia
 gli eventuali FlowExecutor registrati in attesa di essi. In questo modo il
 ProcessManager sarebbe sollevato da quest'ultimo compito e la possibilità di
 avere la sequenzializzazione sopra descritta non sarebbe più un problema.
@@ -785,6 +786,7 @@ modo  si può pensare che le diverse istanze siano in competizione (``race'') su
 tali eventi nel limite di quelle che sono le regole di correlazione stabilite
 dal  linguaggio. Nel momento in cui è necessario accedere alle strutture dati
 condivise, una sezione critica può essere creata nel seguente modo:
+\label{cod:wait}
 \begin{lstlisting}
    	MessageContainer consumedMes = null;
 	InComingEventKey icek = 
@@ -828,7 +830,7 @@ sia eseguito da un solo thread alla volta, si conclude con il seguente codice:
 	}
 \end{lstlisting}
 in questo modo il processo di gestione dei messaggi in arrivo è bloccato. La
-nuova istanza \texttt{newInstance} riceverà notifica delle sue start acitivty
+nuova istanza \texttt{newInstance} riceverà notifica delle sue start activity
 della avvenuta attivazione e nel momento in cui tutte saranno attivate,
 sbloccherà il thread in attesa, e quindi tutto il processo di gestione dei
 messaggi in arrivo alla definizione di processo, tramite la seguente operazione:
@@ -898,10 +900,10 @@ comportamenti seguenti:
 
 Di fatto questo c'\`e sembrato il giusto compromesso fra una comunicazione
 sincrona (che del resto può sempre essere riprodotta) e una comunicazione puramente
-``fire-and-forget'' come specifcato nella sematica originale di Blite, in cui le
+``fire-and-forget'' come specificato nella semantica originale di Blite, in cui le
 istanze procedono i maniera totalmente svincolata senza poter fare nessuna ipotesi sull'esito della comunicazione. Inoltre questo
 modello di comunicazione \`e quello che meglio si adatta al binding su
-protocolli di trasporto tipo HTTP, in cui ad una richiesta c'e sempre una
+protocolli di trasporto tipo HTTP, in cui ad una richiesta c'è sempre una
 risposta del server che chiude la connessione. In HTTP una invocazione remota 
 secondo lo scema One-Way può essere implementata come segue:
 
@@ -1033,8 +1035,8 @@ nel medesimo contesto immediatamente contenente il contesto \texttt{c}''.}.
 
 Il verificarsi di un'eccezione, oltre a mettere in esecuzione le eventuali
 CompensationHandlerActivity e FaultHandlerActivity associate, ha un altro
-effetto: la terminazione di tutti i flussi ``fratelli'' o discendenti dei fratelli
-del flusso in cui si genera il fault. Per capire gli effetti prodotti dal
+effetto: la terminazione di tutti i flussi ``fratelli'' o discendenti dei
+fratelli del flusso in cui si genera il fault. Per capire gli effetti prodotti dal
 verificarsi di un'eccezione si faccia riferimento alla Figura \ref{fig:fault}
 dove \`e rappresentato il seguente scenario a runtime:
 
@@ -1083,7 +1085,7 @@ alla gestione dei contesti e delle eccezioni.
 
 L'entità principale designata per la realizzazione dei meccanismi esposti \`e
 stata individuata nel \icode{ExecutionContext}, la cui interfaccia, citata più
-volte nelle sezioni precedenti, è presetata nel Listato
+volte nelle sezioni precedenti, è presentata nel Listato
 \ref{lst:ExecutionContext}. In particolare si \`e visto che un oggetto conforme a
 tale interfaccia era presente nella segnatura del metodo
 \icode{makeRuntimeActivity()} della classe \icode{ActivityComponentFactory}.
@@ -1154,7 +1156,7 @@ Con questo metodo ha inizio la propagazione del fault.}\\
 
 
 \hline \small{\icode{boolean isInAFaultedBranch()}} & \small{Questo
-metodo sarà utilizzato da ongi attività per vedere se nella loro gerarchia di
+metodo sarà utilizzato da ogni attività per vedere se nella loro gerarchia di
 contesti ne sia presente uno su cui sia stata notificata un'eccezione. La
 gerarchia in questo caso sarà ispezionata dal contesto padre verso i
 predecessori. In tal caso, le attività dovranno collaborare per attuare la

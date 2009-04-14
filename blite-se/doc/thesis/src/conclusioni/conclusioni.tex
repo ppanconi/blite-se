@@ -53,37 +53,36 @@ contemporaneamente la ricezione sulla medesima porta, per cui diventa inutile
 valutare una priorità nell'attribuzione dei messaggi alle diverse istanze.
 
 Di fatto un'istanza di processo, nel momento in cui si trova nella condizione
-di poter consumare un messaggio , può stabilire se questo è a lei
-correlato semplicemente valutando la funzione booleana:
+di poter consumare un messaggio, può stabilire se questo è ad essa
+correlato semplicemente valutando la funzione booleana $\x{corr}(\xcorr,
+\xsigma, \xx, \xv)$ introdotta nella Sezione \ref{sec:semcor}.
 
-$$
-\begin{array}{c}
-\x{corr}(\xcorr, \xsigma, \xx, \xv	) =
-\left\{
-\begin{array}{l@{\hspace{2ex}}l}
-\\[-.50cm]
-false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} 
-\, \wedge \, \xv \neq \xsigma(\xx)
-\\[-.05cm] true & \textrm{altrimenti} \\
-\end{array}
-\right.
-\\[.7cm]
-%\xxnewmatch{\xcorr}{\xsigma}{\xv}{\xv} =
-%\emptyset \qquad
-\x{corr}(\xcorr, \xsigma, \arr{}, \arr{}) =
-true
-\\[.7cm]
-\prooftree
-\x{corr}(\xcorr, \xsigma, \xx_1, \xv_1) = b'
-\quad
-\x{corr}(\xcorr, \xsigma, \bar{\xx}_2, \bar{\xv}_2) = b''
-\justifies \
-\x{corr}(\xcorr, \xsigma, (\xx_1,\bar{\xx}_2), (\xv_1,\bar{\xv}_2)) =
-b' \wedge b''
-\endprooftree
-\\[.7cm]
-\end{array}
-$$
+% $$
+% \begin{array}{c}
+% \x{corr}(\xcorr, \xsigma, \xx, \xv	) =
+% \left\{
+% \begin{array}{l@{\hspace{2ex}}l}
+% \\[-.50cm]
+% false & \textrm{se}\ \xx \in \xcorr \, \wedge \, \xx \in \xdom{\xsigma} 
+% \, \wedge \, \xv \neq \xsigma(\xx)
+% \\[-.05cm] true & \textrm{altrimenti} \\
+% \end{array}
+% \right.
+% \\[.7cm]
+% \x{corr}(\xcorr, \xsigma, \arr{}, \arr{}) =
+% true
+% \\[.7cm]
+% \prooftree
+% \x{corr}(\xcorr, \xsigma, \xx_1, \xv_1) = b'
+% \quad
+% \x{corr}(\xcorr, \xsigma, \bar{\xx}_2, \bar{\xv}_2) = b''
+% \justifies \
+% \x{corr}(\xcorr, \xsigma, (\xx_1,\bar{\xx}_2), (\xv_1,\bar{\xv}_2)) =
+% b' \wedge b''
+% \endprooftree
+% \\[.7cm]
+% \end{array}
+% $$
 
 
 Se dal punto di vista dell'attribuzione dei messaggi alle istanze il problema
@@ -102,9 +101,9 @@ realizzare le multiple start activity è necessario implemetare un meccanismo di
 notifica da parte delle start activity di ricezione nei confronti delle istanze
 di processo e di quest'ultime nei confronti del \icode{ProcessManager}. Questo
 flusso d'informazione e l'utilizzo opportuno dei metodi per la sincronizzazione
-dei thread (si veda la Sezione \ref{sec:semcor}) permette di realizzare il comportamento
-specificato dalla semeatica di Blite e in particolare la correlazione e le
-multiple start activity.
+dei thread (si veda la Sezione \ref{sec:comevent} e in particolare il codice
+presentato a pagina \pageref{cod:wait}) permette di realizzare il comportamento
+specificato dalla semeatica di Blite e in particolare la correlazione e le multiple start activity.
 
 % Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
 % un'istanza in grado di correlare con un messaggio in arrivo ad una
@@ -215,11 +214,13 @@ Un approccio totalmente dinamico in fase di ricezione risulta anche possibile
 limitandosi ad una versione specifica del protocollo SOAP.
 
 Probabilmente risulta più facile realizzare un Environment capace di dialogare
-con un Enterprise Service Bus basato su JBI, in quanto tale standard è stato
-ideato appositamente per l'integrazione di \emph{Service Engine} e quindi
+con un Enterprise Service Bus basato su JBI \cite{JBI}, in quanto tale standard
+è stato ideato appositamente per l'integrazione di \emph{Service Engine} e quindi
 esistono, oltre ad una serie di API appositamente studiate, una buona
 documentazione e diversi esempi su come realizzare tale l'integrazione
-\cite{OPENESB}.
+Ad esempio il progetto \emph{Open nESB} \cite{OPENESB} può essere un valido
+punto di partenza per iniziare a sviluppare componenti software basati sullo
+standard JBI.
 \\
 
 Per quanto riguarda Blide l'attività potrebbe concentrarsi sull'apportare
