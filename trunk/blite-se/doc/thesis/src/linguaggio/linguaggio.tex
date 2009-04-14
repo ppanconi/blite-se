@@ -1,13 +1,15 @@
 \chapter{Linguaggi per l'orchestrazione}
 
-Questo capitolo offre una panoramica ad alto livello di BPEL, il
-linguaggio che è diventato lo standard per l'orchestrazione dei Servizi Web.
-Successivamente viene introdotto Blite, una variante semplificata di
-BPEL, che ne riproduce alcune delle funzionalità più caratteristiche al fine
-di definire una semantica formale. Tale semantica è presentata e commentata in
-dettaglio nella Sezione 2.2. Dalla sintassi astratta di Blite si ricava una
-grammatica in notazione EBNF utilizzata dopo per lo sviluppo di un compilatore,
-tale procedimento è presentato nella Sezione 2.3.
+Questo capitolo offre una panoramica ad alto livello di BPEL, il linguaggio che è
+diventato lo standard per l'orchestrazione dei Servizi Web. Successivamente viene
+introdotto Blite, una variante semplificata di BPEL, che ne riproduce alcune
+delle funzionalità più caratteristiche al fine di definire una semantica formale.
+Tale semantica è presentata e commentata in dettaglio nella Sezione 2.2. A
+partire dalla sintassi astratta di Blite si ricava una grammatica in notazione
+EBNF utilizzata successivamente per lo sviluppo di un compilatore; tale
+procedimento è presentato nella Sezione 2.3. Il capitolo si chiude con una
+disamina di alcuni aspetti della semantica rispetto a problematiche legate
+all'implementazione.
 
 \section{BPEL: uno standard per l'orchestrazione di Servizi Web}
 
@@ -2078,10 +2080,10 @@ e la sintassi delle espressioni logiche e aritmetiche.
 \label{sec:semcor}
 
 La semantica presentata in Sezione \ref{sec:blite} descrive il comportamento dei
-programmi Blite in modo molto elegante e sintetico. L'obiettivo è stato
-quello di creare un motore capace di eseguire i programmi producendo un
-comportamento equivalente a quello specificato, nel rispetto di specifiche
-tecniche che tenessero conto il più possibile di problematiche di: efficienza,
+programmi Blite in modo molto elegante e sintetico. L'obiettivo del lavoro di
+tesi è stato quello di creare un motore capace di eseguire i programmi
+producendo un comportamento equivalente a quello specificato, nel rispetto di specifiche
+tecniche che tenessero conto il più possibile di problematiche di efficienza,
 scalabilità e requisiti di memoria.
 
 Come vedremo nel capitolo seguente alla base dell'architettura software
@@ -2098,21 +2100,21 @@ realizzata, ci sono due componenti fondamentali:
 \end{itemize}
 
 Gli aspetti più critici nella realizzazione del comportamento specificato
-sono quelli di attribuire i messaggi alle diverse istanze e di discriminare se
-l'arrivo di un messaggio produca o meno la creazione di una nuova
-istanza (regole \rulelabel{$\x{com}$} e \rulelabel{$\x{new}$} di Tabella
+sono quelli legati all'attribuzione dei messaggi alle diverse
+istanze e alla decisione se l'arrivo di un messaggio produca o meno la creazione
+di una nuova istanza (regole \rulelabel{$\x{com}$} e \rulelabel{$\x{new}$} di Tabella
 \ref{tab:deploySOS}).
 
 In riferimento alla prima problematica, la semantica definisce un ordinamento
 fra tutte le istanze che \emph{contemporaneamente} attivano una ricezione su una
 determinata porta\footnote{Con il termine porta si intende la coppia $\langle
 \texttt{service-name}, \texttt{operation-name} \rangle$, essa identifica
-univocamente una funzionalità operazione nell'interfaccia associata ad una
-definizione di processo.} e, in base a tale ordinamento, si stabilisce
+univocamente una funzionalità nell'interfaccia associata ad una
+definizione di processo.} e, in base a tale ordinamento, stabilisce
 l'attribuzione del messaggio. Di fatto in un'architettura che
 usa una tecnologia di \emph{multithreading} per realizzare la non sequenzialità
 specificata dalla semantica di Blite, non ha molto senso parlare di attività di
-ricezione contemporaneamente attive su una porta. In pratica quando il
+ricezione contemporaneamente attive su una porta. In pratica, quando il
 flusso di esecuzione di un'istanza arriva ad eseguire una ricezione su una
 determinata porta, si deve poter decidere se un messaggio è
 destinabile a tale istanza solamente in base allo stato attuale dell'istanza
@@ -2129,7 +2131,7 @@ seguente procedura:
                       m := v
                       break iteration
     
-               if m is null start wainting on <p,o>
+               if m is null start waiting on <p,o>
                else 
                    consume m
                    continue execution
@@ -2140,7 +2142,7 @@ che restituisce un valore booleano, valuta se il messaggio \texttt{v} può esser
 base ai parametri attuali \texttt{x}, allo stato di memoria dell'istanza e al
 correlation set definito dal programmatore.
 
-In pratica tale funzione può essere ricavata, in riferimento alla funzione
+In pratica, tale funzione può essere ricavata, in riferimento alla funzione
 $\xxnewmatch{\xcorr}{\xsigma}{\bar{\xx}}{\bar{\xv}}$ definita in Sezione
 \ref{pag:match}, nel seguente modo:
 $$
@@ -2171,7 +2173,7 @@ b' \wedge b''
 \\[.7cm]
 \end{array}
 $$
-in cui $\xsigma$ rappresenta lo stato di memoria associato all'istanza e
+dove $\xsigma$ rappresenta lo stato di memoria associato all'istanza e
 $\xcorr$ il correlation set associato alla definizione di processo da cui
 l'istanza è ricavata.
 
@@ -2179,8 +2181,8 @@ Questa strategia risolve il problema della correlazione dei messaggi con
 le istanze di processo, producendo un comportamento equivalente a quello
 specificato dalla semantica formale di Blite. Si fa notare infatti che
 la semantica non risolve più conflitti rispetto all'implementazione realizzata,
-in quanto la regola \rulelabel{$\x{pass}$} porta ad attivare in modo indeterminato
-le attività di ricezione delle diverse istanze.
+in quanto la regola \rulelabel{$\x{pass}$} porta ad attivare in modo non
+deterministico le attività di ricezione delle diverse istanze.
 
 I concetti di \emph{grado di definizione} e di ordinamento delle istanze
 rispetto alla possibilità di consumare messaggi in arrivo, introdotti dalla
@@ -2284,7 +2286,7 @@ mai).
 
 \`E ovvio che questa tecnica non permetta di realizzare le multiple start
 activity, in cui una porta è contemporaneamente di creazione e di possibile
-correlazione e in generale produca comportamenti non conformi alla semantica
+correlazione, e in generale produca comportamenti non conformi alla semantica
 specificata. Invece, per ottenere tali comportamenti, compreso il caso delle
 multiple start activity, si deve fare in modo che il \icode{ProcessManager},
 all'arrivo di un messaggio $\xmsg{{\xp}}{\xo}{\bar{\xv}}$,  attui la seguente
@@ -2293,7 +2295,7 @@ procedura:
 On a new message v:
 
                put v in { messages on <p,o> } 
-               for each 'rcv <p> o x' wainting on <p,o>
+               for each 'rcv <p> o x' waiting on <p,o>
                    if cor(x, v) goto continue
 
                if <p,o> is a create port 
@@ -2305,18 +2307,18 @@ On a new message v:
 \end{verbatim}
 
 In pratica viene creata una nuova istanza solo se il messaggio è indirizzato a
-una porta di creazione, e non c'è alcuna attività di ricezione (fra tutte le
+una porta di creazione e non c'è alcuna attività di ricezione (fra tutte le
 varie istanze) in attesa su tale porta in grado correlare col messaggio. Inoltre
 si fa notare come la procedura di gestione dei nuovi messaggi, dopo aver creato
 una nuova istanza e averla messa in esecuzione, attenda che tutte le sue start
 activity si siano attivate, cioè si siano registrate in attesa sulle rispettive
 porte o abbiano consumato qualche messaggio. Solo dopo questo la procedura
 tornerà a gestire altri messaggi in arrivo. Così si realizza
-l'atomicità descritta dalla regola \rulelabel{(new)}, in cui in un solo passo si
+l'atomicità descritta dalla regola \rulelabel{new}, in cui in un solo passo si
 crea una nuova istanza e si attivano le attività di ricezione. 
 
-In questo si implementa la semantica delle multiple start activity secondo cui
-la correlazione ha priorità sulla creazione di istanze.
+In questo modo si implementa la semantica delle multiple start activity secondo
+cui la correlazione ha priorità sulla creazione di istanze.
 
 Queste osservazioni risulteranno più chiare dopo aver letto il Capitolo 4 in cui
 verrà presentata l'architettura e il modello di esecuzione dell'Engine. In questa
