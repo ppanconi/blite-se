@@ -4,8 +4,8 @@
 
 Realizzare un'implementazione del linguaggio ci ha permesso di analizzare
 approfonditamente la semantica formale definita per Blite e di capire quali
-aspetti di essa risultassero particolarmente critici in fase di implementazione,
-e più in generale ci ha permesso di fare alcune riflessioni su BPEL e
+aspetti di essa risultassero particolarmente critici in fase di implementazione
+e, più in generale, ci ha permesso di fare alcune riflessioni su BPEL e
 sul significato di alcune sue funzionalità.
 \\
 
@@ -16,7 +16,7 @@ l'orchestrazione di servizi, con una semantica rigorosa da cui sia possibile
 ricavare implementazioni coerenti. 
 
 In particolare abbiamo capito che un linguaggio per l'orchestrazione di servizi,
-come BPEL, risulta essere uno strumento molto complesso, e per questo
+come BPEL, risulta essere uno strumento molto complesso e per questo
 riuscirne a sintetizzare gli aspetti cruciali in una semantica formale è
 veramente un'attività delicata. Contemporaneamente, sviluppare un'
 implementazione di tale semantica, in rispetto dei requisiti che ci possono
@@ -39,11 +39,10 @@ iterativamente fino al raggiungimento di un accettabile grado di funzionalità.
 % comunicazione dell'informazione.
 
 %Per esempio 
-Un punto molto critico in cui la specifica della semantica è
-risultata particolarmente lontana dalle soluzioni implementative è stato quello
+Un punto molto critico dell'implementazione della semantica formale è stato quello
 in cui essa definisce la correlazione dei messaggi con le diverse istanze di
 processo e risolve il problema delle \emph{multiple start activity}. In
-particolare la sematica di Blite specifica tale comportamento in maniera molto
+particolare la semantica di Blite specifica tale comportamento in maniera molto
 brillante e con un formalismo estremamente sintetico ed efficace, ma che mal
 si presta a guidare lo sviluppo del software. 
 
@@ -93,17 +92,18 @@ ricezione in base alle informazioni di cui dispone in quel momento.
 
 In generale si potrebbe pensare di risolvere il problema semplicemente a livello
 sintattico\footnote{La soluzione può sembrare ingenua, ma per esempio è ciò che
-di fatto fa Oralce Process Manager.}, rendendo distinguibili le porte di
+di fatto fa Oracle Process Manager.}, rendendo distinguibili le porte di
 ricezione su cui vengono create le istanze (\emph{create port}). \`E ovvio che
 questa tecnica non permette di realizzare le multiple start activity, in cui una
 porta è contemporaneamente di creazione e di possibile correlazione. Per
-realizzare le multiple start activity è necessario implemetare un meccanismo di
+realizzare le multiple start activity è necessario implementare un meccanismo di
 notifica da parte delle start activity di ricezione nei confronti delle istanze
 di processo e di quest'ultime nei confronti del \icode{ProcessManager}. Questo
 flusso d'informazione e l'utilizzo opportuno dei metodi per la sincronizzazione
 dei thread (si veda la Sezione \ref{sec:comevent} e in particolare il codice
 presentato a pagina \pageref{cod:wait}) permette di realizzare il comportamento
-specificato dalla semeatica di Blite e in particolare la correlazione e le multiple start activity.
+specificato dalla semantica di Blite, in particolare la correlazione e le
+multiple start activity.
 
 % Con questa informazione il \icode{Process Manager} può sapere se esiste o meno
 % un'istanza in grado di correlare con un messaggio in arrivo ad una
@@ -119,10 +119,10 @@ tutto tale comportamento. Inoltre diversi processi di sviluppo possono attuare
 strategie di implementazione tra loro completamente diversi, aumentando di fatto
 la probabilità di difformità.
 
-In tal senso speriamo che questa nostra esperienza e queste osservazioni
+In tal senso speriamo che questa esperienza e queste osservazioni
 aiutino ad affiancare alla semantica attuale una versione, in cui i formalismi e
 le strategie di specifica siano più in linea con le necessità di sviluppo che
-abbiamo incontrato e che le soluzioni da noi ideate possano in qualche modo
+abbiamo incontrato e che le soluzioni ideate possano in qualche modo
 essere d'ispirazione.
   
 \section{Sviluppi futuri}
@@ -140,10 +140,10 @@ essenzialmente due:
 Per quanto riguarda il primo punto, come già più volte detto, le possibilità
 sono molteplici. 
 
-Un primo passo molto semplice potrebbe essere quello di creare un Environmet
+Un primo passo molto semplice potrebbe essere quello di creare un Environment
 che supporti la comunicazione remota fra programmi Blite. In questo caso si
 potrebbe utilizzare una tecnologia nativa per implementare la comunicazione. Per
-esempio utilizzando le socket e la Java Object Serialization si potrebbe di
+esempio, utilizzando le socket e la Java Object Serialization si potrebbe di
 fatto scambiare in rete gli oggetti attualmente utilizzati dal Local
 Environment e avere quindi la possibilità di
 distribuire i Deployment Blite su diversi nodi di rete. Ovviamente per poter
@@ -166,8 +166,8 @@ Sicuramente molto più interessante sarebbe poter far dialogare i nostri program
 Blite con altri tipi di servizi definiti con linguaggi e tecnologie diverse,
 primi fra tutti i Web Service. Per far questo la cosa fondamentale è creare
 un meccanismo che relazioni il codice Blite alle definizioni WSDL. In pratica
-serve da una parte ricavare una definizione dell'interfaccia del processo Blite,
-e dall'altra associare le operazioni d'invocazione ad alcune definizioni di
+serve, da una parte ricavare una definizione dell'interfaccia del processo
+Blite e dall'altra associare le operazioni d'invocazione ad alcune definizioni di
 servizi preesistenti.
 
 Si potrebbe pensare di realizzare un tool \texttt{blite2WSDL} che, preso in

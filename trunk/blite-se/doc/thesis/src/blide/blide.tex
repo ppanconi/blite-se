@@ -1,7 +1,7 @@
 \chapter{Blide}
 
 Questo capitolo presenta \emph{Blide} (Blite Integrated Development
-Environment) un strumento che racchiude un ambiente di esecuzione locale e
+Environment) uno strumento che racchiude un ambiente di esecuzione locale e
 fornisce un'interfaccia grafica che permette di svolgere in maniera integrata
 tutte le operazioni legate allo sviluppo di programmi Blite. 
 % Nella prima parte
@@ -14,7 +14,7 @@ un esempio presentato nella specifica di BPEL 1.1 \cite{BPEL10Spec}.
 
 \section{Un IDE per Blite}
 
-Per verificare se uno strumento è funzionale, la cosa migliore da fare
+Per verificare se uno strumento è funzionale la cosa migliore da fare
 è provarlo. In tal senso per verificare se il linguaggio e il motore di
 esecuzione realizzati risultino veramente utilizzabili è stato sviluppato un
 vero e proprio IDE che permetta di scrivere rapidamente e testare, tramite
@@ -52,8 +52,8 @@ Per una presentazione approfondita di NetBeans Platform si consulti
 \end{figure}
 
 In Figura \ref{fig:blide1} è presentata l'interfaccia di Blide al primo avvio. 
-Oltre alle consuete barre dei menù e dei pulsanti posizionati in alto
-l'applicazione presenta quattro aree distinte
+Oltre alle consuete barre dei menù e dei pulsanti posizionati in alto,
+l'applicazione presenta quattro aree distinte:
 
 \begin{enumerate}
   \item Un pannello identificato dall'etichetta \emph{``Favorites''} che
@@ -105,9 +105,9 @@ definizioni presenti nel file sono disponibili i modelli statici.}\\
 \end{center}
 \end{table}
 
-Abbiamo detto che questa area permette di accedere al filesystem, in realtà
+Abbiamo detto che quest'area permette di accedere al filesystem, in realtà
 non offre un'unica visione dell'albero come i consueti file manager, ma
-permette in pratica di visualizzare direttamente più sotto alberi del
+permette in pratica di visualizzare direttamente più sotto-alberi del
 filesystem. Di fatto l'utente può selezionare un direcotry e con la funzione \emph{``Add to
 Favorites\ldots''} aggiungere tale directory, con tutto il suo sotto albero,
 come una nuova radice che compare direttamente nel pannello. In questo modo l'utente
@@ -223,7 +223,7 @@ icone presentate nell'interfaccia.
 
 \subsubsection*{Editing e compilazione del codice Blite}
 Facendo doppio click, o usando l'azione contestuale \emph{``Open''}, su un nodo
-degli alberi di Favorites rappresentate un file Blite, si apre un pannello di
+degli alberi di Favorites rappresentante un file Blite, si apre un pannello di
 editing nell'opportuna sezione dell'interfaccia grafica. 
 
 Per creare un nuovo file invece si devono eseguire i seguenti passi:
@@ -241,7 +241,7 @@ Per creare un nuovo file invece si devono eseguire i seguenti passi:
 \begin{enumerate}
   \item Creare un file vuoto, selezionando la voce di menù \emph{``Empty
   File''}. In questo caso si aprirà una finestra in cui l'utente potrà digitare
-  il nome del nuovo file comprensivo dell'estenzione \texttt{.blt}.
+  il nome del nuovo file comprensivo dell'estensione \texttt{.blt}.
   \item Utilizzare un file di esempio da cui iniziare a
   sviluppare il proprio programma Blite scegliendo la voce \emph{``All
   Templates \ldots''}. In questo caso tramite un ``Wizard'' l'utente potrà
@@ -257,22 +257,22 @@ disposizione le funzionalità specifiche di:
 \begin{itemize}
   \item \emph{Syntax Highlight}: Tramite la grammatica formale, presentata
   nel Capitolo 2,  è stato possibile realizzare una tecnologia capace di 
-  riconoscere la sintassi Blite e evidenziare in maniera opportuna le parole
+  riconoscere la sintassi Blite ed evidenziare in maniera opportuna le parole
   riservate  e i costrutti specifici del linguaggio. Tale tecnologia si basa
-  sul progetto \emph{``Generic Languages Framework (GLF)''} [GLFSite], che mette
-  a disposizione un modulo per NetBeans Platform con cui è possibile sviluppare 
+  sul progetto \emph{``Generic Languages Framework (GLF)''} \cite{GLFSite}, che
+  mette a disposizione un modulo per NetBeans Platform con cui è possibile sviluppare 
   il supporto ad un linguaggio di programmazione all'interno delle proprie 
   applicazioni.
   
   \item \emph{Autocompletamento}: L'editor dei file Blite assistono
   l'utente nella scrittura del codice andando a completare automaticamente
   alcune parti del codice. In particolare l'editor inserisce automaticamente i
-  delimitatori di chiusura dei blocchi. Per esempio all'utente basterà digitare
+  delimitatori di chiusura dei blocchi. Per esempio, all'utente basterà digitare
   la stringa \texttt{seq} e il sistema inserirà automaticamente la chiusura
   inserendo il corrispettivo \texttt{qes}. Inoltre anche le operazioni di
   invocazione e ricezione sono completate automaticamente, digitando per
   esempio semplicemente la stringa \texttt{rcv} l'utente si troverà a
-  disposizione l'intera struttura della operazione di ricezione come: 
+  disposizione l'intera struttura dell'operazione di ricezione come: 
   \verb#rcv<"on_me"> operation(x)#, e in questa potrà modificare
   le parti necessarie.
   
@@ -284,12 +284,12 @@ dotate di delimitatori di blocco. Con il supporto dell'editor tale
 appesantimento sintattico non verrà avvertito dal programmatore.
   
 In Figura \ref{fig:blideEditor} è raffigurato un editor con il sorgente Blite in
-cui sono evidenzite tramite colori e font specifici le parole riservate e i costrutti
-del linguaggio.
+cui sono evidenziate tramite colori e font specifici le parole riservate e i
+costrutti del linguaggio.
 	
 La compilazione del file visualizzato nell'editor attualmente attivo, come
 detto, può essere eseguita con l'opportuno pulsante nella Tool Bar. All'utente
-verrà notificato l'esito della compilazione nell'aria in basso
+verrà notificato l'esito della compilazione nell'area in basso
 dell'interfaccia grafica identificata con l'etichetta \emph{``Output''}. In caso di
 errore tale area riporterà il messaggio opportuno e l'utente potrà direttamente
 fare click su di esso per posizionare automaticamente il cursore dell'editor in
@@ -366,7 +366,7 @@ ogni definizione sono visualizzate le istanze eseguite o in esecuzione.}
 
 In Figura \ref{fig:blidEngines} è presentato l'albero dei Local Engines.
 Come si può osservare fra le definizioni istallate negli Engine, si può
-distinguere le così dette \emph{Ready to Run Instancess}, da queste l'utente
+distinguere le cosiddette \emph{Ready-to-Run Instances}, da queste l'utente
 può avviare direttamente delle istanze tramite l'operazione contestuale
 \emph{``Run''}, o tramite l'opportuno pulsante posizionato nella Tool Bar.
 
@@ -391,7 +391,7 @@ si trovano nei livelli dell'albero dei Local Engines.
 
 \hline
 \parbox[c][1.8cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/defnodeRun}} 
-& Ready to Run Instance.\\
+& Ready-to-Run Instance.\\
 
 \hline
 \parbox[c][1.5cm][c]{0.7cm}{\includegraphics[scale=1]{blide/dia/instdef}}
@@ -420,7 +420,7 @@ nell'albero Local Engines.}
 
 Abbiamo visto come l'utente possa scrivere i propri programmi Blite, istallarli
 ed eseguirli all'interno di un Local Environment. L'esecuzione viene avviata
-facendo partire una definizione di tipo \emph{Ready to Run Instance}, da
+facendo partire una definizione di tipo \emph{Ready-to-Run Instance}, da
 questa verrà creata immediatamente un'istanza che probabilmente, invocando le
 porte di start activity di altre definizioni di processo, provocherà la
 creazione di altre istanze. Per esempio si consideri il seguente caso:
@@ -436,7 +436,7 @@ creazione di altre istanze. Per esempio si consideri il seguente caso:
 \end{center}
 \vspace{0.5cm}
 in cui si hanno due Engine: \texttt{faulthandler.blt:1} con la definizione
-\texttt{Definition 1} e \texttt{faulthandler.blt:2} con la \emph{Ready to Run
+\texttt{Definition 1} e \texttt{faulthandler.blt:2} con la \emph{Ready-to-Run
 Instance} \texttt{Definition 1}. Quest'ultima può essere messa in esecuzione
 direttamente dall'utente facendo click con il tasto destro e selezionando dal
 menù contestuale l'azione \emph{``Run''}. A questo punto come si vede dalla
@@ -444,14 +444,14 @@ figura a destra vengono generate due istanze; la Ready to Run Instance ha
 provocato la creazione di un'istanza della definizione di processo istallata su
 \texttt{faulthandler.blt:1}.
 
-Già dalla rappresentazione delle istanze nell'albero Local Engines si ha una
-informazione sull'esito della loro esecuzione. Come precedentemente detto
+Già dalla rappresentazione delle istanze nell'albero Local Engines si ha
+un'informazione sull'esito della loro esecuzione. Come precedentemente detto
 le icone riportano graficamente il fatto che un'istanza abbia concluso con
-esito positivo o meno la propria elaborazione. 
+esito positivo o meno la propria elaborazione.
 
-All'utente viene data inoltre, la possibilità di visualizzare il flusso
+All'utente viene data inoltre la possibilità di visualizzare il flusso
 completo di esecuzione di un'istanza. Facendo doppio click sul nodo
-dell'istanza si apre, nella zona dedicata agli editor, un pannello
+dell'istanza, si apre, nella zona dedicata agli editor, un pannello
 che propone una rappresentazione grafica dell'esecuzione della stessa. Tale
 pannello viene di seguito identificato con il termine \emph{Monitor View}.
 
@@ -482,10 +482,10 @@ questo modo è possibile visualizzare in un'unica rappresentazione grafica
 l'interazione di più istanze di processo che nel loro ciclo di vita si sono
 scambiate messaggi. In Figura \ref{fig:blideMonitor1} è rappresentato il
 Monitor View con la rappresentazione dell'esecuzione di due istanze generate
-dal codice di Figura \ref{fig:blideMonitorCode}. Si noti come la Ready to Run
+dal codice di Figura \ref{fig:blideMonitorCode}. Si noti come la Ready-to-Run
 Instance tramite la prima invocazione produca la creazione dell'istanza
-derivante dalla definizione di processo, quest'ultima con una successiva
-invocazione risponde con un messaggio di correlazione. Si osservi inoltre come
+derivante dalla definizione di processo, quest'ultima, con una successiva
+invocazione, risponde con un messaggio di correlazione. Si osservi inoltre come
 l'istanza di destra concluda con successo la sua esecuzione, in quanto
 l'eccezione sollevata è gestita in un Fault Handler (è il Fault Handler stesso
 che esegue l'invocazione di risposta). Quella di sinistra invece fallisce poiché
@@ -493,14 +493,14 @@ l'eccezione sollevata non è gestita da alcun Fault Handler e la stessa produce
 la terminazione del ramo parallelo che era fermo in attesa di ricevere un
 messaggio. 
 
-A prima vista potrebbe sorpredere la presenza della seconda Throw (racchiusa
+A prima vista potrebbe sorprendere la presenza della seconda Throw (racchiusa
 dal rettangolo tratteggiato di rosso) nell'istanza fallita, in quanto non
 sembrerebbe prevista dal codice. In realtà essa non è altro che l'attività
 Throw prevista dal Default Fault Handler (si veda la Sezione \ref{defHandelr}).
 C'è sembrato che la scelta migliore per rendere la rappresentazione grafica più chiara possibile fosse
 quella di rappresentare esplicitamente i Default Fault Handler, in quanto
 condizionano fortemente il flusso di esecuzione, e di nascondere al contrario i
-Default Compensation Handler (Empty Activity) in quanto del tutto ininfluenti.
+Default Compensation Handler (Empty Activity), in quanto del tutto ininfluenti.
 \\
 
 Concludiamo questa sezione dando una panoramica dei costrutti grafici utilizzati
@@ -522,8 +522,8 @@ esecuzione; verde, completata con successo; rosso, fallita.}\\
 \parbox[c][3.2cm][c]{0.2 \textwidth}
 {\includegraphics[scale=0.80]{blide/dia/BlideInv}} &
 \parbox[c][3.2cm][c]{0.6 \textwidth}{Le attività di base (\emph{Basic
-Activity}), sono rappresentate come dei quadrati con all'interno una opportuna
-icona la cui grafica rimanda alla semantica della attività.}\\
+Activity}), sono rappresentate come dei quadrati con all'interno un'opportuna
+icona, la cui grafica rimanda alla semantica della attività.}\\
 \end{tabular}
 
 \begin{tabular}{c c}
@@ -577,7 +577,7 @@ la disposizione orizzontale delle attività di ricezione unite dal simbolo +.}\\
 \parbox[c][3.5cm][c]{0.6 \textwidth}{La valutazione della scelta condizionata
 è rappresentata dall'icona a sinistra. Nel caso in cui la condizione di test
 è valutata a false, l'icona ha contorno rosso (come nell'immagine
-riportata), viceversa, se valuta a true ha contorno verde.}\\
+riportata); viceversa, se valuta a true, ha contorno verde.}\\
 \end{tabular}
 
 \begin{tabular}{c c}
@@ -651,8 +651,8 @@ come attività di creazione delle istanze, in cui la ricezione è fatta tramite 
 partner link bidirezionale, in cui la locazione del richiedente è resa dinamica
 tramite l'identificativo \texttt{cust}. I valori ricevuti rappresentano
 rispettivamente: \texttt{id}, l'identificativo dell'ordine (già introdotto e
-utilizzato per correlare la comunicazione), \texttt{c}, un valore booleano che
-discrimina fra le due modalità di invio degli articoli, \texttt{items}, un
+utilizzato per correlare la comunicazione); \texttt{c}, un valore booleano che
+discrimina fra le due modalità di invio degli articoli; \texttt{items}, un
 intero che rappresenta il numero degli articoli nell'ordine.
 
 Se \texttt{c} ha il valore \texttt{true} il processo prova ad inviare tutti gli
@@ -749,7 +749,7 @@ In questo, come precedentemente è stato fatto osservare, verrà eseguito
 il compensation handler del sottoscope completato,
 revocando il pagamento degli articoli non inviati.
 Poiché lo scope che gestisce l'eccezione definisce un
-faulthandler, questo verrà eseguito subito dopo il compesation handler,
+faulthandler, questo verrà eseguito subito dopo il compensation handler,
 comunicando così al client l'errore.
 
 Se le politiche e le disponibilità del magazzino sono tali che, anche
@@ -779,7 +779,7 @@ come: \emph{All} e \emph{Dif}.
 
 Il codice è abbastanza semplice ed intuibile. In entrambi i casi i processi 
 eseguono l'inizializzazione preliminare delle variabili utilizzate, in
-particolare: alla variabile \texttt{id}, è assegnato il valore
+particolare: alla variabile \texttt{id} è assegnato il valore
 identificativo dell'ordine, tale variabile è anche utilizzata per realizzare la
 correlazione, alla variabile \texttt{c} viene assegnato un valore booleano per
 discriminare la tipologia di invio articoli richiesta, alla variabile
@@ -798,9 +798,9 @@ $$
 	\verb#inv<"ship", "cust-dif"> req(id, c, items)#
 $$
 
-A questo punto i comportamenti dei due client si differiscono in base alla
+A questo punto i comportamenti dei due client differiscono in base alla
 tipologia di invio articoli richiesta. In particolare All espone allo Shipping Service
-semplicemente la scelta fra le due operazioni \texttt{notice} ed \texttt{err}
+semplicemente la scelta fra le due operazioni \texttt{notice} ed \texttt{err},
 tramite la seguente Pick Activity:
 \begin{verbatim}
       pck
@@ -919,7 +919,7 @@ tale messaggio di errore, termina forzatamente la propria esecuzione.
 \begin{center}
   \includegraphics[scale=0.90,clip]{blide/dia/Sim4}
    \caption[Blide, simulazione 4]{Il processo di spedizione differita fallisce,
-   il compesation e il fault handler sono eseguiti in un Proteced Scope
+   il compensation e il fault handler sono eseguiti in un Proteced Scope
    (rettangolo tratteggiato di rosso).}
   \label{fig:Sim4}
 \end{center}

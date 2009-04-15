@@ -596,7 +596,7 @@ ricezioni non siano condivisi fra diversi deployment. In questo modo ogni
 definizione di processo avrà i propri nomi di servizio univoci e dato un nome
 sarà sempre possibile individuare un deployment specifico.
 
-In seguito, nella definizione della semantica, si farà uso della notazione
+In seguito, si farà uso della notazione
 $\bar{\cdot}$, per denotare tuple di valori o variabili, $\bar{\xx}$ può
 essere considerata l'abbreviazione di $\arr{\xx_1,
 \ldots, \xx_h}$ (con $h \geq 0$). L'ulteriore notazione $\tilde{\cdot}$
@@ -1185,12 +1185,16 @@ Commentiamo ora le regole di Tabella \ref{tab:allSOS}.
   contesti padre i loro compensation handler per un'eventuale successiva
   compensazione. Il contesto padre colleziona in sequenza i compensation halder
   di contesti figli completati \rulelabel{$\xdl_3$}. Questa
-  semantica, differentemente dalla specifica informale di BPEL, prevede che i
-  compensation handler siano mantenuti attraverso un solo grado di parentela
-  nella gerarchia dei contesti. Difatti un contesto completato istalla nel suo
-  padre solo il suo compensation handler e non quelli istallati dai suoi figli.
-  Una semantica alternativa poteva essere:
-  $$
+  semantica, differentemente dalle ultime specifiche informali di BPEL, prevede
+  che i compensation handler siano mantenuti attraverso un solo grado di parentela
+  nella gerarchia dei contesti\footnote{Un punto abbastanza discusso, nelle
+  prime specifiche di BPEL è stato il meccanismo di realizzazione della
+  compensazione. Il modello proposto dalla semantica di Blite non vuole essere
+  una semplificazione, ma riprodurre la linea di pensiero secondo cui la
+  compensazione di un contesto esegue ogni azione necessaria ad annulare
+  tutti gli effetti del contesto stesso, comprese quindi le azioni svolte dai
+  sotto-contesti.}. Difatti un contesto completato istalla nel suo padre solo il
+  suo compensation handler e non quelli istallati dai suoi figli. Una semantica alternativa poteva essere: $$
   \xinstnostate{\xsigma}{\xscope{\xskip}{\xs_f}{\xs_c}{\xs_d}}
 \bpeltsarrow{\xdonel{\xs_d;\xs_c}}
 \xinstnostate{\xsigma}{\xskip} 
