@@ -104,5 +104,7 @@ public abstract class ActivityComponentBase implements ActivityComponent {
         return getContext().getProcessInstance();
     }
 
-    
+    public int getNumberOfChildDef() {
+        return node.jjtGetNumChildren();
+    }
 }
