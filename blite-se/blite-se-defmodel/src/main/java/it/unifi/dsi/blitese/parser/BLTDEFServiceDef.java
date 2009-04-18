@@ -2,7 +2,9 @@
 
 package it.unifi.dsi.blitese.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BLTDEFServiceDef extends AServiceElement {
   public BLTDEFServiceDef(int id) {
@@ -22,11 +24,15 @@ public class BLTDEFServiceDef extends AServiceElement {
 //added code start here ////////////////////////////////////////////////////////
   
     //map to mark the create instances recive
-    private HashMap<String, Object> mPortIdCreate = new HashMap<String, Object>();   
-    
+    private HashMap<String, BLTDEFReceiveActivity> mPortIdCreate = new HashMap<String, BLTDEFReceiveActivity>();
+    private List<BLTDEFReceiveActivity> mAllCreateReceive = new ArrayList<BLTDEFReceiveActivity>();
+
     public boolean markAsCreateInstance(BLTDEFReceiveActivity receiveActivity) {
         
         String portId = receiveActivity.getPortId();
+        receiveActivity.setCreate(true);
+        mAllCreateReceive.add(receiveActivity);
+        
         return null == mPortIdCreate.put(portId, receiveActivity);
         
     }
@@ -35,6 +41,12 @@ public class BLTDEFServiceDef extends AServiceElement {
     public boolean isCreateInstancePort(String portId) {
         return null != mPortIdCreate.get(portId);
     }
-    
+
+    @Override
+    public List<BLTDEFReceiveActivity> getMAllCreateReceive() {
+        return mAllCreateReceive;
+    }
+
+
     
 }
