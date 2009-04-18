@@ -102,6 +102,10 @@ public abstract class AServiceElement extends SimpleNode {
         return false;
     }
 
+    public List<BLTDEFReceiveActivity> getMAllCreateReceive() {
+        return new ArrayList<BLTDEFReceiveActivity>(0);
+    }
+
     public Set<String> getCorrelationSet() {
         return correlationSet;
     }

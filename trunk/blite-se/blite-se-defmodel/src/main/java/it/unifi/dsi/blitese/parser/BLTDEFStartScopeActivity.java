@@ -2,7 +2,10 @@
 
 package it.unifi.dsi.blitese.parser;
 
-public class BLTDEFStartScopeActivity extends AScope {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BLTDEFStartScopeActivity extends AScope implements StartActivityInterface {
   public BLTDEFStartScopeActivity(int id) {
     super(id);
   }
@@ -16,4 +19,22 @@ public class BLTDEFStartScopeActivity extends AScope {
   public Object jjtAccept(BliteParserVisitor visitor, Object data) {
     return visitor.visit(this, data);
   }
+
+//added code start here ////////////////////////////////////////////////////////
+
+    private List<String> startPorts = new ArrayList<String>();
+
+    public List<String> provideStartPorts() {
+        return startPorts;
+    }
+
+    public void addStartPorts(List<String> ports) {
+        for (String portId : ports) {
+            startPorts.add(portId);
+        }
+    }
+
+    public void addStartPort(String port) {
+        startPorts.add(port);
+    }
 }

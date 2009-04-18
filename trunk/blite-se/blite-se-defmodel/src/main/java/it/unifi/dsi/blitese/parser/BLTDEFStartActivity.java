@@ -2,7 +2,10 @@
 
 package it.unifi.dsi.blitese.parser;
 
-public class BLTDEFStartActivity extends BLTDEFActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BLTDEFStartActivity extends BLTDEFActivity implements StartActivityInterface{
   public BLTDEFStartActivity(int id) {
     super(id);
   }
@@ -16,4 +19,23 @@ public class BLTDEFStartActivity extends BLTDEFActivity {
   public Object jjtAccept(BliteParserVisitor visitor, Object data) {
     return visitor.visit(this, data);
   }
+
+
+  //added code start here ////////////////////////////////////////////////////////
+
+    private List<String> startPorts = new ArrayList<String>();
+
+    public List<String> provideStartPorts() {
+        return startPorts;
+    }
+
+    public void addStartPorts(List<String> ports) {
+        for (String portId : ports) {
+            startPorts.add(portId);
+        }
+    }
+
+    public void addStartPort(String port) {
+        startPorts.add(port);
+    }
 }

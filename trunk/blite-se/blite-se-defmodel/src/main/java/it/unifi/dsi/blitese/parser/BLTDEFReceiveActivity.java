@@ -22,6 +22,7 @@ public class BLTDEFReceiveActivity extends SimpleNode {
     private BLTDEFRecPartners recPartners;
     private BLTDEFOperationId operation;
     private BLTDEFRecParams params;
+    private boolean create;
     
     public BLTDEFRecPartners getPartners() {
         return recPartners;
@@ -46,7 +47,16 @@ public class BLTDEFReceiveActivity extends SimpleNode {
     public void setParams(BLTDEFRecParams params) {
         this.params = params;
     }
-    
+
+    public boolean isCreate() {
+        return create;
+    }
+
+    public void setCreate(boolean create) {
+        this.create = create;
+    }
+
+
     public String getPortId() {
         return makePortId(getPartners().getServiceName(), getOperation().getName());
     }
@@ -56,4 +66,6 @@ public class BLTDEFReceiveActivity extends SimpleNode {
         return serviceName + "/" + operationName;
         
     }
+
+
 }

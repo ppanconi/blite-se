@@ -920,7 +920,34 @@ void Scope() :
     }
 }
 
-void StartScopeActivity() :
+BLTDEFStartActivity StartActivity() :
+{
+    BLTDEFReceiveActivity createRecive = null;
+    StartActivityInterface me = (StartActivityInterface) jjtThis;
+}
+{
+  (
+      createRecive = ReceiveActivity()
+            {
+              if (createRecive != null) {
+                markReciveAsCreateInst(createRecive);
+                me.addStartPort(createRecive.getPortId());
+              }
+            }
+    |
+      StartSequenceActivity()
+    |
+      StartScopeActivity()
+    |
+      StartFlowActivity()
+    |
+      StartPickActivity()
+  )
+  { return jjtThis; }
+}
+
+
+BLTDEFStartScopeActivity StartScopeActivity() :
 {
     BLTDEFActivity mainActivity = null;
     BLTDEFActivity faultHandler = null;
@@ -933,27 +960,9 @@ void StartScopeActivity() :
         jjtThis.setFaultHandler(faultHandler);
         jjtThis.setCompensationHandler(compensationHandler);
     }
+    { return jjtThis; }
 }
 
-BLTDEFStartActivity StartActivity() :
-{
-    BLTDEFReceiveActivity createRecive = null;
-}
-{
-  (
-      createRecive = ReceiveActivity() 
-            { if (createRecive != null) markReciveAsCreateInst(createRecive); }
-    |
-      StartSequenceActivity()
-    |
-      StartScopeActivity()
-    |
-      StartFlowActivity()
-    |
-      StartPickActivity()
-  )
-  { return jjtThis; }
-}
 
 BLTDEFActivity Activity() :
 { 
