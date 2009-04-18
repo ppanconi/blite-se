@@ -38,6 +38,7 @@ public class FlowActivity extends ActivityComponentBase implements FlowOwner {
     public void init() {
         super.init();
         engine =  getContext().getProcessInstance().getManager().getEngine();
+        childFlowNumber = getNumberOfChildDef();
     }
     
     public boolean doActivity() {
@@ -49,11 +50,11 @@ public class FlowActivity extends ActivityComponentBase implements FlowOwner {
             flowParent();
             return true;
         }
-        
+
+
         while (hasNextChildActivity()) {
             //we start our parallel child flow... I'm their owner and
             //they have my same context
-            childFlowNumber++;
             
             FlowExecutor flowExecutor = new FlowExecutorImp(this);
             getContext().registerFlow(flowExecutor);
@@ -72,7 +73,7 @@ public class FlowActivity extends ActivityComponentBase implements FlowOwner {
     public void flowCompleted() {
         joinedChildFlow++;
 
-        LOGGER.info("Joined Child Flow " + joinedChildFlow);
+        LOGGER.info("Joined Child Flow " + joinedChildFlow + " of " + childFlowNumber);
 
         if (joinedChildFlow == childFlowNumber) {
             //all the childs flow have joined me so I can restart my 
