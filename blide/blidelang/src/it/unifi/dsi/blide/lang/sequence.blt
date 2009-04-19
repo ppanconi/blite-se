@@ -1,0 +1,18 @@
+{
+    [
+       rcv <"seq1"> mathod1(y)
+    ]
+}
+||
+{
+    [
+        rcv <"seq2"> mathod1(y)
+    ]
+}
+||
+{
+    :: seq
+        inv <"seq1"> mathod1("HELLO SERVICE S1");
+        inv <"seq2"> mathod1("HELLO SERVICE S2")
+    qes
+}

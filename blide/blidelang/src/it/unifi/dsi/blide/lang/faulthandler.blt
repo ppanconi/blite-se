@@ -1,0 +1,34 @@
+{
+    [
+        seq
+            rcv <"f"> ask(y);
+            throw;
+            inv <"c"> ok(y)
+        qes
+        fh:
+            inv <"c"> no(y)
+    ]
+} 
+||
+{
+    :: seq
+           x := ("CAN I?");
+           inv <"f"> ask(x);
+           [
+             flw
+                seq
+                  rcv <"c"> ok(x);
+                  y := "YES";
+                  throw;
+                qes
+              |
+                seq
+                  rcv <"c"> no(x);
+                  y := "NO";
+                  throw;
+                qes
+             wlf
+            
+           ]
+       qes
+} (x)

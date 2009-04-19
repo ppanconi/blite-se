@@ -1,0 +1,28 @@
+{
+    [
+        seq
+            rcv <"serv"> op1(x);
+
+            pck
+                rcv<"serv", c1> op2(x);
+                seq
+                    inv<c1> resp(x)
+                qes;
+             +
+                rcv<"serv", c2> op2(x);
+                seq
+                    inv<c2> resp(x)
+                qes;
+            kcp
+        qes
+    ]
+}
+||
+{
+    :: seq
+        x := 1;
+        inv <"serv"> op1(x);
+        inv <"serv", "c1"> op2(x);
+        rcv <"c1"> resp(x)
+    qes
+} (x)

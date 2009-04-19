@@ -1,0 +1,46 @@
+{
+    [
+        seq
+            flw
+               rcv <"auction"> seller(pid, seller)
+             |
+               rcv <"auction"> buyer(pid, buyer)
+            wlf;
+            inv <seller> ok(pid, buyer);
+            inv <buyer> ok(pid, seller)
+        qes
+    ]
+} (pid)
+//||
+//{
+//    :: seq
+//        pid := 100;
+//        inv<"auction"> seller(pid, "seller");
+//        rcv<"seller"> ok(pid, buyer);
+//    qes
+//} (pid)
+//||
+//{
+//    :: seq
+//        pid := 100;
+//        inv <"auction"> buyer(100, "buyer");
+//        rcv <"buyer"> ok(pid, seller);
+//    qes
+//}
+||
+{
+    ::
+    flw
+        seq
+            pid := 100;
+            inv<"auction"> seller(pid, "seller");
+            rcv<"seller"> ok(pid, buyer);
+        qes
+     |
+        seq
+            pid := 100;
+            inv <"auction"> buyer(pid, "buyer");
+            rcv <"buyer"> ok(pid, seller);
+        qes
+    wlf
+}(pid)

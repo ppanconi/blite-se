@@ -1,0 +1,34 @@
+{ // richiesta invio completo - (All)
+    :: seq
+        id := 123;
+        c := true;
+        items := 5;
+        inv<"ship", "cust-all"> req(id, c, items);
+        pck
+            rcv<"cust-all"> notice(id, items);
+            empty;
+         +
+            //tale invio non e' disponibile
+            rcv<"cust-all"> err(id, err);
+            exit; //si fallisce l'istanza
+        kcp
+    qes
+} (id)
+||
+{ // richiesta invio anche in parti - (Dif)
+    :: seq
+        id := 15;
+        c := false;
+        items := 20;
+        inv<"ship", "cust-dif"> req(id, c, items);
+        shiped := 0;
+        while (shiped < items)
+            pck
+                rcv<"cust-dif"> notice(id, count);
+                shiped := shiped + count;
+             +
+                rcv<"cust-dif"> err(id, err);
+                exit; //si fallisce l'istanza
+            kcp
+    qes
+} (id)

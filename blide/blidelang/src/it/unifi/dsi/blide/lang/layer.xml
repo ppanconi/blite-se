@@ -147,6 +147,75 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
                 <attr name="template" boolvalue="true"/>
             </file>
+            <file name="mulstart.blt" url="mulstart.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="compesation.blt" url="compesation.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="conditional.blt" url="conditional.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="correlation.blt" url="correlation.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="empty.blt" url="empty.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="faulthandler.blt" url="faulthandler.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="faultprocess.blt" url="faultprocess.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="flow.blt" url="flow.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="mulstartpick.blt" url="mulstartpick.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="pick.blt" url="pick.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="pickstart.blt" url="pickstart.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="sequence.blt" url="sequence.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="throw.blt" url="throw.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+
+            <file name="shipbackend.blt" url="shipbackend.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="shipbilling.blt" url="shipbilling.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="shipcustomer.blt" url="shipcustomer.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="shipper.blt" url="shipper.blt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="it.unifi.dsi.blide.lang.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
         </folder>
             <file name="Properties_hidden"/>
     </folder>

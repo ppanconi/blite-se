@@ -1,0 +1,26 @@
+{
+    [
+        pck
+            rcv<"op1"> operation(x);
+            inv<"cl1"> operation(x);
+          +
+            rcv<"op2"> operation(x);
+            inv<"cl2"> operation(x);
+        kcp
+    ]
+}
+||
+{
+    ::seq
+        inv<"op1"> operation(1);
+        rcv<"cl1"> operation(x)
+    qes
+
+} (x)
+||
+{
+    ::seq
+        inv<"op2"> operation(2);
+        rcv<"cl2"> operation(x)
+    qes
+} (x)

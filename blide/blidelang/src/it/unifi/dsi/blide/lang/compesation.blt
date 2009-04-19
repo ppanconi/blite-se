@@ -1,0 +1,27 @@
+{
+    [
+        seq
+            rcv<"ch"> start(y);
+        qes
+    ]
+} 
+||
+{
+    :: seq
+        [
+            seq
+                [
+                    empty
+                    ch:
+                        seq
+                            inv<"ch"> start(1);
+                            inv<"ch"> start(2);  
+                        qes
+                        
+                ];
+                throw;
+            qes
+            fh: empty
+        ]
+    qes
+}
