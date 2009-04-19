@@ -1,0 +1,27 @@
+{
+    [
+        seq
+            flw
+                pck
+                    rcv<"msp"> op1(x);
+                    empty;
+                 +
+                    rcv<"msp"> op2(x);
+                    empty;
+                kcp
+             |
+                rcv<"msp"> op3(x)
+            wlf;
+            inv<"mspcb"> op(x)
+        qes
+    ]
+} (x)
+||
+{
+    :: seq
+        inv <"msp"> op1(1);
+        inv <"msp"> op2(1);
+        inv <"msp"> op3(1);
+        rcv <"mspcb"> op(x);
+    qes
+} (x)
