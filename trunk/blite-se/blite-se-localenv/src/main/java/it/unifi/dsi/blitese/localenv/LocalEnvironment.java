@@ -62,7 +62,17 @@ public class LocalEnvironment {
     public LocalEnvironment() {
         channel = new LocalEngineChannel(this);
     }
-    
+
+    public void clear() {
+        mCompUnits = new HashMap<URL, BLTDEFCompilationUnit>();
+        mLocToEngine = new HashMap<EngineLocation, Engine>();
+        mServiceNameToEngine = new HashMap<String, Engine>();
+        channel = new LocalEngineChannel(this);
+
+        fire();
+    }
+
+
     /**
      * Add a compiletion unit if not yet present in the Enviroment.
      * 
