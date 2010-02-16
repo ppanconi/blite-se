@@ -4,7 +4,7 @@
    # An operation system supporting a Java 5 Platform. Linux, Mac OS X, MS Windows, Solaris or Open-Solaris ...
    # A Java 5 (or superior) Runtime installed. You can download the last stable version at <a href="http://java.sun.com/javase/downloads/index.jsp">Java Sun Official Site </a>. 
    
-   _NB! At the moment to run Blite using Javaweb Start you need a Java 6 Runtime but to run Blide from a downloaded distribution you need just a Java 5 Runtime. Besides the usage of a Java 5 is discouraged. For a better user experience (performances, system look and feel integration) we heartily recommend to use the last version of Java 6 JRE._
+   _NB! At the moment to run Blite using Javaweb Start or to run Blide from a downloaded distribution you need just a Java 5 Runtime. Besides the usage of a Java 5 is discouraged. For a better user experience (performances, system look and feel integration) we heartily recommend to use the last version of Java 6 JRE._
 
  * Installation 
    # On Linux or Windows systems: Download the last version of Blide Zip format distribution from the <a href="http://code.google.com/p/blite-se/downloads/list">Downloads</a> section. Unzip the archive to any directory obtaining a <tt>blide</tt> named subdirectory. This directory will be referred as <tt>{{{<BLIDE_HOME>}}}</tt>.
